@@ -6,6 +6,7 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import TradingPage from './pages/TradingPage';
 import { UserContextProvider } from './UserContext';
+import 'regenerator-runtime/runtime';
 
 
 axios.defaults.baseURL = "http://127.0.0.1:4000";
