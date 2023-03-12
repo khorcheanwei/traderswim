@@ -28,8 +28,7 @@ function GlobalFilter({
   };
 
   return (
-    <div>
-      <div className="flex justify-between">
+      <div className="flex max-w-max">
         <label className="flex gap-x-2 items-baseline">
           <span className="text-gray-700">Search: </span>
           <input
@@ -43,12 +42,11 @@ function GlobalFilter({
             placeholder={`${count} records...`}
           />
         </label>
-        <Button className="text-gray-700" onClick={toggleOverlay}>Add account</Button>
+        <Button className="text-gray-700 " onClick={toggleOverlay}>Add account</Button>
         <Overlay isOpen={isOpen} onClose={toggleOverlay}>
           <AccountCreate></AccountCreate>
         </Overlay>
       </div>
-    </div>
   )
 }
 

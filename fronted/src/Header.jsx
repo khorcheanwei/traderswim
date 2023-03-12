@@ -15,7 +15,7 @@ export default function Header() {
     function linkClasses(type=null) {
         let classes = "py-2 px-6";
         if (type === subpage || (subpage === undefined && type === "accounts")) {
-            classes += "  bg-primary text-white rounded-full";
+            classes += "  bg-teal-300 text-white rounded-full";
         }
         return classes
     }

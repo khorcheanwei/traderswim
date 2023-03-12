@@ -85,7 +85,7 @@ export default function AccountsPage() {
         {
           Header: "Status",
           accessor: 'status',
-          Filter: SelectColumnFilter,  // new
+          //Filter: SelectColumnFilter,  // new
           filter: 'includes',
           Cell: StatusPill,
         },
