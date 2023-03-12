@@ -1,6 +1,6 @@
 import React from 'react'
 import {useContext, useState} from 'react';
-import AccountCreate from './AccountsCreate';
+import AccountAdd from './AccountAdd';
 
 
 import AccountsTable, { SelectColumnFilter, StatusPill, SettingsPanel, ConnectionToggle } from './AccountsTable'  // new

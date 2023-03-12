@@ -5,7 +5,7 @@ import { Button, PageButton } from './shared/Button'
 import { classNames } from './shared/Utils'
 import { SortIcon, SortUpIcon, SortDownIcon } from './shared/Icons'
 import {useContext, useState} from 'react';
-import AccountCreate from './AccountsCreate';
+import AccountAdd from './AccountAdd';
 
 import Overlay from "./Overlay";
 
@@ -44,7 +44,7 @@ function GlobalFilter({
         </label>
         <Button className="text-gray-700 " onClick={toggleOverlay}>Add account</Button>
         <Overlay isOpen={isOpen} onClose={toggleOverlay}>
-          <AccountCreate></AccountCreate>
+          <AccountAdd></AccountAdd>
         </Overlay>
       </div>
   )
