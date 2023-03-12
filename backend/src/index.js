@@ -1,24 +1,35 @@
 const express = require("express");
-const http = require("http");
 
+// setup express
 const app = express();
+app.use(express.json());
+
 const redirect_uri = "";
 
+app.get("/test", (req, res) => {
+  res.json("test ok");
+});
+
 // agent authentication
-const authenticateAgentRoute = require("./routes/authenticateAgent");
-app.use("/authenticate/agent", authenticateAgentRoute);
+const agentAccountRoute = require("./routes/agentAccount");
+app.use("/agent_account/", agentAccountRoute);
+
+var port = process.env.PORT || 4000;
+app.listen(port, () => {
+  console.log(`Listening at ${port}`);
+});
+
+/*
 
 // account authentication
 const authenticateAccount = require("./routes/authenticateAccount");
 app.use("/authenticate/account", authenticateAccount);
+*/
 
 // start http server
+/*
 const httpServer = http.createServer(app);
-
-var port = process.env.PORT || 4000;
-httpServer.listen(port, () => {
-  console.log(`Listening at ${port}`);
-});
+*/
 
 /*
 const bcryptSalt = bcrypt.genSaltSync(12);

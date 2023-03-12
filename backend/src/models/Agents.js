@@ -1,11 +1,11 @@
-const mongoose = require("moogoose");
+const mongoose = require("mongoose");
 
 const agentSchema = new mongoose.Schema({
-  agentID: Number,
+  agentID: mongoose.Schema.Types.ObjectId,
   agentUsername: String,
   agentPassword: String,
 });
 
-const AgentModel = moogoose.model("Agent", agentSchema);
+const AgentModel = mongoose.model("Agent", agentSchema);
 
 module.exports = AgentModel;

@@ -1,4 +1,4 @@
-const mongoose = require("moogoose");
+const mongoose = require("mongoose");
 
 const placeSchema = new mongoose.Schema({
   owner: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
@@ -13,6 +13,6 @@ const placeSchema = new mongoose.Schema({
   maxGuests: Number,
 });
 
-const PlaceModel = moogoose.model("Place", placeSchema);
+const PlaceModel = mongoose.model("Place", placeSchema);
 
 module.exports = PlaceModel;

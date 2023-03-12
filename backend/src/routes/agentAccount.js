@@ -1,22 +1,34 @@
 const express = require("express");
-const authenticateAgentRouter = express.Router();
 
-authenticateAgentRouter.post("/register", async (req, res) => {
-  const { name, email, password } = req.body;
+const { UUID } = require("bson");
+
+const bcrypt = require("bcryptjs");
+const bcryptSalt = bcrypt.genSaltSync(12);
+
+const agentAccountRouter = express.Router();
+
+const Agent = require("../models/Agents.js");
+
+agentAccountRouter.post("/register", async (req, res) => {
+  const { agentUsername, agentPassword } = req.body;
+
+  const agentID = UUID().toBinary();
 
   try {
-    const userDoc = await User.create({
-      name,
-      email,
-      password: bcrypt.hashSync(password, bcryptSalt),
+    const agentDoc = await Agent.create({
+      agentID,
+      agentUsername,
+      agentPassword: bcrypt.hashSync(agentPassword, bcryptSalt),
     });
-    res.json(userDoc);
+    res.json(agentDoc);
   } catch (e) {
     res.status(422).json(e);
   }
 });
 
-authenticateAgentRouter.post("/login", async (req, res) => {
+/*
+
+agentAccountRouter.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
   try {
@@ -47,7 +59,7 @@ authenticateAgentRouter.post("/login", async (req, res) => {
   }
 });
 
-authenticateAgentRouter.get("/profile", async (req, res) => {
+agentAccountRouter.get("/profile", async (req, res) => {
   const { token } = req.cookies;
   if (token) {
     jwt.verify(token, jwtSecret, {}, async (err, userData) => {
@@ -60,8 +72,9 @@ authenticateAgentRouter.get("/profile", async (req, res) => {
   }
 });
 
-authenticateAgentRouter.post("/logout", (req, res) => {
+agentAccountRouter.post("/logout", (req, res) => {
   res.cookie("token", "").json(true);
 });
+*/
 
-module.exports = authenticateAgentRouter;
+module.exports = agentAccountRouter;
