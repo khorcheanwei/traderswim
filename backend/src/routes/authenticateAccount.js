@@ -1,5 +1,5 @@
 const express = require("express");
-const router = express.Router();
+const authenticateAccountRouter = express.Router();
 const request = require("request");
 
 const mongoose = require("mongoose");
@@ -10,7 +10,7 @@ const cookieParser = require("cookie-parser");
 
 const redirect_uri = "";
 
-router.get("/auth", (req, res) => {
+authenticateAccountRouter.get("/auth", (req, res) => {
   var authRequest = {
     url: "https://api.tdameritrade.com/v1/oauth2/token",
     method: "POST",
@@ -35,4 +35,4 @@ router.get("/auth", (req, res) => {
   });
 });
 
-module.exports = router;
+module.exports = authenticateAccountRouter;

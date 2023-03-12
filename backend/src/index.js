@@ -5,12 +5,12 @@ const app = express();
 const redirect_uri = "";
 
 // agent authentication
-const authenticateAgentRoute = require("./routes/authenticate_agent");
+const authenticateAgentRoute = require("./routes/authenticateAgent");
 app.use("/authenticate/agent", authenticateAgentRoute);
 
 // account authentication
-const authenticateAccount = require("./routes/authenticate_account");
-//app.use("/authenticate/account", authenticateAccount);
+const authenticateAccount = require("./routes/authenticateAccount");
+app.use("/authenticate/account", authenticateAccount);
 
 // start http server
 const httpServer = http.createServer(app);

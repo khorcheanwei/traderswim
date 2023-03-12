@@ -1,8 +1,7 @@
 const express = require("express");
-const router = express.Router();
-const request = require("request");
+const authenticateAgentRouter = express.Router();
 
-router.post("/register", async (req, res) => {
+authenticateAgentRouter.post("/register", async (req, res) => {
   const { name, email, password } = req.body;
 
   try {
@@ -17,7 +16,7 @@ router.post("/register", async (req, res) => {
   }
 });
 
-router.post("/login", async (req, res) => {
+authenticateAgentRouter.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
   try {
@@ -48,7 +47,7 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.get("/profile", async (req, res) => {
+authenticateAgentRouter.get("/profile", async (req, res) => {
   const { token } = req.cookies;
   if (token) {
     jwt.verify(token, jwtSecret, {}, async (err, userData) => {
@@ -61,8 +60,8 @@ router.get("/profile", async (req, res) => {
   }
 });
 
-router.post("/logout", (req, res) => {
+authenticateAgentRouter.post("/logout", (req, res) => {
   res.cookie("token", "").json(true);
 });
 
-module.exports = router;
+module.exports = authenticateAgentRouter;
