@@ -3,7 +3,7 @@ import { Route, Routes } from 'react-router';
 import './App.css';
 import Layout from './Layout';
 import LoginPage from './pages/LoginPage';
-import RegisterPage from './pages/RegisterPage';
+import AgentRegisterPage from './pages/AgentRegisterPage';
 import TradingPage from './pages/TradingPage';
 import { UserContextProvider } from './UserContext';
 import 'regenerator-runtime/runtime';
@@ -19,7 +19,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Layout/>}>
           <Route path="/login" element={<LoginPage />}/>
-          <Route path="/register" element={<RegisterPage />}/>
+          <Route path="/register" element={<AgentRegisterPage />}/>
           <Route path="/trading/:subpage?" element={<TradingPage />}/>   
         </Route>
       </Routes>

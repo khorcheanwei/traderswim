@@ -8,18 +8,18 @@ const bcryptSalt = bcrypt.genSaltSync(12);
 
 const agentAccountRouter = express.Router();
 
-/* agent */
-
+/* agent registration and authentication*/
 const Agent = require("../models/Agents.js");
 
 agentAccountRouter.post("/register", async (req, res) => {
-  const { agentUsername, agentPassword } = req.body;
+  const { agentUsername, agentEmail, agentPassword } = req.body;
 
   /*const agentID = new UUID().toBinary();*/
 
   try {
     const agentDoc = await Agent.create({
       agentUsername,
+      agentEmail,
       agentPassword: bcrypt.hashSync(agentPassword, bcryptSalt),
     });
     res.json(agentDoc);
@@ -38,7 +38,7 @@ agentAccountRouter.post("/login", async (req, res) => {
       if (passOk) {
         jwt.sign(
           {
-            email: agentDoc.email,
+            agentEmail: agentDoc.agentEmail,
             id: agentDoc._id,
           },
           jwtSecret,
@@ -49,7 +49,7 @@ agentAccountRouter.post("/login", async (req, res) => {
           }
         );
       } else {
-        res.status(422).json("incorrect password");
+        res.status(422).json("incorrect agentPassword");
       }
     } else {
       res.status(422).json("agent not found");
@@ -65,8 +65,8 @@ agentAccountRouter.get("/profile", async (req, res) => {
   if (token) {
     jwt.verify(token, jwtSecret, {}, async (err, userData) => {
       if (err) throw err;
-      const { name, email, _id } = await User.findById(userData.id);
-      res.json({ name, email, _id });
+      const { name, agentEmail, _id } = await User.findById(userData.id);
+      res.json({ name, agentEmail, _id });
     });
   } else {
     res.json(null);

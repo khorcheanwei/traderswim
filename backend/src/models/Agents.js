@@ -6,6 +6,10 @@ const agentSchema = new mongoose.Schema({
     unique: true,
     required: true,
   },
+  agentEmail: {
+    type: String,
+    required: true,
+  },
   agentPassword: {
     type: String,
     required: true,

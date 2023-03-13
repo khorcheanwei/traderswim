@@ -12,7 +12,24 @@
                 "<node_internals>/**"
             ],
             "runtimeExecutable": "nodemon",
-            "program": "${workspaceFolder}/backend/src/index.js"
+            "program": "${workspaceFolder}/backend/src/index.js",
+            "envFile": "${workspaceFolder}/backend/src/.env"
+        },
+        {
+            "name": "Launch Chrome",
+            "request": "launch",
+            "type": "chrome",
+            "url": "http://localhost:5173",
+            "webRoot": "${workspaceFolder}/fonted/",
+            "runtimeExecutable": "/mnt/c/Program Files/Google/Chrome/Application/chrome.exe" 
+        },
+        {
+            "name": "Attach to Chrome",
+            "port": 9222,
+            "request": "attach",
+            "type": "chrome",
+            "urlFilter": "http://localhost:5173/*", // use urlFilter instead of url!
+            "webRoot": "${workspaceFolder}/fonted/",
         }
     ]
 }

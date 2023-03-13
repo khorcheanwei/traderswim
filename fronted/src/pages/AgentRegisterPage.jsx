@@ -3,25 +3,23 @@ import {useState} from 'react';
 import axios from "axios";
 
 
-export default function RegisterPage() {
-    const [name, setName] = useState('');
-    const [email,setEmail] = useState('');
-    const [password,setPassword] = useState('');
+export default function AgentRegisterPage() {
+    const [agentUsername, setAgentUsername] = useState('');
+    const [agentEmail,setAgentEmail] = useState('');
+    const [agentPassword,setAgentPassword] = useState('');
 
     async function registerUser(ev) {
         ev.preventDefault();
         try {
             await axios.post("/register", {
-                name,
-                email,
-                password,
+                agentUsername,
+                agentEmail,
+                agentPassword,
             });
             alert("Registration successful. Now you can log in.");
         } catch (e) {
             alert("Registration failed. Please try again.");
         }
-        
-        
     }
 
     return (
@@ -31,16 +29,16 @@ export default function RegisterPage() {
                 <form className="max-w-md mx-auto" onSubmit={registerUser}>
                     <input type="text" 
                         placeholder="John Doe"
-                        value={name}
-                        onChange={ev => setName(ev.target.value)}/>
+                        value={agentUsername}
+                        onChange={ev => setAgentUsername(ev.target.value)}/>
                     <input type="email" 
                         placeholder="your@email.com"
-                        value={email}
-                        onChange={ev => setEmail(ev.target.value)}/>
+                        value={agentEmail}
+                        onChange={ev => setAgentEmail(ev.target.value)}/>
                     <input type="password" 
-                        placeholder="password"
-                        value={password}
-                        onChange={ev => setPassword(ev.target.value)}/>
+                        placeholder="************"
+                        value={agentPassword}
+                        onChange={ev => setAgentPassword(ev.target.value)}/>
                     <button className="primary">Register</button>
                     <div className="text-center py-2 text-gray-500">
                         Already a member? <Link className="underline text-black" to={'/login'}>Login</Link>
