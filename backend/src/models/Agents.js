@@ -1,9 +1,15 @@
 const mongoose = require("mongoose");
 
 const agentSchema = new mongoose.Schema({
-  agentID: mongoose.Schema.Types.ObjectId,
-  agentUsername: String,
-  agentPassword: String,
+  agentUsername: {
+    type: String,
+    unique: true,
+    required: true,
+  },
+  agentPassword: {
+    type: String,
+    required: true,
+  },
 });
 
 const AgentModel = mongoose.model("Agent", agentSchema);

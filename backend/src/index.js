@@ -1,10 +1,15 @@
 const express = require("express");
+const mongoose = require("mongoose");
+
+require("dotenv").config();
 
 // setup express
 const app = express();
 app.use(express.json());
 
 const redirect_uri = "";
+
+mongoose.connect(process.env.MONGO_URL);
 
 app.get("/test", (req, res) => {
   res.json("test ok");
