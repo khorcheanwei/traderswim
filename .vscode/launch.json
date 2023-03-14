@@ -19,7 +19,7 @@
             "name": "Launch Chrome",
             "request": "launch",
             "type": "chrome",
-            "url": "http://localhost:5173",
+            "url": "http://127.0.0.1:5173",
             "webRoot": "${workspaceFolder}/fonted/",
             "runtimeExecutable": "/mnt/c/Program Files/Google/Chrome/Application/chrome.exe" 
         },
@@ -28,7 +28,7 @@
             "port": 9222,
             "request": "attach",
             "type": "chrome",
-            "urlFilter": "http://localhost:5173/*", // use urlFilter instead of url!
+            "urlFilter": "http://127.0.0.1:5173/*", // use urlFilter instead of url!
             "webRoot": "${workspaceFolder}/fonted/",
         }
     ]

@@ -9,23 +9,36 @@ const bcryptSalt = bcrypt.genSaltSync(12);
 const agentAccountRouter = express.Router();
 
 /* agent registration and authentication*/
-const Agent = require("../models/Agents.js");
+const Agent = require("../models/Agent.js");
 
 agentAccountRouter.post("/register", async (req, res) => {
   const { agentUsername, agentEmail, agentPassword } = req.body;
 
   /*const agentID = new UUID().toBinary();*/
-
-  try {
-    const agentDoc = await Agent.create({
-      agentUsername,
-      agentEmail,
-      agentPassword: bcrypt.hashSync(agentPassword, bcryptSalt),
-    });
-    res.json(agentDoc);
-  } catch (e) {
-    res.status(422).json(e);
-  }
+  Agent.init().then(async () => {
+    try {
+      const agentDoc = await Agent.create({
+        agentUsername,
+        agentEmail,
+        agentPassword: bcrypt.hashSync(agentPassword, bcryptSalt),
+      });
+      res.status(200).json("User is successfully registered");
+    } catch (e) {
+      if (
+        e.keyValue["agentUsername"] != undefined &&
+        e.keyValue["agentUsername"] == agentUsername
+      ) {
+        res.status(200).json("This username is already registered");
+      } else if (
+        e.keyValue["agentEmail"] != undefined &&
+        e.keyValue["agentEmail"] == agentEmail
+      ) {
+        res.status(200).json("This email is already registered");
+      } else {
+        res.status(422).json(e);
+      }
+    }
+  });
 });
 
 agentAccountRouter.post("/login", async (req, res) => {
@@ -44,15 +57,18 @@ agentAccountRouter.post("/login", async (req, res) => {
           jwtSecret,
           {},
           (err, token) => {
-            if (err) throw err;
-            res.cookie("token", token).json(agentDoc);
+            if (err) {
+              throw err;
+            } else {
+              res.cookie("token", token).json(agentDoc);
+            }
           }
         );
       } else {
-        res.status(422).json("incorrect agentPassword");
+        res.status(422).json("Incorrect password");
       }
     } else {
-      res.status(422).json("agent not found");
+      res.status(422).json("Agent is not registered");
     }
   } catch (e) {
     res.status(422).json(e);

@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link , Navigate} from 'react-router-dom';
 import {useState} from 'react';
 import axios from "axios";
 
@@ -8,18 +8,28 @@ export default function AgentRegisterPage() {
     const [agentEmail,setAgentEmail] = useState('');
     const [agentPassword,setAgentPassword] = useState('');
 
+    const [redirect, setRedirect] = useState(false)
+
     async function registerUser(ev) {
         ev.preventDefault();
         try {
-            await axios.post("/register", {
+            await axios.post("/agent_account/register/", {
                 agentUsername,
                 agentEmail,
                 agentPassword,
-            });
-            alert("Registration successful. Now you can log in.");
+            }).then(response =>{
+                alert(response.data);
+                setRedirect(true)
+            }).catch(err =>{
+                console.log(err);
+            })
         } catch (e) {
             alert("Registration failed. Please try again.");
         }
+    }
+
+    if (redirect) {
+        return <Navigate to={'/login'} />
     }
 
     return (

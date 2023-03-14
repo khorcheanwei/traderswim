@@ -1,10 +1,31 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const cors = require("cors");
+
+// security
+const corsOptions = {
+  origin: "127.0.0.1",
+  credentials: true,
+  optionSuccessStatus: 200,
+};
 
 require("dotenv").config();
 
 // setup express
 const app = express();
+app.use(
+  cors({
+    credentials: true,
+    origin: "http://127.0.0.1:5173",
+  })
+);
+/*
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  next();
+});
+*/
+
 app.use(express.json());
 
 const redirect_uri = "";
@@ -20,12 +41,9 @@ const agentAccountRoute = require("./routes/agentAccount");
 app.use("/agent_account/", agentAccountRoute);
 
 var port = process.env.PORT || 4000;
-app.listen(port, () => {
-  console.log(`Listening at ${port}`);
-});
+app.listen(port, "127.0.0.1");
 
 /*
-
 // account authentication
 const authenticateAccount = require("./routes/authenticateAccount");
 app.use("/authenticate/account", authenticateAccount);
