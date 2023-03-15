@@ -1,24 +1,24 @@
+import axios from "axios";
 import {useContext, useState} from 'react';
+import { UserContext } from '../UserContext';
 
 export default function AccountAdd() {
-
     const [accountName, setAccountName] = useState("");
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
+    const [accountUsername, setAccountUsername] = useState("");
+    const [accountPassword, setAccountPassword] = useState("");
+
+    const { contextAgentID } = useContext(UserContext);
 
     async function handleAccountAdd(ev) {
-        //ev.preventDefault()
-        console.log(accountName)
-        console.log(username)
-        console.log(password)
-
+        ev.preventDefault()
         try {
-            const {data} = await axios.post("/login", {email, password});
+            agentID = contextAgentID
+            const {data} = await axios.post("/trading_account/login/", {agentID, accountName, accountUsername, accountPassword});
+            console.log(data)
             if (typeof data.name === 'undefined') {
-                alert("Login failed.");
+                alert("Account add failed.");
             } else {
-                setUser(data)
-                alert("Login successful");
+                alert("Account add successful");
                 setRedirect(true)
             }
         } catch (e) {
@@ -42,17 +42,17 @@ export default function AccountAdd() {
                 <label className="block text-gray-700 text-sm font-bold mb-2">Username</label>
                 <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
                     type="text" 
-                    value={username}
-                    onChange={ev => setUsername(ev.target.value)}
+                    value={accountUsername}
+                    onChange={ev => setAccountUsername(ev.target.value)}
                     placeholder="Username">
                 </input>
             </div>
             <div className="mb-6">  
                 <label className="block text-gray-700 text-sm font-bold mb-2" >Password</label>
                 <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" 
-                    type="password" 
-                    value={password}
-                    onChange={ev => setPassword(ev.target.value)}
+                    type="accountPassword" 
+                    value={accountPassword}
+                    onChange={ev => setAccountPassword(ev.target.value)}
                     placeholder="******************">
                 </input>
             </div>

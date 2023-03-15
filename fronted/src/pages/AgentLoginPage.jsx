@@ -4,26 +4,27 @@ import axios from 'axios';
 import { UserContext } from '../UserContext';
 
 export default function AgentLoginPage() {
+    
     const [agentUsername, setAgentUsername] = useState('');
     const [agentPassword,setAgentPassword] = useState('');
 
-    const [redirect, setRedirect] = useState(false)
-    const {setUser} = useContext(UserContext)
+    const [redirect, setRedirect] = useState(false);
 
     async function handleLoginSubmit(ev) {
         ev.preventDefault()
+        const {data} = await axios.post("/agent_account/login/", {agentUsername, agentPassword});
+
         try {
             const {data} = await axios.post("/agent_account/login/", {agentUsername, agentPassword});
             if (typeof data.agentUsername === 'undefined') {
                 alert("Login failed.");
             } else {
-                setUser(data)
                 alert("Login successful");
                 setRedirect(true)
             }
         } catch (e) {
             alert("Login failed.");
-        }    
+        }   
     }
 
     if (redirect) {
