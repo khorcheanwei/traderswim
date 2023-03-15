@@ -51,7 +51,6 @@ agentAccountRouter.post("/login", async (req, res) => {
       if (passOk) {
         jwt.sign(
           {
-            agentEmail: agentDoc.agentEmail,
             id: agentDoc._id,
           },
           jwtSecret,
@@ -75,20 +74,22 @@ agentAccountRouter.post("/login", async (req, res) => {
   }
 });
 
-/*
 agentAccountRouter.get("/profile", async (req, res) => {
   const { token } = req.cookies;
   if (token) {
-    jwt.verify(token, jwtSecret, {}, async (err, userData) => {
-      if (err) throw err;
-      const { name, agentEmail, _id } = await User.findById(userData.id);
-      res.json({ name, agentEmail, _id });
+    jwt.verify(token, jwtSecret, {}, async (err, agentDoc) => {
+      if (err) {
+        throw err;
+      } else {
+        const { _id, agentUsername } = await Agent.findById(agentDoc.id);
+        agentID = _id;
+        res.json({ agentID, agentUsername });
+      }
     });
   } else {
     res.json(null);
   }
 });
-*/
 
 /*
 

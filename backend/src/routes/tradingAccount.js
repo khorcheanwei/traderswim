@@ -1,16 +1,54 @@
 const express = require("express");
-const authenticateAccountRouter = express.Router();
+
+const bcrypt = require("bcryptjs");
+const bcryptSalt = bcrypt.genSaltSync(12);
+
+const tradingAccountRouter = express.Router();
 const request = require("request");
 
-const mongoose = require("mongoose");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const User = require("../models/Users.js");
-const cookieParser = require("cookie-parser");
+const Account = require("../models/Account.js");
 
 const redirect_uri = "";
 
-authenticateAccountRouter.get("/auth", (req, res) => {
+tradingAccountRouter.get("/test", (req, res) => {
+  res.json("test ok");
+});
+
+tradingAccountRouter.post("/login", (req, res) => {
+  const { agentID, accountName, accountUsername, accountPassword } = req.body;
+
+  Account.init().then(async () => {
+    try {
+      accountNameExist = await Account.exists({
+        agentID: agentID,
+        accountName: accountName,
+      });
+      accountUsernameExist = await Account.exists({
+        agentID: agentID,
+        accountUsername: accountUsername,
+      });
+
+      if (accountNameExist) {
+        res.status(200).json("Account name exists for this agent");
+      } else if (accountUsernameExist) {
+        res.status(200).json("Trading account username exists for this agent");
+      } else {
+        const accountDoc = await Account.create({
+          agentID,
+          accountName,
+          accountUsername,
+          accountPassword: bcrypt.hashSync(accountPassword, bcryptSalt),
+        });
+      }
+
+      res.status(200).json("Account is successfully login");
+    } catch (e) {
+      res.status(422).json(e);
+    }
+  });
+
+  /*
+
   var authRequest = {
     url: "https://api.tdameritrade.com/v1/oauth2/token",
     method: "POST",
@@ -33,6 +71,7 @@ authenticateAccountRouter.get("/auth", (req, res) => {
       res.send(authReply);
     }
   });
+  */
 });
 
-module.exports = authenticateAccountRouter;
+module.exports = tradingAccountRouter;

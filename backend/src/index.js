@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const cookieParser = require("cookie-parser");
 
 // security
 const corsOptions = {
@@ -13,6 +14,7 @@ require("dotenv").config();
 
 // setup express
 const app = express();
+app.use(cookieParser());
 app.use(
   cors({
     credentials: true,
@@ -43,11 +45,9 @@ app.use("/agent_account/", agentAccountRoute);
 var port = process.env.PORT || 4000;
 app.listen(port, "127.0.0.1");
 
-/*
-// account authentication
-const authenticateAccount = require("./routes/authenticateAccount");
-app.use("/authenticate/account", authenticateAccount);
-*/
+// trading account authentication
+const tradingAccount = require("./routes/tradingAccount");
+app.use("/trading_account/", tradingAccount);
 
 // start http server
 /*
