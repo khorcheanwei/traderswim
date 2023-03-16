@@ -12,8 +12,8 @@ const getData = () => {
       email: 'jane.cooper@example.com',
       name: 'Regional Paradigm Technician',
       department: 'Optimization',
-      connection: 'Active',
-      status: 'Active',
+      connection: 'Online',
+      status: 'Online',
       balance: 275384,
     },
     {
@@ -21,8 +21,8 @@ const getData = () => {
       email: 'cody.fisher@example.com',
       name: 'Product Directives Officer',
       department: 'Intranet',
-      connection: 'Inactive',
-      status: 'Inactive',
+      connection: 'Offline',
+      status: 'Offline',
       balance: 454565,
     },
     {
@@ -30,8 +30,8 @@ const getData = () => {
       email: 'esther.howard@example.com',
       name: 'Forward Response Developer',
       department: 'Directives',
-      connection: 'Active',
-      status: 'Active',
+      connection: 'Online',
+      status: 'Online',
       balance: 653444,
     },
     {
@@ -48,8 +48,8 @@ const getData = () => {
       email: 'kristin.watson@example.com',
       name: 'Lean Implementation Liaison',
       department: 'Mobility',
-      connection: 'Inactive',
-      status: 'Inactive',
+      connection: 'Offline',
+      status: 'Offline',
       balance: 554233,
     },
     {
@@ -57,12 +57,12 @@ const getData = () => {
       email: 'cameron.williamson@example.com',
       name: 'Internal Applications Engineer',
       department: 'Security',
-      connection: 'Active',
-      status: 'Active',
+      connection: 'Online',
+      status: 'Online',
       balance: 2454544,
     },
   ]
-  return [...data, ...data, ...data]
+  return [...data]
 }
 
 

@@ -1,5 +1,6 @@
 import axios from "axios";
-import {useContext, useState} from 'react';
+import { Link , Navigate} from 'react-router-dom';
+import {useContext, useState, useEffect } from 'react';
 import { UserContext } from '../UserContext';
 
 export default function AccountAdd() {
@@ -7,21 +8,31 @@ export default function AccountAdd() {
     const [accountUsername, setAccountUsername] = useState("");
     const [accountPassword, setAccountPassword] = useState("");
 
-    const { contextAgentID } = useContext(UserContext);
+    const [agentID, setAgentID] = useState(null);
+    const { contextAgentID, setIsOpenAccountLogin} = useContext(UserContext);
+
+    useEffect(() => {
+        if (!agentID) {
+            axios.get("/agent_account/profile").then(({data}) =>{
+                setAgentID(data.agentID)
+            })  
+        }
+    }, [])
 
     async function handleAccountAdd(ev) {
         ev.preventDefault()
         try {
-            agentID = contextAgentID
+            const agentID = contextAgentID
             const {data} = await axios.post("/trading_account/login/", {agentID, accountName, accountUsername, accountPassword});
-            console.log(data)
-            if (typeof data.name === 'undefined') {
+
+            if (typeof data.accountName === 'undefined') {
                 alert("Account add failed.");
             } else {
                 alert("Account add successful");
-                setRedirect(true)
+                setIsOpenAccountLogin(close)
             }
         } catch (e) {
+            console.log(e)
             alert("Login failed.");
         }   
     }

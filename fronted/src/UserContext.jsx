@@ -7,6 +7,7 @@ export const UserContext = createContext({});
 export function UserContextProvider({children}) {
     const [contextAgentUsername, setContextAgentUsername] = useState(null);
     const [contextAgentID, setContextAgentID] = useState(null);
+    const [isOpenAccountLogin, setIsOpenAccountLogin] = useState(false);
     const [ready, setReady] = useState(false);
 
     useEffect(() => {
@@ -20,7 +21,7 @@ export function UserContextProvider({children}) {
     }, [])
     
     return (
-        <UserContext.Provider value={{contextAgentUsername, setContextAgentUsername, contextAgentID, setContextAgentID, ready, setReady}}>
+        <UserContext.Provider value={{contextAgentUsername, setContextAgentUsername, contextAgentID, setContextAgentID, isOpenAccountLogin, setIsOpenAccountLogin, ready, setReady}}>
             {children}
         </UserContext.Provider>
     );

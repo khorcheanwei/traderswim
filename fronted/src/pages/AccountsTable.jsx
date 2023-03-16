@@ -4,9 +4,11 @@ import { ChevronDoubleLeftIcon, ChevronLeftIcon, ChevronRightIcon, ChevronDouble
 import { Button, PageButton } from './shared/Button'
 import { classNames } from './shared/Utils'
 import { SortIcon, SortUpIcon, SortDownIcon } from './shared/Icons'
-import {useContext, useState} from 'react';
+import {useContext, useState, useEffect} from 'react';
 import AccountAdd from './AccountAdd';
+import { UserContext } from '../UserContext';
 
+import axios from 'axios';
 import Overlay from "./Overlay";
 
 // Define a default UI for filtering
@@ -21,11 +23,19 @@ function GlobalFilter({
     setGlobalFilter(value || undefined)
   }, 200)
 
-  const [isOpen, setIsOpen] = useState(false);
+  const { isOpenAccountLogin, setIsOpenAccountLogin } = useContext(UserContext);
+
 
   const toggleOverlay = () => {
-    setIsOpen(!isOpen);
+    setIsOpenAccountLogin(!isOpenAccountLogin);
   };
+
+  
+  useEffect(() => {
+    axios.get("/trading_account/database").then(({data}) =>{
+      console.log("wei")
+    })  
+  }, []) 
 
   return (
       <div className="flex max-w-max">
@@ -43,7 +53,7 @@ function GlobalFilter({
           />
         </label>
         <Button className="text-gray-700 " onClick={toggleOverlay}>Add account</Button>
-        <Overlay isOpen={isOpen} onClose={toggleOverlay}>
+        <Overlay isOpenAccountLogin={isOpenAccountLogin} onClose={toggleOverlay}>
           <AccountAdd></AccountAdd>
         </Overlay>
       </div>
@@ -97,8 +107,7 @@ export function StatusPill({ value }) {
       className={
         classNames(
           "px-3 py-1 uppercase leading-wide font-bold text-xs rounded-full shadow-sm",
-          status.startsWith("active") ? "bg-green-100 text-green-800" : null,
-          status.startsWith("inactive") ? "bg-yellow-100 text-yellow-800" : null,
+          status.startsWith("online") ? "bg-green-100 text-green-800" : null,
           status.startsWith("offline") ? "bg-red-100 text-red-800" : null,
         )
       }
