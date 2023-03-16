@@ -1,5 +1,8 @@
 const express = require("express");
 
+const jwt = require("jsonwebtoken");
+const jwtSecret = process.env.JWTSECRET;
+
 const bcrypt = require("bcryptjs");
 const bcryptSalt = bcrypt.genSaltSync(12);
 
@@ -33,21 +36,43 @@ tradingAccountRouter.post("/login", (req, res) => {
       } else if (accountUsernameExist) {
         res.status(200).json("Trading account username exists for this agent");
       } else {
+        var accountConnection = true;
         const accountDoc = await Account.create({
           agentID,
           accountName,
+          accountConnection,
           accountUsername,
           accountPassword: bcrypt.hashSync(accountPassword, bcryptSalt),
         });
+        res.status(200).json({ accountName });
       }
-
-      res.status(200).json("Account is successfully login");
     } catch (e) {
       res.status(422).json(e);
     }
   });
+});
 
-  /*
+tradingAccountRouter.get("/database", (req, res) => {
+  const { token } = req.cookies;
+  if (token) {
+    jwt.verify(token, jwtSecret, {}, async (err, agentDoc) => {
+      if (err) {
+        throw err;
+      } else {
+        agentID = agentDoc.id;
+
+        const accountDoc = await Account.find({
+          agentID: agentID,
+        });
+        console.log(accountDoc);
+      }
+    });
+  } else {
+    res.json(null);
+  }
+});
+
+/*
 
   var authRequest = {
     url: "https://api.tdameritrade.com/v1/oauth2/token",
@@ -72,6 +97,5 @@ tradingAccountRouter.post("/login", (req, res) => {
     }
   });
   */
-});
 
 module.exports = tradingAccountRouter;

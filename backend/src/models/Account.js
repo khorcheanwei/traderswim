@@ -11,6 +11,10 @@ const accountSchema = new Schema(
       type: String,
       required: true,
     },
+    accountConnection: {
+      type: Boolean,
+      required: true,
+    },
     accountUsername: {
       type: String,
       required: true,
