@@ -2,6 +2,7 @@ import axios from "axios";
 import { Link , Navigate} from 'react-router-dom';
 import {useContext, useState, useEffect } from 'react';
 import { UserContext } from '../UserContext';
+import { AccountContext } from '../AccountContext';
 
 export default function AccountAdd() {
     const [accountName, setAccountName] = useState("");
@@ -10,9 +11,11 @@ export default function AccountAdd() {
 
     const [agentID, setAgentID] = useState(null);
     const { contextAgentID, setIsOpenAccountLogin} = useContext(UserContext);
+    const { isAccountLoginSuccessful, setIsAccountLoginSuccessful} = useContext(AccountContext);
+
 
     useEffect(() => {
-        if (!agentID) {
+        if (agentID == null) {
             axios.get("/agent_account/profile").then(({data}) =>{
                 setAgentID(data.agentID)
             })  
@@ -30,6 +33,7 @@ export default function AccountAdd() {
             } else {
                 alert("Account add successful");
                 setIsOpenAccountLogin(close)
+                setIsAccountLoginSuccessful(true)
             }
         } catch (e) {
             console.log(e)
