@@ -38,10 +38,10 @@ tradingAccountRouter.post("/login", (req, res) => {
       } else {
         var accountConnection = true;
         const accountDoc = await Account.create({
-          agentID,
-          accountName,
-          accountConnection,
-          accountUsername,
+          agentID: agentID,
+          accountName: accountName,
+          accountConnection: accountConnection,
+          accountUsername: accountUsername,
           accountPassword: bcrypt.hashSync(accountPassword, bcryptSalt),
         });
         res.status(200).json({ accountName });
@@ -64,7 +64,18 @@ tradingAccountRouter.get("/database", (req, res) => {
         const accountDoc = await Account.find({
           agentID: agentID,
         });
-        console.log(accountDoc);
+
+        accountTableArray = [];
+        Object.keys(accountDoc).forEach(function (key, index) {
+          accountTableArray.push({
+            accountName: accountDoc[index].accountName,
+            accountBalance: 1000, //hard code for now
+            //accountConnection: accountDoc[index].accountConnection,
+            accountConnection: "Online",
+            accountStatus: "Online",
+          });
+        });
+        res.status(200).json(accountTableArray);
       }
     });
   } else {
