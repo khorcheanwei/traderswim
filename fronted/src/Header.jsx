@@ -1,6 +1,6 @@
 import { Link, useParams } from 'react-router-dom';
 import {useContext} from 'react';
-import { UserContext } from './UserContext';
+import { UserContext } from './pages/context/UserContext';
 import Trading from './pages/TradingPage';
 
 export default function Header() {

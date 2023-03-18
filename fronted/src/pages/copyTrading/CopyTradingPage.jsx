@@ -2,13 +2,13 @@ import axios from 'axios';
 import React from 'react'
 import {useContext, useState, useEffect} from 'react';
 import { async } from 'regenerator-runtime';
-import AccountAdd from './AccountAdd';
+import CopyTradingAdd from './CopyTradingAdd';
 import { AccountContext } from './../context/AccountContext';
 
 
-import AccountsTable, { SelectColumnFilter, StatusPill, SettingsPanel, ConnectionToggle } from './AccountsTable'  // new
+import CopyTradingTable, { SelectColumnFilter, StatusPill, SettingsPanel, ConnectionToggle } from './CopyTradingTable'  // new
 
-export default function AccountsPage() {
+export default function CopyTradingPage()  {
 
     const columns = React.useMemo(() => [
         {
@@ -65,7 +65,7 @@ export default function AccountsPage() {
         <div className="min-h-screen bg-gray-100 text-black">
           <main className="mx-auto px-4 sm:px-6 lg:px-8 pt-4">
             <div className="mt-6">
-              <AccountsTable columns={columns} data={data} />
+              <CopyTradingTable columns={columns} data={data} />
             </div>
           </main>
         </div>

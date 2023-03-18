@@ -5,8 +5,8 @@ import Layout from './Layout';
 import AgentLoginPage from './pages/agent/AgentLoginPage';
 import AgentRegisterPage from './pages/agent/AgentRegisterPage';
 import TradingPage from './pages/TradingPage';
-import { UserContextProvider } from './UserContext';
-import { AccountContextProvider } from './AccountContext';
+import { UserContextProvider } from './pages/context/UserContext';
+import { AccountContextProvider } from './pages/context/AccountContext';
 import 'regenerator-runtime/runtime';
 
 

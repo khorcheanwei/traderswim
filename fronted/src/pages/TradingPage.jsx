@@ -2,7 +2,7 @@
 import { useParams } from 'react-router-dom';
 
 import AccountsPage from './account/AccountsPage.jsx';
-import CopyTradingPage from './CopyTradingPage';
+import CopyTradingPage from './copyTrading/CopyTradingPage';
 import TradeBlotterPage from './TradeBlotterPage';
 
 export default function Trading() {

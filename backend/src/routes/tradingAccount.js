@@ -67,15 +67,44 @@ tradingAccountRouter.get("/database", (req, res) => {
 
         accountTableArray = [];
         Object.keys(accountDoc).forEach(function (key, index) {
+          // need to go Ameritrade website to check whether it is successful to convert to connect to website or not
+
           accountTableArray.push({
             accountName: accountDoc[index].accountName,
             accountBalance: 1000, //hard code for now
             //accountConnection: accountDoc[index].accountConnection,
-            accountConnection: "Online",
-            accountStatus: "Online",
+            accountConnection: accountDoc[index].accountConnection,
+            accountStatus: accountDoc[index].accountConnection,
           });
         });
         res.status(200).json(accountTableArray);
+      }
+    });
+  } else {
+    res.json(null);
+  }
+});
+
+tradingAccountRouter.post("/connection", (req, res) => {
+  const { token } = req.cookies;
+  const { accountName, accountConnection } = req.body;
+
+  if (token) {
+    jwt.verify(token, jwtSecret, {}, async (err, agentDoc) => {
+      if (err) {
+        throw err;
+      } else {
+        agentID = agentDoc.id;
+
+        var query = { agentID: agentID, accountName: accountName };
+        var updatedQuery = { accountConnection: accountConnection };
+
+        try {
+          await Account.updateOne(query, updatedQuery);
+          res.status(200).json("success");
+        } catch (e) {
+          res.status(422).json(e);
+        }
       }
     });
   } else {

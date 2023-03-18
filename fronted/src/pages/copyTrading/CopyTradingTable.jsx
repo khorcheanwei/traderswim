@@ -5,7 +5,7 @@ import { Button, PageButton } from './../shared/Button'
 import { classNames } from './../shared/Utils'
 import { SortIcon, SortUpIcon, SortDownIcon } from './../shared/Icons'
 import {useContext, useState, useEffect} from 'react';
-import AccountAdd from './AccountAdd';
+import CopyTradingAdd from './CopyTradingAdd';
 import { UserContext } from '../context/UserContext';
 import { AccountContext } from '../context/AccountContext';
 
@@ -48,9 +48,9 @@ function GlobalFilter({
             placeholder={`${count} records...`}
           />
         </label>
-        <Button className="text-gray-700 " onClick={toggleOverlay}>Add account</Button>
+        <Button className="text-gray-700 " onClick={toggleOverlay}>Add account copier </Button>
         <Overlay isOpen={isOpenAccountLogin} onClose={toggleOverlay}>
-          <AccountAdd></AccountAdd>
+          <CopyTradingAdd></CopyTradingAdd>
         </Overlay>
       </div>
   )
@@ -171,7 +171,7 @@ export function ConnectionToggle(row) {
   );
 };
 
-function AccountsTable({ columns, data }) {
+function CopyTradingTable({ columns, data }) {
 
   const [accountCreate, setAccountCreate] = useState(false);
 
@@ -360,4 +360,4 @@ function AccountsTable({ columns, data }) {
   )
 }
 
-export default AccountsTable;
+export default CopyTradingTable;
