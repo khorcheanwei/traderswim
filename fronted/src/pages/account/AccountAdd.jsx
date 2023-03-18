@@ -1,8 +1,8 @@
 import axios from "axios";
 import { Link , Navigate} from 'react-router-dom';
 import {useContext, useState, useEffect } from 'react';
-import { UserContext } from '../UserContext';
-import { AccountContext } from '../AccountContext';
+import { UserContext } from '../../UserContext';
+import { AccountContext } from '../../AccountContext';
 
 export default function AccountAdd() {
     const [accountName, setAccountName] = useState("");

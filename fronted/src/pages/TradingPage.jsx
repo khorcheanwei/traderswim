@@ -1,7 +1,7 @@
 
 import { useParams } from 'react-router-dom';
 
-import AccountsPage from './AccountsPage';
+import AccountsPage from './account/AccountsPage.jsx';
 import CopyTradingPage from './CopyTradingPage';
 import TradeBlotterPage from './TradeBlotterPage';
 

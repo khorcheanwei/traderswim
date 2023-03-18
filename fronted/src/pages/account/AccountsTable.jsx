@@ -1,15 +1,16 @@
 import React from 'react'
 import { useTable, useFilters, useGlobalFilter, useAsyncDebounce, useSortBy, usePagination } from 'react-table'
 import { ChevronDoubleLeftIcon, ChevronLeftIcon, ChevronRightIcon, ChevronDoubleRightIcon } from '@heroicons/react/solid'
-import { Button, PageButton } from './shared/Button'
-import { classNames } from './shared/Utils'
-import { SortIcon, SortUpIcon, SortDownIcon } from './shared/Icons'
+import { Button, PageButton } from './../shared/Button'
+import { classNames } from './../shared/Utils'
+import { SortIcon, SortUpIcon, SortDownIcon } from './../shared/Icons'
 import {useContext, useState, useEffect} from 'react';
 import AccountAdd from './AccountAdd';
-import { UserContext } from '../UserContext';
+import { UserContext } from './../../UserContext';
+import { AccountContext } from './../../AccountContext';
 
 import axios from 'axios';
-import Overlay from "./Overlay";
+import Overlay from "./../Overlay";
 
 // Define a default UI for filtering
 function GlobalFilter({
@@ -48,7 +49,7 @@ function GlobalFilter({
           />
         </label>
         <Button className="text-gray-700 " onClick={toggleOverlay}>Add account</Button>
-        <Overlay isOpenAccountLogin={isOpenAccountLogin} onClose={toggleOverlay}>
+        <Overlay isOpen={isOpenAccountLogin} onClose={toggleOverlay}>
           <AccountAdd></AccountAdd>
         </Overlay>
       </div>
@@ -94,8 +95,12 @@ export function SelectColumnFilter({
   )
 }
 
-export function StatusPill({ value }) {
-  const accountStatus = value ? value.toLowerCase() : "unknown";
+export function StatusPill(row) {
+
+  var accountStatus = "offline";
+  if (row.value == true) {
+    accountStatus = "online";
+  } 
 
   return (
     <span
@@ -128,12 +133,39 @@ export function SettingsPanel({ value }) {
   );
 };
 
-export function ConnectionToggle({ value }) {
-  const accountStatus = value ? value.toLowerCase() : "unknown";
+
+
+
+export function ConnectionToggle(row) {
+  const { accountTableData, setAccountTableData, isAccountLoginSuccessful, setIsAccountLoginSuccessful} = useContext(AccountContext);
+
+  var checked_state = false;
+
+  if (row.value == true) {
+    checked_state = true
+  }
+
+  async function updateAccountConnection(accountName, accountConnection) {
+    try {
+      await axios.post("/trading_account/connection", {accountName, accountConnection})
+      var response = await axios.get("/trading_account/database")
+      if (response.data != null) {
+        setAccountTableData(response.data)
+      }
+
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  function handleConnectionChange() {
+    var accountName = row.cell.row.original.accountName
+    updateAccountConnection(accountName, !checked_state)
+  }
 
   return (
     <label className="relative inline-flex content-center">
-      <input type="checkbox" value="" className="sr-only peer"></input>
+      <input type="checkbox" value="" className="sr-only peer" checked={checked_state} onChange={handleConnectionChange}></input>
       <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-green-800"></div>
     </label>
   );

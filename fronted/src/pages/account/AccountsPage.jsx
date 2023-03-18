@@ -3,7 +3,7 @@ import React from 'react'
 import {useContext, useState, useEffect} from 'react';
 import { async } from 'regenerator-runtime';
 import AccountAdd from './AccountAdd';
-import { AccountContext } from '../AccountContext';
+import { AccountContext } from '../../AccountContext';
 
 
 import AccountsTable, { SelectColumnFilter, StatusPill, SettingsPanel, ConnectionToggle } from './AccountsTable'  // new
@@ -38,14 +38,14 @@ export default function AccountsPage() {
         },
       ], [])
 
-      const { isAccountLoginSuccessful, setIsAccountLoginSuccessful} = useContext(AccountContext);
-      const [accountTableData, setAccountTableData] = useState([]);
+      const { accountTableData, setAccountTableData, isAccountLoginSuccessful, setIsAccountLoginSuccessful} = useContext(AccountContext);
 
       async function fetchAccountData() {
         try {
           const response = await axios.get("/trading_account/database")
-          setAccountTableData(response.data)
-          
+          if (response.data != null) {
+            setAccountTableData(response.data)
+          }
         } catch (error) {
           console.error(error);
         }
@@ -58,7 +58,7 @@ export default function AccountsPage() {
       if (isAccountLoginSuccessful) {
         fetchAccountData();
       }
-
+      
       var data = React.useMemo(() => accountTableData, [accountTableData])
 
       return (
