@@ -6,6 +6,7 @@ import { classNames } from './../shared/Utils'
 import { SortIcon, SortUpIcon, SortDownIcon } from './../shared/Icons'
 import {useContext, useState, useEffect} from 'react';
 import CopyTradingAdd from './CopyTradingAdd';
+import CopyTradingWarning from './CopyTradingWarning';
 import { UserContext } from '../context/UserContext';
 import { AccountContext } from '../context/AccountContext';
 
@@ -24,14 +25,19 @@ function GlobalFilter({
     setGlobalFilter(value || undefined)
   }, 200)
 
-  const { isOpenAccountLogin, setIsOpenAccountLogin } = useContext(UserContext);
+  const { accountNameListData, setAccountNameListData, isOpenCopyTradingAccount, setIsOpenCopyTradingAccount, isOpenCopyTradingWarning, setIsOpenCopyTradingWarning } = useContext(AccountContext);
 
-
-  const toggleOverlay = () => {
-    setIsOpenAccountLogin(!isOpenAccountLogin);
+  const toggleCopyTradingAccountOverlay = async () => {
+    const response = await axios.get("/trading_account/accont_name_list");
+    setAccountNameListData(response.data)
+    
+    const lenCopyTradingAccount = response.data.length;
+    if (lenCopyTradingAccount < 2) {
+      setIsOpenCopyTradingWarning(!isOpenCopyTradingWarning);
+    } else {
+      setIsOpenCopyTradingAccount(!isOpenCopyTradingAccount);
+    }
   };
-
-
 
   return (
       <div className="flex max-w-max">
@@ -48,9 +54,12 @@ function GlobalFilter({
             placeholder={`${count} records...`}
           />
         </label>
-        <Button className="text-gray-700 " onClick={toggleOverlay}>Add account copier </Button>
-        <Overlay isOpen={isOpenAccountLogin} onClose={toggleOverlay}>
+        <Button className="text-gray-700 " onClick={toggleCopyTradingAccountOverlay}>Add account copier</Button>
+        <Overlay isOpen={isOpenCopyTradingAccount} onClose={toggleCopyTradingAccountOverlay}>
           <CopyTradingAdd></CopyTradingAdd>
+        </Overlay>
+        <Overlay isOpen={isOpenCopyTradingWarning} onClose={toggleCopyTradingAccountOverlay}>
+          <CopyTradingWarning></CopyTradingWarning>
         </Overlay>
       </div>
   )

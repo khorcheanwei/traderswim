@@ -6,7 +6,6 @@ import { classNames } from './../shared/Utils'
 import { SortIcon, SortUpIcon, SortDownIcon } from './../shared/Icons'
 import {useContext, useState, useEffect} from 'react';
 import AccountAdd from './AccountAdd';
-import { UserContext } from '../context/UserContext';
 import { AccountContext } from '../context/AccountContext';
 
 import axios from 'axios';
@@ -24,7 +23,7 @@ function GlobalFilter({
     setGlobalFilter(value || undefined)
   }, 200)
 
-  const { isOpenAccountLogin, setIsOpenAccountLogin } = useContext(UserContext);
+  const { isOpenAccountLogin, setIsOpenAccountLogin } = useContext(AccountContext);
 
 
   const toggleOverlay = () => {
