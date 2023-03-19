@@ -6,19 +6,20 @@ const jwtSecret = process.env.JWTSECRET;
 const bcrypt = require("bcryptjs");
 const bcryptSalt = bcrypt.genSaltSync(12);
 
-const tradingAccountRouter = express.Router();
+const copyTradingAccountRouter = express.Router();
 const request = require("request");
 
 const Account = require("../models/Account.js");
-const Agent = require("../models/Agent.js");
+const CopyTradingAccountModel = require("../models/CopyTradingAccount.js");
 
 const redirect_uri = "";
 
-tradingAccountRouter.get("/test", (req, res) => {
+copyTradingAccountRouter.get("/test", (req, res) => {
   res.json("test ok");
 });
 
-tradingAccountRouter.post("/login", (req, res) => {
+/*
+copyTradingAccountRouter.post("/", (req, res) => {
   const { agentID, accountName, accountUsername, accountPassword } = req.body;
 
   Account.init().then(async () => {
@@ -37,26 +38,26 @@ tradingAccountRouter.post("/login", (req, res) => {
       } else if (accountUsernameExist) {
         res.status(200).json("Trading account username exists for this agent");
       } else {
-        try {
-          // search for agentID first before creating login account
-          Agent.findOne({ _id: agentID }).then(async (doc) => {
-            if (!doc) {
-              res.status(422).json("Failed to find agentID");
-            } else {
-              var accountConnection = true;
-              const accountDoc = await Account.create({
-                agentID: agentID,
-                accountName: accountName,
-                accountConnection: accountConnection,
-                accountUsername: accountUsername,
-                accountPassword: bcrypt.hashSync(accountPassword, bcryptSalt),
-              });
-              res.status(200).json({ accountName });
-            }
-          });
-        } catch (e) {
-          res.status(422).json(e);
-        }
+        // search for agentID first before creating login account
+        Agent.findOne({ _id: agentID }).then(async (doc) => {
+          if (!doc) {
+            res.status(422).json("Failed to find agentID");
+          } else {
+            var accountConnection = true;
+            const accountDoc = await Account.create({
+              agentID: agentID,
+              accountName: accountName,
+              masterAccount: false,
+              copyFromMasterAccount: "None",
+              accountConnection: accountConnection,
+              accountUsername: accountUsername,
+              accountPassword: bcrypt.hashSync(accountPassword, bcryptSalt),
+              tradeRiskType: "None",
+              accountTradeRiskPercent: 0,
+            });
+            res.status(200).json({ accountName });
+          }
+        });
       }
     } catch (e) {
       res.status(422).json(e);
@@ -64,31 +65,7 @@ tradingAccountRouter.post("/login", (req, res) => {
   });
 });
 
-tradingAccountRouter.get("/accont_name_list", (req, res) => {
-  const { token } = req.cookies;
-  if (token) {
-    jwt.verify(token, jwtSecret, {}, async (err, agentDoc) => {
-      if (err) {
-        throw err;
-      } else {
-        agentID = agentDoc.id;
-
-        const accountDoc = await Account.find(
-          {
-            agentID: agentID,
-          },
-          { accountName: 1 }
-        );
-
-        res.status(200).json(accountDoc);
-      }
-    });
-  } else {
-    res.json(null);
-  }
-});
-
-tradingAccountRouter.get("/database", (req, res) => {
+copyTradingAccountRouter.get("/database", (req, res) => {
   const { token } = req.cookies;
   if (token) {
     jwt.verify(token, jwtSecret, {}, async (err, agentDoc) => {
@@ -121,7 +98,7 @@ tradingAccountRouter.get("/database", (req, res) => {
   }
 });
 
-tradingAccountRouter.post("/connection", (req, res) => {
+copyTradingAccountRouter.post("/connection", (req, res) => {
   const { token } = req.cookies;
   const { accountName, accountConnection } = req.body;
 
@@ -174,4 +151,4 @@ tradingAccountRouter.post("/connection", (req, res) => {
   });
   */
 
-module.exports = tradingAccountRouter;
+module.exports = copyTradingAccountRouter;

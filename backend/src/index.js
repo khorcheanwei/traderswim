@@ -42,12 +42,16 @@ app.get("/test", (req, res) => {
 const agentAccountRoute = require("./routes/agentAccount");
 app.use("/agent_account/", agentAccountRoute);
 
-var port = process.env.PORT || 4000;
-app.listen(port, "127.0.0.1");
-
 // trading account authentication
 const tradingAccount = require("./routes/tradingAccount");
 app.use("/trading_account/", tradingAccount);
+
+// manage copy trading account
+const copyTradingAccount = require("./routes/copyTradingAccount");
+app.use("/copy_trading_account/", copyTradingAccount);
+
+var port = process.env.PORT || 4000;
+app.listen(port, "127.0.0.1");
 
 // start http server
 /*

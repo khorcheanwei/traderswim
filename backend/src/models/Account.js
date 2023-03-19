@@ -3,15 +3,12 @@ const { Schema } = mongoose;
 
 const accountSchema = new Schema({
   agentID: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Agent",
     required: true,
   },
   accountName: {
     type: String,
-    required: true,
-  },
-  masterAccount: {
-    type: Boolean,
     required: true,
   },
   accountConnection: {
@@ -24,14 +21,6 @@ const accountSchema = new Schema({
   },
   accountPassword: {
     type: String,
-    required: true,
-  },
-  accountTradeType: {
-    type: String,
-    required: true,
-  },
-  accountTradeRiskPercent: {
-    type: Integer,
     required: true,
   },
 });
