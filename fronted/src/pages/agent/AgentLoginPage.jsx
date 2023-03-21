@@ -10,8 +10,8 @@ export default function AgentLoginPage() {
 
     const [redirect, setRedirect] = useState(false);
 
-    async function handleLoginSubmit(ev) {
-        ev.preventDefault()
+    async function handleLoginSubmit(event) {
+        event.preventDefault()
         const {data} = await axios.post("/agent_account/login/", {agentUsername, agentPassword});
 
         try {
@@ -39,11 +39,11 @@ export default function AgentLoginPage() {
                     <input type="text" 
                         placeholder="John Doe"
                         value={agentUsername}
-                        onChange={ev => setAgentUsername(ev.target.value)}/>
+                        onChange={event => setAgentUsername(event.target.value)}/>
                     <input type="password" 
                         placeholder="************"
                         value={agentPassword}
-                        onChange={ev => setAgentPassword(ev.target.value)}/>
+                        onChange={event => setAgentPassword(event.target.value)}/>
                     <button className="primary">Login</button>
                     <div className="text-center py-2 text-gray-500">
                         Don't have an accounts yet? <Link className="underline text-black" to={'/register'}>Register now</Link>

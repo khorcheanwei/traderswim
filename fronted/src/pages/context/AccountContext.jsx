@@ -7,15 +7,14 @@ import { useCookies } from "react-cookie";
 export const AccountContext = createContext({});
 
 export function AccountContextProvider({children}) {
-    var [accountTableData, setAccountTableData] = useState([]);
-    var [accountNameListData, setAccountNameListData] = useState([]);
+    const [accountTableData, setAccountTableData] = useState([]);
+    
+    const [accountNameList, setAccountNameList] = useState([]);
     const [isAccountLoginSuccessful, setIsAccountLoginSuccessful] = useState(false);
     const [isOpenAccountLogin, setIsOpenAccountLogin] = useState(false);
-    const [isOpenCopyTradingAccount, setIsOpenCopyTradingAccount] = useState(false);
-    const [isOpenCopyTradingWarning, setIsOpenCopyTradingWarning] = useState(false);
     
     return (
-        <AccountContext.Provider value={{accountTableData, setAccountTableData, accountNameListData, setAccountNameListData, isAccountLoginSuccessful, setIsAccountLoginSuccessful,  isOpenAccountLogin, setIsOpenAccountLogin, isOpenCopyTradingAccount, setIsOpenCopyTradingAccount,isOpenCopyTradingWarning, setIsOpenCopyTradingWarning}}>
+        <AccountContext.Provider value={{accountTableData, setAccountTableData, accountNameList, setAccountNameList, isAccountLoginSuccessful, setIsAccountLoginSuccessful,  isOpenAccountLogin, setIsOpenAccountLogin}}>
             {children}
         </AccountContext.Provider>
     );

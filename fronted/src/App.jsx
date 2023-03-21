@@ -7,6 +7,7 @@ import AgentRegisterPage from './pages/agent/AgentRegisterPage';
 import TradingPage from './pages/TradingPage';
 import { UserContextProvider } from './pages/context/UserContext';
 import { AccountContextProvider } from './pages/context/AccountContext';
+import { CopyTradingAccountContextProvider } from './pages/context/CopyTradingAccountContext';
 import 'regenerator-runtime/runtime';
 
 
@@ -17,14 +18,16 @@ function App() {
   return (
     <UserContextProvider>
       <AccountContextProvider>
-        <Routes>
-          <Route path="/" element={<Layout/>}>
-            <Route path="/login" element={<AgentLoginPage />}/>
-            <Route path="/register" element={<AgentRegisterPage />}/>
-            <Route path="/trading/:subpage?" element={<TradingPage />}/>   
-          </Route>
-        </Routes>
-      </AccountContextProvider>
+        <CopyTradingAccountContextProvider>
+          <Routes>
+            <Route path="/" element={<Layout/>}>
+              <Route path="/login" element={<AgentLoginPage />}/>
+              <Route path="/register" element={<AgentRegisterPage />}/>
+              <Route path="/trading/:subpage?" element={<TradingPage />}/>   
+            </Route>
+          </Routes>
+          </CopyTradingAccountContextProvider>
+        </AccountContextProvider> 
     </UserContextProvider>
   )
 }

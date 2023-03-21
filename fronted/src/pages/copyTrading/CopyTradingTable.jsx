@@ -9,6 +9,7 @@ import CopyTradingAdd from './CopyTradingAdd';
 import CopyTradingWarning from './CopyTradingWarning';
 import { UserContext } from '../context/UserContext';
 import { AccountContext } from '../context/AccountContext';
+import { CopyTradingAccountContext } from '../context/CopyTradingAccountContext';
 
 import axios from 'axios';
 import Overlay from "./../Overlay";
@@ -25,11 +26,12 @@ function GlobalFilter({
     setGlobalFilter(value || undefined)
   }, 200)
 
-  const { accountNameListData, setAccountNameListData, isOpenCopyTradingAccount, setIsOpenCopyTradingAccount, isOpenCopyTradingWarning, setIsOpenCopyTradingWarning } = useContext(AccountContext);
+  const { accountNameList, setAccountNameList } = useContext(AccountContext);
+  const { isOpenCopyTradingAccount, setIsOpenCopyTradingAccount, isOpenCopyTradingWarning, setIsOpenCopyTradingWarning } = useContext(CopyTradingAccountContext);
 
   const toggleCopyTradingAccountOverlay = async () => {
     const response = await axios.get("/trading_account/accont_name_list");
-    setAccountNameListData(response.data)
+    setAccountNameList(response.data)
     
     const lenCopyTradingAccount = response.data.length;
     if (lenCopyTradingAccount < 2) {

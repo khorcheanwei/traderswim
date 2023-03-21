@@ -4,6 +4,8 @@ import {useContext, useState, useEffect} from 'react';
 import { async } from 'regenerator-runtime';
 import CopyTradingAdd from './CopyTradingAdd';
 import { AccountContext } from './../context/AccountContext';
+import { CopyTradingAccountContext } from '../context/CopyTradingAccountContext';
+
 
 
 import CopyTradingTable, { SelectColumnFilter, StatusPill, SettingsPanel, ConnectionToggle } from './CopyTradingTable'  // new
@@ -13,38 +15,24 @@ const getData = () => {
     {
       accountName: 'JaneCooper',
       accountBalance: 1000,
-      title: 'Regional Paradigm Technician',
-      department: 'Optimization',
+      copyFromMasterAccount: 'Jace',
+      tradeRiskType: "Fixed Account",
+      tradeRiskPercent: 100,
+      accountConnection: false,
       status: 'Active',
-      role: 'Admin',
-      age: 27,
-      imgUrl: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60',
-    },
+    }, 
     {
-      accountName: 'CodyFisher',
+      accountName: 'JaneCooper',
       accountBalance: 1000,
-      title: 'Product Directives Officer',
-      department: 'Intranet',
-      status: 'Inactive',
-      role: 'Owner',
-      age: 43,
-      imgUrl: 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60',
-    },
-    {
-      accountName: 'EstherHoward',
-      accountBalance: 1000,
-      title: 'Forward Response Developer',
-      department: 'Directives',
+      copyFromMasterAccount: 'Jace',
+      tradeRiskType: "Fixed Account",
+      tradeRiskPercent: 100,
+      accountConnection: true,
       status: 'Active',
-      role: 'Member',
-      age: 32,
-      imgUrl: 'https://images.unsplash.com/photo-1520813792240-56fc4a3765a7?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60',
     }
   ]
   return [...data]
 }
-
-
 
 export default function CopyTradingPage()  {
 
@@ -67,7 +55,7 @@ export default function CopyTradingPage()  {
         },
         {
           Header: "Trade risk %",
-          accessor: 'accountTradeRiskPercent',
+          accessor: 'tradeRiskPercent',
         },
         {
           Header: "Connection",
@@ -88,31 +76,29 @@ export default function CopyTradingPage()  {
         },
       ], [])
 
-      const { accountTableData, setAccountTableData, isAccountLoginSuccessful, setIsAccountLoginSuccessful} = useContext(AccountContext);
 
-      async function fetchAccountData() {
-        return
+    const {copyTradingAccountData, setCopyTradingAccountData, isCopyTradingAccountSuccessful, setIsCopyTradingAccountSuccessful} = useContext(CopyTradingAccountContext);
+
+    async function fetchCopyTradingAccountData() {
         try {
-          const response = await axios.get("/copy_trading_account/accont_name_list")
-          console.log(response);
-          /*
+          const response = await axios.get("/copy_trading_account/database")
           if (response.data != null) {
-            setAccountTableData(response.data)
-          }*/
+            setCopyTradingAccountData(response.data)
+          }
         } catch (error) {
           console.error(error);
         }
       }
 
       useEffect(() => {
-        fetchAccountData();
+        fetchCopyTradingAccountData();
       }, []) 
 
-      if (isAccountLoginSuccessful) {
-        fetchAccountData();
+      if (isCopyTradingAccountSuccessful) {
+        fetchCopyTradingAccountData();
       }
       
-      var data = React.useMemo(() => getData(), [getData()])
+      var data = React.useMemo(() => copyTradingAccountData, [copyTradingAccountData])
 
       return (
         <div className="min-h-screen bg-gray-100 text-black">

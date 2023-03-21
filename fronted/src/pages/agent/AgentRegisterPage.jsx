@@ -10,8 +10,8 @@ export default function AgentRegisterPage() {
 
     const [redirect, setRedirect] = useState(false)
 
-    async function registerUser(ev) {
-        ev.preventDefault();
+    async function registerUser(event) {
+        event.preventDefault();
         try {
             await axios.post("/agent_account/register/", {
                 agentUsername,
@@ -40,15 +40,15 @@ export default function AgentRegisterPage() {
                     <input type="text" 
                         placeholder="John Doe"
                         value={agentUsername}
-                        onChange={ev => setAgentUsername(ev.target.value)}/>
+                        onChange={event => setAgentUsername(event.target.value)}/>
                     <input type="email" 
                         placeholder="your@email.com"
                         value={agentEmail}
-                        onChange={ev => setAgentEmail(ev.target.value)}/>
+                        onChange={event => setAgentEmail(event.target.value)}/>
                     <input type="password" 
                         placeholder="************"
                         value={agentPassword}
-                        onChange={ev => setAgentPassword(ev.target.value)}/>
+                        onChange={event => setAgentPassword(event.target.value)}/>
                     <button className="primary">Register</button>
                     <div className="text-center py-2 text-gray-500">
                         Already a member? <Link className="underline text-black" to={'/login'}>Login</Link>
