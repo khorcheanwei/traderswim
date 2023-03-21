@@ -7,17 +7,14 @@ const copyTradingAccountSchema = new Schema({
     ref: "Agent",
     required: true,
   },
-  accountID: {
+  masterAccountID: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Account",
     required: true,
   },
-  masterAccount: {
-    type: Boolean,
-    required: true,
-  },
-  copyFromMasterAccount: {
-    type: String,
+  copierAccountID: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Account",
     required: true,
   },
   tradeRiskType: {
@@ -25,7 +22,7 @@ const copyTradingAccountSchema = new Schema({
     required: true,
     enum: ["None", "Fixed Lot", "Lot Multiplier"],
   },
-  accountTradeRiskPercent: {
+  tradeRiskPercent: {
     type: Number,
     required: true,
   },

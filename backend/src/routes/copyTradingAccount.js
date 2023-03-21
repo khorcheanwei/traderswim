@@ -14,57 +14,111 @@ const CopyTradingAccountModel = require("../models/CopyTradingAccount.js");
 
 const redirect_uri = "";
 
+const CopyTradingAccount = require("../models/CopyTradingAccount.js");
+
 copyTradingAccountRouter.get("/test", (req, res) => {
   res.json("test ok");
 });
 
-/*
-copyTradingAccountRouter.post("/", (req, res) => {
-  const { agentID, accountName, accountUsername, accountPassword } = req.body;
+copyTradingAccountRouter.post("/add_copier_account", (req, res) => {
+  const {
+    agentID,
+    masterAccountID,
+    copierAccountID,
+    tradeRiskType,
+    tradeRiskPercent,
+  } = req.body;
 
-  Account.init().then(async () => {
+  CopyTradingAccount.init().then(async () => {
     try {
-      accountNameExist = await Account.exists({
+      const copyTradingAccountDoc = await CopyTradingAccount.create({
         agentID: agentID,
-        accountName: accountName,
+        masterAccountID: masterAccountID,
+        copierAccountID: copierAccountID,
+        tradeRiskType: tradeRiskType,
+        tradeRiskPercent: tradeRiskPercent,
       });
-      accountUsernameExist = await Account.exists({
-        agentID: agentID,
-        accountUsername: accountUsername,
-      });
-
-      if (accountNameExist) {
-        res.status(200).json("Account name exists for this agent");
-      } else if (accountUsernameExist) {
-        res.status(200).json("Trading account username exists for this agent");
-      } else {
-        // search for agentID first before creating login account
-        Agent.findOne({ _id: agentID }).then(async (doc) => {
-          if (!doc) {
-            res.status(422).json("Failed to find agentID");
-          } else {
-            var accountConnection = true;
-            const accountDoc = await Account.create({
-              agentID: agentID,
-              accountName: accountName,
-              masterAccount: false,
-              copyFromMasterAccount: "None",
-              accountConnection: accountConnection,
-              accountUsername: accountUsername,
-              accountPassword: bcrypt.hashSync(accountPassword, bcryptSalt),
-              tradeRiskType: "None",
-              accountTradeRiskPercent: 0,
-            });
-            res.status(200).json({ accountName });
-          }
-        });
-      }
+      res.status(200).json({ id: copyTradingAccountDoc._id });
     } catch (e) {
       res.status(422).json(e);
     }
   });
 });
 
+copyTradingAccountRouter.get("/database", (req, res) => {
+  const { token } = req.cookies;
+  if (token) {
+    jwt.verify(token, jwtSecret, {}, async (err, agentDoc) => {
+      if (err) {
+        throw err;
+      } else {
+        agentID = agentDoc.id;
+
+        const copyTradingAccountDoc = await CopyTradingAccount.find({
+          agentID: agentID,
+        });
+
+        const copyTradingAccountMap = new Map();
+        Object.keys(copyTradingAccountDoc).forEach(function (key, index) {
+          copyTradingAccountMap.set(
+            copyTradingAccountDoc[index].masterAccountID.toString(),
+            ""
+          );
+          copyTradingAccountMap.set(
+            copyTradingAccountDoc[index].copierAccountID.toString(),
+            ""
+          );
+        });
+
+        accountIDKeysList = [...copyTradingAccountMap.keys()];
+
+        await Account.find()
+          .where("_id")
+          .in(accountIDKeysList)
+          .then((accountDoc) => {
+            Object.keys(accountDoc).forEach(function (key, index) {
+              const accountID = accountDoc[index]._id.toString();
+              if (copyTradingAccountMap.has(accountID)) {
+                copyTradingAccountMap[accountID] =
+                  accountDoc[index].accountName;
+              }
+            });
+          })
+          .catch((err) => {
+            res.status(422).json(e);
+            return;
+          });
+
+        copyTradingAccounArray = [];
+        Object.keys(copyTradingAccountDoc).forEach(function (key, index) {
+          // need to go Ameritrade website to check whether it is successful to convert to connect to website or not
+
+          copyTradingAccounArray.push({
+            accountName:
+              copyTradingAccountMap[
+                copyTradingAccountDoc[index].masterAccountID
+              ],
+            accountBalance: 1000,
+            copyFromMasterAccount:
+              copyTradingAccountMap[
+                copyTradingAccountDoc[index].copierAccountID
+              ],
+            tradeRiskType: copyTradingAccountDoc[index].tradeRiskType,
+            tradeRiskPercent: copyTradingAccountDoc[index].tradeRiskPercent,
+            accountConnection: copyTradingAccountDoc[index].accountName,
+            accountStatus: copyTradingAccountDoc[index].accountName,
+          });
+        });
+
+        res.status(200).json(copyTradingAccounArray);
+      }
+    });
+  } else {
+    res.json(null);
+  }
+});
+
+/*
 copyTradingAccountRouter.get("/database", (req, res) => {
   const { token } = req.cookies;
   if (token) {
