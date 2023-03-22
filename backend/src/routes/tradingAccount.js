@@ -126,23 +126,23 @@ tradingAccountRouter.post("/connection", (req, res) => {
   const { accountName, accountConnection } = req.body;
 
   if (token) {
-    jwt.verify(token, jwtSecret, {}, async (err, agentDoc) => {
-      if (err) {
-        throw err;
-      } else {
-        agentID = agentDoc.id;
+    try {
+      jwt.verify(token, jwtSecret, {}, async (err, agentDoc) => {
+        if (err) {
+          throw err;
+        } else {
+          agentID = agentDoc.id;
 
-        var query = { agentID: agentID, accountName: accountName };
-        var updatedQuery = { accountConnection: accountConnection };
+          var query = { agentID: agentID, accountName: accountName };
+          var updatedQuery = { accountConnection: accountConnection };
 
-        try {
           await Account.updateOne(query, updatedQuery);
           res.status(200).json("success");
-        } catch (e) {
-          res.status(422).json(e);
         }
-      }
-    });
+      });
+    } catch (e) {
+      res.status(422).json(e);
+    }
   } else {
     res.json(null);
   }

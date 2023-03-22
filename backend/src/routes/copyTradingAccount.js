@@ -70,6 +70,8 @@ copyTradingAccountRouter.get("/database", (req, res) => {
           );
         });
 
+        const copyTradingAccountConnectionMap = new Map(copyTradingAccountMap);
+
         accountIDKeysList = [...copyTradingAccountMap.keys()];
 
         await Account.find()
@@ -81,6 +83,8 @@ copyTradingAccountRouter.get("/database", (req, res) => {
               if (copyTradingAccountMap.has(accountID)) {
                 copyTradingAccountMap[accountID] =
                   accountDoc[index].accountName;
+                copyTradingAccountConnectionMap[accountID] =
+                  accountDoc[index].accountConnection;
               }
             });
           })
@@ -92,21 +96,17 @@ copyTradingAccountRouter.get("/database", (req, res) => {
         copyTradingAccounArray = [];
         Object.keys(copyTradingAccountDoc).forEach(function (key, index) {
           // need to go Ameritrade website to check whether it is successful to convert to connect to website or not
+          const masterAccountID = copyTradingAccountDoc[index].masterAccountID;
+          const copierAccountID = copyTradingAccountDoc[index].copierAccountID;
 
           copyTradingAccounArray.push({
-            accountName:
-              copyTradingAccountMap[
-                copyTradingAccountDoc[index].masterAccountID
-              ],
+            accountName: copyTradingAccountMap[copierAccountID],
             accountBalance: 1000,
-            copyFromMasterAccount:
-              copyTradingAccountMap[
-                copyTradingAccountDoc[index].copierAccountID
-              ],
+            copyFromMasterAccount: copyTradingAccountMap[masterAccountID],
             tradeRiskType: copyTradingAccountDoc[index].tradeRiskType,
             tradeRiskPercent: copyTradingAccountDoc[index].tradeRiskPercent,
-            accountConnection: copyTradingAccountDoc[index].accountName,
-            accountStatus: copyTradingAccountDoc[index].accountName,
+            accountConnection: copyTradingAccountConnectionMap[copierAccountID],
+            accountStatus: copyTradingAccountConnectionMap[copierAccountID],
           });
         });
 
