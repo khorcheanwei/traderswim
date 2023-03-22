@@ -6,33 +6,7 @@ import CopyTradingAdd from './CopyTradingAdd';
 import { AccountContext } from './../context/AccountContext';
 import { CopyTradingAccountContext } from '../context/CopyTradingAccountContext';
 
-
-
-import CopyTradingTable, { SelectColumnFilter, StatusPill, SettingsPanel, ConnectionToggle } from './CopyTradingTable'  // new
-
-const getData = () => {
-  const data = [
-    {
-      accountName: 'JaneCooper',
-      accountBalance: 1000,
-      copyFromMasterAccount: 'Jace',
-      tradeRiskType: "Fixed Account",
-      tradeRiskPercent: 100,
-      accountConnection: false,
-      status: 'Active',
-    }, 
-    {
-      accountName: 'JaneCooper',
-      accountBalance: 1000,
-      copyFromMasterAccount: 'Jace',
-      tradeRiskType: "Fixed Account",
-      tradeRiskPercent: 100,
-      accountConnection: true,
-      status: 'Active',
-    }
-  ]
-  return [...data]
-}
+import CopyTradingTable, { SelectColumnFilter, StatusPill, SettingsPanel, ConnectionToggle } from './CopyTradingTable' 
 
 export default function CopyTradingPage()  {
 

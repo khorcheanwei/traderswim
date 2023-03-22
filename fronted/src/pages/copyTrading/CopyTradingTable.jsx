@@ -148,8 +148,7 @@ export function SettingsPanel({ value }) {
 
 
 export function ConnectionToggle(row) {
-  const { accountTableData, setAccountTableData, isAccountLoginSuccessful, setIsAccountLoginSuccessful} = useContext(AccountContext);
-
+  const {copyTradingAccountData, setCopyTradingAccountData, isCopyTradingAccountSuccessful, setIsCopyTradingAccountSuccessful} = useContext(CopyTradingAccountContext);
   var checked_state = false;
 
   if (row.value == true) {
@@ -159,9 +158,9 @@ export function ConnectionToggle(row) {
   async function updateAccountConnection(accountName, accountConnection) {
     try {
       await axios.post("/trading_account/connection", {accountName, accountConnection})
-      var response = await axios.get("/trading_account/database")
+      var response = await axios.get("/copy_trading_account/database")
       if (response.data != null) {
-        setAccountTableData(response.data)
+        setCopyTradingAccountData(response.data)
       }
 
     } catch (error) {
