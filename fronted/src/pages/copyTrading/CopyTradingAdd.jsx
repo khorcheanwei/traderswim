@@ -8,59 +8,66 @@ import { CopyTradingAccountContext } from '../context/CopyTradingAccountContext'
 export default function CopyTradingAdd() {
 
     const { contextAgentID} = useContext(UserContext);
-    const { accountNameList, setAccountNameList} = useContext(AccountContext);
+    const { masterAccountList, setMasterAccountList, copierAccountList, setCopierAccountList} = useContext(CopyTradingAccountContext);
     const {isOpenCopyTradingAccount, setIsOpenCopyTradingAccount, isCopyTradingAccountSuccessful, setIsCopyTradingAccountSuccessful} = useContext(CopyTradingAccountContext);
 
     const [isOpenTradeRisk, setIsOpenTradeRisk] = useState(false);
     
-    const [masterAccountName, setMasterAccountName] = useState(accountNameList[0].accountName);
-    const [copierAccountName, setCopierAccountName] = useState(accountNameList[1].accountName);
+    const [masterAccountName, setMasterAccountName] = useState(masterAccountList[0].accountName);
+
+    const [copierAccountNameList, setCopierAccountNameList] = useState(findCopierAccountNameList(copierAccountList, masterAccountName));
+    const [copierAccountName, setCopierAccountName] = useState(copierAccountNameList[0].accountName);
+
     const [tradeRiskType, setTradeRiskType] = useState("Fixed Lot");
     const [tradeRiskPercent, setTradeRiskPercent] = useState(100);
 
-    const [copierAccountNameArray, setCopierAccountNameArray] = useState(findCopierAccountNameList(accountNameList, masterAccountName));
 
-    function findCopierAccountNameList(accountNameList, masterAccountName) {
-        var newcopierAccountNameArray = []
-        accountNameList.map(account => {
-            if (account.accountName != masterAccountName) {
-                newcopierAccountNameArray.push(account)
-            }
-        });
-        return newcopierAccountNameArray
+    function findCopierAccountNameList(copierAccountList, masterAccountName) {
+        // ensure selected masterAccountName is not in copierAccountNameList
+        try{
+            var newcopierAccountNameList = []
+            copierAccountList.map(account => {
+                if (account.accountName != masterAccountName) {
+                    newcopierAccountNameList.push(account)
+                }
+            });
+        return newcopierAccountNameList
+        } catch(e) {
+            console.log(e)
+            return []
+        }
+        
     };
     
-    function handleCopierAccountNameList(event) {
-        event.preventDefault()
-
-        const eventMasterAccountName = event.target.value
-        const newcopierAccountNameArray = findCopierAccountNameList(accountNameList, eventMasterAccountName)
-        
-        setMasterAccountName(eventMasterAccountName)
-        setCopierAccountName(newcopierAccountNameArray[0].accountName)
-
+    function handleCreateCopierAccountNameList(event) {
+        // create new newcopierAccountNameList excluding masterAccountName
         try{
-            setCopierAccountNameArray(newcopierAccountNameArray);
+            const eventMasterAccountName = event.target.value
+            const newcopierAccountNameList = findCopierAccountNameList(copierAccountList, eventMasterAccountName)
+            
+            setMasterAccountName(eventMasterAccountName)
+            setCopierAccountName(newcopierAccountNameList[0].accountName)
+
+            setCopierAccountNameList(newcopierAccountNameList);
         } catch (e) {
             console.log(e)
             return []
         }   
     }
 
-    function handleCopierAccountName(event) {
-        event.preventDefault()
-
+    function handleSetCopierAccountName(event) {
+        // set current selected copierAccountName
         const eventCopierAccountName = event.target.value
         setCopierAccountName(eventCopierAccountName)
     }
 
     function handleTradeRiskType(event) {
-        event.preventDefault()
+        // set tradeRiskType - Set trading risk type - Fixed Lot, Lot Multiplier
 
         const eventTradeRiskType = event.target.value;
         setTradeRiskType(eventTradeRiskType)
 
-        if (eventTradeRiskType == "Fixed lot") {
+        if (eventTradeRiskType == "Fixed Lot") {
             setTradeRiskPercent(100)
             setIsOpenTradeRisk(false)
         } else {
@@ -69,30 +76,36 @@ export default function CopyTradingAdd() {
     }
 
     function handleTradeRiskPercent(event) {
-        event.preventDefault()
-        const eventTradeRiskPercent = event.target.value;
+         // set tradeRiskPercent - Set trading risk of percentage leverage 
 
+        const eventTradeRiskPercent = event.target.value;
         setTradeRiskPercent(eventTradeRiskPercent)
     }
 
     
     async function handleCopyTradingAccountAdd(event) {
-        event.preventDefault()
-
+        // Add copier trading account to database
         try {
             const agentID = contextAgentID
             var masterAccountID = ""
             var copierAccountID = ""
 
 
-            for (var i=0; i < accountNameList.length; i++) {
-                if (accountNameList[i].accountName == masterAccountName) {
-                    masterAccountID = accountNameList[i]._id
-                }
-                if (accountNameList[i].accountName == copierAccountName) {
-                    copierAccountID = accountNameList[i]._id
+            for (var i=0; i < masterAccountList.length; i++) {
+                if (masterAccountList[i].accountName == masterAccountName) {
+                    masterAccountID = masterAccountList[i]._id;
+                    break
                 }
             }
+
+            for (var i=0; i < copierAccountList.length; i++) {
+                if (copierAccountList[i].accountName == copierAccountName) {
+                    copierAccountID = copierAccountList[i]._id;
+                    break
+                }
+            }
+
+            console.log(copierAccountName);
         
             const {data} = await axios.post("/copy_trading_account/add_copier_account/", {agentID, masterAccountID, copierAccountID, tradeRiskType, tradeRiskPercent});
     
@@ -117,9 +130,9 @@ export default function CopyTradingAdd() {
                 <label className="block text-gray-700 text-sm font-bold mb-2">Master account</label>
                 <select 
                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                    onChange={handleCopierAccountNameList}
+                    onChange={handleCreateCopierAccountNameList}
                     value={masterAccountName}>
-                    {accountNameList.map((account, index) => (
+                    {masterAccountList.map((account, index) => (
                         <option key={index} >{account.accountName}</option>
                     ))}
                 </select>
@@ -128,9 +141,9 @@ export default function CopyTradingAdd() {
                 <label className="block text-gray-700 text-sm font-bold mb-2">Account copier</label>
                 <select 
                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                    onChange={handleCopierAccountName}
+                    onChange={handleSetCopierAccountName}
                     value={copierAccountName}>
-                    {copierAccountNameArray.map((account, index) => (
+                    {copierAccountNameList.map((account, index) => (
                         <option key={index} >{account.accountName}</option>
                     ))}
                 </select>

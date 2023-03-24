@@ -9,12 +9,11 @@ export const AccountContext = createContext({});
 export function AccountContextProvider({children}) {
     const [accountTableData, setAccountTableData] = useState([]);
     
-    const [accountNameList, setAccountNameList] = useState([]);
     const [isAccountLoginSuccessful, setIsAccountLoginSuccessful] = useState(false);
     const [isOpenAccountLogin, setIsOpenAccountLogin] = useState(false);
     
     return (
-        <AccountContext.Provider value={{accountTableData, setAccountTableData, accountNameList, setAccountNameList, isAccountLoginSuccessful, setIsAccountLoginSuccessful,  isOpenAccountLogin, setIsOpenAccountLogin}}>
+        <AccountContext.Provider value={{accountTableData, setAccountTableData, isAccountLoginSuccessful, setIsAccountLoginSuccessful,  isOpenAccountLogin, setIsOpenAccountLogin}}>
             {children}
         </AccountContext.Provider>
     );
