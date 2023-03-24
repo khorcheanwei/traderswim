@@ -9,8 +9,9 @@ const bcryptSalt = bcrypt.genSaltSync(12);
 const tradingAccountRouter = express.Router();
 const request = require("request");
 
-const Account = require("../models/Account.js");
 const Agent = require("../models/Agent.js");
+const Account = require("../models/Account.js");
+const CopyTradingAccount = require("../models/CopyTradingAccount.js");
 
 const redirect_uri = "";
 
@@ -64,30 +65,6 @@ tradingAccountRouter.post("/login", (req, res) => {
   });
 });
 
-tradingAccountRouter.get("/accont_name_list", (req, res) => {
-  const { token } = req.cookies;
-  if (token) {
-    jwt.verify(token, jwtSecret, {}, async (err, agentDoc) => {
-      if (err) {
-        throw err;
-      } else {
-        agentID = agentDoc.id;
-
-        const accountDoc = await Account.find(
-          {
-            agentID: agentID,
-          },
-          { accountName: 1 }
-        );
-
-        res.status(200).json(accountDoc);
-      }
-    });
-  } else {
-    res.json(null);
-  }
-});
-
 tradingAccountRouter.get("/database", (req, res) => {
   const { token } = req.cookies;
   if (token) {
@@ -137,6 +114,45 @@ tradingAccountRouter.post("/connection", (req, res) => {
           var updatedQuery = { accountConnection: accountConnection };
 
           await Account.updateOne(query, updatedQuery);
+          res.status(200).json("success");
+        }
+      });
+    } catch (e) {
+      res.status(422).json(e);
+    }
+  } else {
+    res.json(null);
+  }
+});
+
+tradingAccountRouter.post("/delete_account", (req, res) => {
+  const { token } = req.cookies;
+  const { accountName } = req.body;
+
+  if (token) {
+    try {
+      jwt.verify(token, jwtSecret, {}, async (err, agentDoc) => {
+        if (err) {
+          throw err;
+        } else {
+          agentID = agentDoc.id;
+
+          // delete accountName
+          var accountQuery = { agentID: agentID, accountName: accountName };
+          const accountID = await Account.findOne(accountQuery, {
+            _id: 1,
+          });
+          await Account.deleteOne({ _id: accountID });
+
+          // delete account in copyTrading table
+          var copyTradingquery = {
+            $or: [
+              { masterAccountID: accountID },
+              { copierAccountID: accountID },
+            ],
+          };
+          await CopyTradingAccount.deleteMany(copyTradingquery);
+
           res.status(200).json("success");
         }
       });

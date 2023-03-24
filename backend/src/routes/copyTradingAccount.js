@@ -45,6 +45,102 @@ copyTradingAccountRouter.post("/add_copier_account", (req, res) => {
   });
 });
 
+copyTradingAccountRouter.get("/accont_name_list", (req, res) => {
+  const { token } = req.cookies;
+  if (token) {
+    jwt.verify(token, jwtSecret, {}, async (err, agentDoc) => {
+      if (err) {
+        throw err;
+      } else {
+        try {
+          agentID = agentDoc.id;
+
+          const accountDoc = await Account.find(
+            {
+              agentID: agentID,
+            },
+            { _id: 1, accountName: 1 }
+          );
+
+          const copyTradingAccountDoc = await CopyTradingAccount.find(
+            { agentID: agentID },
+            { masterAccountID: 1, copierAccountID: 1 }
+          );
+
+          // create accountIDToNameMap with key agentID and value accountName
+          const accountIDToNameMap = new Map();
+          Object.keys(accountDoc).forEach(function (key, index) {
+            accountIDToNameMap.set(
+              accountDoc[index]._id.toString(),
+              accountDoc[index].accountName
+            );
+          });
+
+          // create masterAccountSet and copierAccountNameSet from CopyTradingAccount table
+          var masterAccountNameSet = new Set();
+          var copierAccountNameSet = new Set();
+
+          Object.keys(copyTradingAccountDoc).forEach(function (key, index) {
+            const currMasterAccountID =
+              copyTradingAccountDoc[index].masterAccountID.toString();
+            const currCopierAccountID =
+              copyTradingAccountDoc[index].copierAccountID.toString();
+
+            masterAccountNameSet.add(
+              accountIDToNameMap.get(currMasterAccountID)
+            );
+            copierAccountNameSet.add(
+              accountIDToNameMap.get(currCopierAccountID)
+            );
+          });
+
+          // Ensure masterAccount is always in masterAccountList
+          // Ensure already added copierAccount in CopyTradingAccount table not in copierAccountList
+          var masterAccountList = [];
+          var copierAccountList = [];
+
+          Object.keys(accountDoc).forEach(function (key, index) {
+            const currAccountID = accountDoc[index]._id.toString();
+            const currAccountName = accountDoc[index].accountName;
+
+            if (masterAccountNameSet.has(currAccountName)) {
+              masterAccountList.push({
+                _id: currAccountID,
+                accountName: accountIDToNameMap.get(currAccountID),
+              });
+            } else {
+              if (copierAccountNameSet.has(currAccountName) == false) {
+                masterAccountList.push({
+                  _id: currAccountID,
+                  accountName: accountIDToNameMap.get(currAccountID),
+                });
+                copierAccountList.push({
+                  _id: currAccountID,
+                  accountName: accountIDToNameMap.get(currAccountID),
+                });
+              }
+            }
+          });
+
+          // remove account from masterAccountList if there is ony one account in copierAccountList
+          if (copierAccountList.length == 1) {
+            masterAccountList = masterAccountList.filter(
+              (account) =>
+                account.accountName !== copierAccountList[0].accountName
+            );
+          }
+
+          res.status(200).json([masterAccountList, copierAccountList]);
+        } catch (e) {
+          res.status(422).json(e);
+        }
+      }
+    });
+  } else {
+    res.json(null);
+  }
+});
+
 copyTradingAccountRouter.get("/database", (req, res) => {
   const { token } = req.cookies;
   if (token) {
