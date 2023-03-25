@@ -137,7 +137,7 @@ tradingAccountRouter.post("/delete_account", (req, res) => {
         } else {
           agentID = agentDoc.id;
 
-          // delete accountName
+          // delete accountName in account table
           var accountQuery = { agentID: agentID, accountName: accountName };
           const accountID = await Account.findOne(accountQuery, {
             _id: 1,

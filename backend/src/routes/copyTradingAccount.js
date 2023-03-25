@@ -214,6 +214,44 @@ copyTradingAccountRouter.get("/database", (req, res) => {
   }
 });
 
+copyTradingAccountRouter.post("/delete_account", (req, res) => {
+  const { token } = req.cookies;
+  const { accountName } = req.body;
+
+  if (token) {
+    try {
+      jwt.verify(token, jwtSecret, {}, async (err, agentDoc) => {
+        if (err) {
+          throw err;
+        } else {
+          agentID = agentDoc.id;
+
+          // search accountID in account table
+          var accountQuery = {
+            agentID: agentID,
+            accountName: accountName,
+          };
+          const accountID = await Account.findOne(accountQuery, {
+            _id: 1,
+          });
+
+          // delete account in copyTrading table
+          var copyTradingquery = {
+            copierAccountID: accountID,
+          };
+          await CopyTradingAccount.deleteOne(copyTradingquery);
+
+          res.status(200).json("success");
+        }
+      });
+    } catch (e) {
+      res.status(422).json(e);
+    }
+  } else {
+    res.json(null);
+  }
+});
+
 /*
 copyTradingAccountRouter.get("/database", (req, res) => {
   const { token } = req.cookies;

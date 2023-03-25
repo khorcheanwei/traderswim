@@ -19,9 +19,9 @@ export default function AccountAdd() {
             const {data} = await axios.post("/trading_account/login/", {agentID, accountName, accountUsername, accountPassword});
 
             if (typeof data.accountName === 'undefined') {
-                alert("Account add failed.");
+                alert("Account added failed.");
             } else {
-                alert("Account add successful");
+                alert("Account added successful");
                 setIsOpenAccountLogin(!isOpenAccountLogin)
                 setIsAccountLoginSuccessful(true)
             }
