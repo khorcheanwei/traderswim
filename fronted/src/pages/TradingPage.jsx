@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 
 import AccountsPage from './account/AccountsPage.jsx';
 import CopyTradingPage from './copyTrading/CopyTradingPage';
-import TradeBlotterPage from './TradeBlotterPage';
+import TradeActivityPage from './tradeActivity/TradeActivityPage';
 
 export default function Trading() {
 
@@ -21,8 +21,8 @@ export default function Trading() {
             {subpage === 'copytrading' && (
                 <CopyTradingPage></CopyTradingPage>
             )}
-            {subpage === 'tradeblotter' && (
-               <TradeBlotterPage></TradeBlotterPage>
+            {subpage === 'tradeactivity' && (
+               <TradeActivityPage></TradeActivityPage>
             )}
         </div>
     )
