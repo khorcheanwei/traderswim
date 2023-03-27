@@ -9,12 +9,12 @@ export default function Header() {
     let {subpage} = useParams();
 
     if (subpage === undefined) {
-        subpage = "accounts"
+        subpage = "account"
     }
 
     function linkClasses(type=null) {
         let classes = "py-2 px-6";
-        if (type === subpage || (subpage === undefined && type === "accounts")) {
+        if (type === subpage || (subpage === undefined && type === "account")) {
             classes += "  bg-teal-300 text-white rounded-full";
         }
         return classes
@@ -30,11 +30,11 @@ export default function Header() {
                     <span className="font-bold text-xl">traderswim</span>
                 </Link>
                 <nav className="w-full flex justify-center mt-8 gap-2 mb-8">
-                    <Link className={linkClasses('accounts')} to={"/trading/accounts"}>Accounts</Link>
+                    <Link className={linkClasses('account')} to={"/trading/account"}>Account</Link>
                     <Link className={linkClasses('copytrading')} to={"/trading/copytrading"}>Copy trading</Link>
                     <Link className={linkClasses('tradeactivity')} to={"/trading/tradeactivity"}>Trade Activity</Link>
                 </nav>
-                <Link to={user?'/accounts':'/login'} className="flex items-center gap-2 border-l border-gray-300 rounded-full py-2 px-4">
+                <Link to={user?'/account':'/login'} className="flex items-center gap-2 border-l border-gray-300 rounded-full py-2 px-4">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
                     </svg>

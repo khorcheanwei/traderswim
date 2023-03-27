@@ -3,10 +3,10 @@ import React from 'react'
 import {useContext, useState, useEffect} from 'react';
 import { async } from 'regenerator-runtime';
 import AccountAdd from './AccountAdd';
-import { AccountContext } from './../context/AccountContext';
+import { AccountContext } from '../context/AccountContext';
 
 
-import AccountsTable, { SelectColumnFilter, StatusPill, SettingsPanel, ConnectionToggle } from './AccountsTable'  // new
+import AccountsTable, { SelectColumnFilter, StatusPill, SettingsPanel, ConnectionToggle } from './AccountTable'  // new
 
 export default function AccountsPage() {
 

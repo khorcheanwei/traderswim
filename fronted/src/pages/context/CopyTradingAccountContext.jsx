@@ -17,9 +17,11 @@ export function CopyTradingAccountContextProvider({children}) {
     const [isOpenCopyTradingAccount, setIsOpenCopyTradingAccount] = useState(false);
     const [isOpenCopyTradingWarning, setIsOpenCopyTradingWarning] = useState(false);
     const [isOpenCopyTradingAccountDelete, setIsOpenCopyTradingAccountDelete] = useState(false);
+
+    const [isOpenTradingStock, setIsOpenTradingStock] = useState(false);
     
     return (
-        <CopyTradingAccountContext.Provider value={{copyTradingAccountData, setCopyTradingAccountData, rowCopyTradingAccount, setRowCopyTradingAccount, masterAccountList, setMasterAccountList, copierAccountList, setCopierAccountList, isCopyTradingAccountSuccessful, setIsCopyTradingAccountSuccessful, isOpenCopyTradingAccount, setIsOpenCopyTradingAccount,isOpenCopyTradingWarning, setIsOpenCopyTradingWarning, isOpenCopyTradingAccountDelete, setIsOpenCopyTradingAccountDelete}}>
+        <CopyTradingAccountContext.Provider value={{copyTradingAccountData, setCopyTradingAccountData, rowCopyTradingAccount, setRowCopyTradingAccount, masterAccountList, setMasterAccountList, copierAccountList, setCopierAccountList, isCopyTradingAccountSuccessful, setIsCopyTradingAccountSuccessful, isOpenCopyTradingAccount, setIsOpenCopyTradingAccount,isOpenCopyTradingWarning, setIsOpenCopyTradingWarning, isOpenCopyTradingAccountDelete, setIsOpenCopyTradingAccountDelete, isOpenTradingStock, setIsOpenTradingStock}}>
             {children}
         </CopyTradingAccountContext.Provider>
     );

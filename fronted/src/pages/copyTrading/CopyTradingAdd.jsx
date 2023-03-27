@@ -66,7 +66,6 @@ export default function CopyTradingAdd() {
 
         const eventTradeRiskType = event.target.value;
         setTradeRiskType(eventTradeRiskType)
-
         if (eventTradeRiskType == "Fixed Lot") {
             setTradeRiskPercent(100)
             setIsOpenTradeRisk(false)
@@ -154,7 +153,7 @@ export default function CopyTradingAdd() {
                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
                     onChange={handleTradeRiskType}
                     value={tradeRiskType}>
-                    <option>Fixed lot</option>
+                    <option>Fixed Lot</option>
                     <option>Lot Multiplier</option>
                 </select>
             </div>

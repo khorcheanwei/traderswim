@@ -34,7 +34,7 @@ function GlobalFilter({
 
 
   return (
-      <div className="flex max-w-max">
+      <div className="flex">
         <label className="flex gap-x-2 items-baseline">
           <span className="text-gray-700">Search: </span>
           <input

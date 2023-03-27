@@ -12,29 +12,38 @@ import {SettingsPanel} from './TradeActivityTable'
 const getData = () => {
     const data = [
       {
-        accountName: 'Jane Cooper',
+        accountName: 'Jane',
         position: 'TSLA/USD',
         leverage: '1x Long',
         entryPrice: '13 USD',
         orderQuantity: '11',
-        filledQuantity: '10',
+        filledQuantity: '11',
         orderDate: '11-May-2020'
       },
       {
-        accountName: 'Cody Fisher',
+        accountName: 'Cody',
         position: 'TSLA/USD',
         leverage: '1x Long',
-        entryPrice: '12 USD',
-        orderQuantity: '10',
-        filledQuantity: '9',
+        entryPrice: '13 USD',
+        orderQuantity: '11',
+        filledQuantity: '11',
         orderDate: '11-Jan-2020'
       },
       {
-        accountName: 'Esther Howard',
+        accountName: 'Esther',
         position: 'TSLA/USD',
         leverage: '1x Long',
-        entryPrice: '11 USD',
-        orderQuantity: '13',
+        entryPrice: '13 USD',
+        orderQuantity: '11',
+        filledQuantity: '9',
+        orderDate: '11-June-2020'
+      },
+      {
+        accountName: 'Howard',
+        position: 'TSLA/USD',
+        leverage: '1x Long',
+        entryPrice: '13 USD',
+        orderQuantity: '11',
         filledQuantity: '9',
         orderDate: '11-June-2020'
       }

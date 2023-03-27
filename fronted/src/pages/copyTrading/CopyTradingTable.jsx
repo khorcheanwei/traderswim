@@ -11,9 +11,11 @@ import { UserContext } from '../context/UserContext';
 import { AccountContext } from '../context/AccountContext';
 import { CopyTradingAccountContext } from '../context/CopyTradingAccountContext';
 import CopyTradingAccountDeleteConfirmation from './CopyTradingAccountDeleteConfirmation';
+import TradingStock from '../tradingStock/TradingStock';
 
 import axios from 'axios';
 import Overlay from "./../Overlay";
+import { async } from 'regenerator-runtime'
 
 // Define a default UI for filtering
 function GlobalFilter({
@@ -28,7 +30,7 @@ function GlobalFilter({
   }, 200)
 
   const { masterAccountList, setMasterAccountList, copierAccountList, setCopierAccountList } = useContext(CopyTradingAccountContext);
-  const { isOpenCopyTradingAccount, setIsOpenCopyTradingAccount, isOpenCopyTradingWarning, setIsOpenCopyTradingWarning } = useContext(CopyTradingAccountContext);
+  const { isOpenCopyTradingAccount, setIsOpenCopyTradingAccount, isOpenCopyTradingWarning, setIsOpenCopyTradingWarning, isOpenTradingStock, setIsOpenTradingStock } = useContext(CopyTradingAccountContext);
 
   const toggleCopyTradingAccountOverlay = async () => {
     const response = await axios.get("/copy_trading_account/accont_name_list");
@@ -45,28 +47,42 @@ function GlobalFilter({
     }
   };
 
+  const toggleTradingStockOverlay = async () => {
+    setIsOpenTradingStock(true)
+  }
+
   return (
-      <div className="flex max-w-max">
-        <label className="flex gap-x-2 items-baseline">
-          <span className="text-gray-700">Search: </span>
-          <input
-            type="text"
-            className="rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-            value={value || ""}
-            onChange={e => {
-              setValue(e.target.value);
-              onChange(e.target.value);
-            }}
-            placeholder={`${count} records...`}
-          />
-        </label>
-        <Button className="text-gray-700 " onClick={toggleCopyTradingAccountOverlay}>Add account copier</Button>
-        <Overlay isOpen={isOpenCopyTradingAccount} onClose={toggleCopyTradingAccountOverlay}>
-          <CopyTradingAdd></CopyTradingAdd>
-        </Overlay>
-        <Overlay isOpen={isOpenCopyTradingWarning} onClose={toggleCopyTradingAccountOverlay}>
-          <CopyTradingWarning></CopyTradingWarning>
-        </Overlay>
+      <div className="w-full">
+        <div className="flex justify-between items-center">
+          <label className="flex gap-x-2 items-baseline">
+            <span className="text-gray-700">Search: </span>
+            <input
+              type="text"
+              className="rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              value={value || ""}
+              onChange={e => {
+                setValue(e.target.value);
+                onChange(e.target.value);
+              }}
+              placeholder={`${count} records...`}
+            />
+          </label>
+          <div className="flex gap-6 h-12">
+            <Button className="text-gray-700 " onClick={toggleCopyTradingAccountOverlay}>Add account copier</Button>
+            <Button className="text-gray-700 " onClick={toggleTradingStockOverlay}>BUY/SELL</Button>
+          </div>
+        </div>
+        <div>
+          <Overlay isOpen={isOpenCopyTradingAccount} onClose={toggleCopyTradingAccountOverlay}>
+            <CopyTradingAdd></CopyTradingAdd>
+          </Overlay>
+          <Overlay isOpen={isOpenCopyTradingWarning} onClose={toggleCopyTradingAccountOverlay}>
+            <CopyTradingWarning></CopyTradingWarning>
+          </Overlay>
+          <Overlay isOpen={isOpenTradingStock} onClose={toggleTradingStockOverlay}>
+            <TradingStock></TradingStock>
+          </Overlay>
+        </div>
       </div>
   )
 }
