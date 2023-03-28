@@ -50,6 +50,10 @@ app.use("/trading_account/", tradingAccount);
 const copyTradingAccount = require("./routes/copyTradingAccount");
 app.use("/copy_trading_account/", copyTradingAccount);
 
+// manage trading stock
+const tradingStock = require("./routes/tradingStock");
+app.use("/trading_stock/", tradingStock);
+
 var port = process.env.PORT || 4000;
 app.listen(port, "127.0.0.1");
 

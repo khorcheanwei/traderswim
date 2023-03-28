@@ -104,8 +104,6 @@ export default function CopyTradingAdd() {
                 }
             }
 
-            console.log(copierAccountName);
-        
             const {data} = await axios.post("/copy_trading_account/add_copier_account/", {agentID, masterAccountID, copierAccountID, tradeRiskType, tradeRiskPercent});
     
             if (data.id != "undefined") {
@@ -119,9 +117,7 @@ export default function CopyTradingAdd() {
             console.log(e)
             alert("Login failed.");
         }   
-
     }
-
 
     return (
         <form>
@@ -129,8 +125,7 @@ export default function CopyTradingAdd() {
                 <label className="block text-gray-700 text-sm font-bold mb-2">Master account</label>
                 <select 
                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                    onChange={handleCreateCopierAccountNameList}
-                    value={masterAccountName}>
+                    onChange={handleCreateCopierAccountNameList}>
                     {masterAccountList.map((account, index) => (
                         <option key={index} >{account.accountName}</option>
                     ))}
@@ -140,8 +135,7 @@ export default function CopyTradingAdd() {
                 <label className="block text-gray-700 text-sm font-bold mb-2">Account copier</label>
                 <select 
                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                    onChange={handleSetCopierAccountName}
-                    value={copierAccountName}>
+                    onChange={handleSetCopierAccountName}>
                     {copierAccountNameList.map((account, index) => (
                         <option key={index} >{account.accountName}</option>
                     ))}
@@ -151,8 +145,7 @@ export default function CopyTradingAdd() {
                 <label className="block text-gray-700 text-sm font-bold mb-2">Trade risk type</label>
                 <select 
                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                    onChange={handleTradeRiskType}
-                    value={tradeRiskType}>
+                    onChange={handleTradeRiskType}>
                     <option>Fixed Lot</option>
                     <option>Lot Multiplier</option>
                 </select>

@@ -48,7 +48,7 @@ function GlobalFilter({
   };
 
   const toggleTradingStockOverlay = async () => {
-    setIsOpenTradingStock(true)
+    setIsOpenTradingStock(!isOpenTradingStock)
   }
 
   return (

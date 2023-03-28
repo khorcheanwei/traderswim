@@ -1,36 +1,103 @@
 
+import axios from 'axios';
+import { Button, PageButton } from '../shared/Button'
+import {useContext, useState, useEffect } from 'react';
+import { UserContext } from '../context/UserContext';
+
 export default function TradingStock() {
+    var stockNameList = ["TSLA", "APLA", "ADBE"];
+    var stockTradeActionList = ["BUY", "SELL"];
+    var stockTradeTypeList = ["Limit", "Market", "Stop Market", "Stop Limit", "Trailing Stop %", "Trailing Stop $"];
+
+    const { contextAgentID } = useContext(UserContext);
+
+    const [stockName, setStockName] = useState(stockNameList[0]);
+    const [stockTradeAction, setStockTradeAction] = useState(stockTradeActionList[0]);
+    const [stockTradeType, setStockTradeType] = useState("LIMIT");
+    const [stockSharesTotal, setStockSharesTotal] = useState(0)
+    const [stockPrice, setStockPrice] = useState(0)
+
+
+    async function handlePlaceOrder() {
+        const agentID = contextAgentID;
+        try {
+            const {data} = await axios.post("/trading_stock/place_order/", {agentID, stockName, stockTradeAction, stockTradeType, stockSharesTotal, stockPrice})
+    
+          } catch(e) {
+              alert("Account deleted failed")
+              console.log(e);
+          }
+    
+    }
 
     return (
         <div>
-            <div>Trade:</div>
+            <div className="mb-6">Trade:</div>
             <div>
-                <div className="relative w-full lg:max-w-sm">
-                    <select className="w-full p-2.5 text-gray-500 bg-white border rounded-md shadow-sm outline-none appearance-none focus:border-indigo-600">
-                        <option>TSLA</option>
-                        <option>APLA</option>
-                        <option>ADBE</option>
+                <div className="relative w-full lg:max-w-sm mb-6">
+                    <select 
+                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                        onChange={event => setStockName(event.target.value)}>
+                        {
+                            stockNameList.map((stockName, index) => (
+                                <option key={index}>{stockName}</option>
+                            ))
+                        }
                     </select>
                 </div>
-                <div className="relative w-full lg:max-w-sm">
-                    <select className="w-full p-2.5 text-gray-500 bg-white border rounded-md shadow-sm outline-none appearance-none focus:border-indigo-600">
-                        <option>BUY</option>
-                        <option>SELL</option>
-                    </select>
+                <div className="grid items-end gap-6 mb-6 md:grid-cols-2">
+                    <div>
+                        <select 
+                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                            onChange={event => setStockTradeAction(event.target.value)}>
+                            {
+                                stockTradeActionList.map((stockTradeAction, index) => (
+                                    <option key={index}>{stockTradeAction}</option>
+                                ))
+                            }
+                        </select>
+                    </div>
+                    <div>
+                        <select 
+                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                            onChange={event => setStockTradeType(event.target.value)}>
+                            {
+                                stockTradeTypeList.map((stockTradeType, index) => (
+                                    <option key={index}>{stockTradeType}</option>
+                                ))
+                            }
+                        </select>
+                    </div>
                 </div>
-                <div className="relative w-full lg:max-w-sm">
-                    <select className="w-full p-2.5 text-gray-500 bg-white border rounded-md shadow-sm outline-none appearance-none focus:border-indigo-600">
-                        <option>Limit</option>
-                        <option>Market</option>
-                        <option>Stop Market</option>
-                        <option>Stop Limit</option>
-                        <option>Trailing Stop %</option>
-                        <option>Trailing Stop $</option>
-                    </select>
+                <div className="grid items-end gap-6 mb-6 grid-cols-2">
+                    <div className="relative">
+                        <input 
+                            className="block px-2.5 pb-1.5 pt-3 w-full text-sm text-gray-900 bg-transparent  border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" 
+                            type="text" 
+                            onChange={event => setStockSharesTotal(event.target.value)}
+                            value={stockSharesTotal}
+                            placeholder=" " />
+                        <label
+                            className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
+                            htmlFor="small_outlined">
+                            Shares:
+                        </label>
+                    </div>
+                    <div className="relative">
+                        <input className="block px-2.5 pb-1.5 pt-3 w-full text-sm text-gray-900 bg-transparent  border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" 
+                            type="text" 
+                            onChange={event => setStockPrice(event.target.value)}
+                            value={stockPrice} 
+                            placeholder=" " />
+                        <label
+                            className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
+                            htmlFor="small_outlined">
+                            Price:
+                        </label>
+                    </div>
                 </div>
-                <label>Shares: <input type="text" name="name" /></label>
-                <label>Price: <input type="text" name="name" /></label>
             </div>
+            <Button className="text-gray-700 " onClick={handlePlaceOrder}>Place order</Button>
         </div>
     )
 }
