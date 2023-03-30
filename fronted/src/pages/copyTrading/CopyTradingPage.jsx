@@ -2,7 +2,6 @@ import axios from 'axios';
 import React from 'react'
 import {useContext, useState, useEffect} from 'react';
 import { async } from 'regenerator-runtime';
-import CopyTradingAdd from './CopyTradingAdd';
 import { AccountContext } from './../context/AccountContext';
 import { CopyTradingAccountContext } from '../context/CopyTradingAccountContext';
 
@@ -18,18 +17,6 @@ export default function CopyTradingPage()  {
         {
           Header: "Balance",
           accessor: 'accountBalance',
-        },
-        {
-          Header: "Copy From",
-          accessor: 'copyFromMasterAccount',
-        },
-        {
-          Header: "Trade risk type",
-          accessor: 'tradeRiskType',
-        },
-        {
-          Header: "Trade risk %",
-          accessor: 'tradeRiskPercent',
         },
         {
           Header: "Connection",

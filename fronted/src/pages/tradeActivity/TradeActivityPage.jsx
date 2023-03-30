@@ -59,8 +59,8 @@ export default function TradeActivityPage() {
           accessor: 'accountName',
         },
         {
-          Header: "Position",
-          accessor: 'position',
+          Header: "Stock pair",
+          accessor: 'stock',
         },
         {
           Header: "Leverage",

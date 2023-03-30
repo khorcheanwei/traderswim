@@ -15,13 +15,13 @@ export default function TradingStock() {
     const [stockTradeAction, setStockTradeAction] = useState(stockTradeActionList[0]);
     const [stockTradeType, setStockTradeType] = useState("LIMIT");
     const [stockSharesTotal, setStockSharesTotal] = useState(0)
-    const [stockPrice, setStockPrice] = useState(0)
+    const [stockEntryPrice, setStockEntryPrice] = useState(0)
 
 
     async function handlePlaceOrder() {
         const agentID = contextAgentID;
         try {
-            const {data} = await axios.post("/trading_stock/place_order/", {agentID, stockName, stockTradeAction, stockTradeType, stockSharesTotal, stockPrice})
+            const {data} = await axios.post("/copy_trading_account/place_order/", {agentID, stockName, stockTradeAction, stockTradeType, stockSharesTotal, stockEntryPrice})
     
           } catch(e) {
               alert("Account deleted failed")
@@ -86,8 +86,8 @@ export default function TradingStock() {
                     <div className="relative">
                         <input className="block px-2.5 pb-1.5 pt-3 w-full text-sm text-gray-900 bg-transparent  border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" 
                             type="text" 
-                            onChange={event => setStockPrice(event.target.value)}
-                            value={stockPrice} 
+                            onChange={event => setStockEntryPrice(event.target.value)}
+                            value={stockEntryPrice} 
                             placeholder=" " />
                         <label
                             className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"

@@ -5,8 +5,6 @@ import { Button, PageButton } from './../shared/Button'
 import { classNames } from './../shared/Utils'
 import { SortIcon, SortUpIcon, SortDownIcon } from './../shared/Icons'
 import {useContext, useState, useEffect} from 'react';
-import CopyTradingAdd from './CopyTradingAdd';
-import CopyTradingWarning from './CopyTradingWarning';
 import { UserContext } from '../context/UserContext';
 import { AccountContext } from '../context/AccountContext';
 import { CopyTradingAccountContext } from '../context/CopyTradingAccountContext';
@@ -30,22 +28,8 @@ function GlobalFilter({
   }, 200)
 
   const { masterAccountList, setMasterAccountList, copierAccountList, setCopierAccountList } = useContext(CopyTradingAccountContext);
-  const { isOpenCopyTradingAccount, setIsOpenCopyTradingAccount, isOpenCopyTradingWarning, setIsOpenCopyTradingWarning, isOpenTradingStock, setIsOpenTradingStock } = useContext(CopyTradingAccountContext);
+  const { isOpenTradingStock, setIsOpenTradingStock } = useContext(CopyTradingAccountContext);
 
-  const toggleCopyTradingAccountOverlay = async () => {
-    const response = await axios.get("/copy_trading_account/accont_name_list");
-    var masterAccountResponseList = response.data[0];
-    var copierAccountResponseList = response.data[1];
-
-    setMasterAccountList(masterAccountResponseList);
-    setCopierAccountList(copierAccountResponseList);
-    
-    if (masterAccountResponseList.length == 0 || copierAccountResponseList.length == 0) {
-      setIsOpenCopyTradingWarning(!isOpenCopyTradingWarning);
-    } else {
-      setIsOpenCopyTradingAccount(!isOpenCopyTradingAccount);
-    }
-  };
 
   const toggleTradingStockOverlay = async () => {
     setIsOpenTradingStock(!isOpenTradingStock)
@@ -68,17 +52,10 @@ function GlobalFilter({
             />
           </label>
           <div className="flex gap-6 h-12">
-            <Button className="text-gray-700 " onClick={toggleCopyTradingAccountOverlay}>Add account copier</Button>
             <Button className="text-gray-700 " onClick={toggleTradingStockOverlay}>BUY/SELL</Button>
           </div>
         </div>
         <div>
-          <Overlay isOpen={isOpenCopyTradingAccount} onClose={toggleCopyTradingAccountOverlay}>
-            <CopyTradingAdd></CopyTradingAdd>
-          </Overlay>
-          <Overlay isOpen={isOpenCopyTradingWarning} onClose={toggleCopyTradingAccountOverlay}>
-            <CopyTradingWarning></CopyTradingWarning>
-          </Overlay>
           <Overlay isOpen={isOpenTradingStock} onClose={toggleTradingStockOverlay}>
             <TradingStock></TradingStock>
           </Overlay>
