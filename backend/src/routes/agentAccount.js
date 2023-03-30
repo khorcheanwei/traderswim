@@ -17,7 +17,7 @@ agentAccountRouter.post("/register", async (req, res) => {
   /*const agentID = new UUID().toBinary();*/
   Agent.init().then(async () => {
     try {
-      const agentDoc = await Agent.create({
+      await Agent.create({
         agentUsername,
         agentEmail,
         agentPassword: bcrypt.hashSync(agentPassword, bcryptSalt),

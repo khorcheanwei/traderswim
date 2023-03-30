@@ -15,10 +15,6 @@ const CopyTradingAccount = require("../models/CopyTradingAccount.js");
 
 const redirect_uri = "";
 
-tradingAccountRouter.get("/test", (req, res) => {
-  res.json("test ok");
-});
-
 tradingAccountRouter.post("/login", (req, res) => {
   const { agentID, accountName, accountUsername, accountPassword } = req.body;
 

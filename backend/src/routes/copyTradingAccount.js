@@ -141,8 +141,54 @@ copyTradingAccountRouter.get("/accont_name_list", (req, res) => {
   }
 });
 
+copyTradingAccountRouter.post("/place_order", (req, res) => {
+  console.log(req.body);
+
+  const {
+    agentID,
+    stockName,
+    stockTradeAction,
+    stockTradeType,
+    stockSharesTotal,
+    stockEntryPrice,
+  } = req.body;
+
+  CopyTradingAccount.init().then(async () => {
+    try {
+      const accountDoc = await Account.find(
+        {
+          agentID: agentID,
+        },
+        "_id"
+      );
+
+      Object.keys(accountDoc).forEach(async function (key, index) {
+        await CopyTradingAccount.create({
+          agentID: agentID,
+          accountID: accountDoc[index],
+          stockName: stockName,
+          stockTradeAction: stockTradeAction,
+          stockTradeType: stockTradeType,
+          stockSharesTotal: stockSharesTotal,
+          stockEntryPrice: stockEntryPrice,
+          stockEntryPriceCurrency: "USD",
+          orderQuantity: stockSharesTotal,
+          filledQuantity: 0,
+          orderDate: Date.now(),
+        });
+      });
+
+      res.status(422).json("success");
+    } catch (e) {
+      res.status(422).json(e);
+    }
+  });
+});
+
 copyTradingAccountRouter.get("/database", (req, res) => {
   const { token } = req.cookies;
+
+  /*
   if (token) {
     jwt.verify(token, jwtSecret, {}, async (err, agentDoc) => {
       if (err) {
@@ -198,7 +244,6 @@ copyTradingAccountRouter.get("/database", (req, res) => {
           copyTradingAccounArray.push({
             accountName: copyTradingAccountMap[copierAccountID],
             accountBalance: 1000,
-            copyFromMasterAccount: copyTradingAccountMap[masterAccountID],
             tradeRiskType: copyTradingAccountDoc[index].tradeRiskType,
             tradeRiskPercent: copyTradingAccountDoc[index].tradeRiskPercent,
             accountConnection: copyTradingAccountConnectionMap[copierAccountID],
@@ -211,7 +256,7 @@ copyTradingAccountRouter.get("/database", (req, res) => {
     });
   } else {
     res.json(null);
-  }
+  }*/
 });
 
 copyTradingAccountRouter.post("/delete_account", (req, res) => {
