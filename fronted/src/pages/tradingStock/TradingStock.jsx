@@ -21,9 +21,8 @@ export default function TradingStock() {
     async function handlePlaceOrder() {
         const agentID = contextAgentID;
         try {
-            console.log(agentID)
             const {data} = await axios.post("/copy_trading_account/place_order/", {agentID, stockName, stockTradeAction, stockTradeType, stockSharesTotal, stockEntryPrice})
-    
+            console.log(data)
           } catch(e) {
               alert("Account deleted failed")
               console.log(e);

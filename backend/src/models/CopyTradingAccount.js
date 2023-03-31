@@ -7,6 +7,10 @@ const copyTradingAccountSchema = new Schema({
     ref: "Agent",
     required: true,
   },
+  agentTradingSessionID: {
+    type: Number,
+    required: true,
+  },
   accountID: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Account",

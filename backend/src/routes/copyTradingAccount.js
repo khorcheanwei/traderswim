@@ -176,6 +176,7 @@ copyTradingAccountRouter.post("/place_order", (req, res) => {
       Object.keys(accountDoc).forEach(async function (key, index) {
         await CopyTradingAccount.create({
           agentID: agentID,
+          agentTradingSessionID: agentTradingSessionID,
           accountID: accountDoc[index],
           stockName: stockName,
           stockTradeAction: stockTradeAction,
@@ -188,8 +189,16 @@ copyTradingAccountRouter.post("/place_order", (req, res) => {
         });
       });
 
+      var query = { _id: agentID };
+      var updatedQuery = {
+        agentTradingSessionID: agentTradingSessionID,
+        agentIsTradingSession: true,
+      };
+
+      await Agent.updateOne(query, updatedQuery);
+
       // save agentTradingSessionID and agentIsTradingSession to table Agent
-      res.status(422).json("success");
+      res.status(200).json("success");
     } catch (e) {
       res.status(422).json(e);
     }
@@ -198,6 +207,8 @@ copyTradingAccountRouter.post("/place_order", (req, res) => {
 
 copyTradingAccountRouter.get("/database", (req, res) => {
   const { token } = req.cookies;
+
+  /*
 
   if (token) {
     jwt.verify(token, jwtSecret, {}, async (err, agentDoc) => {
@@ -267,6 +278,7 @@ copyTradingAccountRouter.get("/database", (req, res) => {
   } else {
     res.json(null);
   }
+  */
 });
 
 copyTradingAccountRouter.post("/delete_account", (req, res) => {
