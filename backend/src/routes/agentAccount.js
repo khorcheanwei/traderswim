@@ -21,6 +21,8 @@ agentAccountRouter.post("/register", async (req, res) => {
         agentUsername,
         agentEmail,
         agentPassword: bcrypt.hashSync(agentPassword, bcryptSalt),
+        agentTradingSessionID: 0,
+        agentIsTradingSession: false,
       });
       res.status(200).json("User is successfully registered");
     } catch (e) {

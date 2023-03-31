@@ -17,6 +17,14 @@ const agentSchema = new Schema(
       type: String,
       required: true,
     },
+    agentTradingSessionID: {
+      type: Number,
+      required: true,
+    },
+    agentIsTradingSession: {
+      type: Boolean,
+      required: true,
+    },
   },
   { strict: true }
 );
