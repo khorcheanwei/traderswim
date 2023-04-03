@@ -32,7 +32,7 @@ export default function Header() {
                 <nav className="w-full flex justify-center mt-8 gap-2 mb-8">
                     <Link className={linkClasses('account')} to={"/trading/account"}>Account</Link>
                     <Link className={linkClasses('copytrading')} to={"/trading/copytrading"}>Copy trading</Link>
-                    <Link className={linkClasses('tradeactivity')} to={"/trading/tradeactivity"}>Trade Activity</Link>
+                    <Link className={linkClasses('tradehistory')} to={"/trading/tradehistory"}>Trade History</Link>
                 </nav>
                 <Link to={user?'/account':'/login'} className="flex items-center gap-2 border-l border-gray-300 rounded-full py-2 px-4">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">

@@ -16,6 +16,10 @@ const copyTradingAccountSchema = new Schema({
     ref: "Account",
     required: true,
   },
+  accountName: {
+    type: String,
+    required: true,
+  },
   stockName: {
     type: String,
     required: true,

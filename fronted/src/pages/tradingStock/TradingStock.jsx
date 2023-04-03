@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Button, PageButton } from '../shared/Button'
 import {useContext, useState, useEffect } from 'react';
 import { UserContext } from '../context/UserContext';
+import { useRef } from "react";
 
 export default function TradingStock() {
     var stockNameList = ["TSLA", "APLA", "ADBE"];
@@ -16,18 +17,18 @@ export default function TradingStock() {
     const [stockTradeType, setStockTradeType] = useState("LIMIT");
     const [stockSharesTotal, setStockSharesTotal] = useState(0)
     const [stockEntryPrice, setStockEntryPrice] = useState(0)
-
+    const [disabledButton, setDisabledButton] = useState(false)
 
     async function handlePlaceOrder() {
         const agentID = contextAgentID;
         try {
+            setDisabledButton(true)
             const {data} = await axios.post("/copy_trading_account/place_order/", {agentID, stockName, stockTradeAction, stockTradeType, stockSharesTotal, stockEntryPrice})
-            console.log(data)
           } catch(e) {
               alert("Account deleted failed")
               console.log(e);
           }
-    
+          setDisabledButton(false)
     }
 
     return (
@@ -97,7 +98,7 @@ export default function TradingStock() {
                     </div>
                 </div>
             </div>
-            <Button className="text-gray-700 " onClick={handlePlaceOrder}>Place order</Button>
+            <Button  disabled={disabledButton} className="text-gray-700 " onClick={handlePlaceOrder}>Place order</Button>
         </div>
     )
 }

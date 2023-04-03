@@ -3,11 +3,8 @@ import axios from 'axios';
 import React from 'react'
 import {useContext, useState, useEffect} from 'react';
 import { async } from 'regenerator-runtime';
-import TradingActivityAdd from './TradeActivityAdd';
-import { AccountContext } from './../context/AccountContext';
-import  TradingActivityTable   from './TradeActivityTable'
-import {SettingsPanel} from './TradeActivityTable' 
-
+import { AccountContext } from '../context/AccountContext';
+import  TradingActivityTable   from './TradeHistoryTable'
 
 const getData = () => {
     const data = [
@@ -54,40 +51,35 @@ const getData = () => {
 export default function TradeActivityPage() {
    
     const columns = React.useMemo(() => [
-        {
-          Header: "Account Name",
-          accessor: 'accountName',
-        },
-        {
-          Header: " pair",
-          accessor: 'position',
-        },
-        {
-          Header: "Leverage",
-          accessor: 'leverage',
-        },
-        {
-          Header: "Entry price",
-          accessor: 'entryPrice',
-        },
-        {
-          Header: "Order Quantity",
-          accessor: 'orderQuantity',
-        },
-        {
-          Header: "Filled Quantity",
-          accessor: 'filledQuantity',
-        },
-        {
-          Header: "Order date",
-          accessor: 'orderDate',
-        }, 
-        {
-            Header: "Place new order",
-            accessor: 'placeNewOrder',
-            Cell: SettingsPanel,
-        }, 
-      ], [])
+      {
+        Header: "Account Name",
+        accessor: 'accountName',
+      },
+      {
+        Header: " Stock pair",
+        accessor: 'stockPair',
+      },
+      {
+        Header: "Leverage",
+        accessor: 'leverage',
+      },
+      {
+        Header: "Entry price",
+        accessor: 'entryPrice',
+      },
+      {
+        Header: "Order Quantity",
+        accessor: 'orderQuantity',
+      },
+      {
+        Header: "Filled Quantity",
+        accessor: 'filledQuantity',
+      },
+      {
+        Header: "Order date",
+        accessor: 'orderDate',
+      }
+    ], [])
     
 
       /*

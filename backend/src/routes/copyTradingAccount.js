@@ -157,7 +157,7 @@ copyTradingAccountRouter.post("/place_order", (req, res) => {
   CopyTradingAccount.init().then(async () => {
     try {
       // get agent trading sessionID
-      const agentDoc = await Agent.findOne(
+      const agentsDocument = await Agent.findOne(
         { _id: agentID },
         {
           agentTradingSessionID: 1,
@@ -165,19 +165,21 @@ copyTradingAccountRouter.post("/place_order", (req, res) => {
       );
 
       // get all accounts of particular agent
-      const agentTradingSessionID = agentDoc.agentTradingSessionID + 1;
-      const accountDoc = await Account.find(
+      const agentTradingSessionID = agentsDocument.agentTradingSessionID + 1;
+      const accountsDocument = await Account.find(
         { agentID: agentID },
         {
+          _id: 1,
           accountName: 1,
         }
       );
 
-      Object.keys(accountDoc).forEach(async function (key, index) {
+      Object.keys(accountsDocument).forEach(async function (key, index) {
         await CopyTradingAccount.create({
           agentID: agentID,
           agentTradingSessionID: agentTradingSessionID,
-          accountID: accountDoc[index],
+          accountID: accountsDocument[index]._id,
+          accountName: accountsDocument[index].accountName,
           stockName: stockName,
           stockTradeAction: stockTradeAction,
           stockTradeType: stockTradeType,
@@ -208,8 +210,6 @@ copyTradingAccountRouter.post("/place_order", (req, res) => {
 copyTradingAccountRouter.get("/database", (req, res) => {
   const { token } = req.cookies;
 
-  /*
-
   if (token) {
     jwt.verify(token, jwtSecret, {}, async (err, agentDoc) => {
       if (err) {
@@ -217,70 +217,51 @@ copyTradingAccountRouter.get("/database", (req, res) => {
       } else {
         agentID = agentDoc.id;
 
-        const copyTradingAccountDoc = await CopyTradingAccount.find({
+        // get agent trading sessionID
+        const agentsDocument = await Agent.findOne(
+          { _id: agentID },
+          {
+            agentTradingSessionID: 1,
+          }
+        );
+
+        const agentTradingSessionID = agentsDocument.agentTradingSessionID;
+
+        // get agent trading sessionID
+        const copyTradingAccountsDocument = await CopyTradingAccount.find({
           agentID: agentID,
+          agentTradingSessionID: agentTradingSessionID,
         });
 
-        const copyTradingAccountMap = new Map();
-        Object.keys(copyTradingAccountDoc).forEach(function (key, index) {
-          copyTradingAccountMap.set(
-            copyTradingAccountDoc[index].masterAccountID.toString(),
-            ""
-          );
-          copyTradingAccountMap.set(
-            copyTradingAccountDoc[index].copierAccountID.toString(),
-            ""
-          );
-        });
+        var copyTradingAccountData = [];
 
-        const copyTradingAccountConnectionMap = new Map(copyTradingAccountMap);
-
-        accountIDKeysList = [...copyTradingAccountMap.keys()];
-
-        await Account.find()
-          .where("_id")
-          .in(accountIDKeysList)
-          .then((accountDoc) => {
-            Object.keys(accountDoc).forEach(function (key, index) {
-              const accountID = accountDoc[index]._id.toString();
-              if (copyTradingAccountMap.has(accountID)) {
-                copyTradingAccountMap[accountID] =
-                  accountDoc[index].accountName;
-                copyTradingAccountConnectionMap[accountID] =
-                  accountDoc[index].accountConnection;
-              }
-            });
-          })
-          .catch((err) => {
-            res.status(422).json(e);
-            return;
+        for (
+          let index = 0;
+          index < copyTradingAccountsDocument.length;
+          index++
+        ) {
+          const currCopyTradingAccount = copyTradingAccountsDocument[index];
+          copyTradingAccountData.push({
+            accountName: currCopyTradingAccount.accountName,
+            stockPair: currCopyTradingAccount.stockName,
+            leverage: "1X LONG",
+            entryPrice: currCopyTradingAccount.stockEntryPrice,
+            orderQuantity: currCopyTradingAccount.orderQuantity,
+            filledQuantity: currCopyTradingAccount.filledQuantity,
+            orderDate: currCopyTradingAccount.orderDate,
+            placeNewOrder: "",
           });
+        }
 
-        copyTradingAccounArray = [];
-        Object.keys(copyTradingAccountDoc).forEach(function (key, index) {
-          // need to go Ameritrade website to check whether it is successful to convert to connect to website or not
-          const masterAccountID = copyTradingAccountDoc[index].masterAccountID;
-          const copierAccountID = copyTradingAccountDoc[index].copierAccountID;
-
-          copyTradingAccounArray.push({
-            accountName: copyTradingAccountMap[copierAccountID],
-            accountBalance: 1000,
-            tradeRiskType: copyTradingAccountDoc[index].tradeRiskType,
-            tradeRiskPercent: copyTradingAccountDoc[index].tradeRiskPercent,
-            accountConnection: copyTradingAccountConnectionMap[copierAccountID],
-            accountStatus: copyTradingAccountConnectionMap[copierAccountID],
-          });
-        });
-
-        res.status(200).json(copyTradingAccounArray);
+        res.status(200).json(copyTradingAccountData);
       }
     });
   } else {
     res.json(null);
   }
-  */
 });
 
+/*
 copyTradingAccountRouter.post("/delete_account", (req, res) => {
   const { token } = req.cookies;
   const { accountName } = req.body;
@@ -318,7 +299,7 @@ copyTradingAccountRouter.post("/delete_account", (req, res) => {
     res.json(null);
   }
 });
-
+*/
 /*
 copyTradingAccountRouter.get("/database", (req, res) => {
   const { token } = req.cookies;

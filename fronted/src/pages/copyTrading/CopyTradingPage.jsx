@@ -51,6 +51,7 @@ export default function CopyTradingPage()  {
   async function fetchCopyTradingAccountData() {
       try {
         const response = await axios.get("/copy_trading_account/database")
+
         if (response.data != null) {
           setCopyTradingAccountData(response.data)
         }
