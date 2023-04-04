@@ -19,8 +19,8 @@ export default function CopyTradingPage()  {
       accessor: 'stockPair',
     },
     {
-      Header: "Leverage",
-      accessor: 'leverage',
+      Header: "Action",
+      accessor: 'stockTradeAction',
     },
     {
       Header: "Entry price",

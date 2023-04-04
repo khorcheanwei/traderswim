@@ -8,7 +8,7 @@ import { useRef } from "react";
 export default function TradingStock() {
     var stockNameList = ["TSLA", "APLA", "ADBE"];
     var stockTradeActionList = ["BUY", "SELL"];
-    var stockTradeTypeList = ["Limit", "Market", "Stop Market", "Stop Limit", "Trailing Stop %", "Trailing Stop $"];
+    var stockTradeTypeList = ["Limit", "Market"];
 
     const { contextAgentID } = useContext(UserContext);
 

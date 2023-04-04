@@ -7,15 +7,12 @@ const bcrypt = require("bcryptjs");
 const bcryptSalt = bcrypt.genSaltSync(12);
 
 const tradingAccountRouter = express.Router();
-const request = require("request");
 
 const Agent = require("../models/Agent.js");
 const Account = require("../models/Account.js");
 const CopyTradingAccount = require("../models/CopyTradingAccount.js");
 
-const redirect_uri = "";
-
-tradingAccountRouter.post("/login", (req, res) => {
+tradingAccountRouter.post("/login", async (req, res) => {
   const { agentID, accountName, accountUsername, accountPassword } = req.body;
 
   Account.init().then(async () => {
@@ -61,7 +58,7 @@ tradingAccountRouter.post("/login", (req, res) => {
   });
 });
 
-tradingAccountRouter.get("/database", (req, res) => {
+tradingAccountRouter.get("/database", async (req, res) => {
   const { token } = req.cookies;
   if (token) {
     jwt.verify(token, jwtSecret, {}, async (err, agentDoc) => {
@@ -94,7 +91,7 @@ tradingAccountRouter.get("/database", (req, res) => {
   }
 });
 
-tradingAccountRouter.post("/connection", (req, res) => {
+tradingAccountRouter.post("/connection", async (req, res) => {
   const { token } = req.cookies;
   const { accountName, accountConnection } = req.body;
 
@@ -121,7 +118,7 @@ tradingAccountRouter.post("/connection", (req, res) => {
   }
 });
 
-tradingAccountRouter.post("/delete_account", (req, res) => {
+tradingAccountRouter.post("/delete_account", async (req, res) => {
   const { token } = req.cookies;
   const { accountName } = req.body;
 

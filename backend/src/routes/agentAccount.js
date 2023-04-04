@@ -14,7 +14,6 @@ const Agent = require("../models/Agent.js");
 agentAccountRouter.post("/register", async (req, res) => {
   const { agentUsername, agentEmail, agentPassword } = req.body;
 
-  /*const agentID = new UUID().toBinary();*/
   Agent.init().then(async () => {
     try {
       await Agent.create({
@@ -92,12 +91,5 @@ agentAccountRouter.get("/profile", async (req, res) => {
     res.json(null);
   }
 });
-
-/*
-
-agentAccountRouter.post("/logout", (req, res) => {
-  res.cookie("token", "").json(true);
-});
-*/
 
 module.exports = agentAccountRouter;

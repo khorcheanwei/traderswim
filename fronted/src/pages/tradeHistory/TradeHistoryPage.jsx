@@ -23,8 +23,8 @@ export default function TradeActivityPage() {
         accessor: 'stockPair',
       },
       {
-        Header: "Leverage",
-        accessor: 'leverage',
+        Header: "Action",
+        accessor: 'stockTradeAction',
       },
       {
         Header: "Entry price",

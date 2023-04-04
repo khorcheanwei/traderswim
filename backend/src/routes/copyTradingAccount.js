@@ -3,25 +3,13 @@ const express = require("express");
 const jwt = require("jsonwebtoken");
 const jwtSecret = process.env.JWTSECRET;
 
-const bcrypt = require("bcryptjs");
-const bcryptSalt = bcrypt.genSaltSync(12);
-
 const copyTradingAccountRouter = express.Router();
-const request = require("request");
-
-const Account = require("../models/Account.js");
-const CopyTradingAccountModel = require("../models/CopyTradingAccount.js");
-
-const redirect_uri = "";
 
 const Agent = require("../models/Agent.js");
+const Account = require("../models/Account.js");
 const CopyTradingAccount = require("../models/CopyTradingAccount.js");
 
-copyTradingAccountRouter.get("/test", (req, res) => {
-  res.json("test ok");
-});
-
-copyTradingAccountRouter.get("/accont_name_list", (req, res) => {
+copyTradingAccountRouter.get("/accont_name_list", async (req, res) => {
   const { token } = req.cookies;
   if (token) {
     jwt.verify(token, jwtSecret, {}, async (err, agentDoc) => {
@@ -117,7 +105,7 @@ copyTradingAccountRouter.get("/accont_name_list", (req, res) => {
   }
 });
 
-copyTradingAccountRouter.post("/place_order", (req, res) => {
+copyTradingAccountRouter.post("/place_order", async (req, res) => {
   console.log(req.body);
 
   const {
@@ -182,7 +170,7 @@ copyTradingAccountRouter.post("/place_order", (req, res) => {
   });
 });
 
-copyTradingAccountRouter.get("/database", (req, res) => {
+copyTradingAccountRouter.get("/database", async (req, res) => {
   const { token } = req.cookies;
 
   if (token) {
@@ -218,8 +206,11 @@ copyTradingAccountRouter.get("/database", (req, res) => {
           const currCopyTradingAccount = copyTradingAccountsDocument[index];
           copyTradingAccountData.push({
             accountName: currCopyTradingAccount.accountName,
-            stockPair: currCopyTradingAccount.stockName,
-            leverage: "1X LONG",
+            stockPair:
+              currCopyTradingAccount.stockName +
+              "/" +
+              currCopyTradingAccount.stockEntryPriceCurrency,
+            stockTradeAction: currCopyTradingAccount.stockTradeAction,
             entryPrice: currCopyTradingAccount.stockEntryPrice,
             orderQuantity: currCopyTradingAccount.orderQuantity,
             filledQuantity: currCopyTradingAccount.filledQuantity,
@@ -236,32 +227,57 @@ copyTradingAccountRouter.get("/database", (req, res) => {
   }
 });
 
-copyTradingAccountRouter.get("/trade_history_database", (req, res) => {
-  CopyTradingAccount.init().then(async () => {
-    try {
-      // get all trading history
-      const copyTradingAccountsDocument = await CopyTradingAccount.find();
+copyTradingAccountRouter.get("/trade_history_database", async (req, res) => {
+  const { token } = req.cookies;
 
-      var tradeHistoryData = [];
+  if (token) {
+    jwt.verify(token, jwtSecret, {}, async (err, agentDoc) => {
+      if (err) {
+        throw err;
+      } else {
+        agentID = agentDoc.id;
+        CopyTradingAccount.init().then(async () => {
+          try {
+            // get all trading history
+            const copyTradingAccountsDocument = await CopyTradingAccount.find({
+              agentID: agentID,
+            });
 
-      for (let index = 0; index < copyTradingAccountsDocument.length; index++) {
-        const currCopyTradingAccount = copyTradingAccountsDocument[index];
-        tradeHistoryData.push({
-          agentTradingSessionID: currCopyTradingAccount.agentTradingSessionID,
-          accountName: currCopyTradingAccount.accountName,
-          stockPair: currCopyTradingAccount.stockName,
-          leverage: "1X LONG",
-          entryPrice: currCopyTradingAccount.stockEntryPrice,
-          orderQuantity: currCopyTradingAccount.orderQuantity,
-          filledQuantity: currCopyTradingAccount.filledQuantity,
-          orderDate: currCopyTradingAccount.orderDate.toLocaleString("en-US"),
+            var tradeHistoryData = [];
+
+            for (
+              let index = copyTradingAccountsDocument.length - 1;
+              0 <= index;
+              index--
+            ) {
+              const currCopyTradingAccount = copyTradingAccountsDocument[index];
+
+              tradeHistoryData.push({
+                agentTradingSessionID:
+                  currCopyTradingAccount.agentTradingSessionID,
+                accountName: currCopyTradingAccount.accountName,
+                stockPair:
+                  currCopyTradingAccount.stockName +
+                  "/" +
+                  currCopyTradingAccount.stockEntryPriceCurrency,
+                stockTradeAction: currCopyTradingAccount.stockTradeAction,
+                entryPrice: currCopyTradingAccount.stockEntryPrice,
+                orderQuantity: currCopyTradingAccount.orderQuantity,
+                filledQuantity: currCopyTradingAccount.filledQuantity,
+                orderDate:
+                  currCopyTradingAccount.orderDate.toLocaleString("en-US"),
+              });
+            }
+            res.status(200).json(tradeHistoryData);
+          } catch (e) {
+            res.status(422).json(e);
+          }
         });
       }
-      res.status(200).json(tradeHistoryData);
-    } catch (e) {
-      res.status(422).json(e);
-    }
-  });
+    });
+  } else {
+    res.json(null);
+  }
 });
 
 module.exports = copyTradingAccountRouter;
