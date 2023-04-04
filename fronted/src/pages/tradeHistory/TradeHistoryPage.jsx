@@ -3,54 +3,17 @@ import axios from 'axios';
 import React from 'react'
 import {useContext, useState, useEffect} from 'react';
 import { async } from 'regenerator-runtime';
-import { AccountContext } from '../context/AccountContext';
+import { TradeHistoryContext } from '../context/TradeHistoryContext';
 import  TradingActivityTable   from './TradeHistoryTable'
 
-const getData = () => {
-    const data = [
-      {
-        accountName: 'Jane',
-        position: 'TSLA/USD',
-        leverage: '1x Long',
-        entryPrice: '13 USD',
-        orderQuantity: '11',
-        filledQuantity: '11',
-        orderDate: '11-May-2020'
-      },
-      {
-        accountName: 'Cody',
-        position: 'TSLA/USD',
-        leverage: '1x Long',
-        entryPrice: '13 USD',
-        orderQuantity: '11',
-        filledQuantity: '11',
-        orderDate: '11-Jan-2020'
-      },
-      {
-        accountName: 'Esther',
-        position: 'TSLA/USD',
-        leverage: '1x Long',
-        entryPrice: '13 USD',
-        orderQuantity: '11',
-        filledQuantity: '9',
-        orderDate: '11-June-2020'
-      },
-      {
-        accountName: 'Howard',
-        position: 'TSLA/USD',
-        leverage: '1x Long',
-        entryPrice: '13 USD',
-        orderQuantity: '11',
-        filledQuantity: '9',
-        orderDate: '11-June-2020'
-      }
-    ]
-    return [...data]
-  }
 
 export default function TradeActivityPage() {
    
     const columns = React.useMemo(() => [
+      {
+        Header: "Trading Session ID",
+        accessor: "agentTradingSessionID",
+      },
       {
         Header: "Account Name",
         accessor: 'accountName',
@@ -81,17 +44,14 @@ export default function TradeActivityPage() {
       }
     ], [])
     
-
-      /*
-
-      const { accountTableData, setAccountTableData, isAccountLoginSuccessful, setIsAccountLoginSuccessful} = useContext(AccountContext);
+      const { tradeHistoryTableData, setTradeHistoryTableData} = useContext(TradeHistoryContext);
       
-
-      async function fetchAccountData() {
+      async function fetchTradeHistoryData() {
         try {
-          const response = await axios.get("/trading_account/database")
+          const response = await axios.get("/copy_trading_account/trade_history_database")
+
           if (response.data != null) {
-            setAccountTableData(response.data)
+            setTradeHistoryTableData(response.data)
           }
         } catch (error) {
           console.error(error);
@@ -99,14 +59,16 @@ export default function TradeActivityPage() {
       }
 
       useEffect(() => {
-        fetchAccountData();
+        fetchTradeHistoryData();
       }, []) 
+
+      /*
 
       if (isAccountLoginSuccessful) {
         fetchAccountData();
       } */
       
-      var data = React.useMemo(() => getData(), [getData()])
+      var data = React.useMemo(() => tradeHistoryTableData, [tradeHistoryTableData])
 
 
       return (

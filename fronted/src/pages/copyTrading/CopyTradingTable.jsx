@@ -27,7 +27,6 @@ function GlobalFilter({
     setGlobalFilter(value || undefined)
   }, 200)
 
-  const { masterAccountList, setMasterAccountList, copierAccountList, setCopierAccountList } = useContext(CopyTradingAccountContext);
   const { isOpenTradingStock, setIsOpenTradingStock } = useContext(CopyTradingAccountContext);
 
 
