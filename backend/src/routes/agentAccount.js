@@ -1,27 +1,26 @@
 const express = require("express");
 
 const jwt = require("jsonwebtoken");
-const jwtSecret = process.env.JWTSECRET;
 
 const bcrypt = require("bcryptjs");
+
+const jwtSecret = process.env.JWTSECRET;
+
 const bcryptSalt = bcrypt.genSaltSync(12);
 
 const agentAccountRouter = express.Router();
 
 /* agent registration and authentication*/
-const Agent = require("../models/Agent.js");
-
-agentAccountRouter.post("/register", async (req, res) => {
+agentAccountRouter.post("agent_account/register", async (req, res) => {
+  // Register agent
   const { agentUsername, agentEmail, agentPassword } = req.body;
 
   Agent.init().then(async () => {
     try {
-      await Agent.create({
+      agentDB.createAgentItem({
         agentUsername,
         agentEmail,
-        agentPassword: bcrypt.hashSync(agentPassword, bcryptSalt),
-        agentTradingSessionID: 0,
-        agentIsTradingSession: false,
+        agentPassword,
       });
       res.status(200).json("User is successfully registered");
     } catch (e) {

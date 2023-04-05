@@ -9,7 +9,6 @@ const corsOptions = {
   credentials: true,
   optionSuccessStatus: 200,
 };
-
 require("dotenv").config();
 
 // setup express
@@ -34,21 +33,29 @@ const redirect_uri = "";
 
 mongoose.connect(process.env.MONGO_URL);
 
+// agent authentication
 app.get("/test", (req, res) => {
   res.json("test ok");
 });
 
 // agent authentication
+//const router = require("./routes/index.js");
+//app.use("/", router);
+
 const agentAccountRoute = require("./routes/agentAccount");
 app.use("/agent_account/", agentAccountRoute);
 
+/*
 // trading account authentication
 const tradingAccount = require("./routes/tradingAccount");
 app.use("/trading_account/", tradingAccount);
 
+/*
+
 // manage copy trading account
 const copyTradingAccount = require("./routes/copyTradingAccount");
 app.use("/copy_trading_account/", copyTradingAccount);
+*/
 
 var port = process.env.PORT || 4000;
 app.listen(port, "127.0.0.1");

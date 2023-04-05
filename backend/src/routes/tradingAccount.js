@@ -1,14 +1,14 @@
-const express = require("express");
+import express from "express";
 
-const jwt = require("jsonwebtoken");
+import jwt from "jsonwebtoken";
 const jwtSecret = process.env.JWTSECRET;
 
-const bcrypt = require("bcryptjs");
+import bcrypt from "bcryptjs";
 const bcryptSalt = bcrypt.genSaltSync(12);
 
 const tradingAccountRouter = express.Router();
 
-const Agent = require("../models/Agent.js");
+const Agent = require("../models/agent.model.js");
 const Account = require("../models/Account.js");
 const CopyTradingAccount = require("../models/CopyTradingAccount.js");
 
