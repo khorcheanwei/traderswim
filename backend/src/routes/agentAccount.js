@@ -11,48 +11,71 @@ const agentAccountRouter = express.Router();
 /* agent registration and authentication*/
 const Agent = require("../models/Agent.js");
 
+const AgentModel = require("../models/Agent");
+const agentDBOperation = require("../data-access/agent.db.js");
+
+const newagentDBOperation = new agentDBOperation(AgentModel);
+
+// create new agent
 agentAccountRouter.post("/register", async (req, res) => {
   const { agentUsername, agentEmail, agentPassword } = req.body;
 
-  Agent.init().then(async () => {
-    try {
-      await Agent.create({
-        agentUsername,
-        agentEmail,
-        agentPassword: bcrypt.hashSync(agentPassword, bcryptSalt),
-        agentTradingSessionID: 0,
-        agentIsTradingSession: false,
-      });
-      res.status(200).json("User is successfully registered");
-    } catch (e) {
-      if (
-        e.keyValue["agentUsername"] != undefined &&
-        e.keyValue["agentUsername"] == agentUsername
-      ) {
+  try {
+    // check if agentUsername existed
+    var result = await newagentDBOperation.searchAgentName(agentUsername);
+    if (result.success == true) {
+      if (result.data != null) {
         res.status(200).json("This username is already registered");
-      } else if (
-        e.keyValue["agentEmail"] != undefined &&
-        e.keyValue["agentEmail"] == agentEmail
-      ) {
-        res.status(200).json("This email is already registered");
-      } else {
-        res.status(422).json(e);
+        return;
       }
+    } else {
+      res.status(422).json(result.error);
+      return;
     }
-  });
+
+    // check if agentEmail existed
+    result = await newagentDBOperation.searchAgentEmail(agentEmail);
+    if (result.success == true) {
+      if (result.data != null) {
+        res.status(200).json("This email is already registered");
+        return;
+      }
+    } else {
+      res.status(422).json(result.error);
+      return;
+    }
+
+    await newagentDBOperation.createAgentItem(
+      agentUsername,
+      agentEmail,
+      agentPassword
+    );
+
+    res.status(200).json("User is successfully registered");
+  } catch (error) {
+    res.status(422).json(error);
+  }
 });
 
 agentAccountRouter.post("/login", async (req, res) => {
   const { agentUsername, agentPassword } = req.body;
 
   try {
-    const agentDoc = await Agent.findOne({ agentUsername });
-    if (agentDoc) {
-      const passOk = bcrypt.compareSync(agentPassword, agentDoc.agentPassword);
+    const result = await newagentDBOperation.searchAgentByUsername(
+      agentUsername
+    );
+
+    if (result.success == true) {
+      const agentDocument = result.data;
+
+      const passOk = bcrypt.compareSync(
+        agentPassword,
+        agentDocument.agentPassword
+      );
       if (passOk) {
         jwt.sign(
           {
-            id: agentDoc._id,
+            id: agentDocument._id,
           },
           jwtSecret,
           {},
@@ -60,7 +83,7 @@ agentAccountRouter.post("/login", async (req, res) => {
             if (err) {
               throw err;
             } else {
-              res.cookie("token", token).json(agentDoc);
+              res.cookie("token", token).json(agentDocument);
             }
           }
         );
