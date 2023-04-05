@@ -49,7 +49,7 @@ function GlobalFilter({
               placeholder={`${count} records...`}
             />
           </label>
-          <Button className="text-gray-700 " onClick={toggleOverlay}>Add account</Button>
+          <Button className="text-gray-700 " onClick={toggleOverlay}>ADD ACCOUNT</Button>
         </div>
         <div>
           <Overlay isOpen={isOpenAccountLogin} onClose={toggleOverlay}>
