@@ -12,50 +12,62 @@ const Agent = require("../models/Agent.js");
 const Account = require("../models/Account.js");
 const CopyTradingAccount = require("../models/CopyTradingAccount.js");
 
+const AccountModel = require("../models/Account");
+const accountDBOperation = require("../data-access/account.db.js");
+
+const newaccountDBOperation = new accountDBOperation(AccountModel);
+
 tradingAccountRouter.post("/login", async (req, res) => {
   const { agentID, accountName, accountUsername, accountPassword } = req.body;
 
-  Account.init().then(async () => {
-    try {
-      accountNameExist = await Account.exists({
-        agentID: agentID,
-        accountName: accountName,
-      });
-      accountUsernameExist = await Account.exists({
-        agentID: agentID,
-        accountUsername: accountUsername,
-      });
-
+  try {
+    // search for accountName
+    var result = await newaccountDBOperation.searchAccountName(
+      agentID,
+      accountName
+    );
+    if (result.success == true) {
+      const accountNameExist = result.data;
       if (accountNameExist) {
         res.status(200).json("Account name exists for this agent");
-      } else if (accountUsernameExist) {
-        res.status(200).json("Trading account username exists for this agent");
-      } else {
-        try {
-          // search for agentID first before creating login account
-          Agent.findOne({ _id: agentID }).then(async (doc) => {
-            if (!doc) {
-              res.status(422).json("Failed to find agentID");
-            } else {
-              var accountConnection = true;
-              const accountDoc = await Account.create({
-                agentID: agentID,
-                accountName: accountName,
-                accountConnection: accountConnection,
-                accountUsername: accountUsername,
-                accountPassword: bcrypt.hashSync(accountPassword, bcryptSalt),
-              });
-              res.status(200).json({ accountName });
-            }
-          });
-        } catch (e) {
-          res.status(422).json(e);
-        }
+        return;
       }
-    } catch (e) {
-      res.status(422).json(e);
+    } else {
+      res.status(422).json(result.error);
+      return;
     }
-  });
+
+    // search for accountUsername
+    result = await newaccountDBOperation.searchAccountUsername(
+      agentID,
+      accountUsername
+    );
+    if (result.success == true) {
+      const accountUsernameExist = result.data;
+      if (accountUsernameExist) {
+        res.status(200).json("Trading account username exists for this agent");
+        return;
+      }
+    } else {
+      res.status(422).json(result.error);
+      return;
+    }
+
+    result = await newaccountDBOperation.createAccountItem(
+      agentID,
+      accountName,
+      accountUsername,
+      accountPassword
+    );
+
+    if (result.success) {
+      res.status(200).json({ accountName });
+    } else {
+      res.status(422).json(result.error);
+    }
+  } catch (e) {
+    res.status(422).json(e);
+  }
 });
 
 tradingAccountRouter.get("/database", async (req, res) => {
@@ -67,23 +79,28 @@ tradingAccountRouter.get("/database", async (req, res) => {
       } else {
         agentID = agentDoc.id;
 
-        const accountDoc = await Account.find({
-          agentID: agentID,
-        });
+        const result = await newaccountDBOperation.searchAccountByAgentID(
+          agentID
+        );
 
-        accountTableArray = [];
-        Object.keys(accountDoc).forEach(function (key, index) {
-          // need to go Ameritrade website to check whether it is successful to convert to connect to website or not
+        if (result.success) {
+          const accountDocument = result.data;
+          accountTableArray = [];
+          Object.keys(accountDocument).forEach(function (key, index) {
+            // need to go Ameritrade website to check whether it is successful to convert to connect to website or not
 
-          accountTableArray.push({
-            accountName: accountDoc[index].accountName,
-            accountBalance: 1000, //hard code for now
-            //accountConnection: accountDoc[index].accountConnection,
-            accountConnection: accountDoc[index].accountConnection,
-            accountStatus: accountDoc[index].accountConnection,
+            accountTableArray.push({
+              accountName: accountDocument[index].accountName,
+              accountBalance: 1000, //hard code for now
+              //accountConnection: accountDoc[index].accountConnection,
+              accountConnection: accountDocument[index].accountConnection,
+              accountStatus: accountDocument[index].accountConnection,
+            });
           });
-        });
-        res.status(200).json(accountTableArray);
+          res.status(200).json(accountTableArray);
+        } else {
+          res.status(422).json(result.error);
+        }
       }
     });
   } else {

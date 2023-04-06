@@ -9,8 +9,6 @@ const bcryptSalt = bcrypt.genSaltSync(12);
 const agentAccountRouter = express.Router();
 
 /* agent registration and authentication*/
-const Agent = require("../models/Agent.js");
-
 const AgentModel = require("../models/Agent");
 const agentDBOperation = require("../data-access/agent.db.js");
 
@@ -105,9 +103,13 @@ agentAccountRouter.get("/profile", async (req, res) => {
       if (err) {
         throw err;
       } else {
-        const { _id, agentUsername } = await Agent.findById(agentDoc.id);
-        agentID = _id;
-        res.json({ agentID, agentUsername });
+        const result = await newagentDBOperation.searchAgentByID(agentDoc.id);
+        if (result.success) {
+          const { _id, agentUsername } = result.data;
+          res.json({ agentID: _id, agentUsername: agentUsername });
+        } else {
+          res.json(422).json(result.error);
+        }
       }
     });
   } else {

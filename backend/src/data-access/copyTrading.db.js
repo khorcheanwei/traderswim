@@ -1,7 +1,7 @@
 const bcrypt = require("bcryptjs");
 const bcryptSalt = bcrypt.genSaltSync(12);
 
-function agentDBOperation(Agent) {
+function DBOperation(Agent) {
   this.Agent = Agent;
 
   this.searchAgentName = async function (agentUsername) {
