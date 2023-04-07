@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const agentAccountRouter = require("./agentAccount");
+const agentAccountRouter = require("./agent");
 const copyTradingAccountRouter = require("./copyTradingAccount");
 const tradingAccountRouter = require("./tradingAccount");
 
