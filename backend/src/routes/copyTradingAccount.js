@@ -5,24 +5,11 @@ const jwtSecret = process.env.JWTSECRET;
 
 const copyTradingAccountRouter = express.Router();
 
-/* agent registration and authentication*/
-const AgentModel = require("../models/Agent");
-const agentDBOperation = require("../data-access/agent.db.js");
-const newagentDBOperation = new agentDBOperation(AgentModel);
-
-const AccountModel = require("../models/Account");
-const accountDBOperation = require("../data-access/account.db.js");
-const newaccountDBOperation = new accountDBOperation(AccountModel);
-
-const CopyTradingAccountModel = require("../models/CopyTradingAccount");
-const copyTradingAccountDBOperation = require("../data-access/copyTrading.db.js");
-const newcopyTradingAccountDBOperation = new copyTradingAccountDBOperation(
-  CopyTradingAccountModel
-);
-
-const Agent = require("../models/Agent.js");
-const Account = require("../models/Account.js");
-const CopyTradingAccount = require("../models/CopyTradingAccount.js");
+const {
+  agentDBOperation,
+  accountDBOperation,
+  copyTradingAccountDBBOperation,
+} = require("../data-access/index.js");
 
 copyTradingAccountRouter.post("/place_order", async (req, res) => {
   const {
@@ -36,7 +23,7 @@ copyTradingAccountRouter.post("/place_order", async (req, res) => {
 
   try {
     // get agent trading sessionID
-    var result = await newagentDBOperation.searchAgentTradingSessionID(agentID);
+    var result = await agentDBOperation.searchAgentTradingSessionID(agentID);
     if (result.success != true) {
       res.status(422).json(result.error);
       return;
@@ -45,29 +32,28 @@ copyTradingAccountRouter.post("/place_order", async (req, res) => {
     const agentTradingSessionID = agentsDocument.agentTradingSessionID + 1;
 
     // get all accountName of particular agentID
-    result = await newaccountDBOperation.searchAccountNameByAgentID(agentID);
+    result = await accountDBOperation.searchAccountNameByAgentID(agentID);
     if (result.success != true) {
       res.status(422).json(result.error);
       return;
     }
     const accountsDocument = result.data;
-    result =
-      await newcopyTradingAccountDBOperation.createCopyTradingAccountItem(
-        accountsDocument,
-        agentID,
-        agentTradingSessionID,
-        stockName,
-        stockTradeAction,
-        stockTradeType,
-        stockEntryPrice,
-        stockSharesTotal
-      );
+    result = await copyTradingAccountDBBOperation.createCopyTradingAccountItem(
+      accountsDocument,
+      agentID,
+      agentTradingSessionID,
+      stockName,
+      stockTradeAction,
+      stockTradeType,
+      stockEntryPrice,
+      stockSharesTotal
+    );
     if (result.success != true) {
       res.status(422).json(result.error);
       return;
     }
 
-    result = await newagentDBOperation.updateAgentTradingSessionID(
+    result = await agentDBOperation.updateAgentTradingSessionID(
       agentID,
       agentTradingSessionID
     );
@@ -94,7 +80,7 @@ copyTradingAccountRouter.get("/database", async (req, res) => {
         agentID = agentDoc.id;
 
         // get agent trading sessionID
-        var result = await newagentDBOperation.searchAgentTradingSessionID(
+        var result = await agentDBOperation.searchAgentTradingSessionID(
           agentID
         );
         if (result.success != true) {
@@ -106,7 +92,7 @@ copyTradingAccountRouter.get("/database", async (req, res) => {
 
         // get CopyTradingAccount based on agentID and agentTradingSessionID
         result =
-          await newcopyTradingAccountDBOperation.searchCopyTradingAccountBasedTradingSessionID(
+          await copyTradingAccountDBBOperation.searchCopyTradingAccountBasedTradingSessionID(
             agentID,
             agentTradingSessionID
           );
@@ -156,50 +142,49 @@ copyTradingAccountRouter.get("/trade_history_database", async (req, res) => {
         throw err;
       } else {
         agentID = agentDoc.id;
-        CopyTradingAccount.init().then(async () => {
-          try {
-            // get CopyTradingAccount based on agentID and agentTradingSessionID
-            const result =
-              await newcopyTradingAccountDBOperation.searchCopyTradingAccount(
-                agentID
-              );
 
-            if (result.success != true) {
-              res.status(422).json(result.error);
-              return;
-            }
-            const copyTradingAccountsDocument = result.data;
+        try {
+          // get CopyTradingAccount based on agentID and agentTradingSessionID
+          const result =
+            await copyTradingAccountDBBOperation.searchCopyTradingAccount(
+              agentID
+            );
 
-            var tradeHistoryData = [];
-
-            for (
-              let index = copyTradingAccountsDocument.length - 1;
-              0 <= index;
-              index--
-            ) {
-              const currCopyTradingAccount = copyTradingAccountsDocument[index];
-
-              tradeHistoryData.push({
-                agentTradingSessionID:
-                  currCopyTradingAccount.agentTradingSessionID,
-                accountName: currCopyTradingAccount.accountName,
-                stockPair:
-                  currCopyTradingAccount.stockName +
-                  "/" +
-                  currCopyTradingAccount.stockEntryPriceCurrency,
-                stockTradeAction: currCopyTradingAccount.stockTradeAction,
-                entryPrice: currCopyTradingAccount.stockEntryPrice,
-                orderQuantity: currCopyTradingAccount.orderQuantity,
-                filledQuantity: currCopyTradingAccount.filledQuantity,
-                orderDate:
-                  currCopyTradingAccount.orderDate.toLocaleString("en-US"),
-              });
-            }
-            res.status(200).json(tradeHistoryData);
-          } catch (e) {
-            res.status(422).json(e);
+          if (result.success != true) {
+            res.status(422).json(result.error);
+            return;
           }
-        });
+          const copyTradingAccountsDocument = result.data;
+
+          var tradeHistoryData = [];
+
+          for (
+            let index = copyTradingAccountsDocument.length - 1;
+            0 <= index;
+            index--
+          ) {
+            const currCopyTradingAccount = copyTradingAccountsDocument[index];
+
+            tradeHistoryData.push({
+              agentTradingSessionID:
+                currCopyTradingAccount.agentTradingSessionID,
+              accountName: currCopyTradingAccount.accountName,
+              stockPair:
+                currCopyTradingAccount.stockName +
+                "/" +
+                currCopyTradingAccount.stockEntryPriceCurrency,
+              stockTradeAction: currCopyTradingAccount.stockTradeAction,
+              entryPrice: currCopyTradingAccount.stockEntryPrice,
+              orderQuantity: currCopyTradingAccount.orderQuantity,
+              filledQuantity: currCopyTradingAccount.filledQuantity,
+              orderDate:
+                currCopyTradingAccount.orderDate.toLocaleString("en-US"),
+            });
+          }
+          res.status(200).json(tradeHistoryData);
+        } catch (e) {
+          res.status(422).json(e);
+        }
       }
     });
   } else {

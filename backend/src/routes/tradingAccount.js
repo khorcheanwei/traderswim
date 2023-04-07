@@ -8,16 +8,14 @@ const bcryptSalt = bcrypt.genSaltSync(12);
 
 const tradingAccountRouter = express.Router();
 
-const AccountModel = require("../models/Account");
-const accountDBOperation = require("../data-access/account.db.js");
-const newaccountDBOperation = new accountDBOperation(AccountModel);
+const { accountDBOperation } = require("../data-access/index.js");
 
 tradingAccountRouter.post("/login", async (req, res) => {
   const { agentID, accountName, accountUsername, accountPassword } = req.body;
 
   try {
     // search for accountName
-    var result = await newaccountDBOperation.searchAccountName(
+    var result = await accountDBOperation.searchAccountName(
       agentID,
       accountName
     );
@@ -33,7 +31,7 @@ tradingAccountRouter.post("/login", async (req, res) => {
     }
 
     // search for accountUsername
-    result = await newaccountDBOperation.searchAccountUsername(
+    result = await accountDBOperation.searchAccountUsername(
       agentID,
       accountUsername
     );
@@ -48,7 +46,7 @@ tradingAccountRouter.post("/login", async (req, res) => {
       return;
     }
 
-    result = await newaccountDBOperation.createAccountItem(
+    result = await accountDBOperation.createAccountItem(
       agentID,
       accountName,
       accountUsername,
@@ -74,9 +72,7 @@ tradingAccountRouter.get("/database", async (req, res) => {
       } else {
         agentID = agentDoc.id;
 
-        const result = await newaccountDBOperation.searchAccountByAgentID(
-          agentID
-        );
+        const result = await accountDBOperation.searchAccountByAgentID(agentID);
 
         if (result.success) {
           const accountDocument = result.data;
@@ -116,7 +112,7 @@ tradingAccountRouter.post("/connection", async (req, res) => {
         } else {
           agentID = agentDoc.id;
           const result =
-            await newaccountDBOperation.updateAccountByAccountConnection(
+            await accountDBOperation.updateAccountByAccountConnection(
               agentID,
               accountName,
               accountConnection
@@ -154,7 +150,7 @@ tradingAccountRouter.post("/delete_account", async (req, res) => {
         } else {
           const agentID = agentDoc.id;
 
-          const result = await newaccountDBOperation.deleteAccount(
+          const result = await accountDBOperation.deleteAccount(
             agentID,
             accountName
           );

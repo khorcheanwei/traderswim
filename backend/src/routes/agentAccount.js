@@ -8,10 +8,7 @@ const bcryptSalt = bcrypt.genSaltSync(12);
 
 const agentAccountRouter = express.Router();
 
-/* agent registration and authentication*/
-const AgentModel = require("../models/Agent");
-const agentDBOperation = require("../data-access/agent.db.js");
-const newagentDBOperation = new agentDBOperation(AgentModel);
+const { agentDBOperation } = require("../data-access/index.js");
 
 // create new agent
 agentAccountRouter.post("/register", async (req, res) => {
@@ -19,7 +16,7 @@ agentAccountRouter.post("/register", async (req, res) => {
 
   try {
     // check if agentUsername existed
-    var result = await newagentDBOperation.searchAgentName(agentUsername);
+    var result = await agentDBOperation.searchAgentName(agentUsername);
     if (result.success == true) {
       if (result.data != null) {
         res.status(200).json("This username is already registered");
@@ -31,7 +28,7 @@ agentAccountRouter.post("/register", async (req, res) => {
     }
 
     // check if agentEmail existed
-    result = await newagentDBOperation.searchAgentEmail(agentEmail);
+    result = await agentDBOperation.searchAgentEmail(agentEmail);
     if (result.success == true) {
       if (result.data != null) {
         res.status(200).json("This email is already registered");
@@ -42,7 +39,7 @@ agentAccountRouter.post("/register", async (req, res) => {
       return;
     }
 
-    await newagentDBOperation.createAgentItem(
+    await agentDBOperation.createAgentItem(
       agentUsername,
       agentEmail,
       agentPassword
@@ -58,9 +55,7 @@ agentAccountRouter.post("/login", async (req, res) => {
   const { agentUsername, agentPassword } = req.body;
 
   try {
-    const result = await newagentDBOperation.searchAgentByUsername(
-      agentUsername
-    );
+    const result = await agentDBOperation.searchAgentByUsername(agentUsername);
 
     if (result.success == true) {
       const agentDocument = result.data;
@@ -102,7 +97,7 @@ agentAccountRouter.get("/profile", async (req, res) => {
       if (err) {
         throw err;
       } else {
-        const result = await newagentDBOperation.searchAgentByID(agentDoc.id);
+        const result = await agentDBOperation.searchAgentByID(agentDoc.id);
         if (result.success) {
           const { _id, agentUsername } = result.data;
           res.json({ agentID: _id, agentUsername: agentUsername });
