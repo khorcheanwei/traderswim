@@ -4,6 +4,7 @@ const bcryptSalt = bcrypt.genSaltSync(12);
 function agentDBOperation(Agent) {
   this.Agent = Agent;
 
+  // search whether Agent existed by AgentUsername
   this.searchAgentName = async function (agentUsername) {
     try {
       const queryResult = await this.Agent.exists({
@@ -15,6 +16,7 @@ function agentDBOperation(Agent) {
     }
   };
 
+  // search whether Agent existed by AgentEmail
   this.searchAgentEmail = async function (agentEmail) {
     try {
       const queryResult = await this.Agent.exists({
@@ -26,6 +28,7 @@ function agentDBOperation(Agent) {
     }
   };
 
+  // search Agent by AgentUsername
   this.searchAgentByUsername = async function (agentUsername) {
     try {
       const queryResult = await this.Agent.findOne({
@@ -37,6 +40,7 @@ function agentDBOperation(Agent) {
     }
   };
 
+  // search Agent by AgentID
   this.searchAgentByID = async function (agentID) {
     try {
       const queryResult = await Agent.findById(agentID);
@@ -46,6 +50,22 @@ function agentDBOperation(Agent) {
     }
   };
 
+  // get agentTradingSessionID based on AgentID
+  this.searchAgentTradingSessionID = async function (agentID) {
+    try {
+      const queryResult = await Agent.findOne(
+        { _id: agentID },
+        {
+          agentTradingSessionID: 1,
+        }
+      );
+      return { success: true, data: queryResult };
+    } catch (e) {
+      return { success: false, error: e };
+    }
+  };
+
+  // create new Agent
   this.createAgentItem = async function (
     agentUsername,
     agentEmail,
@@ -60,6 +80,25 @@ function agentDBOperation(Agent) {
         agentIsTradingSession: false,
       });
       return result;
+    } catch (e) {
+      return { success: false, error: e };
+    }
+  };
+
+  // update agentTradingSessionID in Agent
+  this.updateAgentTradingSessionID = async function (
+    agentID,
+    agentTradingSessionID
+  ) {
+    try {
+      var query = { _id: agentID };
+      var updatedQuery = {
+        agentTradingSessionID: agentTradingSessionID,
+        agentIsTradingSession: true,
+      };
+      await Agent.updateOne(query, updatedQuery);
+
+      return { success: true };
     } catch (e) {
       return { success: false, error: e };
     }

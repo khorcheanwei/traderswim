@@ -11,7 +11,6 @@ const agentAccountRouter = express.Router();
 /* agent registration and authentication*/
 const AgentModel = require("../models/Agent");
 const agentDBOperation = require("../data-access/agent.db.js");
-
 const newagentDBOperation = new agentDBOperation(AgentModel);
 
 // create new agent

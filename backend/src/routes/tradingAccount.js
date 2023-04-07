@@ -8,13 +8,8 @@ const bcryptSalt = bcrypt.genSaltSync(12);
 
 const tradingAccountRouter = express.Router();
 
-const Agent = require("../models/Agent.js");
-const Account = require("../models/Account.js");
-const CopyTradingAccount = require("../models/CopyTradingAccount.js");
-
 const AccountModel = require("../models/Account");
 const accountDBOperation = require("../data-access/account.db.js");
-
 const newaccountDBOperation = new accountDBOperation(AccountModel);
 
 tradingAccountRouter.post("/login", async (req, res) => {
@@ -116,22 +111,33 @@ tradingAccountRouter.post("/connection", async (req, res) => {
     try {
       jwt.verify(token, jwtSecret, {}, async (err, agentDoc) => {
         if (err) {
-          throw err;
+          res.status(422).json(err);
+          return;
         } else {
           agentID = agentDoc.id;
+          const result =
+            await newaccountDBOperation.updateAccountByAccountConnection(
+              agentID,
+              accountName,
+              accountConnection
+            );
 
-          var query = { agentID: agentID, accountName: accountName };
-          var updatedQuery = { accountConnection: accountConnection };
-
-          await Account.updateOne(query, updatedQuery);
-          res.status(200).json("success");
+          if (result.success) {
+            res.status(200).json("success");
+            return;
+          } else {
+            res.status(422).json(result.error);
+            return;
+          }
         }
       });
     } catch (e) {
       res.status(422).json(e);
+      return;
     }
   } else {
     res.json(null);
+    return;
   }
 });
 
@@ -143,34 +149,32 @@ tradingAccountRouter.post("/delete_account", async (req, res) => {
     try {
       jwt.verify(token, jwtSecret, {}, async (err, agentDoc) => {
         if (err) {
-          throw err;
+          res.status(422).json(err);
+          return;
         } else {
-          agentID = agentDoc.id;
+          const agentID = agentDoc.id;
 
-          // delete accountName in account table
-          var accountQuery = { agentID: agentID, accountName: accountName };
-          const accountID = await Account.findOne(accountQuery, {
-            _id: 1,
-          });
-          await Account.deleteOne({ _id: accountID });
+          const result = await newaccountDBOperation.deleteAccount(
+            agentID,
+            accountName
+          );
 
-          // delete account in copyTrading table
-          var copyTradingquery = {
-            $or: [
-              { masterAccountID: accountID },
-              { copierAccountID: accountID },
-            ],
-          };
-          await CopyTradingAccount.deleteMany(copyTradingquery);
-
-          res.status(200).json("success");
+          if (result.success) {
+            res.status(200).json("success");
+            return;
+          } else {
+            res.status(422).json(result.error);
+            return;
+          }
         }
       });
     } catch (e) {
       res.status(422).json(e);
+      return;
     }
   } else {
     res.json(null);
+    return;
   }
 });
 
