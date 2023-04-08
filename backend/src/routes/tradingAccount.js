@@ -10,169 +10,55 @@ const tradingAccountRouter = express.Router();
 
 const { accountDBOperation } = require("../data-access/index.js");
 
-tradingAccountRouter.post("/login", async (req, res) => {
-  const { agentID, accountName, accountUsername, accountPassword } = req.body;
+const {
+  account_login,
+  account_database,
+  account_connection_status,
+  account_delete,
+} = require("../controllers/tradingAccountController.js");
 
-  try {
-    // search for accountName
-    var result = await accountDBOperation.searchAccountName(
-      agentID,
-      accountName
-    );
+tradingAccountRouter.post("/login", async (httpRequest, httpResponse) => {
+  const result = await account_login(httpRequest);
+
+  if (result.success == true) {
+    httpResponse.status(200).json(result.data);
+  } else {
+    httpResponse.status(400).json(result.data);
+  }
+});
+
+tradingAccountRouter.get("/database", async (httpRequest, httpResponse) => {
+  const result = await account_database(httpRequest);
+
+  if (result.success == true) {
+    httpResponse.status(200).json(result.data);
+  } else {
+    httpResponse.status(400).json(result.data);
+  }
+});
+
+tradingAccountRouter.post("/connection", async (httpRequest, httpResponse) => {
+  const result = await account_connection_status(httpRequest);
+
+  if (result.success == true) {
+    httpResponse.status(200).json(result.data);
+  } else {
+    httpResponse.status(400).json(result.data);
+  }
+});
+
+tradingAccountRouter.post(
+  "/delete_account",
+  async (httpRequest, httpResponse) => {
+    const result = await account_delete(httpRequest);
+
     if (result.success == true) {
-      const accountNameExist = result.data;
-      if (accountNameExist) {
-        res.status(200).json("Account name exists for this agent");
-        return;
-      }
+      httpResponse.status(200).json(result.data);
     } else {
-      res.status(422).json(result.error);
-      return;
+      httpResponse.status(400).json(result.data);
     }
-
-    // search for accountUsername
-    result = await accountDBOperation.searchAccountUsername(
-      agentID,
-      accountUsername
-    );
-    if (result.success == true) {
-      const accountUsernameExist = result.data;
-      if (accountUsernameExist) {
-        res.status(200).json("Trading account username exists for this agent");
-        return;
-      }
-    } else {
-      res.status(422).json(result.error);
-      return;
-    }
-
-    result = await accountDBOperation.createAccountItem(
-      agentID,
-      accountName,
-      accountUsername,
-      accountPassword
-    );
-
-    if (result.success) {
-      res.status(200).json({ accountName });
-    } else {
-      res.status(422).json(result.error);
-    }
-  } catch (e) {
-    res.status(422).json(e);
   }
-});
-
-tradingAccountRouter.get("/database", async (req, res) => {
-  const { token } = req.cookies;
-  if (token) {
-    jwt.verify(token, jwtSecret, {}, async (err, agentDoc) => {
-      if (err) {
-        throw err;
-      } else {
-        agentID = agentDoc.id;
-
-        const result = await accountDBOperation.searchAccountByAgentID(agentID);
-
-        if (result.success) {
-          const accountDocument = result.data;
-          accountTableArray = [];
-          Object.keys(accountDocument).forEach(function (key, index) {
-            // need to go Ameritrade website to check whether it is successful to convert to connect to website or not
-
-            accountTableArray.push({
-              accountName: accountDocument[index].accountName,
-              accountBalance: 1000, //hard code for now
-              //accountConnection: accountDoc[index].accountConnection,
-              accountConnection: accountDocument[index].accountConnection,
-              accountStatus: accountDocument[index].accountConnection,
-            });
-          });
-          res.status(200).json(accountTableArray);
-        } else {
-          res.status(422).json(result.error);
-        }
-      }
-    });
-  } else {
-    res.json(null);
-  }
-});
-
-tradingAccountRouter.post("/connection", async (req, res) => {
-  const { token } = req.cookies;
-  const { accountName, accountConnection } = req.body;
-
-  if (token) {
-    try {
-      jwt.verify(token, jwtSecret, {}, async (err, agentDoc) => {
-        if (err) {
-          res.status(422).json(err);
-          return;
-        } else {
-          agentID = agentDoc.id;
-          const result =
-            await accountDBOperation.updateAccountByAccountConnection(
-              agentID,
-              accountName,
-              accountConnection
-            );
-
-          if (result.success) {
-            res.status(200).json("success");
-            return;
-          } else {
-            res.status(422).json(result.error);
-            return;
-          }
-        }
-      });
-    } catch (e) {
-      res.status(422).json(e);
-      return;
-    }
-  } else {
-    res.json(null);
-    return;
-  }
-});
-
-tradingAccountRouter.post("/delete_account", async (req, res) => {
-  const { token } = req.cookies;
-  const { accountName } = req.body;
-
-  if (token) {
-    try {
-      jwt.verify(token, jwtSecret, {}, async (err, agentDoc) => {
-        if (err) {
-          res.status(422).json(err);
-          return;
-        } else {
-          const agentID = agentDoc.id;
-
-          const result = await accountDBOperation.deleteAccount(
-            agentID,
-            accountName
-          );
-
-          if (result.success) {
-            res.status(200).json("success");
-            return;
-          } else {
-            res.status(422).json(result.error);
-            return;
-          }
-        }
-      });
-    } catch (e) {
-      res.status(422).json(e);
-      return;
-    }
-  } else {
-    res.json(null);
-    return;
-  }
-});
+);
 
 /*
 

@@ -5,7 +5,6 @@ const jwtSecret = process.env.JWTSECRET;
 
 const agentAccountRouter = express.Router();
 
-const { agentDBOperation } = require("../data-access/index.js");
 const {
   agent_register,
   agent_login,

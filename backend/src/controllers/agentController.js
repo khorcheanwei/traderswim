@@ -91,7 +91,10 @@ async function agent_profile(httpRequest) {
       const dbQueryResult = await agentDBOperation.searchAgentByID(agentDoc.id);
       if (dbQueryResult.success) {
         const { _id, agentUsername } = dbQueryResult.data;
-        return { success: true, agentID: _id, agentUsername: agentUsername };
+        return {
+          success: true,
+          data: { agentID: _id, agentUsername: agentUsername },
+        };
       } else {
         return { success: false, data: dbQueryResult.error };
       }
