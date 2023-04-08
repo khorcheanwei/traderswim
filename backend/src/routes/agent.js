@@ -3,90 +3,32 @@ const express = require("express");
 const jwt = require("jsonwebtoken");
 const jwtSecret = process.env.JWTSECRET;
 
-const bcrypt = require("bcryptjs");
-const bcryptSalt = bcrypt.genSaltSync(12);
-
 const agentAccountRouter = express.Router();
 
 const { agentDBOperation } = require("../data-access/index.js");
+const {
+  agent_register,
+  agent_login,
+} = require("../controllers/agentController.js");
 
-// create new agent
-agentAccountRouter.post("/register", async (req, res) => {
-  const { agentUsername, agentEmail, agentPassword } = req.body;
-
-  try {
-    // check if agentUsername existed
-    var result = await agentDBOperation.searchAgentName(agentUsername);
-    if (result.success == true) {
-      if (result.data != null) {
-        res.status(200).json("This username is already registered");
-        return;
-      }
-    } else {
-      res.status(422).json(result.error);
-      return;
-    }
-
-    // check if agentEmail existed
-    result = await agentDBOperation.searchAgentEmail(agentEmail);
-    if (result.success == true) {
-      if (result.data != null) {
-        res.status(200).json("This email is already registered");
-        return;
-      }
-    } else {
-      res.status(422).json(result.error);
-      return;
-    }
-
-    await agentDBOperation.createAgentItem(
-      agentUsername,
-      agentEmail,
-      agentPassword
-    );
-
-    res.status(200).json("User is successfully registered");
-  } catch (error) {
-    res.status(422).json(error);
+// register new agent
+agentAccountRouter.post("/register", async (httpRequest, httpResponse) => {
+  const result = await agent_register(httpRequest);
+  if (result.success == true) {
+    httpResponse.status(200).json(result.data);
+  } else {
+    httpResponse.status(400).json(result.data);
   }
 });
 
-agentAccountRouter.post("/login", async (req, res) => {
-  const { agentUsername, agentPassword } = req.body;
+// login agent
+agentAccountRouter.post("/login", async (httpRequest, httpResponse) => {
+  const result = await agent_login(httpRequest);
 
-  try {
-    const result = await agentDBOperation.searchAgentByUsername(agentUsername);
-
-    if (result.success == true) {
-      const agentDocument = result.data;
-
-      const passOk = bcrypt.compareSync(
-        agentPassword,
-        agentDocument.agentPassword
-      );
-      if (passOk) {
-        jwt.sign(
-          {
-            id: agentDocument._id,
-          },
-          jwtSecret,
-          {},
-          (err, token) => {
-            if (err) {
-              throw err;
-            } else {
-              res.cookie("token", token).json(agentDocument);
-            }
-          }
-        );
-      } else {
-        res.status(422).json("Incorrect password");
-      }
-    } else {
-      res.status(422).json("Agent is not registered");
-    }
-  } catch (e) {
-    res.status(422).json(e);
+  if (result.success == true) {
+    httpResponse.cookie("token", result.token).json(result.data);
+  } else {
+    httpResponse.status(400).json(result.data);
   }
 });
 
