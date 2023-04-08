@@ -72,17 +72,39 @@ async function agent_login(httpRequest) {
           return { success: false, data: error };
         }
       } else {
-        return { success: false, data: "Incorrect password" };
+        return { success: true, data: "Incorrect password" };
       }
     } else {
-      return { success: false, data: "Agent is not registered" };
+      return { success: true, data: "Agent is not registered" };
     }
   } catch (error) {
     return { success: false, data: error };
   }
 }
 
+// agent get profile
+async function agent_profile(httpRequest) {
+  const { token } = httpRequest.cookies;
+  if (token) {
+    try {
+      const agentDoc = await jwt.verify(token, jwtSecret, {});
+      const dbQueryResult = await agentDBOperation.searchAgentByID(agentDoc.id);
+      if (dbQueryResult.success) {
+        const { _id, agentUsername } = dbQueryResult.data;
+        return { success: true, agentID: _id, agentUsername: agentUsername };
+      } else {
+        return { success: false, data: dbQueryResult.error };
+      }
+    } catch (error) {
+      return { success: false, data: error };
+    }
+  } else {
+    return { success: false, data: null };
+  }
+}
+
 module.exports = {
   agent_register,
   agent_login,
+  agent_profile,
 };
