@@ -11,8 +11,8 @@ function agentDBOperation(Agent) {
         agentUsername: agentUsername,
       });
       return { success: true, data: queryResult };
-    } catch (e) {
-      return { success: false, error: e };
+    } catch (error) {
+      return { success: false, error: error };
     }
   };
 
@@ -23,8 +23,8 @@ function agentDBOperation(Agent) {
         agentEmail: agentEmail,
       });
       return { success: true, data: queryResult };
-    } catch (e) {
-      return { success: false, error: e };
+    } catch (error) {
+      return { success: false, error: error };
     }
   };
 
@@ -35,8 +35,8 @@ function agentDBOperation(Agent) {
         agentUsername: agentUsername,
       });
       return { success: true, data: queryResult };
-    } catch (e) {
-      return { success: false, error: e };
+    } catch (error) {
+      return { success: false, error: error };
     }
   };
 
@@ -45,8 +45,8 @@ function agentDBOperation(Agent) {
     try {
       const queryResult = await Agent.findById(agentID);
       return { success: true, data: queryResult };
-    } catch (e) {
-      return { success: false, error: e };
+    } catch (error) {
+      return { success: false, error: error };
     }
   };
 
@@ -60,8 +60,8 @@ function agentDBOperation(Agent) {
         }
       );
       return { success: true, data: queryResult };
-    } catch (e) {
-      return { success: false, error: e };
+    } catch (error) {
+      return { success: false, error: error };
     }
   };
 
@@ -80,8 +80,8 @@ function agentDBOperation(Agent) {
         agentIsTradingSession: false,
       });
       return result;
-    } catch (e) {
-      return { success: false, error: e };
+    } catch (error) {
+      return { success: false, error: error };
     }
   };
 
@@ -99,8 +99,8 @@ function agentDBOperation(Agent) {
       await Agent.updateOne(query, updatedQuery);
 
       return { success: true };
-    } catch (e) {
-      return { success: false, error: e };
+    } catch (error) {
+      return { success: false, error: error };
     }
   };
 }

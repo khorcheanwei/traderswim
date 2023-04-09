@@ -15,8 +15,8 @@ function copyTradingAccountDBOperation(CopyTradingAccount) {
         agentTradingSessionID: agentTradingSessionID,
       });
       return { success: true, data: queryResult };
-    } catch (e) {
-      return { success: false, error: e };
+    } catch (error) {
+      return { success: false, error: error };
     }
   };
 
@@ -27,8 +27,8 @@ function copyTradingAccountDBOperation(CopyTradingAccount) {
         agentID: agentID,
       });
       return { success: true, data: queryResult };
-    } catch (e) {
-      return { success: false, error: e };
+    } catch (error) {
+      return { success: false, error: error };
     }
   };
 
@@ -61,8 +61,8 @@ function copyTradingAccountDBOperation(CopyTradingAccount) {
         });
       }
       return { success: true };
-    } catch (e) {
-      return { success: false, error: e };
+    } catch (error) {
+      return { success: false, error: error };
     }
   };
 }

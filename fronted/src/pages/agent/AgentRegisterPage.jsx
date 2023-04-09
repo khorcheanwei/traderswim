@@ -23,7 +23,7 @@ export default function AgentRegisterPage() {
             }).catch(err =>{
                 console.log(err);
             })
-        } catch (e) {
+        } catch (error) {
             alert("Registration failed. Please try again.");
         }
     }

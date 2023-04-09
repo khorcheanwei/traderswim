@@ -12,8 +12,8 @@ function accountDBOperation(Account) {
         accountName: accountName,
       });
       return { success: true, data: queryResult };
-    } catch (e) {
-      return { success: false, error: e };
+    } catch (error) {
+      return { success: false, error: error };
     }
   };
 
@@ -25,8 +25,8 @@ function accountDBOperation(Account) {
         accountUsername: accountUsername,
       });
       return { success: true, data: queryResult };
-    } catch (e) {
-      return { success: false, error: e };
+    } catch (error) {
+      return { success: false, error: error };
     }
   };
 
@@ -37,8 +37,8 @@ function accountDBOperation(Account) {
         agentID: agentID,
       });
       return { success: true, data: queryResult };
-    } catch (e) {
-      return { success: false, error: e };
+    } catch (error) {
+      return { success: false, error: error };
     }
   };
 
@@ -53,8 +53,8 @@ function accountDBOperation(Account) {
         }
       );
       return { success: true, data: queryResult };
-    } catch (e) {
-      return { success: false, error: e };
+    } catch (error) {
+      return { success: false, error: error };
     }
   };
 
@@ -63,8 +63,8 @@ function accountDBOperation(Account) {
     try {
       await Account.deleteOne({ agentID: agentID, accountName: accountName });
       return { success: true };
-    } catch (e) {
-      return { success: false, error: e };
+    } catch (error) {
+      return { success: false, error: error };
     }
   };
 
@@ -81,8 +81,8 @@ function accountDBOperation(Account) {
       await Account.updateOne(query, updatedQuery);
 
       return { success: true };
-    } catch (e) {
-      return { success: false, error: e };
+    } catch (error) {
+      return { success: false, error: error };
     }
   };
 
@@ -103,8 +103,8 @@ function accountDBOperation(Account) {
         accountPassword: bcrypt.hashSync(accountPassword, bcryptSalt),
       });
       return { success: true };
-    } catch (e) {
-      return { success: false, error: e };
+    } catch (error) {
+      return { success: false, error: error };
     }
   };
 }

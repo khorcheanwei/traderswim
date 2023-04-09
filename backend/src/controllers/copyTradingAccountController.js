@@ -13,7 +13,6 @@ const {
 // Copy trading place order
 async function copy_trading_place_order(httpRequest) {
   const {
-    agentID,
     stockName,
     stockTradeAction,
     stockTradeType,
@@ -21,47 +20,55 @@ async function copy_trading_place_order(httpRequest) {
     stockEntryPrice,
   } = httpRequest.body;
 
-  try {
-    // get agent trading sessionID
-    var result = await agentDBOperation.searchAgentTradingSessionID(agentID);
-    if (result.success != true) {
-      return { success: false, data: result.error };
-    }
-    const agentsDocument = result.data;
-    const agentTradingSessionID = agentsDocument.agentTradingSessionID + 1;
+  const { token } = httpRequest.cookies;
+  if (token) {
+    try {
+      const agentDoc = await jwt.verify(token, jwtSecret, {});
+      const agentID = agentDoc.id;
+      // get agent trading sessionID
+      var result = await agentDBOperation.searchAgentTradingSessionID(agentID);
+      if (result.success != true) {
+        return { success: false, data: result.error };
+      }
+      const agentsDocument = result.data;
+      const agentTradingSessionID = agentsDocument.agentTradingSessionID + 1;
 
-    // get all accountName of particular agentID
-    result = await accountDBOperation.searchAccountNameByAgentID(agentID);
-    if (result.success != true) {
-      return { success: false, data: result.error };
-    }
-    const accountsDocument = result.data;
-    result = await copyTradingAccountDBBOperation.createCopyTradingAccountItem(
-      accountsDocument,
-      agentID,
-      agentTradingSessionID,
-      stockName,
-      stockTradeAction,
-      stockTradeType,
-      stockEntryPrice,
-      stockSharesTotal
-    );
-    if (result.success != true) {
-      return { success: false, data: result.error };
-    }
+      // get all accountName of particular agentID
+      result = await accountDBOperation.searchAccountNameByAgentID(agentID);
+      if (result.success != true) {
+        return { success: false, data: result.error };
+      }
+      const accountsDocument = result.data;
+      result =
+        await copyTradingAccountDBBOperation.createCopyTradingAccountItem(
+          accountsDocument,
+          agentID,
+          agentTradingSessionID,
+          stockName,
+          stockTradeAction,
+          stockTradeType,
+          stockEntryPrice,
+          stockSharesTotal
+        );
+      if (result.success != true) {
+        return { success: false, data: result.error };
+      }
 
-    result = await agentDBOperation.updateAgentTradingSessionID(
-      agentID,
-      agentTradingSessionID
-    );
-    if (result.success != true) {
+      result = await agentDBOperation.updateAgentTradingSessionID(
+        agentID,
+        agentTradingSessionID
+      );
+      if (result.success != true) {
+        return { success: false, data: result.error };
+      }
+
+      // save agentTradingSessionID and agentIsTradingSession to table Agent
+      return { success: true, data: "success" };
+    } catch (error) {
       return { success: false, data: result.error };
     }
-
-    // save agentTradingSessionID and agentIsTradingSession to table Agent
-    return { success: true, data: "success" };
-  } catch (error) {
-    return { success: false, data: result.error };
+  } else {
+    return { success: false, data: null };
   }
 }
 

@@ -1,4 +1,3 @@
-
 import axios from 'axios';
 import { Button, PageButton } from '../shared/Button'
 import {useContext, useState, useEffect } from 'react';
@@ -11,8 +10,6 @@ export default function TradingStock() {
     var stockTradeActionList = ["BUY", "SELL"];
     var stockTradeTypeList = ["Limit", "Market"];
 
-    const { contextAgentID } = useContext(UserContext);
-
     const {isOpenTradingStock, setIsOpenTradingStock,setIsCopyTradingAccountSuccessful} = useContext(CopyTradingAccountContext);
 
     const [stockName, setStockName] = useState(stockNameList[0]);
@@ -23,16 +20,14 @@ export default function TradingStock() {
     const [disabledButton, setDisabledButton] = useState(false)
 
     async function handlePlaceOrder() {
-        const agentID = contextAgentID;
         try {
             setDisabledButton(true)
-            const {data} = await axios.post("/copy_trading_account/place_order/", {agentID, stockName, stockTradeAction, stockTradeType, stockSharesTotal, stockEntryPrice})
+            const {data} = await axios.post("/copy_trading_account/place_order/", {stockName, stockTradeAction, stockTradeType, stockSharesTotal, stockEntryPrice})
             
             if (data != "success") {
                 alert("Copy trading failed");
             } else {
                 alert("Copy trading successful");
-                console.log(isOpenTradingStock)
                 setIsOpenTradingStock(!isOpenTradingStock)
                 setIsCopyTradingAccountSuccessful(true)
             }

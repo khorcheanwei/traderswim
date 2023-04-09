@@ -8,61 +8,68 @@ const jwtSecret = process.env.JWTSECRET;
 
 // To login new account
 async function account_login(httpRequest) {
-  const { agentID, accountName, accountUsername, accountPassword } =
-    httpRequest.body;
+  const { accountName, accountUsername, accountPassword } = httpRequest.body;
 
-  try {
-    // search for accountName
-    var result = await accountDBOperation.searchAccountName(
-      agentID,
-      accountName
-    );
-    if (result.success == true) {
-      const accountNameExist = result.data;
-      if (accountNameExist) {
-        return { success: true, data: "Account name exists for this agent" };
+  const { token } = httpRequest.cookies;
+  if (token) {
+    try {
+      const agentDoc = await jwt.verify(token, jwtSecret, {});
+      const agentID = agentDoc.id;
+
+      // search for accountName
+      var result = await accountDBOperation.searchAccountName(
+        agentID,
+        accountName
+      );
+      if (result.success == true) {
+        const accountNameExist = result.data;
+        if (accountNameExist) {
+          return { success: true, data: "Account name exists for this agent" };
+        }
+      } else {
+        return { success: false, data: result.error };
       }
-    } else {
-      return { success: false, data: result.error };
-    }
 
-    // search for accountUsername
-    result = await accountDBOperation.searchAccountUsername(
-      agentID,
-      accountUsername
-    );
-    if (result.success == true) {
-      const accountUsernameExist = result.data;
-      if (accountUsernameExist) {
+      // search for accountUsername
+      result = await accountDBOperation.searchAccountUsername(
+        agentID,
+        accountUsername
+      );
+      if (result.success == true) {
+        const accountUsernameExist = result.data;
+        if (accountUsernameExist) {
+          return {
+            success: true,
+            data: "Trading account username exists for this agent",
+          };
+        }
+      } else {
         return {
-          success: true,
-          data: "Trading account username exists for this agent",
+          success: false,
+          data: result.error,
         };
       }
-    } else {
-      return {
-        success: false,
-        data: result.error,
-      };
-    }
 
-    result = await accountDBOperation.createAccountItem(
-      agentID,
-      accountName,
-      accountUsername,
-      accountPassword
-    );
+      result = await accountDBOperation.createAccountItem(
+        agentID,
+        accountName,
+        accountUsername,
+        accountPassword
+      );
 
-    if (result.success) {
-      return {
-        success: true,
-        data: { accountName },
-      };
-    } else {
-      return { success: false, data: result.error };
+      if (result.success) {
+        return {
+          success: true,
+          data: { accountName },
+        };
+      } else {
+        return { success: false, data: result.error };
+      }
+    } catch (error) {
+      return { success: false, data: error };
     }
-  } catch (error) {
-    return { success: false, data: error };
+  } else {
+    return { success: false, data: null };
   }
 }
 
@@ -156,7 +163,7 @@ async function account_delete(httpRequest) {
       return { success: false, data: error };
     }
   } else {
-    return { success: true, data: null };
+    return { success: false, data: null };
   }
 }
 

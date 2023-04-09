@@ -12,8 +12,6 @@ export default function AgentLoginPage() {
 
     async function handleLoginSubmit(event) {
         event.preventDefault()
-        const {data} = await axios.post("/agent_account/login/", {agentUsername, agentPassword});
-
         try {
             const {data} = await axios.post("/agent_account/login/", {agentUsername, agentPassword});
             if (typeof data.agentUsername === 'undefined') {
@@ -22,7 +20,7 @@ export default function AgentLoginPage() {
                 alert("Login successful");
                 setRedirect(true)
             }
-        } catch (e) {
+        } catch (error) {
             alert("Login failed.");
         }   
     }

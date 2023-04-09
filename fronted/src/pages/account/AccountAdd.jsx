@@ -9,7 +9,6 @@ export default function AccountAdd() {
     const [accountUsername, setAccountUsername] = useState("");
     const [accountPassword, setAccountPassword] = useState("");
 
-    const { contextAgentID} = useContext(UserContext);
     const { isOpenAccountLogin, setIsOpenAccountLogin, setIsAccountLoginSuccessful} = useContext(AccountContext);
 
     const [disabledButton, setDisabledButton] = useState(false)
@@ -17,10 +16,8 @@ export default function AccountAdd() {
     async function handleAccountAdd(event) {
         event.preventDefault()
         try {
-            const agentID = contextAgentID
-
             setDisabledButton(true)
-            const {data} = await axios.post("/trading_account/login/", {agentID, accountName, accountUsername, accountPassword});
+            const {data} = await axios.post("/trading_account/login/", {accountName, accountUsername, accountPassword});
 
             if (typeof data.accountName === "undefined") {
                 alert("Account added failed.");
@@ -30,8 +27,8 @@ export default function AccountAdd() {
                 setIsAccountLoginSuccessful(true)
             }
             setDisabledButton(false)
-        } catch (e) {
-            console.log(e)
+        } catch (error) {
+            console.log(error)
             alert("Login failed.");
         }   
     }
