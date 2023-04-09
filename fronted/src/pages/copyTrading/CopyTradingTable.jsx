@@ -8,7 +8,6 @@ import {useContext, useState, useEffect} from 'react';
 import { UserContext } from '../context/UserContext';
 import { AccountContext } from '../context/AccountContext';
 import { CopyTradingAccountContext } from '../context/CopyTradingAccountContext';
-import CopyTradingAccountDeleteConfirmation from './CopyTradingPlaceNewOrder';
 import TradingStock from '../tradingStock/TradingStock';
 
 import axios from 'axios';
@@ -125,7 +124,6 @@ export function StatusPill(row) {
 };
 
 export function SettingsPanel(rowCopyTrading) {
-  const { isOpenCopyTradingAccountDelete, setIsOpenCopyTradingAccountDelete } = useContext(CopyTradingAccountContext);
   const { rowCopyTradingAccount, setRowCopyTradingAccount } = useContext(CopyTradingAccountContext);
   
 
@@ -140,14 +138,7 @@ export function SettingsPanel(rowCopyTrading) {
 
   const togglePlaceOrderOverlay = () => {
     if (disabledPlaceOrder == false) {
-      if (isOpenCopyTradingAccountDelete == false) {
         setRowCopyTradingAccount(rowCopyTrading)
-      }
-      setIsOpenCopyTradingAccountDelete(!isOpenCopyTradingAccountDelete);
-    } 
-
-    if (isOpenCopyTradingAccountDelete == true) {
-      setIsOpenCopyTradingAccountDelete(!isOpenCopyTradingAccountDelete);
     } 
   };
 
@@ -166,9 +157,6 @@ export function SettingsPanel(rowCopyTrading) {
       <svg onClick={togglePlaceOrderOverlay} xmlns="http://www.w3.org/2000/svg" className={changePlaceOrderOpacity(disabledPlaceOrder)} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
       </svg>
-      <Overlay isOpen={isOpenCopyTradingAccountDelete} onClose={togglePlaceOrderOverlay}>
-          <CopyTradingAccountDeleteConfirmation rowCopyTradingAccount={rowCopyTradingAccount}></CopyTradingAccountDeleteConfirmation>
-      </Overlay>
     </div>
   );
 };
