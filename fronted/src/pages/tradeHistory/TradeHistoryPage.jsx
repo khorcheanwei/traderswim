@@ -63,7 +63,6 @@ export default function TradeActivityPage() {
       }, []) 
 
       /*
-
       if (isAccountLoginSuccessful) {
         fetchAccountData();
       } */

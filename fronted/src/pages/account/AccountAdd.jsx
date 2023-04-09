@@ -22,7 +22,7 @@ export default function AccountAdd() {
             setDisabledButton(true)
             const {data} = await axios.post("/trading_account/login/", {agentID, accountName, accountUsername, accountPassword});
 
-            if (typeof data.accountName === 'undefined') {
+            if (typeof data.accountName === "undefined") {
                 alert("Account added failed.");
             } else {
                 alert("Account added successful");
