@@ -3,193 +3,54 @@ const express = require("express");
 const jwt = require("jsonwebtoken");
 const jwtSecret = process.env.JWTSECRET;
 
-const copyTradingAccountRouter = express.Router();
-
 const {
   agentDBOperation,
   accountDBOperation,
   copyTradingAccountDBBOperation,
 } = require("../data-access/index.js");
 
-copyTradingAccountRouter.post("/place_order", async (req, res) => {
-  const {
-    agentID,
-    stockName,
-    stockTradeAction,
-    stockTradeType,
-    stockSharesTotal,
-    stockEntryPrice,
-  } = req.body;
+const copyTradingAccountRouter = express.Router();
 
-  try {
-    // get agent trading sessionID
-    var result = await agentDBOperation.searchAgentTradingSessionID(agentID);
-    if (result.success != true) {
-      res.status(422).json(result.error);
-      return;
-    }
-    const agentsDocument = result.data;
-    const agentTradingSessionID = agentsDocument.agentTradingSessionID + 1;
+const {
+  copy_trading_place_order,
+  copy_trading_database,
+  copy_trading_history_database,
+} = require("../controllers/copyTradingAccountController.js");
 
-    // get all accountName of particular agentID
-    result = await accountDBOperation.searchAccountNameByAgentID(agentID);
-    if (result.success != true) {
-      res.status(422).json(result.error);
-      return;
-    }
-    const accountsDocument = result.data;
-    result = await copyTradingAccountDBBOperation.createCopyTradingAccountItem(
-      accountsDocument,
-      agentID,
-      agentTradingSessionID,
-      stockName,
-      stockTradeAction,
-      stockTradeType,
-      stockEntryPrice,
-      stockSharesTotal
-    );
-    if (result.success != true) {
-      res.status(422).json(result.error);
-      return;
-    }
+copyTradingAccountRouter.post(
+  "/place_order",
+  async (httpRequest, httpResponse) => {
+    const result = await copy_trading_place_order(httpRequest);
 
-    result = await agentDBOperation.updateAgentTradingSessionID(
-      agentID,
-      agentTradingSessionID
-    );
-    if (result.success != true) {
-      res.status(422).json(result.error);
-      return;
+    if (result.success == true) {
+      httpResponse.status(200).json(result.data);
+    } else {
+      httpResponse.status(400).json(result.data);
     }
-
-    // save agentTradingSessionID and agentIsTradingSession to table Agent
-    res.status(200).json("success");
-  } catch (e) {
-    res.status(422).json(e);
   }
-});
+);
 
-copyTradingAccountRouter.get("/database", async (req, res) => {
-  const { token } = req.cookies;
+copyTradingAccountRouter.get("/database", async (httpRequest, httpResponse) => {
+  const result = await copy_trading_database(httpRequest);
 
-  if (token) {
-    jwt.verify(token, jwtSecret, {}, async (err, agentDoc) => {
-      if (err) {
-        throw err;
-      } else {
-        agentID = agentDoc.id;
-
-        // get agent trading sessionID
-        var result = await agentDBOperation.searchAgentTradingSessionID(
-          agentID
-        );
-        if (result.success != true) {
-          res.status(422).json(result.error);
-          return;
-        }
-        const agentsDocument = result.data;
-        const agentTradingSessionID = agentsDocument.agentTradingSessionID;
-
-        // get CopyTradingAccount based on agentID and agentTradingSessionID
-        result =
-          await copyTradingAccountDBBOperation.searchCopyTradingAccountBasedTradingSessionID(
-            agentID,
-            agentTradingSessionID
-          );
-
-        if (result.success != true) {
-          res.status(422).json(result.error);
-          return;
-        }
-        copyTradingAccountsDocument = result.data;
-
-        var copyTradingAccountData = [];
-        for (
-          let index = 0;
-          index < copyTradingAccountsDocument.length;
-          index++
-        ) {
-          const currCopyTradingAccount = copyTradingAccountsDocument[index];
-          copyTradingAccountData.push({
-            accountName: currCopyTradingAccount.accountName,
-            stockPair:
-              currCopyTradingAccount.stockName +
-              "/" +
-              currCopyTradingAccount.stockEntryPriceCurrency,
-            stockTradeAction: currCopyTradingAccount.stockTradeAction,
-            entryPrice: currCopyTradingAccount.stockEntryPrice,
-            orderQuantity: currCopyTradingAccount.orderQuantity,
-            filledQuantity: currCopyTradingAccount.filledQuantity,
-            orderDate: currCopyTradingAccount.orderDate.toLocaleString("en-US"),
-            placeNewOrder: "",
-          });
-        }
-
-        res.status(200).json(copyTradingAccountData);
-      }
-    });
+  if (result.success == true) {
+    httpResponse.status(200).json(result.data);
   } else {
-    res.json(null);
+    httpResponse.status(400).json(result.data);
   }
 });
 
-copyTradingAccountRouter.get("/trade_history_database", async (req, res) => {
-  const { token } = req.cookies;
+copyTradingAccountRouter.get(
+  "/trade_history_database",
+  async (httpRequest, httpResponse) => {
+    const result = await copy_trading_history_database(httpRequest);
 
-  if (token) {
-    jwt.verify(token, jwtSecret, {}, async (err, agentDoc) => {
-      if (err) {
-        throw err;
-      } else {
-        agentID = agentDoc.id;
-
-        try {
-          // get CopyTradingAccount based on agentID and agentTradingSessionID
-          const result =
-            await copyTradingAccountDBBOperation.searchCopyTradingAccount(
-              agentID
-            );
-
-          if (result.success != true) {
-            res.status(422).json(result.error);
-            return;
-          }
-          const copyTradingAccountsDocument = result.data;
-
-          var tradeHistoryData = [];
-
-          for (
-            let index = copyTradingAccountsDocument.length - 1;
-            0 <= index;
-            index--
-          ) {
-            const currCopyTradingAccount = copyTradingAccountsDocument[index];
-
-            tradeHistoryData.push({
-              agentTradingSessionID:
-                currCopyTradingAccount.agentTradingSessionID,
-              accountName: currCopyTradingAccount.accountName,
-              stockPair:
-                currCopyTradingAccount.stockName +
-                "/" +
-                currCopyTradingAccount.stockEntryPriceCurrency,
-              stockTradeAction: currCopyTradingAccount.stockTradeAction,
-              entryPrice: currCopyTradingAccount.stockEntryPrice,
-              orderQuantity: currCopyTradingAccount.orderQuantity,
-              filledQuantity: currCopyTradingAccount.filledQuantity,
-              orderDate:
-                currCopyTradingAccount.orderDate.toLocaleString("en-US"),
-            });
-          }
-          res.status(200).json(tradeHistoryData);
-        } catch (e) {
-          res.status(422).json(e);
-        }
-      }
-    });
-  } else {
-    res.json(null);
+    if (result.success == true) {
+      httpResponse.status(200).json(result.data);
+    } else {
+      httpResponse.status(400).json(result.data);
+    }
   }
-});
+);
 
 module.exports = copyTradingAccountRouter;
