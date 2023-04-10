@@ -69,7 +69,7 @@ async function account_login(httpRequest) {
       return { success: false, data: error };
     }
   } else {
-    return { success: false, data: null };
+    return { success: true, data: null };
   }
 }
 
@@ -105,7 +105,7 @@ async function account_database(httpRequest) {
       return { success: false, data: result.error };
     }
   } else {
-    return { success: false, data: null };
+    return { success: true, data: null };
   }
 }
 
@@ -134,7 +134,7 @@ async function account_connection_status(httpRequest) {
       return { success: false, data: error };
     }
   } else {
-    return { success: false, data: null };
+    return { success: true, data: null };
   }
 }
 
@@ -163,7 +163,7 @@ async function account_delete(httpRequest) {
       return { success: false, data: error };
     }
   } else {
-    return { success: false, data: null };
+    return { success: true, data: null };
   }
 }
 

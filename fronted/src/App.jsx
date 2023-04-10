@@ -9,13 +9,14 @@ import { UserContextProvider } from './pages/context/UserContext';
 import { AccountContextProvider } from './pages/context/AccountContext';
 import { CopyTradingAccountContextProvider } from './pages/context/CopyTradingAccountContext';
 import { TradeHistoryContextProvider } from './pages/context/TradeHistoryContext';
-import 'regenerator-runtime/runtime';
-
+import {useContext, useState, useEffect } from 'react';
+import { Link , Navigate} from 'react-router-dom';
 
 axios.defaults.baseURL = "http://127.0.0.1:4000";
 axios.defaults.withCredentials = true;
 
 function App() {
+
   return (
     <UserContextProvider>
       <AccountContextProvider>

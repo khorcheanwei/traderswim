@@ -3,7 +3,9 @@ import React from 'react'
 import {useContext, useState, useEffect} from 'react';
 import { async } from 'regenerator-runtime';
 import AccountAdd from './AccountAdd';
+import { UserContext } from '../context/UserContext';
 import { AccountContext } from '../context/AccountContext';
+import { Link , Navigate, useNavigate} from 'react-router-dom';
 
 
 import AccountsTable, { SelectColumnFilter, StatusPill, SettingsPanel, ConnectionToggle } from './AccountTable'  // new
@@ -38,14 +40,27 @@ export default function AccountsPage() {
         },
       ], [])
 
+      const { contextAgentUsername, setContextAgentUsername} = useContext(UserContext);
       const { accountTableData, setAccountTableData, isAccountLoginSuccessful, setIsAccountLoginSuccessful} = useContext(AccountContext);
-
+      const navigate = useNavigate();
+      
       async function fetchAccountData() {
         try {
+          if (contextAgentUsername == null) {
+            await axios.get("/agent_account/profile").then(({data}) =>{
+                if (data != null) {
+                  setContextAgentUsername(data.agentUsername);
+                } else {
+                  navigate('/login')
+                }
+            })  
+          }
+
           const response = await axios.get("/trading_account/database")
           if (response.data != null) {
             setAccountTableData(response.data)
           }
+          
         } catch (error) {
           console.error(error);
         }
@@ -57,7 +72,7 @@ export default function AccountsPage() {
 
       if (isAccountLoginSuccessful) {
         fetchAccountData();
-      }
+      } 
       
       var data = React.useMemo(() => accountTableData, [accountTableData])
 

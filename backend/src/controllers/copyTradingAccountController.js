@@ -68,7 +68,7 @@ async function copy_trading_place_order(httpRequest) {
       return { success: false, data: result.error };
     }
   } else {
-    return { success: false, data: null };
+    return { success: true, data: null };
   }
 }
 
@@ -124,7 +124,7 @@ async function copy_trading_database(httpRequest) {
       return { success: false, data: error };
     }
   } else {
-    return { success: false, data: null };
+    return { success: true, data: null };
   }
 }
 
@@ -180,7 +180,7 @@ async function copy_trading_history_database(httpRequest) {
       return { success: false, data: error };
     }
   } else {
-    return { success: false, data: null };
+    return { success: true, data: null };
   }
 }
 

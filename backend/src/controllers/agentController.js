@@ -102,7 +102,7 @@ async function agent_profile(httpRequest) {
       return { success: false, data: error };
     }
   } else {
-    return { success: false, data: null };
+    return { success: true, data: null };
   }
 }
 

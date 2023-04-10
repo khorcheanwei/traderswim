@@ -2,8 +2,10 @@ import axios from 'axios';
 import React from 'react'
 import {useContext, useState, useEffect} from 'react';
 import { async } from 'regenerator-runtime';
+import { UserContext } from '../context/UserContext';
 import { AccountContext } from './../context/AccountContext';
 import { CopyTradingAccountContext } from '../context/CopyTradingAccountContext';
+import { Link , Navigate, useNavigate} from 'react-router-dom';
 
 import CopyTradingTable, { SelectColumnFilter, StatusPill, SettingsPanel, ConnectionToggle } from './CopyTradingTable' 
 
@@ -45,16 +47,28 @@ export default function CopyTradingPage()  {
     }, 
   ], [])
 
-
+  const { contextAgentUsername, setContextAgentUsername} = useContext(UserContext);
   const {copyTradingAccountData, setCopyTradingAccountData, isCopyTradingAccountSuccessful, setIsCopyTradingAccountSuccessful} = useContext(CopyTradingAccountContext);
+
+  const navigate = useNavigate();
 
   async function fetchCopyTradingAccountData() {
       try {
-        const response = await axios.get("/copy_trading_account/database")
+        if (contextAgentUsername == null) {
+          await axios.get("/agent_account/profile").then(({data}) =>{
+              if (data != null) {
+                setContextAgentUsername(data.agentUsername);
+              } else {
+                navigate('/login')
+              }
+          })  
+        }
 
+        const response = await axios.get("/copy_trading_account/database")
         if (response.data != null) {
           setCopyTradingAccountData(response.data)
         }
+        
       } catch (error) {
         console.error(error);
       }

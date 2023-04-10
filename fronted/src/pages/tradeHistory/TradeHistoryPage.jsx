@@ -3,8 +3,10 @@ import axios from 'axios';
 import React from 'react'
 import {useContext, useState, useEffect} from 'react';
 import { async } from 'regenerator-runtime';
+import { UserContext } from '../context/UserContext';
 import { TradeHistoryContext } from '../context/TradeHistoryContext';
 import  TradingActivityTable   from './TradeHistoryTable'
+import { Link , Navigate, useNavigate} from 'react-router-dom';
 
 
 export default function TradeActivityPage() {
@@ -43,20 +45,32 @@ export default function TradeActivityPage() {
         accessor: 'orderDate',
       }
     ], [])
-    
-      const { tradeHistoryTableData, setTradeHistoryTableData} = useContext(TradeHistoryContext);
-      
-      async function fetchTradeHistoryData() {
-        try {
-          const response = await axios.get("/copy_trading_account/trade_history_database")
 
-          if (response.data != null) {
-            setTradeHistoryTableData(response.data)
-          }
-        } catch (error) {
-          console.error(error);
+    const { contextAgentUsername, setContextAgentUsername} = useContext(UserContext);
+    const { tradeHistoryTableData, setTradeHistoryTableData} = useContext(TradeHistoryContext);
+    const navigate = useNavigate();
+
+    async function fetchTradeHistoryData() {
+      try {
+        if (contextAgentUsername == null) {
+          await axios.get("/agent_account/profile").then(({data}) =>{
+              if (data != null) {
+                setContextAgentUsername(data.agentUsername);
+              } else {
+                navigate('/login')
+              }
+          })  
         }
+        const response = await axios.get("/copy_trading_account/trade_history_database")
+
+        if (response.data != null) {
+          setTradeHistoryTableData(response.data)
+        }
+        
+      } catch (error) {
+        console.error(error);
       }
+    }
 
       useEffect(() => {
         fetchTradeHistoryData();

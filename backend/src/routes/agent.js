@@ -32,6 +32,11 @@ agentAccountRouter.post("/login", async (httpRequest, httpResponse) => {
   }
 });
 
+// logout agent
+agentAccountRouter.post("/logout", async (httpRequest, httpResponse) => {
+  httpResponse.cookie("token", "").json(true);
+});
+
 // get agent profile
 agentAccountRouter.get("/profile", async (httpRequest, httpResponse) => {
   const result = await agent_profile(httpRequest);
