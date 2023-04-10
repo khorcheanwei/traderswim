@@ -8,7 +8,7 @@ import { AccountContext } from '../context/AccountContext';
 import { Link , Navigate, useNavigate} from 'react-router-dom';
 
 
-import AccountsTable, { SelectColumnFilter, StatusPill, SettingsPanel, ConnectionToggle } from './AccountTable'  // new
+import AccountsTable, { StatusPill, SettingsPanel, ConnectionToggle } from './AccountTable'  // new
 
 export default function AccountsPage() {
 
@@ -29,7 +29,6 @@ export default function AccountsPage() {
         {
           Header: "Status",
           accessor: 'accountStatus',
-          //Filter: SelectColumnFilter,  // new
           filter: 'includes',
           Cell: StatusPill,
         },

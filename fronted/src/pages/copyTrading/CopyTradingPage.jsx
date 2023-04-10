@@ -7,7 +7,7 @@ import { AccountContext } from './../context/AccountContext';
 import { CopyTradingAccountContext } from '../context/CopyTradingAccountContext';
 import { Link , Navigate, useNavigate} from 'react-router-dom';
 
-import CopyTradingTable, { SelectColumnFilter, StatusPill, SettingsPanel, ConnectionToggle } from './CopyTradingTable' 
+import CopyTradingTable, { StatusPill, SettingsPanel, ConnectionToggle } from './CopyTradingTable' 
 
 export default function CopyTradingPage()  {
 
