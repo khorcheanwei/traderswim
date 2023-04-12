@@ -5,8 +5,6 @@ import { Button, PageButton } from '../shared/Button'
 import { classNames } from '../shared/Utils'
 import { SortIcon, SortUpIcon, SortDownIcon } from '../shared/Icons'
 import {useContext, useState, useEffect} from 'react';
-//import AccountAdd from './AccountAdd';
-//import AccountDeleteConfirmation from './TradeActivityChangeConfirmation'
 import { AccountContext } from '../context/AccountContext';
 
 import axios from 'axios';

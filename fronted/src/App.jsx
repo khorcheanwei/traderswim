@@ -23,7 +23,7 @@ function App() {
         <CopyTradingAccountContextProvider>
           <TradeHistoryContextProvider>
             <Routes>
-              <Route path="/" element={<Layout/>}>
+              <Route  path="/" element={<Layout/>}>
                 <Route path="/login" element={<AgentLoginPage />}/>
                 <Route path="/register" element={<AgentRegisterPage />}/>
                 <Route path="/trading/:subpage?" element={<TradingPage />}/>   

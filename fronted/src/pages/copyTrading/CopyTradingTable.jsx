@@ -29,7 +29,7 @@ function GlobalFilter({
 
   const { isOpenTradingStock, setIsOpenTradingStock } = useContext(CopyTradingAccountContext);
 
-  const toggleTradingStockOverlay = async () => {
+  const placeOrderClose = async () => {
     setIsOpenTradingStock(!isOpenTradingStock)
   }
 
@@ -50,12 +50,12 @@ function GlobalFilter({
             />
           </label>
           <div className="flex gap-6 h-12">
-            <Button className="text-gray-700 " onClick={toggleTradingStockOverlay}>BUY/SELL</Button>
+            <Button className="text-gray-700 " onClick={placeOrderClose}>BUY/SELL</Button>
           </div>
         </div>
         <div>
-          <Overlay isOpen={isOpenTradingStock} onClose={toggleTradingStockOverlay}>
-            <TradingStock></TradingStock>
+          <Overlay isOpen={isOpenTradingStock} >
+            <TradingStock onClose={placeOrderClose}></TradingStock>
           </Overlay>
         </div>
       </div>

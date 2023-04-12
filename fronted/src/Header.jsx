@@ -2,10 +2,15 @@ import { Link, Navigate, useParams, useNavigate  } from 'react-router-dom';
 
 import {useContext, useState, useEffect } from 'react';
 import { UserContext } from './pages/context/UserContext';
+import LogoutConfirmation from './pages/common/LogoutConfirmation';
 import axios from "axios";
+import Overlay from "./pages/Overlay";
+
 
 export default function Header() {
     const {contextAgentUsername, setContextAgentUsername} = useContext(UserContext);
+    const [logoutConfirmation, isLogoutConfirmation] = useState(false);
+
     const navigate = useNavigate();
 
     let {subpage} = useParams();
@@ -26,7 +31,12 @@ export default function Header() {
         await axios.post("agent_account/logout");
         setContextAgentUsername(null);
         navigate('/login')
-      }
+        isLogoutConfirmation(true)
+    }
+
+    const toggleLogoutConfirmationOverlay = () => {
+        isLogoutConfirmation(!logoutConfirmation);
+    };
 
     return (
         <div>
@@ -55,10 +65,12 @@ export default function Header() {
                         )}
                     </div>
                     {!!contextAgentUsername && (
-                    <   button  onClick={logOut} className="primary max-w-sm mt-2">Logout</button>
+                    <   button  onClick={logOut} className="primary max-w-sm mt-2 whitespace-nowrap">Log Out</button>
                     )}
-                    
                 </div>
+                <Overlay isOpen={logoutConfirmation} onClose={toggleLogoutConfirmationOverlay}>
+                    <LogoutConfirmation></LogoutConfirmation>
+                </Overlay>
             </header>
         </div>
     )

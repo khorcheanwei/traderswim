@@ -2,15 +2,7 @@ import React from 'react'
 import { useTable, useFilters, useGlobalFilter, useAsyncDebounce, useSortBy, usePagination } from 'react-table'
 import { ChevronDoubleLeftIcon, ChevronLeftIcon, ChevronRightIcon, ChevronDoubleRightIcon } from '@heroicons/react/solid'
 import { Button, PageButton } from '../shared/Button'
-import { classNames } from '../shared/Utils'
 import { SortIcon, SortUpIcon, SortDownIcon } from '../shared/Icons'
-import {useContext, useState, useEffect} from 'react';
-import AccountAdd from '../account/AccountAdd';
-import AccountDeleteConfirmation from '../account/AccountDeleteConfirmation'
-import { AccountContext } from '../context/AccountContext';
-
-import axios from 'axios';
-import Overlay from "../Overlay";
 
 
 
@@ -153,7 +145,7 @@ function CommonTable({ columns, data, GlobalFilter }) {
                     setPageSize(Number(e.target.value))
                   }}
                 >
-                  {[5, 10, 20].map(pageSize => (
+                  {[10].map(pageSize => (
                     <option key={pageSize} value={pageSize}>
                       Show {pageSize}
                     </option>
