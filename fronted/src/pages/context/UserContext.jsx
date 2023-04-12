@@ -7,6 +7,7 @@ export const UserContext = createContext({});
 
 export function UserContextProvider({children}) {
     const [contextAgentUsername, setContextAgentUsername] = useState(null);
+    const [isLogoutConfirmation, setIsLogoutConfirmation] = useState(false);
 
     useEffect(() => {
         async function updateAgentUsername() {
@@ -22,7 +23,7 @@ export function UserContextProvider({children}) {
     }, [])
     
     return (
-        <UserContext.Provider value={{contextAgentUsername, setContextAgentUsername}}>
+        <UserContext.Provider value={{contextAgentUsername, setContextAgentUsername, isLogoutConfirmation, setIsLogoutConfirmation}}>
             {children}
         </UserContext.Provider>
     );

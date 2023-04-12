@@ -1,17 +1,12 @@
 import { Link, Navigate, useParams, useNavigate  } from 'react-router-dom';
-
 import {useContext, useState, useEffect } from 'react';
-import { UserContext } from './pages/context/UserContext';
 import LogoutConfirmation from './pages/common/LogoutConfirmation';
-import axios from "axios";
+import { UserContext } from './pages/context/UserContext';
 import Overlay from "./pages/Overlay";
 
 
 export default function Header() {
-    const {contextAgentUsername, setContextAgentUsername} = useContext(UserContext);
-    const [logoutConfirmation, isLogoutConfirmation] = useState(false);
-
-    const navigate = useNavigate();
+    const {contextAgentUsername, setContextAgentUsername, isLogoutConfirmation, setIsLogoutConfirmation} = useContext(UserContext);
 
     let {subpage} = useParams();
 
@@ -27,15 +22,8 @@ export default function Header() {
         return classes
     }
 
-    async function logOut() {
-        await axios.post("agent_account/logout");
-        setContextAgentUsername(null);
-        navigate('/login')
-        isLogoutConfirmation(true)
-    }
-
     const toggleLogoutConfirmationOverlay = () => {
-        isLogoutConfirmation(!logoutConfirmation);
+        setIsLogoutConfirmation(!isLogoutConfirmation);
     };
 
     return (
@@ -65,11 +53,11 @@ export default function Header() {
                         )}
                     </div>
                     {!!contextAgentUsername && (
-                    <   button  onClick={logOut} className="primary max-w-sm mt-2 whitespace-nowrap">Log Out</button>
+                    <   button  onClick={toggleLogoutConfirmationOverlay} className="primary max-w-sm mt-2 whitespace-nowrap">Log Out</button>
                     )}
                 </div>
-                <Overlay isOpen={logoutConfirmation} onClose={toggleLogoutConfirmationOverlay}>
-                    <LogoutConfirmation></LogoutConfirmation>
+                <Overlay isOpen={isLogoutConfirmation}>
+                    <LogoutConfirmation onClose={toggleLogoutConfirmationOverlay}></LogoutConfirmation>
                 </Overlay>
             </header>
         </div>
