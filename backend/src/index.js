@@ -32,4 +32,4 @@ const router = require("./routes/index");
 app.use(router);
 
 var port = process.env.PORT || 4000;
-app.listen(port, "127.0.0.1");
+module.exports = app.listen(port, "127.0.0.1");

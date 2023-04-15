@@ -35,7 +35,7 @@ export default function Header() {
                     </svg>
                     <span className="font-bold text-xl">traderswim</span>
                 </div>
-                { !(window.location.pathname=="/login") && <nav className="w-full flex justify-center mt-8 gap-2 mb-8">
+                { !(window.location.pathname=="/login") && !(window.location.pathname=="/register") && <nav className="w-full flex justify-center mt-8 gap-2 mb-8">
                     <Link className={linkClasses('account')} to={"/trading/account"}>Account</Link>
                     <Link className={linkClasses('copytrading')} to={"/trading/copytrading"}>Copy trading</Link>
                     <Link className={linkClasses('tradehistory')} to={"/trading/tradehistory"}>Trade History</Link>

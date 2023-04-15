@@ -5,9 +5,9 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Launch node program",
             "type": "node",
             "request": "launch",
-            "name": "Launch Program",
             "skipFiles": [
                 "<node_internals>/**"
             ],
@@ -20,20 +20,17 @@
             "envFile": "${workspaceFolder}/src/.env"
         },
         {
-            "name": "Launch Chrome",
+            "name": "Mocha unit testing",
+            "type": "node",
             "request": "launch",
-            "type": "chrome",
-            "url": "http://127.0.0.1:5173",
-            "webRoot": "${workspaceFolder}/fonted/",
-            "runtimeExecutable": "/mnt/c/Program Files/Google/Chrome/Application/chrome.exe" 
-        },
-        {
-            "name": "Attach to Chrome",
-            "port": 9222,
-            "request": "attach",
-            "type": "chrome",
-            "urlFilter": "http://127.0.0.1:5173/*", // use urlFilter instead of url!
-            "webRoot": "${workspaceFolder}/fonted/",
+            "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
+            "stopOnEntry": false,
+            "args": ["/home/mern/traderswim/backend/src/routes/unit_test/copyTradingAccount_test.js"], //you can specify paths to specific tests here
+            "cwd": "${workspaceRoot}",
+            "runtimeExecutable": null,
+            "env": {
+              "NODE_ENV": "testing"
+            }
         }
     ]
 }
