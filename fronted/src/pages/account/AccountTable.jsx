@@ -2,7 +2,7 @@ import React from 'react'
 import { useTable, useFilters, useGlobalFilter, useAsyncDebounce, useSortBy, usePagination } from 'react-table'
 import { Button, PageButton } from '../shared/Button'
 import { classNames } from '../shared/Utils'
-import {useContext, useState, useEffect} from 'react';
+import { useContext, useState, useEffect } from 'react';
 import AccountAdd from './AccountAdd';
 import AccountDeleteConfirmation from './AccountDeleteConfirmation'
 import { AccountContext } from '../context/AccountContext';
@@ -33,29 +33,29 @@ function GlobalFilter({
 
 
   return (
-      <div className="w-full">
-        <div className="flex justify-between">
-          <label className="flex gap-x-2 items-baseline">
-            <span className="text-gray-700">Search: </span>
-            <input
-              type="text"
-              className="rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-              value={value || ""}
-              onChange={e => {
-                setValue(e.target.value);
-                onChange(e.target.value);
-              }}
-              placeholder={`${count} records...`}
-            />
-          </label>
-          <Button className="text-gray-700 " onClick={accountAddClose}>ADD ACCOUNT</Button>
-        </div>
-        <div>
-          <Overlay isOpen={isOpenAccountLogin}>
-            <AccountAdd onClose={accountAddClose}></AccountAdd>
-          </Overlay>
-        </div>
+    <div className="w-full">
+      <div className="flex justify-between">
+        <label className="flex gap-x-2 items-baseline">
+          <span className="text-gray-700">Search: </span>
+          <input
+            type="text"
+            className="rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+            value={value || ""}
+            onChange={e => {
+              setValue(e.target.value);
+              onChange(e.target.value);
+            }}
+            placeholder={`${count} records...`}
+          />
+        </label>
+        <Button className="text-gray-700 " onClick={accountAddClose}>ADD ACCOUNT</Button>
       </div>
+      <div>
+        <Overlay isOpen={isOpenAccountLogin}>
+          <AccountAdd onClose={accountAddClose}></AccountAdd>
+        </Overlay>
+      </div>
+    </div>
   )
 }
 
@@ -64,7 +64,7 @@ export function StatusPill(row) {
   var accountStatus = "offline";
   if (row.value == true) {
     accountStatus = "online";
-  } 
+  }
 
   return (
     <span
@@ -85,11 +85,11 @@ export function StatusPill(row) {
 
 export function SettingsPanel(row) {
 
-  const { isOpenAccountDelete, setIsOpenAccountDelete} = useContext(AccountContext);
-  const {rowAccount, setRowAccount} = useContext(AccountContext);
+  const { isOpenAccountDelete, setIsOpenAccountDelete } = useContext(AccountContext);
+  const { rowAccount, setRowAccount } = useContext(AccountContext);
 
   const accountDeleteClose = () => {
-    
+
     if (isOpenAccountDelete == false) {
       setRowAccount(row)
     }
@@ -106,7 +106,7 @@ export function SettingsPanel(row) {
         <path strokeLinecap="round" strokeLinejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
       </svg>
       <Overlay isOpen={isOpenAccountDelete} >
-          <AccountDeleteConfirmation rowAccount={rowAccount} onClose={accountDeleteClose}></AccountDeleteConfirmation>
+        <AccountDeleteConfirmation rowAccount={rowAccount} onClose={accountDeleteClose}></AccountDeleteConfirmation>
       </Overlay>
     </div>
   );
@@ -116,7 +116,7 @@ export function SettingsPanel(row) {
 
 
 export function ConnectionToggle(row) {
-  const { accountTableData, setAccountTableData, isAccountLoginSuccessful, setIsAccountLoginSuccessful} = useContext(AccountContext);
+  const { accountTableData, setAccountTableData, isAccountLoginSuccessful, setIsAccountLoginSuccessful } = useContext(AccountContext);
 
   var checked_state = false;
 
@@ -127,7 +127,7 @@ export function ConnectionToggle(row) {
   async function updateAccountConnection(accountName, accountConnection) {
     try {
       // trigger connection ON/OFF to account trading session
-      await axios.post("/trading_account/connection", {accountName, accountConnection})
+      await axios.post("/trading_account/connection", { accountName, accountConnection })
       var response = await axios.get("/trading_account/database")
       if (response.data != null) {
         setAccountTableData(response.data)
@@ -151,8 +151,8 @@ export function ConnectionToggle(row) {
   );
 };
 
-function AccountsTable({ columns, data}) {
-  return CommonTable({columns, data, GlobalFilter})
+function AccountsTable({ columns, data }) {
+  return CommonTable({ columns, data, GlobalFilter })
 }
 
 export default AccountsTable;

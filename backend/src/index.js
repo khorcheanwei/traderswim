@@ -18,7 +18,7 @@ app.use(cookieParser());
 app.use(
   cors({
     credentials: true,
-    origin: "http://127.0.0.1:5173",
+    origin: "http://localhost:5173",
   })
 );
 
@@ -32,4 +32,4 @@ const router = require("./routes/index");
 app.use(router);
 
 var port = process.env.PORT || 4000;
-module.exports = app.listen(port, "127.0.0.1");
+module.exports = app.listen(port, "localhost");

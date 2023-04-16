@@ -3,7 +3,7 @@ import { useAsyncDebounce } from 'react-table'
 import { Button, PageButton } from './../shared/Button'
 import { classNames } from './../shared/Utils'
 import { SortIcon, SortUpIcon, SortDownIcon } from './../shared/Icons'
-import {useContext, useState, useEffect} from 'react';
+import { useContext, useState, useEffect } from 'react';
 import { UserContext } from '../context/UserContext';
 import { AccountContext } from '../context/AccountContext';
 import { CopyTradingAccountContext } from '../context/CopyTradingAccountContext';
@@ -33,31 +33,31 @@ function GlobalFilter({
   }
 
   return (
-      <div className="w-full">
-        <div className="flex justify-between items-center">
-          <label className="flex gap-x-2 items-baseline">
-            <span className="text-gray-700">Search: </span>
-            <input
-              type="text"
-              className="rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-              value={value || ""}
-              onChange={e => {
-                setValue(e.target.value);
-                onChange(e.target.value);
-              }}
-              placeholder={`${count} records...`}
-            />
-          </label>
-          <div className="flex gap-6 h-12">
-            <Button className="text-gray-700 " onClick={placeOrderClose}>BUY/SELL</Button>
-          </div>
-        </div>
-        <div>
-          <Overlay isOpen={isOpenTradingStock} >
-            <TradingStock onClose={placeOrderClose}></TradingStock>
-          </Overlay>
+    <div className="w-full">
+      <div className="flex justify-between items-center">
+        <label className="flex gap-x-2 items-baseline">
+          <span className="text-gray-700">Search: </span>
+          <input
+            type="text"
+            className="rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+            value={value || ""}
+            onChange={e => {
+              setValue(e.target.value);
+              onChange(e.target.value);
+            }}
+            placeholder={`${count} records...`}
+          />
+        </label>
+        <div className="flex gap-6 h-12">
+          <Button className="text-gray-700 " onClick={placeOrderClose}>BUY/SELL</Button>
         </div>
       </div>
+      <div>
+        <Overlay isOpen={isOpenTradingStock} >
+          <TradingStock onClose={placeOrderClose}></TradingStock>
+        </Overlay>
+      </div>
+    </div>
   )
 }
 
@@ -66,7 +66,7 @@ export function StatusPill(row) {
   var accountStatus = "offline";
   if (row.value == true) {
     accountStatus = "online";
-  } 
+  }
 
   return (
     <span
@@ -89,7 +89,7 @@ export function SettingsPanel(rowCopyTrading) {
   const orderQuantity = rowCopyTrading.cell.row.original.orderQuantity;
   const filledQuantity = rowCopyTrading.cell.row.original.filledQuantity;
 
-  var  disabledPlaceOrder = true;
+  var disabledPlaceOrder = true;
 
   if (filledQuantity < orderQuantity) {
     disabledPlaceOrder = false
@@ -125,7 +125,7 @@ export function SettingsPanel(rowCopyTrading) {
 
 
 export function ConnectionToggle(row) {
-  const {copyTradingAccountData, setCopyTradingAccountData, isCopyTradingAccountSuccessful, setIsCopyTradingAccountSuccessful} = useContext(CopyTradingAccountContext);
+  const { copyTradingAccountData, setCopyTradingAccountData, isCopyTradingAccountSuccessful, setIsCopyTradingAccountSuccessful } = useContext(CopyTradingAccountContext);
   var checked_state = false;
 
   if (row.value == true) {
@@ -134,7 +134,7 @@ export function ConnectionToggle(row) {
 
   async function updateAccountConnection(accountName, accountConnection) {
     try {
-      await axios.post("/trading_account/connection", {accountName, accountConnection})
+      await axios.post("/trading_account/connection", { accountName, accountConnection })
       var response = await axios.get("/copy_trading_account/database")
       if (response.data != null) {
         setCopyTradingAccountData(response.data)
@@ -159,7 +159,7 @@ export function ConnectionToggle(row) {
 };
 
 function CopyTradingTable({ columns, data }) {
-  return CommonTable({columns, data, GlobalFilter})
+  return CommonTable({ columns, data, GlobalFilter })
 }
 
 export default CopyTradingTable;

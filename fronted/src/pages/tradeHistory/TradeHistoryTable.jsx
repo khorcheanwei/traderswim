@@ -4,7 +4,7 @@ import { ChevronDoubleLeftIcon, ChevronLeftIcon, ChevronRightIcon, ChevronDouble
 import { Button, PageButton } from '../shared/Button'
 import { classNames } from '../shared/Utils'
 import { SortIcon, SortUpIcon, SortDownIcon } from '../shared/Icons'
-import {useContext, useState, useEffect} from 'react';
+import { useContext, useState, useEffect } from 'react';
 import { AccountContext } from '../context/AccountContext';
 
 import axios from 'axios';
@@ -31,21 +31,21 @@ function GlobalFilter({
   };
 
   return (
-      <div className="flex">
-        <label className="flex gap-x-2 items-baseline">
-          <span className="text-gray-700">Search: </span>
-          <input
-            type="text"
-            className="rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-            value={value || ""}
-            onChange={e => {
-              setValue(e.target.value);
-              onChange(e.target.value);
-            }}
-            placeholder={`${count} records...`}
-          />
-        </label>
-      </div>
+    <div className="flex">
+      <label className="flex gap-x-2 items-baseline">
+        <span className="text-gray-700">Search: </span>
+        <input
+          type="text"
+          className="rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+          value={value || ""}
+          onChange={e => {
+            setValue(e.target.value);
+            onChange(e.target.value);
+          }}
+          placeholder={`${count} records...`}
+        />
+      </label>
+    </div>
   )
 }
 
@@ -54,7 +54,7 @@ export function StatusPill(row) {
   var accountStatus = "offline";
   if (row.value == true) {
     accountStatus = "online";
-  } 
+  }
 
   return (
     <span
@@ -74,7 +74,7 @@ export function StatusPill(row) {
 
 
 export function ConnectionToggle(row) {
-  const { accountTableData, setAccountTableData, isAccountLoginSuccessful, setIsAccountLoginSuccessful} = useContext(AccountContext);
+  const { accountTableData, setAccountTableData, isAccountLoginSuccessful, setIsAccountLoginSuccessful } = useContext(AccountContext);
 
   var checked_state = false;
 
@@ -85,7 +85,7 @@ export function ConnectionToggle(row) {
   async function updateAccountConnection(accountName, accountConnection) {
     try {
       // trigger connection ON/OFF to account trading session
-      await axios.post("/trading_account/connection", {accountName, accountConnection})
+      await axios.post("/trading_account/connection", { accountName, accountConnection })
       var response = await axios.get("/trading_account/database")
       if (response.data != null) {
         setAccountTableData(response.data)
@@ -110,7 +110,7 @@ export function ConnectionToggle(row) {
 };
 
 function TradingActivityTable({ columns, data }) {
-  return CommonTable({columns, data, GlobalFilter})
+  return CommonTable({ columns, data, GlobalFilter })
 }
 
 export default TradingActivityTable;
