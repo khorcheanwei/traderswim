@@ -25,6 +25,7 @@
     "mongoose": "^7.0.1",
     "nodemon": "^2.0.22",
     "request": "^2.88.2",
+    "sqlite3": "^5.1.6",
     "supertest": "^6.3.3"
   }
 }
