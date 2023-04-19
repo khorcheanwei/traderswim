@@ -1,62 +1,20 @@
-const mongoose = require("mongoose");
-const { Schema } = mongoose;
+const CopyTradingAccountSchemaSql = `
+  CREATE TABLE IF NOT EXISTS copyTradingAccount (
+    id INTEGER PRIMARY KEY,
+    agentID INTEGER NOT NULL,
+    agentTradingSessionID INTEGER NOT NULL,
+    accountID INTEGER NOT NULL,
+    accountName TEXT NOT NULL,
+    stockName TEXT NOT NULL,
+    stockTradeAction TEXT NOT NULL,
+    stockTradeType TEXT NOT NULL,
+    stockEntryPrice REAL NOT NULL,
+    stockEntryPriceCurrency TEXT NOT NULL,
+    orderQuantity INTEGER NOT NULL,
+    filledQuantity INTEGER NOT NULL,
+    orderDate DATETIME NOT NULL,
+    FOREIGN KEY (agentID) REFERENCES agent (id),
+    FOREIGN KEY (accountID) REFERENCES account (id)
+);`
 
-const copyTradingAccountSchema = new Schema({
-  agentID: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Agent",
-    required: true,
-  },
-  agentTradingSessionID: {
-    type: Number,
-    required: true,
-  },
-  accountID: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Account",
-    required: true,
-  },
-  accountName: {
-    type: String,
-    required: true,
-  },
-  stockName: {
-    type: String,
-    required: true,
-  },
-  stockTradeAction: {
-    type: String,
-    required: true,
-  },
-  stockTradeType: {
-    type: String,
-    required: true,
-  },
-  stockEntryPrice: {
-    type: Number,
-    required: true,
-  },
-  stockEntryPriceCurrency: {
-    type: String,
-    required: true,
-  },
-  orderQuantity: {
-    type: Number,
-    required: true,
-  },
-  filledQuantity: {
-    type: Number,
-    required: true,
-  },
-  orderDate: {
-    type: Date,
-    required: true,
-  },
-});
-
-const CopyTradingAccountModel = mongoose.model(
-  "CopyTradingAccount",
-  copyTradingAccountSchema
-);
-
-module.exports = CopyTradingAccountModel;
+module.exports = CopyTradingAccountSchemaSql;

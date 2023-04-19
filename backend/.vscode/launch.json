@@ -12,12 +12,12 @@
                 "<node_internals>/**"
             ],
             "runtimeExecutable": "nodemon",
-            "args": [ 
+            "args": [
                 "--delay",
-                "500ms"                       
+                "500ms"
             ],
             "program": "${workspaceFolder}/src/index.js",
-            "envFile": "${workspaceFolder}/src/.env"
+            "envFile": "${workspaceFolder}/src/.env",
         },
         {
             "name": "Mocha unit testing",
@@ -25,11 +25,13 @@
             "request": "launch",
             "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
             "stopOnEntry": false,
-            "args": ["/home/mern/traderswim/backend/src/routes/unit_test/copyTradingAccount_test.js"], //you can specify paths to specific tests here
+            "args": [
+                "/home/mern/traderswim/backend/src/routes/unit_test/copyTradingAccount_test.js"
+            ], //you can specify paths to specific tests here
             "cwd": "${workspaceRoot}",
             "runtimeExecutable": null,
             "env": {
-              "NODE_ENV": "testing"
+                "NODE_ENV": "testing"
             }
         }
     ]

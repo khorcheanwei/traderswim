@@ -8,36 +8,31 @@ const jwtSecret = process.env.JWTSECRET;
 
 // To register new agent
 async function agent_register(httpRequest) {
-  const { agentUsername, agentEmail, agentPassword } = httpRequest.body;
+  const { agentUsername, agentPassword } = httpRequest.body;
 
   try {
+    
     // check if agentUsername existed
     var dbQueryResult = await agentDBOperation.searchAgentName(agentUsername);
     if (dbQueryResult.success == true) {
-      if (dbQueryResult.data != null) {
+      if (dbQueryResult.data) {
         return { success: true, data: "This username is already registered" };
       }
     } else {
       return { success: false, data: dbQueryResult.error };
     }
-
-    // check if agentEmail existed
-    dbQueryResult = await agentDBOperation.searchAgentEmail(agentEmail);
-    if (dbQueryResult.success == true) {
-      if (dbQueryResult.data != null) {
-        return { success: true, data: "This email is already registered" };
-      }
+  
+    // create new agent
+    dbQueryResult = await agentDBOperation.createAgentItem(
+      agentUsername,
+      agentPassword
+    );
+    if (dbQueryResult.success) {
+      return { success: true, data: "User is successfully registered" };
     } else {
       return { success: false, data: dbQueryResult.error };
     }
-
-    // create new agent
-    await agentDBOperation.createAgentItem(
-      agentUsername,
-      agentEmail,
-      agentPassword
-    );
-    return { success: true, data: "User is successfully registered" };
+    
   } catch (error) {
     return { success: false, data: error };
   }
@@ -62,7 +57,7 @@ async function agent_login(httpRequest) {
         try {
           const token = await jwt.sign(
             {
-              id: agentDocument._id,
+              id: agentDocument.id,
             },
             jwtSecret,
             {}
@@ -87,13 +82,13 @@ async function agent_profile(httpRequest) {
   const { token } = httpRequest.cookies;
   if (token) {
     try {
-      const agentDoc = await jwt.verify(token, jwtSecret, {});
-      const dbQueryResult = await agentDBOperation.searchAgentByID(agentDoc.id);
+      const agentDocument = await jwt.verify(token, jwtSecret, {});
+      const dbQueryResult = await agentDBOperation.searchAgentByID(agentDocument.id);
       if (dbQueryResult.success) {
-        const { _id, agentUsername } = dbQueryResult.data;
+        const { id, agentUsername } = dbQueryResult.data;
         return {
           success: true,
-          data: { agentID: _id, agentUsername: agentUsername },
+          data: { agentID: id, agentUsername: agentUsername },
         };
       } else {
         return { success: false, data: dbQueryResult.error };

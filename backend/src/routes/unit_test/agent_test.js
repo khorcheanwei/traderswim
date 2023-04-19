@@ -6,11 +6,6 @@ let chaiHttp = require("chai-http");
 let server = require("./../../index");
 chai.use(chaiHttp);
 
-const mongoose = require("mongoose");
-MONGODB_URI =
-  "mongodb+srv://khorcheanwei516:E8NJwB7AmXq74N9O@parttimedev.68nzqgq.mongodb.net/test";
-mongoose.connect(MONGODB_URI);
-
 describe("Agent API unit test", () => {
   it("Agent registration", async () => {
     chai
@@ -18,7 +13,6 @@ describe("Agent API unit test", () => {
       .post("/agent_account/register/")
       .send({
         agentUsername: "agent_test",
-        agentEmail: "agent_test@gmail.com",
         agentPassword: "123",
       })
       .end((err, response) => {
@@ -43,7 +37,6 @@ describe("Agent API unit test", () => {
 
         assert(response.status === 200);
         assert(response.body["agentUsername"] === "agent_test");
-        assert(response.body["agentEmail"] === "agent_test@gmail.com");
         assert(
           response.body["agentPassword"] ===
             "$2a$12$pGg03fhwOpJLTDNTl/KtDOls2fr4FcpuMJItHsrrZqVPUz3x6KgLO"
@@ -87,12 +80,4 @@ describe("Agent API unit test", () => {
       });
   });
 
-  /*
-  afterEach(async function () {
-    const collections = await mongoose.connection.db.collections();
-
-    for (let collection of collections) {
-      await collection.remove();
-    }
-  });*/
 });

@@ -1,34 +1,10 @@
-const mongoose = require("mongoose");
-const { Schema } = mongoose;
+const AgentSchemaSql = `
+  CREATE TABLE IF NOT EXISTS agent (
+    id INTEGER PRIMARY KEY,
+    agentUsername TEXT NOT NULL UNIQUE,
+    agentPassword TEXT NOT NULL,
+    agentTradingSessionID INTEGER NOT NULL,
+    agentIsTradingSession BOOLEAN NOT NULL
+);`
 
-const agentSchema = new Schema(
-  {
-    agentUsername: {
-      type: String,
-      unique: true,
-      required: true,
-    },
-    agentEmail: {
-      type: String,
-      unique: true,
-      required: true,
-    },
-    agentPassword: {
-      type: String,
-      required: true,
-    },
-    agentTradingSessionID: {
-      type: Number,
-      required: true,
-    },
-    agentIsTradingSession: {
-      type: Boolean,
-      required: true,
-    },
-  },
-  { strict: true }
-);
-
-const AgentModel = mongoose.model("Agent", agentSchema);
-
-module.exports = AgentModel;
+module.exports = AgentSchemaSql;
