@@ -17,7 +17,7 @@ export default function AgentLoginPage() {
             if (typeof data.agentUsername === 'undefined') {
                 alert("Login failed.");
             } else {
-                alert("Login successful");
+                alert("Login successfully");
                 setRedirect(true)
             }
         } catch (error) {

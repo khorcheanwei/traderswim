@@ -5,7 +5,6 @@ import axios from "axios";
 
 export default function AgentRegisterPage() {
     const [agentUsername, setAgentUsername] = useState('');
-    const [agentEmail, setAgentEmail] = useState('');
     const [agentPassword, setAgentPassword] = useState('');
 
     const [redirect, setRedirect] = useState(false)
@@ -15,13 +14,12 @@ export default function AgentRegisterPage() {
         try {
             await axios.post("/agent_account/register/", {
                 agentUsername,
-                agentEmail,
                 agentPassword,
             }).then(response => {
                 alert(response.data);
                 setRedirect(true)
             }).catch(err => {
-                console.log(err);
+                alert("Registration failed. Please try again.");
             })
         } catch (error) {
             alert("Registration failed. Please try again.");
@@ -41,10 +39,6 @@ export default function AgentRegisterPage() {
                         placeholder="John Doe"
                         value={agentUsername}
                         onChange={event => setAgentUsername(event.target.value)} />
-                    <input type="email"
-                        placeholder="your@email.com"
-                        value={agentEmail}
-                        onChange={event => setAgentEmail(event.target.value)} />
                     <input type="password"
                         placeholder="************"
                         value={agentPassword}
