@@ -34,7 +34,7 @@ export default function TradingStock({ onClose }) {
             setDisabledButton(false)
 
         } catch (e) {
-            alert("Account deleted failed")
+            alert("Copy trading failed")
             console.log(e);
         }
         setDisabledButton(false)
