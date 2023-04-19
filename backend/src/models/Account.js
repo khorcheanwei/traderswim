@@ -1,30 +1,13 @@
-const mongoose = require("mongoose");
-const { Schema } = mongoose;
 
-const accountSchema = new Schema({
-  agentID: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Agent",
-    required: true,
-  },
-  accountName: {
-    type: String,
-    required: true,
-  },
-  accountConnection: {
-    type: Boolean,
-    required: true,
-  },
-  accountUsername: {
-    type: String,
-    required: true,
-  },
-  accountPassword: {
-    type: String,
-    required: true,
-  },
-});
+const AccountSchemaSql = `
+  CREATE TABLE  IF NOT EXISTS account (
+    id INTEGER PRIMARY KEY,
+    agentID INTEGER NOT NULL,
+    accountName TEXT NOT NULL,
+    accountConnection INTEGER NOT NULL,
+    accountUsername TEXT NOT NULL,
+    accountPassword TEXT NOT NULL,
+    FOREIGN KEY (agentID) REFERENCES agent (id)
+);`
 
-const AccountModel = mongoose.model("Account", accountSchema);
-
-module.exports = AccountModel;
+module.exports = AccountSchemaSql;

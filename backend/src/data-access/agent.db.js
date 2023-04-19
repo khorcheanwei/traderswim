@@ -7,22 +7,22 @@ function agentDBOperation(trading_management_db) {
   // search whether Agent existed by AgentUsername
   this.searchAgentName = async function (agentUsername) {
     try {
-      const queryResult = await this.trading_management_db.exists({
-        agentUsername: agentUsername,
-      });
-      return { success: true, data: queryResult };
-    } catch (error) {
-      return { success: false, error: error };
-    }
-  };
+      let tableExists = false;
+      const sqlCommand = `SELECT EXISTS(SELECT 1 FROM agent WHERE agentUsername=?) AS rowExists;`
 
-  // search whether Agent existed by AgentEmail
-  this.searchAgentEmail = async function (agentEmail) {
-    try {
-      const queryResult = await this.trading_management_db.exists({
-        agentEmail: agentEmail,
+      const row = await new Promise((resolve, reject) => {
+        this.trading_management_db.get(sqlCommand, [agentUsername], (err, row) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(row);
+          }
+        });
       });
-      return { success: true, data: queryResult };
+      if (row.rowExists) {
+        tableExists = true;
+      }
+      return { success: true, data: tableExists };
     } catch (error) {
       return { success: false, error: error };
     }
@@ -31,9 +31,18 @@ function agentDBOperation(trading_management_db) {
   // search Agent by AgentUsername
   this.searchAgentByUsername = async function (agentUsername) {
     try {
-      const queryResult = await this.trading_management_db.findOne({
-        agentUsername: agentUsername,
+      const sqlCommand = `SELECT * FROM agent WHERE agentUsername=?`;
+
+      const queryResult = await new Promise((resolve, reject) => {
+        this.trading_management_db.get(sqlCommand, [agentUsername], (err, row) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(row);
+          }
+        });
       });
+
       return { success: true, data: queryResult };
     } catch (error) {
       return { success: false, error: error };
@@ -42,8 +51,20 @@ function agentDBOperation(trading_management_db) {
 
   // search Agent by AgentID
   this.searchAgentByID = async function (agentID) {
+
     try {
-      const queryResult = await trading_management_db.findById(agentID);
+      const sqlCommand = `SELECT * FROM agent WHERE id=?`;
+
+      const queryResult = await new Promise((resolve, reject) => {
+        this.trading_management_db.get(sqlCommand, [agentID], (err, row) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(row);
+          }
+        });
+      });
+
       return { success: true, data: queryResult };
     } catch (error) {
       return { success: false, error: error };
@@ -53,12 +74,18 @@ function agentDBOperation(trading_management_db) {
   // get agentTradingSessionID based on AgentID
   this.searchAgentTradingSessionID = async function (agentID) {
     try {
-      const queryResult = await trading_management_db.findOne(
-        { _id: agentID },
-        {
-          agentTradingSessionID: 1,
-        }
-      );
+      const sqlCommand = `SELECT * FROM agent WHERE id=?;`
+
+      const queryResult = await new Promise((resolve, reject) => {
+        this.trading_management_db.get(sqlCommand, [agentID], (err, row) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(row);
+          }
+        });
+      });
+      
       return { success: true, data: queryResult };
     } catch (error) {
       return { success: false, error: error };
@@ -68,14 +95,25 @@ function agentDBOperation(trading_management_db) {
   // create new Agent
   this.createAgentItem = async function (
     agentUsername,
-    agentEmail,
     agentPassword
   ) {
     try {
-      const sqlCommand = `insert into hero (agentUsername, agentEmail, agentPassword, agentTradingSessionID, agentIsTradingSession)
-                          values ('agent_a', 'agent_a@gmail.com', '1', '1');`
+      const sqlCommand = `INSERT INTO agent (agentUsername, agentPassword, agentTradingSessionID, agentIsTradingSession) VALUES (?, ?, ?, ?);`
+      const agentTradingSessionID = 0;
+      const agentIsTradingSession = false;
+      agentPassword = bcrypt.hashSync(agentPassword, bcryptSalt)
 
-      await this.trading_management_db.exec(sqlCommand)
+      await new Promise((resolve, reject) => {
+        this.trading_management_db.get(sqlCommand, [agentUsername, agentPassword, agentTradingSessionID, agentIsTradingSession], (err, row) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(row);
+          }
+        });
+      });
+      return {success: true}
+
     } catch (error) {
       return { success: false, error: error };
     }
@@ -86,18 +124,24 @@ function agentDBOperation(trading_management_db) {
     agentID,
     agentTradingSessionID
   ) {
-    try {
-      var query = { _id: agentID };
-      var updatedQuery = {
-        agentTradingSessionID: agentTradingSessionID,
-        agentIsTradingSession: true,
-      };
-      await trading_management_db.updateOne(query, updatedQuery);
+    try{  
+      const agentIsTradingSession = true;
+      const sqlCommand = `UPDATE agent SET agentTradingSessionID=?,agentIsTradingSession=? WHERE id=?`;
 
+      await new Promise((resolve, reject) => {
+        this.trading_management_db.all(sqlCommand, [agentTradingSessionID, agentIsTradingSession, agentID], (err, row) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(row);
+          }
+        });
+      });
       return { success: true };
+
     } catch (error) {
       return { success: false, error: error };
-    }
+    };
   };
 }
 module.exports = agentDBOperation;

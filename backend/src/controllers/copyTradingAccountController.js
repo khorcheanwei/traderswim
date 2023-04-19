@@ -23,18 +23,19 @@ async function copy_trading_place_order(httpRequest) {
   const { token } = httpRequest.cookies;
   if (token) {
     try {
-      const agentDoc = await jwt.verify(token, jwtSecret, {});
-      const agentID = agentDoc.id;
+      var agentDocument = await jwt.verify(token, jwtSecret, {});
+      const agentID = agentDocument.id;
       // get agent trading sessionID
       var result = await agentDBOperation.searchAgentTradingSessionID(agentID);
       if (result.success != true) {
         return { success: false, data: result.error };
       }
-      const agentsDocument = result.data;
-      const agentTradingSessionID = agentsDocument.agentTradingSessionID + 1;
+
+      agentDocument = result.data;
+      const agentTradingSessionID = agentDocument.agentTradingSessionID + 1;
 
       // get all accountName of particular agentID
-      result = await accountDBOperation.searchAccountNameByAgentID(agentID);
+      result = await accountDBOperation.searchAccountByAgentID(agentID);
       if (result.success != true) {
         return { success: false, data: result.error };
       }
@@ -65,7 +66,7 @@ async function copy_trading_place_order(httpRequest) {
       // save agentTradingSessionID and agentIsTradingSession to table Agent
       return { success: true, data: "success" };
     } catch (error) {
-      return { success: false, data: result.error };
+      return { success: false, data: error };
     }
   } else {
     return { success: true, data: null };
@@ -78,16 +79,16 @@ async function copy_trading_database(httpRequest) {
 
   if (token) {
     try {
-      const agentDoc = await jwt.verify(token, jwtSecret, {});
-      agentID = agentDoc.id;
+      var agentDocument = await jwt.verify(token, jwtSecret, {});
+      agentID = agentDocument.id;
 
       // get agent trading sessionID
       var result = await agentDBOperation.searchAgentTradingSessionID(agentID);
       if (result.success != true) {
         return { success: false, data: result.error };
       }
-      const agentsDocument = result.data;
-      const agentTradingSessionID = agentsDocument.agentTradingSessionID;
+      agentDocument = result.data;
+      const agentTradingSessionID = agentDocument.agentTradingSessionID;
 
       // get CopyTradingAccount based on agentID and agentTradingSessionID
       result =
@@ -134,8 +135,8 @@ async function copy_trading_history_database(httpRequest) {
 
   if (token) {
     try {
-      const agentDoc = await jwt.verify(token, jwtSecret, {});
-      agentID = agentDoc.id;
+      const agentDocument = await jwt.verify(token, jwtSecret, {});
+      agentID = agentDocument.id;
 
       try {
         // get CopyTradingAccount based on agentID and agentTradingSessionID

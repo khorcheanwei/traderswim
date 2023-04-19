@@ -18,7 +18,6 @@ describe("Agent API unit test", () => {
       .post("/agent_account/register/")
       .send({
         agentUsername: "agent_test",
-        agentEmail: "agent_test@gmail.com",
         agentPassword: "123",
       })
       .end((err, response) => {
@@ -43,7 +42,6 @@ describe("Agent API unit test", () => {
 
         assert(response.status === 200);
         assert(response.body["agentUsername"] === "agent_test");
-        assert(response.body["agentEmail"] === "agent_test@gmail.com");
         assert(
           response.body["agentPassword"] ===
             "$2a$12$pGg03fhwOpJLTDNTl/KtDOls2fr4FcpuMJItHsrrZqVPUz3x6KgLO"

@@ -13,8 +13,8 @@ async function account_login(httpRequest) {
   const { token } = httpRequest.cookies;
   if (token) {
     try {
-      const agentDoc = await jwt.verify(token, jwtSecret, {});
-      const agentID = agentDoc.id;
+      const agentDocument = await jwt.verify(token, jwtSecret, {});
+      const agentID = agentDocument.id;
 
       // search for accountName
       var result = await accountDBOperation.searchAccountName(
@@ -77,9 +77,9 @@ async function account_login(httpRequest) {
 async function account_database(httpRequest) {
   const { token } = httpRequest.cookies;
   if (token) {
-    const agentDoc = await jwt.verify(token, jwtSecret, {});
+    const agentDocument = await jwt.verify(token, jwtSecret, {});
     try {
-      agentID = agentDoc.id;
+      agentID = agentDocument.id;
 
       const result = await accountDBOperation.searchAccountByAgentID(agentID);
 
@@ -102,7 +102,7 @@ async function account_database(httpRequest) {
         return { success: false, data: result.error };
       }
     } catch (error) {
-      return { success: false, data: result.error };
+      return { success: false, data: error };
     }
   } else {
     return { success: true, data: null };
@@ -116,9 +116,9 @@ async function account_connection_status(httpRequest) {
 
   if (token) {
     try {
-      const agentDoc = await jwt.verify(token, jwtSecret, {});
+      const agentDocument = await jwt.verify(token, jwtSecret, {});
 
-      agentID = agentDoc.id;
+      agentID = agentDocument.id;
       const result = await accountDBOperation.updateAccountByAccountConnection(
         agentID,
         accountName,
@@ -145,9 +145,9 @@ async function account_delete(httpRequest) {
 
   if (token) {
     try {
-      const agentDoc = await jwt.verify(token, jwtSecret, {});
+      const agentDocument = await jwt.verify(token, jwtSecret, {});
 
-      const agentID = agentDoc.id;
+      const agentID = agentDocument.id;
 
       const result = await accountDBOperation.deleteAccount(
         agentID,
