@@ -6,11 +6,6 @@ let chaiHttp = require("chai-http");
 let server = require("./../../index");
 chai.use(chaiHttp);
 
-const mongoose = require("mongoose");
-MONGODB_URI =
-  "mongodb+srv://khorcheanwei516:E8NJwB7AmXq74N9O@parttimedev.68nzqgq.mongodb.net/test";
-mongoose.connect(MONGODB_URI);
-
 describe("Trading Account login", () => {
   chai
     .request(server)

@@ -6,11 +6,6 @@ let chaiHttp = require("chai-http");
 let server = require("./../../index");
 chai.use(chaiHttp);
 
-const mongoose = require("mongoose");
-MONGODB_URI =
-  "mongodb+srv://khorcheanwei516:E8NJwB7AmXq74N9O@parttimedev.68nzqgq.mongodb.net/test";
-mongoose.connect(MONGODB_URI);
-
 describe("Agent API unit test", () => {
   it("Agent registration", async () => {
     chai
@@ -85,12 +80,4 @@ describe("Agent API unit test", () => {
       });
   });
 
-  /*
-  afterEach(async function () {
-    const collections = await mongoose.connection.db.collections();
-
-    for (let collection of collections) {
-      await collection.remove();
-    }
-  });*/
 });
