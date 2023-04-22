@@ -9,8 +9,6 @@ import { UserContextProvider } from './pages/context/UserContext';
 import { AccountContextProvider } from './pages/context/AccountContext';
 import { CopyTradingAccountContextProvider } from './pages/context/CopyTradingAccountContext';
 import { TradeHistoryContextProvider } from './pages/context/TradeHistoryContext';
-import { useContext, useState, useEffect } from 'react';
-import { Link, Navigate } from 'react-router-dom';
 
 axios.defaults.baseURL = "http://localhost:4000";
 axios.defaults.withCredentials = true;

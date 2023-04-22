@@ -1,29 +1,33 @@
 import axios from "axios";
 import { createContext, useEffect } from "react";
-import { Link , Navigate} from 'react-router-dom';
-import { useState} from 'react';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
 export const UserContext = createContext({});
 
-export function UserContextProvider({children}) {
+export function UserContextProvider({ children }) {
     const [contextAgentUsername, setContextAgentUsername] = useState(null);
     const [isLogoutConfirmation, setIsLogoutConfirmation] = useState(false);
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         async function updateAgentUsername() {
             if (contextAgentUsername == null) {
-                await axios.get("/agent_account/profile").then(({data}) =>{
+                await axios.get("/agent_account/profile").then(({ data }) => {
                     if (data != null) {
                         setContextAgentUsername(data.agentUsername);
-                    } 
-                })  
+                    } else {
+                        navigate('/login')
+                    }
+                })
             }
         }
-        updateAgentUsername()   
+        updateAgentUsername()
     }, [])
-    
+
     return (
-        <UserContext.Provider value={{contextAgentUsername, setContextAgentUsername, isLogoutConfirmation, setIsLogoutConfirmation}}>
+        <UserContext.Provider value={{ contextAgentUsername, setContextAgentUsername, isLogoutConfirmation, setIsLogoutConfirmation }}>
             {children}
         </UserContext.Provider>
     );
