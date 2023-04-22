@@ -4,12 +4,13 @@ var sqlite3 = require('sqlite3').verbose();;
 const trading_management_db = new sqlite3.Database('trading_management.db', (err) => {
   if (err) {
     console.error(err.message);
+  } else {
+    console.log('Connected to the database');
   }
-  console.log('Connected to the agent database.');
 });
 
-const AgentSchemaSql = require("../models/Agent");
 // new agent table
+const AgentSchemaSql = require("../models/Agent");
 trading_management_db.run(AgentSchemaSql), (err) => {
   if (err) {
     console.error(err.message);
@@ -27,7 +28,6 @@ trading_management_db.run(AccountSchemaSql), (err) => {
 };
 
 
-
 // new copytradingaccounts table
 const CopyTradingAccountSchemaSql = require("../models/CopyTradingAccount");
 trading_management_db.run(CopyTradingAccountSchemaSql), (err) => {
@@ -38,7 +38,6 @@ trading_management_db.run(CopyTradingAccountSchemaSql), (err) => {
 };
 
 
-
 const agentDB = require("./agent.db.js");
 const accountDB = require("./account.db.js");
 const copyTradingAccountDB = require("./copyTrading.db.js");
@@ -47,6 +46,7 @@ const agentDBOperation = new agentDB(trading_management_db);
 const accountDBOperation = new accountDB(trading_management_db);
 const copyTradingAccountDBBOperation = new copyTradingAccountDB(trading_management_db);
 
+console.log('Backend service start');
 
 module.exports = {
   agentDBOperation,
