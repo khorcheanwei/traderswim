@@ -1,5 +1,4 @@
 const express = require("express");
-const mongoose = require("mongoose");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 
@@ -24,9 +23,6 @@ app.use(
 
 app.use(express.json());
 
-const redirect_uri = "";
-
-mongoose.connect(process.env.MONGO_URL);
 
 const router = require("./routes/index");
 app.use(router);
