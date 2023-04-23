@@ -1,14 +1,6 @@
 const express = require("express");
 
-const jwt = require("jsonwebtoken");
-const jwtSecret = process.env.JWTSECRET;
-
-const bcrypt = require("bcryptjs");
-const bcryptSalt = bcrypt.genSaltSync(12);
-
 const tradingAccountRouter = express.Router();
-
-const { accountDBOperation } = require("../data-access/index.js");
 
 const {
   account_login,

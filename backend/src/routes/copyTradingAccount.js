@@ -1,14 +1,5 @@
 const express = require("express");
 
-const jwt = require("jsonwebtoken");
-const jwtSecret = process.env.JWTSECRET;
-
-const {
-  agentDBOperation,
-  accountDBOperation,
-  copyTradingAccountDBBOperation,
-} = require("../data-access/index.js");
-
 const copyTradingAccountRouter = express.Router();
 
 const {

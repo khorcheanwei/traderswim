@@ -1,8 +1,5 @@
 const express = require("express");
 
-const jwt = require("jsonwebtoken");
-const jwtSecret = process.env.JWTSECRET;
-
 const agentAccountRouter = express.Router();
 
 const {
@@ -28,6 +25,7 @@ agentAccountRouter.post("/login", async (httpRequest, httpResponse) => {
   if (result.success == true) {
     httpResponse.cookie("token", result.token).json(result.data);
   } else {
+    console.log(result.data)
     httpResponse.status(400).json(result.data);
   }
 });
