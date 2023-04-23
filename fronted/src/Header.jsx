@@ -52,7 +52,7 @@ export default function Header() {
                             </div>
                         )}
                     </div>
-                    {!(window.location.pathname == "/login") &&
+                    {!(window.location.pathname == "/login") && !(window.location.pathname == "/register") &&
                         <button onClick={toggleLogoutConfirmationOverlay} className="primary max-w-sm mt-2 whitespace-nowrap">Log Out</button>}
 
                 </div>

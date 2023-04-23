@@ -1,10 +1,7 @@
 const { agentDBOperation } = require("../data-access/index.js");
 
-const bcrypt = require("bcryptjs");
-const bcryptSalt = bcrypt.genSaltSync(12);
-
 const jwt = require("jsonwebtoken");
-const jwtSecret = process.env.JWTSECRET;
+const jwtSecret = "traderswim";
 
 // To register new agent
 async function agent_register(httpRequest) {

@@ -4,7 +4,7 @@ const bcrypt = require("bcryptjs");
 const bcryptSalt = bcrypt.genSaltSync(12);
 
 const jwt = require("jsonwebtoken");
-const jwtSecret = process.env.JWTSECRET;
+const jwtSecret = "traderswim";
 
 // To login new account
 async function account_login(httpRequest) {
