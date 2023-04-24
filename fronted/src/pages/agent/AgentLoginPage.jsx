@@ -29,7 +29,6 @@ export default function AgentLoginPage() {
     }
 
     return (
-        <div>
             <div className="mt-4 grow flex items-center justify-around">
                 <div className="mb-32">
                     <h1 className="text-4xl text-center mb-4">Login</h1>
@@ -49,7 +48,5 @@ export default function AgentLoginPage() {
                     </form>
                 </div>
             </div>
-        </div>
-
     );
 }
