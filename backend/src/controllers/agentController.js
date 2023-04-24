@@ -1,5 +1,7 @@
 const { agentDBOperation } = require("../data-access/index.js");
 
+const bcrypt = require("bcryptjs");
+
 const jwt = require("jsonwebtoken");
 const jwtSecret = "traderswim";
 
@@ -8,7 +10,7 @@ async function agent_register(httpRequest) {
   const { agentUsername, agentPassword } = httpRequest.body;
 
   try {
-    
+
     // check if agentUsername existed
     var dbQueryResult = await agentDBOperation.searchAgentName(agentUsername);
     if (dbQueryResult.success == true) {
@@ -18,7 +20,7 @@ async function agent_register(httpRequest) {
     } else {
       return { success: false, data: dbQueryResult.error };
     }
-  
+
     // create new agent
     dbQueryResult = await agentDBOperation.createAgentItem(
       agentUsername,
@@ -29,7 +31,7 @@ async function agent_register(httpRequest) {
     } else {
       return { success: false, data: dbQueryResult.error };
     }
-    
+
   } catch (error) {
     return { success: false, data: error };
   }

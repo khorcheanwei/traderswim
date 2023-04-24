@@ -1,8 +1,5 @@
-import axios from "axios";
-import { createContext, useEffect } from "react";
-import { Link , Navigate} from 'react-router-dom';
+import { createContext } from "react";
 import { useState} from 'react';
-import { useCookies } from "react-cookie";
 
 export const AccountContext = createContext({});
 

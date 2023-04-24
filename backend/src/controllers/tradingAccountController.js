@@ -1,8 +1,5 @@
 const { accountDBOperation } = require("../data-access/index.js");
 
-const bcrypt = require("bcryptjs");
-const bcryptSalt = bcrypt.genSaltSync(12);
-
 const jwt = require("jsonwebtoken");
 const jwtSecret = "traderswim";
 

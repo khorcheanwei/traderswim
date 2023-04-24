@@ -2,13 +2,6 @@ const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 
-// security
-const corsOptions = {
-  origin: "127.0.0.1",
-  credentials: true,
-  optionSuccessStatus: 200,
-};
-
 require("dotenv").config();
 
 // setup express
@@ -17,7 +10,7 @@ app.use(cookieParser());
 app.use(
   cors({
     credentials: true,
-    origin: "http://localhost:5173",
+    origin: "http://localhost:3000",
   })
 );
 

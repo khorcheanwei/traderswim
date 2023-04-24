@@ -1,6 +1,3 @@
-const bcrypt = require("bcryptjs");
-const bcryptSalt = bcrypt.genSaltSync(12);
-
 function copyTradingAccountDBOperation(trading_management_db) {
   this.trading_management_db = trading_management_db;
 
@@ -10,7 +7,7 @@ function copyTradingAccountDBOperation(trading_management_db) {
     agentTradingSessionID
   ) {
 
-    try{  
+    try {
       const sqlCommand = `SELECT * FROM copyTradingAccount WHERE agentID=? and agentTradingSessionID=?`;
 
       const queryResult = await new Promise((resolve, reject) => {
@@ -31,7 +28,7 @@ function copyTradingAccountDBOperation(trading_management_db) {
 
   // search searchCopyTradingAccount
   this.searchCopyTradingAccount = async function (agentID) {
-    try{  
+    try {
       const sqlCommand = `SELECT * FROM copyTradingAccount WHERE agentID=?`;
 
       const queryResult = await new Promise((resolve, reject) => {
@@ -72,7 +69,7 @@ function copyTradingAccountDBOperation(trading_management_db) {
           const localTime = date.toLocaleString('en-US');
 
           await new Promise((resolve, reject) => {
-            this.trading_management_db.get(sqlCommand, [agentID,agentTradingSessionID,accountsDocument[index].id,accountsDocument[index].accountName,stockName,stockTradeAction,stockTradeType,stockEntryPrice,"USD",stockSharesTotal,0,localTime], (err, row) => {
+            this.trading_management_db.get(sqlCommand, [agentID, agentTradingSessionID, accountsDocument[index].id, accountsDocument[index].accountName, stockName, stockTradeAction, stockTradeType, stockEntryPrice, "USD", stockSharesTotal, 0, localTime], (err, row) => {
               if (err) {
                 reject(err);
               } else {
