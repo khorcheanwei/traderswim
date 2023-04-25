@@ -1,23 +1,65 @@
 import axios from 'axios';
-import { Button, PageButton } from '../shared/Button'
 import { useContext, useState, useEffect } from 'react';
-import { UserContext } from '../context/UserContext';
 import { CopyTradingAccountContext } from '../context/CopyTradingAccountContext';
-import { useRef } from "react";
+import useWebSocket from 'react-use-websocket';
+import { FixedSizeList } from 'react-window';
+import  TradingStockList  from './TradingStockList';
 
 export default function TradingStock({ onClose }) {
-    var stockNameList = ["TSLA", "APLA", "ADBE"];
+
     var stockTradeActionList = ["BUY", "SELL"];
     var stockTradeTypeList = ["Limit", "Market"];
 
     const { isOpenTradingStock, setIsOpenTradingStock, setIsCopyTradingAccountSuccessful } = useContext(CopyTradingAccountContext);
 
-    const [stockName, setStockName] = useState(stockNameList[0]);
+    // websocket price
+    const [websocketPrice, useWebSocketPrice] = useState("");
+
+    const API_KEY = '980OIYKEGSOHZGGDKCIY';
+    var socketUrl = 'wss://stream.cryptowat.ch/connect?apikey='+API_KEY;
+
+    const { sendMessage, lastMessage, readyState } = useWebSocket(socketUrl);
+
+    // Helper method for subscribing to resources
+    function subscribe(resources) {
+        sendMessage(JSON.stringify({
+                subscribe: {
+                subscriptions: resources.map((resource) => { return { streamSubscription: { resource: resource } } })
+            }
+        }));
+    }
+
+    if (lastMessage != null){
+        //const message = JSON.parse(lastMessage.data);
+        new Response(lastMessage.data).arrayBuffer().then(buffer=> {
+            var enc = new TextDecoder("utf-8");
+            const stockInfoJSON = JSON.parse(enc.decode(buffer));
+
+            if (stockInfoJSON["authenticationResult"] && stockInfoJSON["authenticationResult"]["status"] === "AUTHENTICATED") {
+                console.log("Streaming trades for 1 second...")
+                subscribe(['instruments:9:trades']);
+            }
+
+            if (stockInfoJSON["marketUpdate"] && stockInfoJSON["marketUpdate"]["tradesUpdate"]){
+                useWebSocketPrice(stockInfoJSON["marketUpdate"]["tradesUpdate"]["trades"][0]["priceStr"]);
+            }
+            
+        })
+    }
+
+    const [stockName, setStockName] = useState("");
     const [stockTradeAction, setStockTradeAction] = useState(stockTradeActionList[0]);
     const [stockTradeType, setStockTradeType] = useState("LIMIT");
     const [stockSharesTotal, setStockSharesTotal] = useState(0)
     const [stockEntryPrice, setStockEntryPrice] = useState(0)
     const [disabledButton, setDisabledButton] = useState(false)
+
+    useEffect(() => {
+        if (readyState === 1) {
+          console.log("Websocket connection established")
+          subscribe(['instruments:9:trades'])
+        }
+    }, [readyState]);
 
     async function handlePlaceOrder({ onClose }) {
         try {
@@ -40,25 +82,35 @@ export default function TradingStock({ onClose }) {
         setDisabledButton(false)
     }
 
+    const itemCount = 1000 * 1000;
+
+    const Row = ({ index, style }) => (
+        <div className={index % 2 ? "ListItemOdd" : "ListItemEven"} style={style}>
+          Row {index}
+        </div>
+      );
+
     return (
         <div>
             <div className="mb-4">
                 <h1 className="block text-gray-700 text-lm font-bold mb-2">Trade Stock</h1>
             </div>
             <div className="mb-4">
-                <h1 className="block text-gray-700 text-lm font-bold mb-2">Price</h1>
+                <h1 className="block text-gray-700 text-lm font-bold mb-2">Price: {websocketPrice}</h1>
             </div>
             <div>
+                <TradingStockList></TradingStockList>
                 <div className="relative w-full lg:max-w-sm mb-6">
-                    <select
+                    
+                    {/*<select
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
                         onChange={event => setStockName(event.target.value)}>
                         {
                             stockNameList.map((stockName, index) => (
-                                <option key={index}>{stockName}</option>
+                                <FixedSizeList key={index}>{stockName}</FixedSizeList>
                             ))
                         }
-                    </select>
+                    </select> */}
                 </div>
                 <div className="grid items-end gap-6 mb-6 md:grid-cols-2">
                     <div>

@@ -1,7 +1,5 @@
 import axios from "axios";
-import { Link , Navigate} from 'react-router-dom';
-import {useContext, useState, useEffect } from 'react';
-import { UserContext } from '../context/UserContext';
+import {useContext } from 'react';
 import { AccountContext } from '../context/AccountContext';
 
 export default function AccountDeleteConfirmation({rowAccount, onClose}) {
