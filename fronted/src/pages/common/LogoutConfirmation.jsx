@@ -11,7 +11,7 @@ export default function LogoutConfirmation({ onClose }) {
 
     async function logOut() {
         try {
-            /*await axios.post("agent_account/logout");*/
+            await axios.post("agent_account/logout");
             setContextAgentUsername(null);
             navigate('/login')
             setIsLogoutConfirmation(!isLogoutConfirmation);

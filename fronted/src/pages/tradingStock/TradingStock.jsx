@@ -45,6 +45,9 @@ export default function TradingStock({ onClose }) {
             <div className="mb-4">
                 <h1 className="block text-gray-700 text-lm font-bold mb-2">Trade Stock</h1>
             </div>
+            <div className="mb-4">
+                <h1 className="block text-gray-700 text-lm font-bold mb-2">Price</h1>
+            </div>
             <div>
                 <div className="relative w-full lg:max-w-sm mb-6">
                     <select
