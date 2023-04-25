@@ -3,10 +3,25 @@ const express = require("express");
 const copyTradingAccountRouter = express.Router();
 
 const {
+  copy_trading_stock_pair_list,
   copy_trading_place_order,
   copy_trading_database,
   copy_trading_history_database,
 } = require("../controllers/copyTradingAccountController.js");
+
+// get all stock pair list
+copyTradingAccountRouter.get(
+  "/get_stock_pair_list",
+  async (httpRequest, httpResponse) => {
+    const result = await copy_trading_stock_pair_list();
+
+    if (result.success == true) {
+      httpResponse.status(200).json(result.data);
+    } else {
+      httpResponse.status(400).json(result.data);
+    }
+  }
+);
 
 copyTradingAccountRouter.post(
   "/place_order",
