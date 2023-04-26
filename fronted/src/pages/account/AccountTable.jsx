@@ -2,7 +2,7 @@ import React from 'react'
 import { useTable, useFilters, useGlobalFilter, useAsyncDebounce, useSortBy, usePagination } from 'react-table'
 import { Button, PageButton } from '../shared/Button'
 import { classNames } from '../shared/Utils'
-import { useContext, useState, useEffect } from 'react';
+import { useContext } from 'react';
 import AccountAdd from './AccountAdd';
 import AccountDeleteConfirmation from './AccountDeleteConfirmation'
 import { AccountContext } from '../context/AccountContext';

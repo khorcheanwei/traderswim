@@ -1,25 +1,27 @@
 import axios from 'axios';
-import { Button, PageButton } from '../shared/Button'
 import { useContext, useState, useEffect } from 'react';
-import { UserContext } from '../context/UserContext';
 import { CopyTradingAccountContext } from '../context/CopyTradingAccountContext';
-import { useRef } from "react";
+import useWebSocket from 'react-use-websocket';
+import TradingStockList from './TradingStockList';
+import TradingStockPrice from './TradingStockPrice';
 
 export default function TradingStock({ onClose }) {
-    var stockNameList = ["TSLA", "APLA", "ADBE"];
+
     var stockTradeActionList = ["BUY", "SELL"];
     var stockTradeTypeList = ["Limit", "Market"];
 
     const { isOpenTradingStock, setIsOpenTradingStock, setIsCopyTradingAccountSuccessful } = useContext(CopyTradingAccountContext);
 
-    const [stockName, setStockName] = useState(stockNameList[0]);
+    const [stockName, setStockName] = useState("");
     const [stockTradeAction, setStockTradeAction] = useState(stockTradeActionList[0]);
     const [stockTradeType, setStockTradeType] = useState("LIMIT");
     const [stockSharesTotal, setStockSharesTotal] = useState(0)
     const [stockEntryPrice, setStockEntryPrice] = useState(0)
     const [disabledButton, setDisabledButton] = useState(false)
 
-    async function handlePlaceOrder({ onClose }) {
+    console.log("kcw")
+
+    async function handlePlaceOrder() {
         try {
             setDisabledButton(true)
             const { data } = await axios.post("/copy_trading_account/place_order/", { stockName, stockTradeAction, stockTradeType, stockSharesTotal, stockEntryPrice })
@@ -32,33 +34,33 @@ export default function TradingStock({ onClose }) {
                 setIsCopyTradingAccountSuccessful(true)
             }
             setDisabledButton(false)
-
         } catch (e) {
             alert("Copy trading failed")
             console.log(e);
         }
         setDisabledButton(false)
     }
+    
 
     return (
         <div>
             <div className="mb-4">
                 <h1 className="block text-gray-700 text-lm font-bold mb-2">Trade Stock</h1>
             </div>
-            <div className="mb-4">
-                <h1 className="block text-gray-700 text-lm font-bold mb-2">Price</h1>
-            </div>
+            <TradingStockPrice></TradingStockPrice>
             <div>
+                <TradingStockList></TradingStockList>
                 <div className="relative w-full lg:max-w-sm mb-6">
-                    <select
+                    
+                    {/*<select
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
                         onChange={event => setStockName(event.target.value)}>
                         {
                             stockNameList.map((stockName, index) => (
-                                <option key={index}>{stockName}</option>
+                                <FixedSizeList key={index}>{stockName}</FixedSizeList>
                             ))
                         }
-                    </select>
+                    </select> */}
                 </div>
                 <div className="grid items-end gap-6 mb-6 md:grid-cols-2">
                     <div>
@@ -116,16 +118,14 @@ export default function TradingStock({ onClose }) {
                 <button
                     type="button"
                     className="inline-block rounded bg-white px-7 pt-3 pb-2.5 text-sm font-medium uppercase leading-normal text-black shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-teal-300-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-teal-300-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-teal-300-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
-                    onClick={onClose}
-                >
+                    onClick={onClose}>
                     CANCEL
                 </button>
                 <button
                     type="button"
                     className="inline-block rounded bg-teal-300 px-7 pt-3 pb-2.5 text-sm font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-teal-300-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-teal-300-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-teal-300-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
                     onClick={handlePlaceOrder}
-                    disabled={disabledButton}
-                >
+                    disabled={disabledButton}>
                     Place order
                 </button>
             </div>

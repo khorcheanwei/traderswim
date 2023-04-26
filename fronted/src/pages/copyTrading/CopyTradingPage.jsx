@@ -1,9 +1,6 @@
 import axios from 'axios';
 import React from 'react'
 import { useContext, useState, useEffect } from 'react';
-import { async } from 'regenerator-runtime';
-import { UserContext } from '../context/UserContext';
-import { AccountContext } from './../context/AccountContext';
 import { CopyTradingAccountContext } from '../context/CopyTradingAccountContext';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 

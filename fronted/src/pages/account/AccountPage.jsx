@@ -1,10 +1,7 @@
 import axios from 'axios';
 import React from 'react'
 import { useContext, useState, useEffect } from 'react';
-import { UserContext } from '../context/UserContext';
 import { AccountContext } from '../context/AccountContext';
-import { Link, Navigate, useNavigate } from 'react-router-dom';
-
 
 import AccountsTable, { StatusPill, SettingsPanel, ConnectionToggle } from './AccountTable'  // new
 

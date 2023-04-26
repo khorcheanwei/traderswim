@@ -1,4 +1,8 @@
+const axios = require('axios');
 const jwt = require("jsonwebtoken");
+const node_cache = require("node-cache");
+const cache = new node_cache();
+
 const jwtSecret = "traderswim";
 
 const {
@@ -6,6 +10,31 @@ const {
   accountDBOperation,
   copyTradingAccountDBBOperation,
 } = require("../data-access/index.js");
+
+// get stock pair 
+async function copy_trading_stock_pair_list() {
+  try {
+    const key = "stockPairList";
+    var stockPairList = [];
+    if (cache.get(key)) {
+      stockPairList = cache.get(key);
+    } else {
+      const result = await axios.get("https://api.cryptowat.ch/pairs");
+      const stockPairInfoList = result["data"]["result"];
+
+      for (let index = 0; index < stockPairInfoList.length; index++) {
+        const stockPair = stockPairInfoList[index]["symbol"];
+        stockPairList.push({ value: stockPair, label: stockPair });
+      }
+
+      cache.set("stockPairList", stockPairList, 300)
+    }
+
+    return { success: true, data: stockPairList };
+  } catch (error) {
+    return { success: false, data: error };
+  }
+}
 
 // Copy trading place order
 async function copy_trading_place_order(httpRequest) {
@@ -183,6 +212,7 @@ async function copy_trading_history_database(httpRequest) {
 }
 
 module.exports = {
+  copy_trading_stock_pair_list,
   copy_trading_place_order,
   copy_trading_database,
   copy_trading_history_database,
