@@ -2,8 +2,8 @@ import axios from 'axios';
 import { useContext, useState, useEffect } from 'react';
 import { CopyTradingAccountContext } from '../context/CopyTradingAccountContext';
 import useWebSocket from 'react-use-websocket';
-import { FixedSizeList } from 'react-window';
-import  TradingStockList  from './TradingStockList';
+import TradingStockList from './TradingStockList';
+import TradingStockPrice from './TradingStockPrice';
 
 export default function TradingStock({ onClose }) {
 
@@ -12,41 +12,6 @@ export default function TradingStock({ onClose }) {
 
     const { isOpenTradingStock, setIsOpenTradingStock, setIsCopyTradingAccountSuccessful } = useContext(CopyTradingAccountContext);
 
-    // websocket price
-    const [websocketPrice, useWebSocketPrice] = useState("");
-
-    const API_KEY = '980OIYKEGSOHZGGDKCIY';
-    var socketUrl = 'wss://stream.cryptowat.ch/connect?apikey='+API_KEY;
-
-    const { sendMessage, lastMessage, readyState } = useWebSocket(socketUrl);
-
-    // Helper method for subscribing to resources
-    function subscribe(resources) {
-        sendMessage(JSON.stringify({
-                subscribe: {
-                subscriptions: resources.map((resource) => { return { streamSubscription: { resource: resource } } })
-            }
-        }));
-    }
-
-    if (lastMessage != null){
-        //const message = JSON.parse(lastMessage.data);
-        new Response(lastMessage.data).arrayBuffer().then(buffer=> {
-            var enc = new TextDecoder("utf-8");
-            const stockInfoJSON = JSON.parse(enc.decode(buffer));
-
-            if (stockInfoJSON["authenticationResult"] && stockInfoJSON["authenticationResult"]["status"] === "AUTHENTICATED") {
-                console.log("Streaming trades for 1 second...")
-                subscribe(['instruments:9:trades']);
-            }
-
-            if (stockInfoJSON["marketUpdate"] && stockInfoJSON["marketUpdate"]["tradesUpdate"]){
-                useWebSocketPrice(stockInfoJSON["marketUpdate"]["tradesUpdate"]["trades"][0]["priceStr"]);
-            }
-            
-        })
-    }
-
     const [stockName, setStockName] = useState("");
     const [stockTradeAction, setStockTradeAction] = useState(stockTradeActionList[0]);
     const [stockTradeType, setStockTradeType] = useState("LIMIT");
@@ -54,14 +19,9 @@ export default function TradingStock({ onClose }) {
     const [stockEntryPrice, setStockEntryPrice] = useState(0)
     const [disabledButton, setDisabledButton] = useState(false)
 
-    useEffect(() => {
-        if (readyState === 1) {
-          console.log("Websocket connection established")
-          subscribe(['instruments:9:trades'])
-        }
-    }, [readyState]);
+    console.log("kcw")
 
-    async function handlePlaceOrder({ onClose }) {
+    async function handlePlaceOrder() {
         try {
             setDisabledButton(true)
             const { data } = await axios.post("/copy_trading_account/place_order/", { stockName, stockTradeAction, stockTradeType, stockSharesTotal, stockEntryPrice })
@@ -74,30 +34,20 @@ export default function TradingStock({ onClose }) {
                 setIsCopyTradingAccountSuccessful(true)
             }
             setDisabledButton(false)
-
         } catch (e) {
             alert("Copy trading failed")
             console.log(e);
         }
         setDisabledButton(false)
     }
-
-    const itemCount = 1000 * 1000;
-
-    const Row = ({ index, style }) => (
-        <div className={index % 2 ? "ListItemOdd" : "ListItemEven"} style={style}>
-          Row {index}
-        </div>
-      );
+    
 
     return (
         <div>
             <div className="mb-4">
                 <h1 className="block text-gray-700 text-lm font-bold mb-2">Trade Stock</h1>
             </div>
-            <div className="mb-4">
-                <h1 className="block text-gray-700 text-lm font-bold mb-2">Price: {websocketPrice}</h1>
-            </div>
+            <TradingStockPrice></TradingStockPrice>
             <div>
                 <TradingStockList></TradingStockList>
                 <div className="relative w-full lg:max-w-sm mb-6">
@@ -168,16 +118,14 @@ export default function TradingStock({ onClose }) {
                 <button
                     type="button"
                     className="inline-block rounded bg-white px-7 pt-3 pb-2.5 text-sm font-medium uppercase leading-normal text-black shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-teal-300-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-teal-300-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-teal-300-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
-                    onClick={onClose}
-                >
+                    onClick={onClose}>
                     CANCEL
                 </button>
                 <button
                     type="button"
                     className="inline-block rounded bg-teal-300 px-7 pt-3 pb-2.5 text-sm font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-teal-300-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-teal-300-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-teal-300-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
                     onClick={handlePlaceOrder}
-                    disabled={disabledButton}
-                >
+                    disabled={disabledButton}>
                     Place order
                 </button>
             </div>
