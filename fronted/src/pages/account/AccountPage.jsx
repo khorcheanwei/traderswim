@@ -3,29 +3,22 @@ import React from 'react'
 import { useContext, useState, useEffect } from 'react';
 import { AccountContext } from '../context/AccountContext';
 
-import AccountsTable, { StatusPill, SettingsPanel, ConnectionToggle } from './AccountTable'  // new
+import AccountsTable, { SettingsPanel } from './AccountTable'  // new
 
 export default function AccountsPage() {
 
   const columns = React.useMemo(() => [
     {
-      Header: "Account Name",
+      Header: "Name",
       accessor: 'accountName',
+    },
+    {
+      Header: "Account Username",
+      accessor: 'accountUsername',
     },
     {
       Header: "Balance",
       accessor: 'accountBalance',
-    },
-    {
-      Header: "Connection",
-      accessor: 'accountConnection',
-      Cell: ConnectionToggle,
-    },
-    {
-      Header: "Status",
-      accessor: 'accountStatus',
-      filter: 'includes',
-      Cell: StatusPill,
     },
     {
       Header: "Settings",

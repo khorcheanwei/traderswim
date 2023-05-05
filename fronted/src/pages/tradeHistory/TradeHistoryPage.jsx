@@ -17,8 +17,12 @@ export default function TradeActivityPage() {
       accessor: "agentTradingSessionID",
     },
     {
-      Header: "Account Name",
+      Header: "Name",
       accessor: 'accountName',
+    },
+    {
+      Header: "Account Username",
+      accessor: 'accountUsername',
     },
     {
       Header: " Stock pair",

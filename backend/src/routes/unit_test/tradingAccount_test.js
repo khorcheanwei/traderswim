@@ -41,27 +41,8 @@ describe("Trading Account database", () => {
         const account = account_database[index];
         assert(account.hasOwnProperty("accountBalance"));
         assert(account["accountName"] === "account_1");
-        assert(account["accountConnection"] === true);
         assert(account["accountStatus"] === true);
       }
-    });
-});
-
-describe("Trading Account connection", () => {
-  chai
-    .request(server)
-    .post("/trading_account/connection/")
-    .set(
-      "Cookie",
-      "token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0M2E5N2FlMTU0YjdjMDE2MWE5ZmY3OCIsImlhdCI6MTY4MTU2MzI2NH0.iys83-jv3jVGDZFmY2VT5NGqgWcvcH9tFpYOHOo3NaU"
-    )
-    .send({
-      accountName: "account_1",
-      accountConnection: true,
-    })
-    .end((err, response) => {
-      assert(response.status === 200);
-      assert(response.body === "success");
     });
 });
 

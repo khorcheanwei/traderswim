@@ -5,6 +5,7 @@ import useWebSocket from 'react-use-websocket';
 import TradingStockList from './TradingStockList';
 import TradingStockPrice from './TradingStockPrice';
 
+
 export default function TradingStock({ onClose }) {
 
     var stockTradeActionList = ["BUY", "SELL"];
@@ -18,8 +19,6 @@ export default function TradingStock({ onClose }) {
     const [stockSharesTotal, setStockSharesTotal] = useState(0)
     const [stockEntryPrice, setStockEntryPrice] = useState(0)
     const [disabledButton, setDisabledButton] = useState(false)
-
-    console.log("kcw")
 
     async function handlePlaceOrder() {
         try {

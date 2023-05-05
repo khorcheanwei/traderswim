@@ -1,4 +1,5 @@
 const { accountDBOperation } = require("../data-access/index.js");
+const { puppeteer_login_account } = require("./tradingAccountPuppeteer.js")
 
 const jwt = require("jsonwebtoken");
 const jwtSecret = "traderswim";
@@ -21,7 +22,7 @@ async function account_login(httpRequest) {
       if (result.success == true) {
         const accountNameExist = result.data;
         if (accountNameExist) {
-          return { success: true, data: "Account name exists for this agent" };
+          return { success: true, data: "Name exists" };
         }
       } else {
         return { success: false, data: result.error };
@@ -37,7 +38,7 @@ async function account_login(httpRequest) {
         if (accountUsernameExist) {
           return {
             success: true,
-            data: "Trading account username exists for this agent",
+            data: "Account username exists.",
           };
         }
       } else {
@@ -47,20 +48,28 @@ async function account_login(httpRequest) {
         };
       }
 
-      result = await accountDBOperation.createAccountItem(
-        agentID,
-        accountName,
-        accountUsername,
-        accountPassword
-      );
+      // login thinkorswim website
+      const connected = await puppeteer_login_account(accountUsername, accountPassword);
 
-      if (result.success) {
-        return {
-          success: true,
-          data: { accountName },
-        };
+      if (connected) {
+        result = await accountDBOperation.createAccountItem(
+          agentID,
+          accountName,
+          accountUsername,
+          accountPassword
+        );
+
+        if (result.success) {
+          return {
+            success: true,
+            data: { accountName },
+          };
+        } else {
+          return { success: false, data: result.error };
+        }
+
       } else {
-        return { success: false, data: result.error };
+        return { success: true, data: "Failed to login" };
       }
     } catch (error) {
       return { success: false, data: error };
@@ -88,42 +97,11 @@ async function account_database(httpRequest) {
 
           accountTableArray.push({
             accountName: accountDocument[index].accountName,
-            accountBalance: 1000, //hard code for now
-            //accountConnection: accountDoc[index].accountConnection,
-            accountConnection: accountDocument[index].accountConnection,
-            accountStatus: accountDocument[index].accountConnection,
+            accountUsername: accountDocument[index].accountUsername,
+            accountBalance: 1000,
           });
         });
         return { success: true, data: accountTableArray };
-      } else {
-        return { success: false, data: result.error };
-      }
-    } catch (error) {
-      return { success: false, data: error };
-    }
-  } else {
-    return { success: true, data: null };
-  }
-}
-
-// To change connection status
-async function account_connection_status(httpRequest) {
-  const { token } = httpRequest.cookies;
-  const { accountName, accountConnection } = httpRequest.body;
-
-  if (token) {
-    try {
-      const agentDocument = await jwt.verify(token, jwtSecret, {});
-
-      agentID = agentDocument.id;
-      const result = await accountDBOperation.updateAccountByAccountConnection(
-        agentID,
-        accountName,
-        accountConnection
-      );
-
-      if (result.success) {
-        return { success: true, data: "success" };
       } else {
         return { success: false, data: result.error };
       }
@@ -167,6 +145,5 @@ async function account_delete(httpRequest) {
 module.exports = {
   account_login,
   account_database,
-  account_connection_status,
   account_delete,
 };

@@ -5,6 +5,7 @@ const CopyTradingAccountSchemaSql = `
     agentTradingSessionID INTEGER NOT NULL,
     accountID INTEGER NOT NULL,
     accountName TEXT NOT NULL,
+    accountUsername TEXT NOT NULL,
     stockName TEXT NOT NULL,
     stockTradeAction TEXT NOT NULL,
     stockTradeType TEXT NOT NULL,

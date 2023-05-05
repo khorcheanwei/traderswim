@@ -22,9 +22,12 @@ async function copy_trading_stock_pair_list() {
       const result = await axios.get("https://api.cryptowat.ch/pairs");
       const stockPairInfoList = result["data"]["result"];
 
-      for (let index = 0; index < stockPairInfoList.length; index++) {
+      //stockPairInfoList.length
+      for (let index = 0; index < 2; index++) {
         const stockPair = stockPairInfoList[index]["symbol"];
-        stockPairList.push({ value: stockPair, label: stockPair });
+        const stockPairId = stockPairInfoList[index]["id"]
+
+        stockPairList.push({ value: stockPairId, label: stockPair });
       }
 
       cache.set("stockPairList", stockPairList, 300)
@@ -133,6 +136,7 @@ async function copy_trading_database(httpRequest) {
         const currCopyTradingAccount = copyTradingAccountsDocument[index];
         copyTradingAccountData.push({
           accountName: currCopyTradingAccount.accountName,
+          accountUsername: currCopyTradingAccount.accountUsername,
           stockPair:
             currCopyTradingAccount.stockName +
             "/" +
@@ -188,6 +192,7 @@ async function copy_trading_history_database(httpRequest) {
           tradeHistoryData.push({
             agentTradingSessionID: currCopyTradingAccount.agentTradingSessionID,
             accountName: currCopyTradingAccount.accountName,
+            accountUsername: currCopyTradingAccount.accountUsername,
             stockPair:
               currCopyTradingAccount.stockName +
               "/" +

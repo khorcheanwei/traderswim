@@ -4,14 +4,18 @@ import { useContext, useState, useEffect } from 'react';
 import { CopyTradingAccountContext } from '../context/CopyTradingAccountContext';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 
-import CopyTradingTable, { StatusPill, SettingsPanel, ConnectionToggle } from './CopyTradingTable'
+import CopyTradingTable, { SettingsPanel } from './CopyTradingTable'
 
 export default function CopyTradingPage() {
 
   const columns = React.useMemo(() => [
     {
-      Header: "Account Name",
+      Header: "Name",
       accessor: 'accountName',
+    },
+    {
+      Header: "Account Username",
+      accessor: 'accountUsername',
     },
     {
       Header: " Stock pair",

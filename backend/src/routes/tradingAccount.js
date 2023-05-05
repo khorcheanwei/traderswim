@@ -5,7 +5,6 @@ const tradingAccountRouter = express.Router();
 const {
   account_login,
   account_database,
-  account_connection_status,
   account_delete,
 } = require("../controllers/tradingAccountController.js");
 
@@ -21,16 +20,6 @@ tradingAccountRouter.post("/login", async (httpRequest, httpResponse) => {
 
 tradingAccountRouter.get("/database", async (httpRequest, httpResponse) => {
   const result = await account_database(httpRequest);
-
-  if (result.success == true) {
-    httpResponse.status(200).json(result.data);
-  } else {
-    httpResponse.status(400).json(result.data);
-  }
-});
-
-tradingAccountRouter.post("/connection", async (httpRequest, httpResponse) => {
-  const result = await account_connection_status(httpRequest);
 
   if (result.success == true) {
     httpResponse.status(200).json(result.data);

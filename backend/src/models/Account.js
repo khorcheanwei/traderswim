@@ -4,7 +4,6 @@ const AccountSchemaSql = `
     id INTEGER PRIMARY KEY,
     agentID INTEGER NOT NULL,
     accountName TEXT NOT NULL,
-    accountConnection INTEGER NOT NULL,
     accountUsername TEXT NOT NULL,
     accountPassword TEXT NOT NULL,
     FOREIGN KEY (agentID) REFERENCES agent (id)
