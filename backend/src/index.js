@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
+var cron = require('node-cron');
 
 require("dotenv").config();
 
@@ -19,6 +20,16 @@ app.use(express.json());
 const router = require("./routes/index");
 app.use(router);
 
-var port = process.env.PORT || 4000;
-module.exports = app.listen(port, "localhost");
+let port = process.env.PORT || 4000;
+
+
+
+const { tradingAccountCronJob } = require('./controllers/tradingAccountPuppeteer');
+// setup cron 
+cron.schedule('* * * * *', () => {
+  console.log('Trading account cron job task every minute');
+  //tradingAccountCronJob()
+});
+
+app.listen(port, "localhost");
 

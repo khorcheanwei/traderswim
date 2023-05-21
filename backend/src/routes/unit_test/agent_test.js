@@ -1,4 +1,4 @@
-var assert = require("assert");
+let assert = require("assert");
 require("dotenv").config({ path: "/home/mern/traderswim/backend/src/.env" });
 
 let chai = require("chai");
@@ -39,7 +39,7 @@ describe("Agent API unit test", () => {
         assert(response.body["agentUsername"] === "agent_test");
         assert(
           response.body["agentPassword"] ===
-            "$2a$12$pGg03fhwOpJLTDNTl/KtDOls2fr4FcpuMJItHsrrZqVPUz3x6KgLO"
+          "$2a$12$pGg03fhwOpJLTDNTl/KtDOls2fr4FcpuMJItHsrrZqVPUz3x6KgLO"
         );
         assert(response.body["agentTradingSessionID"] === 0);
         assert(response.body["agentIsTradingSession"] === false);

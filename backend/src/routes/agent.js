@@ -5,6 +5,7 @@ const agentAccountRouter = express.Router();
 const {
   agent_register,
   agent_login,
+  agent_logout,
   agent_profile,
 } = require("../controllers/agentController.js");
 
@@ -32,7 +33,13 @@ agentAccountRouter.post("/login", async (httpRequest, httpResponse) => {
 
 // logout agent
 agentAccountRouter.post("/logout", async (httpRequest, httpResponse) => {
-  httpResponse.cookie("token", "").json(true);
+  const result = await agent_logout(httpRequest);
+
+  if (result.success == true) {
+    httpResponse.cookie("token", "").json(true);
+  } else {
+    httpResponse.status(400).json("Failed to logout");
+  }
 });
 
 // get agent profile

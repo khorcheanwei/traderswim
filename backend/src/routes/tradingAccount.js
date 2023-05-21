@@ -4,9 +4,16 @@ const tradingAccountRouter = express.Router();
 
 const {
   account_login,
+  fetch_trading_account_info,
   account_database,
   account_delete,
 } = require("../controllers/tradingAccountController.js");
+
+const { tradingAccountCronJob } = require("./../controllers/tradingAccountPuppeteer.js")
+
+tradingAccountRouter.get("/trading_account", async (httpRequest, httpResponse) => {
+  tradingAccountCronJob()
+})
 
 tradingAccountRouter.post("/login", async (httpRequest, httpResponse) => {
   const result = await account_login(httpRequest);
@@ -16,6 +23,11 @@ tradingAccountRouter.post("/login", async (httpRequest, httpResponse) => {
   } else {
     httpResponse.status(400).json(result.data);
   }
+});
+
+tradingAccountRouter.post("/account_fetch", async (httpRequest, httpResponse) => {
+  // axios is asynchronous request
+  await fetch_trading_account_info(httpRequest, httpResponse);
 });
 
 tradingAccountRouter.get("/database", async (httpRequest, httpResponse) => {
@@ -43,7 +55,7 @@ tradingAccountRouter.post(
 
 /*
 
-  var authRequest = {
+  let authRequest = {
     url: "https://api.tdameritrade.com/v1/oauth2/token",
     method: "POST",
     headers: {
@@ -61,7 +73,7 @@ tradingAccountRouter.post(
   // make the POST request
   request(authRequest, function (error, response, body) {
     if (!error && response.statusCode == 200) {
-      var authReply = JSON.parse(body);
+      let authReply = JSON.parse(body);
       res.send(authReply);
     }
   });

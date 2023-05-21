@@ -1,4 +1,5 @@
 const { agentDBOperation } = require("../data-access/index.js");
+const { store_agent_list_to_cache, delete_agent_list_from_cache } = require("./tradingAccountCronJob.js")
 
 const bcrypt = require("bcryptjs");
 
@@ -12,7 +13,7 @@ async function agent_register(httpRequest) {
   try {
 
     // check if agentUsername existed
-    var dbQueryResult = await agentDBOperation.searchAgentName(agentUsername);
+    let dbQueryResult = await agentDBOperation.searchAgentName(agentUsername);
     if (dbQueryResult.success == true) {
       if (dbQueryResult.data) {
         return { success: true, data: "This username is already registered" };
@@ -33,7 +34,7 @@ async function agent_register(httpRequest) {
     }
 
   } catch (error) {
-    return { success: false, data: error };
+    return { success: false, data: error.message };
   }
 }
 
@@ -41,7 +42,7 @@ async function agent_register(httpRequest) {
 async function agent_login(httpRequest) {
   const { agentUsername, agentPassword } = httpRequest.body;
   try {
-    var dbQueryResult = await agentDBOperation.searchAgentByUsername(
+    let dbQueryResult = await agentDBOperation.searchAgentByUsername(
       agentUsername
     );
 
@@ -61,9 +62,11 @@ async function agent_login(httpRequest) {
             jwtSecret,
             {}
           );
+          // store agent ID to agent list in cache
+          store_agent_list_to_cache(agentDocument.id)
           return { success: true, data: agentDocument, token: token };
         } catch (error) {
-          return { success: false, data: error };
+          return { success: false, data: error.message };
         }
       } else {
         return { success: true, data: "Incorrect password" };
@@ -72,7 +75,24 @@ async function agent_login(httpRequest) {
       return { success: true, data: "Agent is not registered" };
     }
   } catch (error) {
-    return { success: false, data: error };
+    return { success: false, data: error.message };
+  }
+}
+
+// agent logout 
+async function agent_logout(httpRequest) {
+  const { token } = httpRequest.cookies;
+
+
+  if (token) {
+    try {
+      const agentDocument = jwt.verify(token, jwtSecret, {});
+      // delete agent ID from agent list in cache
+      delete_agent_list_from_cache(agentDocument.id);
+      return { success: true };
+    } catch (error) {
+      return { success: false, data: error.message.message };
+    }
   }
 }
 
@@ -93,7 +113,7 @@ async function agent_profile(httpRequest) {
         return { success: false, data: dbQueryResult.error };
       }
     } catch (error) {
-      return { success: false, data: error };
+      return { success: false, data: error.message };
     }
   } else {
     return { success: true, data: null };
@@ -103,5 +123,6 @@ async function agent_profile(httpRequest) {
 module.exports = {
   agent_register,
   agent_login,
+  agent_logout,
   agent_profile,
 };

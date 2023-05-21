@@ -1,4 +1,4 @@
-var assert = require("assert");
+let assert = require("assert");
 require("dotenv").config({ path: "/home/mern/traderswim/backend/src/.env" });
 
 let chai = require("chai");
