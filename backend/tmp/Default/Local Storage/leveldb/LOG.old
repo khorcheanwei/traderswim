@@ -1,9 +1,0 @@
-2023/05/16-22:36:59.711 924 Reusing MANIFEST C:\Users\chean\OneDrive\Desktop\full_stack_development\mern\traderswim\backend\tmp\Default\Local Storage\leveldb/MANIFEST-000001
-2023/05/16-22:36:59.712 924 Recovering log #3
-2023/05/16-22:36:59.716 924 Reusing old log C:\Users\chean\OneDrive\Desktop\full_stack_development\mern\traderswim\backend\tmp\Default\Local Storage\leveldb/000003.log 
-2023/05/16-22:41:37.937 2314 Level-0 table #5: started
-2023/05/16-22:41:37.942 2314 Level-0 table #5: 81531 bytes OK
-2023/05/16-22:41:37.943 2314 Delete type=0 #3
-2023/05/16-22:41:44.866 2314 Level-0 table #7: started
-2023/05/16-22:41:44.873 2314 Level-0 table #7: 110168 bytes OK
-2023/05/16-22:41:44.875 2314 Delete type=0 #4
