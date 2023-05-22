@@ -15,16 +15,19 @@ const {
 async function copy_trading_stock_pair_list() {
   try {
     const key = "stockPairList";
-    var stockPairList = [];
+    let stockPairList = [];
     if (cache.get(key)) {
       stockPairList = cache.get(key);
     } else {
       const result = await axios.get("https://api.cryptowat.ch/pairs");
       const stockPairInfoList = result["data"]["result"];
 
-      for (let index = 0; index < stockPairInfoList.length; index++) {
+      //stockPairInfoList.length
+      for (let index = 0; index < 2; index++) {
         const stockPair = stockPairInfoList[index]["symbol"];
-        stockPairList.push({ value: stockPair, label: stockPair });
+        const stockPairId = stockPairInfoList[index]["id"]
+
+        stockPairList.push({ value: stockPairId, label: stockPair });
       }
 
       cache.set("stockPairList", stockPairList, 300)
@@ -32,7 +35,7 @@ async function copy_trading_stock_pair_list() {
 
     return { success: true, data: stockPairList };
   } catch (error) {
-    return { success: false, data: error };
+    return { success: false, data: error.message };
   }
 }
 
@@ -49,10 +52,10 @@ async function copy_trading_place_order(httpRequest) {
   const { token } = httpRequest.cookies;
   if (token) {
     try {
-      var agentDocument = await jwt.verify(token, jwtSecret, {});
+      let agentDocument = await jwt.verify(token, jwtSecret, {});
       const agentID = agentDocument.id;
       // get agent trading sessionID
-      var result = await agentDBOperation.searchAgentTradingSessionID(agentID);
+      let result = await agentDBOperation.searchAgentTradingSessionID(agentID);
       if (result.success != true) {
         return { success: false, data: result.error };
       }
@@ -92,7 +95,7 @@ async function copy_trading_place_order(httpRequest) {
       // save agentTradingSessionID and agentIsTradingSession to table Agent
       return { success: true, data: "success" };
     } catch (error) {
-      return { success: false, data: error };
+      return { success: false, data: error.message };
     }
   } else {
     return { success: true, data: null };
@@ -105,11 +108,11 @@ async function copy_trading_database(httpRequest) {
 
   if (token) {
     try {
-      var agentDocument = await jwt.verify(token, jwtSecret, {});
+      let agentDocument = await jwt.verify(token, jwtSecret, {});
       agentID = agentDocument.id;
 
       // get agent trading sessionID
-      var result = await agentDBOperation.searchAgentTradingSessionID(agentID);
+      let result = await agentDBOperation.searchAgentTradingSessionID(agentID);
       if (result.success != true) {
         return { success: false, data: result.error };
       }
@@ -128,11 +131,12 @@ async function copy_trading_database(httpRequest) {
       }
       copyTradingAccountsDocument = result.data;
 
-      var copyTradingAccountData = [];
+      let copyTradingAccountData = [];
       for (let index = 0; index < copyTradingAccountsDocument.length; index++) {
         const currCopyTradingAccount = copyTradingAccountsDocument[index];
         copyTradingAccountData.push({
           accountName: currCopyTradingAccount.accountName,
+          accountUsername: currCopyTradingAccount.accountUsername,
           stockPair:
             currCopyTradingAccount.stockName +
             "/" +
@@ -148,7 +152,7 @@ async function copy_trading_database(httpRequest) {
 
       return { success: true, data: copyTradingAccountData };
     } catch (error) {
-      return { success: false, data: error };
+      return { success: false, data: error.message };
     }
   } else {
     return { success: true, data: null };
@@ -176,7 +180,7 @@ async function copy_trading_history_database(httpRequest) {
         }
         const copyTradingAccountsDocument = result.data;
 
-        var tradeHistoryData = [];
+        let tradeHistoryData = [];
 
         for (
           let index = copyTradingAccountsDocument.length - 1;
@@ -188,6 +192,7 @@ async function copy_trading_history_database(httpRequest) {
           tradeHistoryData.push({
             agentTradingSessionID: currCopyTradingAccount.agentTradingSessionID,
             accountName: currCopyTradingAccount.accountName,
+            accountUsername: currCopyTradingAccount.accountUsername,
             stockPair:
               currCopyTradingAccount.stockName +
               "/" +
@@ -201,10 +206,10 @@ async function copy_trading_history_database(httpRequest) {
         }
         return { success: true, data: tradeHistoryData };
       } catch (error) {
-        return { success: false, data: error };
+        return { success: false, data: error.message };
       }
     } catch (error) {
-      return { success: false, data: error };
+      return { success: false, data: error.message };
     }
   } else {
     return { success: true, data: null };

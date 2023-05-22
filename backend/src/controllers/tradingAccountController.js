@@ -1,6 +1,11 @@
 const { accountDBOperation } = require("../data-access/index.js");
+const { puppeteer_login_account, get_access_token_from_cache, fetch_trading_account_info_api } = require("./tradingAccountPuppeteer.js")
+const common = require("../common.js");
 
+const puppeteer = require('puppeteer');
+const axios = require('axios');
 const jwt = require("jsonwebtoken");
+const { Cluster } = require('puppeteer-cluster');
 const jwtSecret = "traderswim";
 
 // To login new account
@@ -14,14 +19,14 @@ async function account_login(httpRequest) {
       const agentID = agentDocument.id;
 
       // search for accountName
-      var result = await accountDBOperation.searchAccountName(
+      let result = await accountDBOperation.searchAccountName(
         agentID,
         accountName
       );
       if (result.success == true) {
         const accountNameExist = result.data;
         if (accountNameExist) {
-          return { success: true, data: "Account name exists for this agent" };
+          return { success: true, data: "Name exists" };
         }
       } else {
         return { success: false, data: result.error };
@@ -37,7 +42,7 @@ async function account_login(httpRequest) {
         if (accountUsernameExist) {
           return {
             success: true,
-            data: "Trading account username exists for this agent",
+            data: "Account username exists.",
           };
         }
       } else {
@@ -47,26 +52,71 @@ async function account_login(httpRequest) {
         };
       }
 
-      result = await accountDBOperation.createAccountItem(
-        agentID,
-        accountName,
-        accountUsername,
-        accountPassword
-      );
+      // login thinkorswim website
+      //const connected = await puppeteer_login_account(accountUsername, accountPassword);
+      const connected = true;
 
-      if (result.success) {
-        return {
-          success: true,
-          data: { accountName },
-        };
+      if (connected) {
+        result = await accountDBOperation.createAccountItem(
+          agentID,
+          accountName,
+          accountUsername,
+          accountPassword
+        );
+
+        if (result.success) {
+          return {
+            success: true,
+            data: { accountName },
+          };
+        } else {
+          return { success: false, data: result.error };
+        }
+
       } else {
-        return { success: false, data: result.error };
+        return { success: true, data: "Failed to login" };
       }
     } catch (error) {
-      return { success: false, data: error };
+      return { success: false, data: error.message };
     }
   } else {
     return { success: true, data: null };
+  }
+}
+
+// To fetch trading account info
+async function fetch_trading_account_info(httpRequest, httpResponse) {
+
+  const { token } = httpRequest.cookies;
+  if (token) {
+    try {
+      const agentDocument = jwt.verify(token, jwtSecret, {});
+      const agentID = agentDocument.id;
+
+      const { accountUsername } = httpRequest.body;
+
+      const authToken = await get_access_token_from_cache(agentID, accountUsername);
+      const config = {
+        headers: {
+          'Authorization': `Bearer ${authToken}`
+        }
+      }
+      await axios.get('https://api.tdameritrade.com/v1/accounts', config)
+        .then(response => {
+          httpResponse.status(200).json(response.data[0]);
+        })
+        .catch(error => {
+          // Handle any errors
+          console.log(error.message)
+          httpResponse.status(400).json(error.message);
+        });
+
+
+    } catch (error) {
+      httpResponse.status(400).json(error.message);
+    }
+  } else {
+    httpResponse.status(200).json(null);
   }
 }
 
@@ -74,66 +124,42 @@ async function account_login(httpRequest) {
 async function account_database(httpRequest) {
   const { token } = httpRequest.cookies;
   if (token) {
-    const agentDocument = await jwt.verify(token, jwtSecret, {});
+    const agentDocument = jwt.verify(token, jwtSecret, {});
     try {
       agentID = agentDocument.id;
 
       const result = await accountDBOperation.searchAccountByAgentID(agentID);
 
+
       if (result.success) {
         const accountDocument = result.data;
-        accountTableArray = [];
-        Object.keys(accountDocument).forEach(function (key, index) {
+
+        let accountTableArray = [];
+        Object.keys(accountDocument).forEach(async function (key, index) {
           // need to go Ameritrade website to check whether it is successful to convert to connect to website or not
+
+          let accountConnection = await puppeteer_login_account(agentID, accountDocument[index].accountUsername, accountDocument[index].accountPassword)
 
           accountTableArray.push({
             accountName: accountDocument[index].accountName,
-            accountBalance: 1000, //hard code for now
-            //accountConnection: accountDoc[index].accountConnection,
-            accountConnection: accountDocument[index].accountConnection,
-            accountStatus: accountDocument[index].accountConnection,
+            accountUsername: accountDocument[index].accountUsername,
+            accountBalance: 1000,
+            accountConnection: accountConnection,
           });
         });
+
         return { success: true, data: accountTableArray };
       } else {
         return { success: false, data: result.error };
       }
     } catch (error) {
-      return { success: false, data: error };
+      return { success: false, data: error.message };
     }
   } else {
     return { success: true, data: null };
   }
 }
 
-// To change connection status
-async function account_connection_status(httpRequest) {
-  const { token } = httpRequest.cookies;
-  const { accountName, accountConnection } = httpRequest.body;
-
-  if (token) {
-    try {
-      const agentDocument = await jwt.verify(token, jwtSecret, {});
-
-      agentID = agentDocument.id;
-      const result = await accountDBOperation.updateAccountByAccountConnection(
-        agentID,
-        accountName,
-        accountConnection
-      );
-
-      if (result.success) {
-        return { success: true, data: "success" };
-      } else {
-        return { success: false, data: result.error };
-      }
-    } catch (error) {
-      return { success: false, data: error };
-    }
-  } else {
-    return { success: true, data: null };
-  }
-}
 
 // To delete account
 async function account_delete(httpRequest) {
@@ -157,7 +183,7 @@ async function account_delete(httpRequest) {
         return { success: false, data: result.error };
       }
     } catch (error) {
-      return { success: false, data: error };
+      return { success: false, data: error.message };
     }
   } else {
     return { success: true, data: null };
@@ -166,7 +192,7 @@ async function account_delete(httpRequest) {
 
 module.exports = {
   account_login,
+  fetch_trading_account_info,
   account_database,
-  account_connection_status,
   account_delete,
 };

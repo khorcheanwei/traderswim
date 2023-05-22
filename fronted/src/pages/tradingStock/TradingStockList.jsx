@@ -1,13 +1,15 @@
 import axios from "axios";
-import React, { useState, useMemo, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import Select from "react-select";
 import { FixedSizeList } from "react-window";
+import { TradeStockContext } from './../context/TradeStockContext';
 
 
 export default function TradingStockList() {
+  const { stockNameID, setStockNameID } = useContext(TradeStockContext);
+
   const [stockNameList, setStockNameList] = useState([])
   const [stockNameListLength, setStockNameListLength] = useState(0);
-  //const [inputValue, setInputValue] = useState("");
   
   const TradingStockMenuList = props => {
     const itemHeight = 35;
@@ -31,30 +33,25 @@ export default function TradingStockList() {
   
   async function getStockNameList() {
        try {
-        const response = await axios.get("/copy_trading_account/get_stock_pair_list")
+        const response = await axios.get("http://localhost:4000/copy_trading_account/get_stock_pair_list")
         setStockNameListLength(response.data.length)
         setStockNameList(response.data)
       } catch (error) {
-        console.error(error);
+        console.log(error.message);
     }
   }
 
   useEffect(() => {
     getStockNameList();
-  }, [stockNameListLength]);
-
-  //React.useMemo(() => stockNameListLength, [stockNameListLength])
-
-  console.log("wee");
+  }, []);
 
   return (
     <div>
-      <header>
-        <h1>Stock Pair</h1>
-      </header>
-      <div style={{ width: "30%", margin: "auto" }}>
+      <div className="flex items-center gap-4">
+        <h1 className="block text-gray-700 text-lm font-bold mb-2">Stock Pair:</h1>
         <Select
-          onInputChange={val => setInputValue(val)}
+          className="shadow appearance-none border rounded w-full text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+          onChange={val => setStockNameID(val.value)}
           options={stockNameList}
           components={{
             MenuList: TradingStockMenuList,
@@ -64,3 +61,5 @@ export default function TradingStockList() {
     </div>
   );
 }
+
+

@@ -10,9 +10,10 @@ export function AccountContextProvider({children}) {
     const [isAccountLoginSuccessful, setIsAccountLoginSuccessful] = useState(false);
     const [isOpenAccountLogin, setIsOpenAccountLogin] = useState(false);
     const [isOpenAccountDelete, setIsOpenAccountDelete] = useState(false);
+    const [isShowAccountInfo, setIsShowAccountInfo] = useState(false);
     
     return (
-        <AccountContext.Provider value={{rowAccount, setRowAccount, accountTableData, setAccountTableData, isAccountLoginSuccessful, setIsAccountLoginSuccessful,  isOpenAccountLogin, setIsOpenAccountLogin, isOpenAccountDelete, setIsOpenAccountDelete}}>
+        <AccountContext.Provider value={{rowAccount, setRowAccount, accountTableData, setAccountTableData, isAccountLoginSuccessful, setIsAccountLoginSuccessful,  isOpenAccountLogin, setIsOpenAccountLogin, isOpenAccountDelete, setIsOpenAccountDelete, isShowAccountInfo, setIsShowAccountInfo}}>
             {children}
         </AccountContext.Provider>
     );

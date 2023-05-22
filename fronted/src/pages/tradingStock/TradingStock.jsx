@@ -5,6 +5,7 @@ import useWebSocket from 'react-use-websocket';
 import TradingStockList from './TradingStockList';
 import TradingStockPrice from './TradingStockPrice';
 
+
 export default function TradingStock({ onClose }) {
 
     var stockTradeActionList = ["BUY", "SELL"];
@@ -19,12 +20,10 @@ export default function TradingStock({ onClose }) {
     const [stockEntryPrice, setStockEntryPrice] = useState(0)
     const [disabledButton, setDisabledButton] = useState(false)
 
-    console.log("kcw")
-
     async function handlePlaceOrder() {
         try {
             setDisabledButton(true)
-            const { data } = await axios.post("/copy_trading_account/place_order/", { stockName, stockTradeAction, stockTradeType, stockSharesTotal, stockEntryPrice })
+            const { data } = await axios.post("http://localhost:4000/copy_trading_account/place_order/", { stockName, stockTradeAction, stockTradeType, stockSharesTotal, stockEntryPrice })
 
             if (data != "success") {
                 alert("Copy trading failed");
@@ -34,9 +33,9 @@ export default function TradingStock({ onClose }) {
                 setIsCopyTradingAccountSuccessful(true)
             }
             setDisabledButton(false)
-        } catch (e) {
+        } catch (error) {
             alert("Copy trading failed")
-            console.log(e);
+            console.log(error.message);
         }
         setDisabledButton(false)
     }

@@ -1,4 +1,4 @@
-var sqlite3 = require('sqlite3').verbose();;
+let sqlite3 = require('sqlite3').verbose();;
 
 // create trading_management database 
 const trading_management_db = new sqlite3.Database('trading_management.db', (err) => {

@@ -12,16 +12,18 @@ export default function AgentRegisterPage() {
     async function registerUser(event) {
         event.preventDefault();
         try {
-            await axios.post("/agent_account/register/", {
+            await axios.post("http://localhost:4000/agent_account/register/", {
                 agentUsername,
                 agentPassword,
             }).then(response => {
                 alert(response.data);
                 setRedirect(true)
-            }).catch(err => {
+            }).catch(error => {
+                console.log(error.message);
                 alert("Registration failed. Please try again.");
             })
         } catch (error) {
+            console.log(error.message);
             alert("Registration failed. Please try again.");
         }
     }

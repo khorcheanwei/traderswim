@@ -4,14 +4,18 @@ import { useContext, useState, useEffect } from 'react';
 import { CopyTradingAccountContext } from '../context/CopyTradingAccountContext';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 
-import CopyTradingTable, { StatusPill, SettingsPanel, ConnectionToggle } from './CopyTradingTable'
+import CopyTradingTable, { SettingsPanel } from './CopyTradingTable'
 
 export default function CopyTradingPage() {
 
   const columns = React.useMemo(() => [
     {
-      Header: "Account Name",
+      Header: "Name",
       accessor: 'accountName',
+    },
+    {
+      Header: "Account Username",
+      accessor: 'accountUsername',
     },
     {
       Header: " Stock pair",
@@ -51,13 +55,13 @@ export default function CopyTradingPage() {
   async function fetchCopyTradingAccountData() {
     try {
 
-      const response = await axios.get("/copy_trading_account/database")
+      const response = await axios.get("http://localhost:4000/copy_trading_account/database")
       if (response.data != null) {
         setCopyTradingAccountData(response.data)
       }
 
     } catch (error) {
-      console.error(error);
+      console.log(error.message);
     }
   }
 

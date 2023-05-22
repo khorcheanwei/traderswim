@@ -54,7 +54,7 @@ function accountDBOperation(trading_management_db) {
 
   // search all Account by agentID
   this.searchAccountByAgentID = async function (agentID) {
-    try{  
+    try {
       const sqlCommand = `SELECT * FROM account WHERE agentID=?`;
 
       const queryResult = await new Promise((resolve, reject) => {
@@ -75,7 +75,7 @@ function accountDBOperation(trading_management_db) {
 
   // search a Account based on agentID and accountName
   this.deleteAccount = async function (agentID, accountName) {
-    try{  
+    try {
       const sqlCommand = `DELETE FROM account WHERE agentID=? AND accountName=?`;
 
       const queryResult = await new Promise((resolve, reject) => {
@@ -94,32 +94,6 @@ function accountDBOperation(trading_management_db) {
     };
   }
 
-  // update accountConnection based on agentID, accountName, accountConnection
-  this.updateAccountByAccountConnection = async function (
-    agentID,
-    accountName,
-    accountConnection
-  ) {
-
-    try{  
-      const sqlCommand = `UPDATE account SET accountConnection=? WHERE agentID=? AND accountName=?`;
-
-      const queryResult = await new Promise((resolve, reject) => {
-        this.trading_management_db.all(sqlCommand, [accountConnection, agentID, accountName], (err, row) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(row);
-          }
-        });
-      });
-      return { success: true };
-
-    } catch (error) {
-      return { success: false, error: error };
-    };
-  };
-
   // create Account based on agentID, accountName, accountUsername and accountPassword
   this.createAccountItem = async function (
     agentID,
@@ -128,14 +102,13 @@ function accountDBOperation(trading_management_db) {
     accountPassword
   ) {
     try {
-      const sqlCommand = `INSERT INTO account (agentID, accountName, accountConnection, accountUsername, accountPassword)
-                          VALUES (?, ?, ?, ?, ?);`
+      const sqlCommand = `INSERT INTO account (agentID, accountName, accountUsername, accountPassword)
+                          VALUES (?, ?, ?, ?);`
 
       agentPassword = bcrypt.hashSync(accountPassword, bcryptSalt)
-      const accountConnection = true;
 
       await new Promise((resolve, reject) => {
-        this.trading_management_db.get(sqlCommand, [agentID, accountName, accountConnection, accountUsername, accountPassword], (err, row) => {
+        this.trading_management_db.get(sqlCommand, [agentID, accountName, accountUsername, accountPassword], (err, row) => {
           if (err) {
             reject(err);
           } else {
@@ -143,7 +116,7 @@ function accountDBOperation(trading_management_db) {
           }
         });
       });
-      return { success: true};
+      return { success: true };
     } catch (error) {
       return { success: false, error: error };
     }
