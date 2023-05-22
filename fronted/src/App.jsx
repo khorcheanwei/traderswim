@@ -11,7 +11,7 @@ import { CopyTradingAccountContextProvider } from './pages/context/CopyTradingAc
 import { TradeHistoryContextProvider } from './pages/context/TradeHistoryContext';
 import {TradeStockContextProvider } from './pages/context/TradeStockContext';
  
-axios.defaults.baseURL = "http://localhost:4000";
+//axios.defaults.baseURL = "http://localhost:4000";
 axios.defaults.withCredentials = true;
 
 function App() {

@@ -55,13 +55,13 @@ export default function CopyTradingPage() {
   async function fetchCopyTradingAccountData() {
     try {
 
-      const response = await axios.get("/copy_trading_account/database")
+      const response = await axios.get("http://localhost:4000/copy_trading_account/database")
       if (response.data != null) {
         setCopyTradingAccountData(response.data)
       }
 
     } catch (error) {
-      console.error(error);
+      console.log(error.message);
     }
   }
 

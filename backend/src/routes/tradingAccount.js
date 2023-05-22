@@ -12,7 +12,7 @@ const {
 const { tradingAccountCronJob } = require("./../controllers/tradingAccountPuppeteer.js")
 
 tradingAccountRouter.get("/trading_account", async (httpRequest, httpResponse) => {
-  tradingAccountCronJob()
+  await tradingAccountCronJob()
 })
 
 tradingAccountRouter.post("/login", async (httpRequest, httpResponse) => {

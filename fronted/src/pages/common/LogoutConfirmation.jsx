@@ -11,13 +11,13 @@ export default function LogoutConfirmation({ onClose }) {
 
     async function logOut() {
         try {
-            await axios.post("agent_account/logout");
+            await axios.post("http://localhost:4000/agent_account/logout");
             setContextAgentUsername(null);
             navigate('/login')
             setIsLogoutConfirmation(!isLogoutConfirmation);
             alert("Log out successfully");
         } catch (error) {
-            console.log(error);
+            console.log(error.message);
             alert("Log out failed.");
         }
     }

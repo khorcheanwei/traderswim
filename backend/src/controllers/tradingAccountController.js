@@ -1,5 +1,5 @@
 const { accountDBOperation } = require("../data-access/index.js");
-const { puppeteer_login_account, fetch_trading_account_info_api } = require("./tradingAccountPuppeteer.js")
+const { puppeteer_login_account, get_access_token_from_cache, fetch_trading_account_info_api } = require("./tradingAccountPuppeteer.js")
 const common = require("../common.js");
 
 const puppeteer = require('puppeteer');
@@ -95,7 +95,7 @@ async function fetch_trading_account_info(httpRequest, httpResponse) {
 
       const { accountUsername } = httpRequest.body;
 
-      authToken = "YM6BU9HCTMF1stps5OvHZ0cUJzG3ULSLQ4GY0YVfTPzhLWQm3/CR5+r9kwW07n5rMOanyhVov+Kfo4YpF+FXYxdd6bwxgIIZ/4+guT/2Axgqa2NgqPwkbEG5uINFVk8I1Nr59VkJdjtEJko7eDBgsf73RtEnthicA4TSlQL/VHmxaJwM9bDw59oRkDQyXCSb0mTDoKinNqryJzvqP6LIJI9Mfy791rTjrj3FuCrGDaVFol4AQZU/Ztnem0UH3CR4/qWhUDBP6fXCSIs6FuGuJHvQ/Wy/yqwneSYH1x8IiHOrUcYOwDB1g8L/NLt9BvolnHiyF6PlsQ0WhoNzKAzQBXICn9FbAj/Yz5X2czuQtj4dA4Xtib/w6I5DwMdl0ETBD1NQAhhm4D2/GkW8Ylp8cxmIosmmSfYINZsy0zwNoiDlpjaJu0dUzskwQUYsK5GYuLOXi3GxYq9dgVH80uyYaovrTdPxIklaod4H3mt1vy5ADsAZfwpEgYc5UExrc7zDgthFHRA4Tjj5mFlysZWzG5elnbswxUjGisHkS100MQuG4LYrgoVi/JHHvlyZS9K8yNC1uKD5wfJgbX/8MYA+d0EsMwWy1vjAxPh1xCdVG6A1RUIHM51SAFKJvt6KDVz+zKxy6zZmrXul+/gyOVpKRyMVtwzO4NczKsJ1EqS75DwQwNRA82It6f+Hje+02v6aJexiIvv3E306bg6lQUg647Y1V6g7LBDhm9MaKLi5TAjJ6IgxlY6yirTWXgUjLzlBaq3M5Oe6vB3DTmia7FSQyhDazvi2OaXRrozQXaHjj7g8SX5TyzycmT6edFWNH3yqlPySSrkPjTXJnOc10zZ74UHD18BP8hF3OwMVx846YAFSBpBbLJZw8WXB+yopeFpQA8IazI6Q+JR053F+ot4p7gZtHWRw1kvOLzlTbY8synlMiNJCvrRz68cnHCwu7iLOdiNDuDfhhOLPx1lOmBJPO/Sao25+jyEbllwJFglVrJe7qxIcB3JFdB16ciNI12x5DnBhe30/AzLdCqB8di4e0D4BOFoWDtNb9sGgLd1noiiIwcBee6GIhu6rhCYoy8R8vGrA+nitb0u9RILjSoS+khwP41hn8jfq212FD3x19z9sWBHDJACbC00B75E";
+      const authToken = await get_access_token_from_cache(agentID, accountUsername);
       const config = {
         headers: {
           'Authorization': `Bearer ${authToken}`

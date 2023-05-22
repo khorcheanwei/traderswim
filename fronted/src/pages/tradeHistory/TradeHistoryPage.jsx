@@ -55,14 +55,14 @@ export default function TradeActivityPage() {
 
   async function fetchTradeHistoryData() {
     try {
-      const response = await axios.get("/copy_trading_account/trade_history_database")
+      const response = await axios.get("http://localhost:4000/copy_trading_account/trade_history_database")
 
       if (response.data != null) {
         setTradeHistoryTableData(response.data)
       }
 
     } catch (error) {
-      console.error(error);
+      console.log(error.message);
     }
   }
 

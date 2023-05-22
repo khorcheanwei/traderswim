@@ -14,7 +14,7 @@ export default function AccountDeleteConfirmation({rowAccount, onClose}) {
       try {
         await axios.post("/trading_account/delete_account", {accountName});
         alert("Account deleted successful")
-        var response = await axios.get("/trading_account/database")
+        var response = await axios.get("http://localhost:4000/trading_account/database")
         
         if (response.data != null) {
           setAccountTableData(response.data)
@@ -22,9 +22,9 @@ export default function AccountDeleteConfirmation({rowAccount, onClose}) {
 
         setIsOpenAccountDelete(!isOpenAccountDelete);
 
-      } catch(e) {
+      } catch(error) {
           alert("Account deleted failed")
-          console.log(e);
+          console.log(error.message);
       }
     }
     return (

@@ -1,5 +1,5 @@
 const { agentDBOperation } = require("../data-access/index.js");
-const { store_agent_list_to_cache, delete_agent_list_from_cache } = require("./tradingAccountCronJob.js")
+const { store_agent_list_to_cache, delete_agent_list_from_cache } = require("./tradingAccountPuppeteer.js")
 
 const bcrypt = require("bcryptjs");
 

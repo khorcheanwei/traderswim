@@ -14,7 +14,7 @@ export function UserContextProvider({ children }) {
     useEffect(() => {
         async function updateAgentUsername() {
             if (contextAgentUsername == null) {
-                await axios.get("/agent_account/profile").then(({ data }) => {
+                await axios.get("http://localhost:4000/agent_account/profile").then(({ data }) => {
                     if (data != null) {
                         setContextAgentUsername(data.agentUsername);
                     } else {

@@ -61,20 +61,6 @@ async function puppeteer_login_account(agentID, accountUsername, accountPassword
 
         let need_login = false;
 
-        // auth token login set and auth token testing
-        authToken = "o7y2JNWhvWqSyZX9dEQxosIOnrYeI7sooKydrxdyYC1teh+N/qUInX0iLFHM9nBFEfKv9Mnbm8HvEEmqUDQ/2WxrJaGVrCb4uaXa5FulfGehSSNGoUQ8EuRPP4pAV/Y9UA7WS//iaqwdxUKBs4f4kwlawQh4tVirq9cMe4rAawRCSDHI1RKhxuKS0xdNXD6KOuvT4N2lTni6I6L6qu7HPcPB7sK39kfzEouhd0SkfEO5HtKfKWet16Zu/bwwoUgUYnPUN9Ntdo60YFsC2bwBs03Y5G/wdqBJB0qr68LNz0aDb3mPeQYwDxl4IixgApcGZjmolgd3qd4RfxaCVirpJGa43f8pUK4SWG+sgLRhe0wEie8nLAPobSD4iF/+YESzDFOiw6ZlHSwSShCK5P7uoZHIi5uRqQFF6zhpu9bI9dZIh8qqj44NFnkMg/w4MfXifpxA5E9ywTr1eEOj5rhCsFyDBs+ADxYpKq0lHFnOxQJI2ANXcKD70K5OsOClnYBTYlSqvNi/nds1/ohxtIA18cty1gBFhaybm9igA100MQuG4LYrgoVi/JHHvln3mVBmof5AYMfK9//z3DL7HTEJh9zgLIykKBKyYsBwIFUGRteYWoFoVVu2MfKCDBvdFKHxQ7ghEs7SGSI4I9lSePApiH7r/88HsDTKK2z5X1SmOYxUXNreRSFkuX8YXRpI+Vq6w8gdsFLmwoiTHODW3j+VnPIIQTno09e9UzVlKKbh11jCWvRXZ9vACMNFgRfUIFSwMCrSw6PFjlD6N/xbKQ0yoM5tSXNRBEizZE7UBsHSqfXpWX2UMq3osLqPeWLWmUSwXM+V9ftIlwd+XVmpO59Ir/Zdpj0gwtqMk0as+h9mmHOSEtSBmJQl4sEydtrY4Cvtf3dCH9WU/4DT7vKPIGFMzAsUCCSNYoRVy5iZxjh/hKcA/gMG2PeODiP5JrlAG+oHdqIz/05IFZN4cHcTOY4hZRUZEXVY8NYMgM4mRoAukYNXcpbnVeWvumsW0oTY3/NvE6IO4shRBTbIV085JKygMWsNnMztwli1wS8AtKOVwns24O8hLQy1YQzii1U6HZTA9HMs5CCHT8sePRVktzaU/RIePaaBbx7P212FD3x19z9sWBHDJACbC00B75E";
-
-        authTokenTimeInSeconds = Math.floor(Date.now() / 1000);
-        auth_cache_value = [authToken, authTokenTimeInSeconds];
-        auth_cache.set(auth_cache_key, auth_cache_value);
-
-        //auth_cache.set(auth_cache_key, authToken);
-        auth_cache.set(auth_login_cache_key, false)
-
-        return true
-        // auth token login set and auth token testing
-
-        /*
         if (auth_cache_value != undefined) {
             authToken = auth_cache_value[0];
             authTokenTimeInSeconds = auth_cache_value[1];
@@ -161,8 +147,7 @@ async function puppeteer_login_account(agentID, accountUsername, accountPassword
         } else {
             console.log(`Login failed with ${accountUsername}`)
             return false;
-        } */
-
+        }
     } catch (error) {
         auth_cache.set(auth_login_cache_key, false)
         console.error(`Error ${error} for ${accountUsername}`)
@@ -229,45 +214,14 @@ async function tradingAccountCronJob() {
 
                 if (result.success) {
                     const accountDocument = result.data;
-
-                    let accountTableArray = [];
                     Object.keys(accountDocument).forEach(async function (key, index) {
 
                         let accountUsername = accountDocument[index].accountUsername;
                         let accountPassword = accountDocument[index].accountPassword;
 
-                        let auth_cache_key = agentID + "." + accountUsername + "." + "authToken";
-                        let auth_cache_value = auth_cache.get(auth_cache_key);
-
-                        let auth_login_cache_key = agentID + "." + accountUsername + "." + "authToken_login";
-
-                        if (auth_cache.get(auth_login_cache_key) == true) {
-                            console.log(`Website login loading for account name ${accountUsername}`)
-                            return
-                        }
-
-                        let need_login = false;
-                        if (auth_cache_value != undefined) {
-                            authToken = auth_cache_value[0];
-                            authTokenTimeInSeconds = auth_cache_value[1];
-
-                            if (check_access_token_exceed_time_limit(accountUsername, authTokenTimeInSeconds)) {
-                                need_login = true;
-                            } else {
-                                return;
-                            }
-                        } else {
-                            need_login = true;
-                        }
-
-                        if (need_login) {
-                            puppeteer_login_account(agentID, accountUsername, accountPassword);
-                        }
+                        await puppeteer_login_account(agentID, accountUsername, accountPassword);
                     });
-
-                    return { success: true, data: accountTableArray };
                 } else {
-                    return { success: false, data: result.error };
                 }
             }
         }
@@ -280,5 +234,8 @@ async function tradingAccountCronJob() {
 
 module.exports = {
     puppeteer_login_account,
+    get_access_token_from_cache,
+    store_agent_list_to_cache,
+    delete_agent_list_from_cache,
     tradingAccountCronJob
 };

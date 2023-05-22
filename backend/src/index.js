@@ -28,7 +28,7 @@ const { tradingAccountCronJob } = require('./controllers/tradingAccountPuppeteer
 // setup cron 
 cron.schedule('* * * * *', () => {
   console.log('Trading account cron job task every minute');
-  //tradingAccountCronJob()
+  tradingAccountCronJob()
 });
 
 app.listen(port, "localhost");
