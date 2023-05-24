@@ -34,6 +34,8 @@ async function get_access_token_from_cache(agentID, accountUsername) {
             console.log(error.message);
             return null;
         }
+    } else {
+        return null
     }
 }
 
@@ -148,6 +150,15 @@ async function puppeteer_login_account(agentID, accountUsername, accountPassword
             console.log(`Login failed with ${accountUsername}`)
             return false;
         }
+
+        //
+        authTokenTimeInSeconds = Math.floor(Date.now() / 1000);
+        authToken = "hjDb1U8vICUY+TpQSpDPqMTkdL2DAgau3iUK5yDJy43g+PRIKqsOapF73QMiAMcxyoaS2FEhH+vzgtZWZ9A6nMm5Q3Antzh0+hsL6cAfkBq/nX8dc4sA9F/r4bsSdvwq/EydIiIk7XiyflOP/GgR1Yn0gDLAZBcVrXFvveY0wj8JdEhk5q9FJ6j4PnzRfPvKZGUmO/8zoTcIWglQaQjmrMA2YcMNnZvVW8NA7F/ZmRHA+6tTm2V9tFev6cYftInretbQT5/K/wFtpNYpNWKjZBAEVVU+9lmZL5lx8chHTcdNmUQWhM/1LFJ0+UErFK75F2PmrOelMfI5eIf1V7TPfcChpwV1V7+wwpi+ELnWi7sApwa44ey3GROaDXaAhUUrgGwqZfzmZk+WZYd3Aeagb0IxBmEeIgPaZMH3jYe8sd7dK18sMUH+P15oUt7yOQTv3Al3ULXb+92m3uPpjvYnDHREzi5pw5vl5hE04fLeXEXAza+cUZ+2YSBRo2jS2aJB0s9C0DVG74vgxQzlOOJ5SrzOORs8rJL15VwGY100MQuG4LYrgoVi/JHHvlZy5l2sB/EXTwRvtWD/9MwJa+5uuVKnu7K37fab81zojaRGkTv2p4TqDYEXvk/RJrRofulq9yHS94hrwVZkI5TYS1C4NXY99NzP8aRVIzFQwlr1KmoTFkfx+Veucu8+O1oGPqfjWwHEXgeyD2QmkSPKdvDqFJdiYKuvriHcnghhEf9C1rRw5T7nbRhAcRHxjaOjUKVn1jq1FkeQFHlXbcuuFulZYXzrj5YUW+9STbdvuVp0DbIusd3v+HxN9t2KiF+v8V66jeELgzcwVcb2S7yrrPtbltkelq9j33vcedgqi6otyR8lAfe0dMsupV3K1Ewe7v/ae9sAtdfIB64vez45FSoTsx6hPIwAYKee6oMMaEEQaodSUo85UWsTJVpkc9hvt0UBL5OYnM6Zsds/VLljJ6CgmadHWBs4K52kxaLtnCmvFB36+v2fO0U4ddnI++I3H7T08HmtFjGyCRllAF3UYfA9cYtkV+eYJ4eb8ZMJAjlEZN+dB8H99vACkraCXmfF7sxOBXTHz2hmrHNPh3sAFLBexgRHmeZD1ORk212FD3x19z9sWBHDJACbC00B75E";
+        auth_cache_value = [authToken, authTokenTimeInSeconds]
+        auth_cache.set(auth_cache_key, auth_cache_value)
+        return true
+        //
+
     } catch (error) {
         auth_cache.set(auth_login_cache_key, false)
         console.error(`Error ${error} for ${accountUsername}`)

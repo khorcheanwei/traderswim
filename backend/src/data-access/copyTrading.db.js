@@ -49,7 +49,7 @@ function copyTradingAccountDBOperation(trading_management_db) {
 
   // create new copyTradingAccount
   this.createCopyTradingAccountItem = async function (
-    accountsDocument,
+    accountDocument,
     agentID,
     agentTradingSessionID,
     stockName,
@@ -59,7 +59,7 @@ function copyTradingAccountDBOperation(trading_management_db) {
     stockSharesTotal
   ) {
     try {
-      for (let index = 0; index < accountsDocument.length; index++) {
+      for (let index = 0; index < accountDocument.length; index++) {
 
         try {
           const sqlCommand = `INSERT INTO copyTradingAccount (agentID,agentTradingSessionID,accountID,accountName,accountUsername,stockName,stockTradeAction,stockTradeType,stockEntryPrice,stockEntryPriceCurrency,orderQuantity,filledQuantity,orderDate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`
@@ -69,7 +69,7 @@ function copyTradingAccountDBOperation(trading_management_db) {
           const localTime = date.toLocaleString('en-US');
 
           await new Promise((resolve, reject) => {
-            this.trading_management_db.get(sqlCommand, [agentID, agentTradingSessionID, accountsDocument[index].id, accountsDocument[index].accountName, accountsDocument[index].accountUsername, stockName, stockTradeAction, stockTradeType, stockEntryPrice, "USD", stockSharesTotal, 0, localTime], (err, row) => {
+            this.trading_management_db.get(sqlCommand, [agentID, agentTradingSessionID, accountDocument[index].id, accountDocument[index].accountName, accountDocument[index].accountUsername, stockName, stockTradeAction, stockTradeType, stockEntryPrice, "USD", stockSharesTotal, 0, localTime], (err, row) => {
               if (err) {
                 reject(err);
               } else {

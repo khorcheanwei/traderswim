@@ -53,12 +53,13 @@ async function account_login(httpRequest) {
       }
 
       // login thinkorswim website
-      //const connected = await puppeteer_login_account(accountUsername, accountPassword);
-      const connected = true;
+      const connected = await puppeteer_login_account(accountUsername, accountPassword);
+      const accountID = null;
 
       if (connected) {
         result = await accountDBOperation.createAccountItem(
           agentID,
+          accountID,
           accountName,
           accountUsername,
           accountPassword
@@ -96,12 +97,13 @@ async function fetch_trading_account_info(httpRequest, httpResponse) {
       const { accountUsername } = httpRequest.body;
 
       const authToken = await get_access_token_from_cache(agentID, accountUsername);
-      const config = {
+      let config = {
         headers: {
           'Authorization': `Bearer ${authToken}`
         }
       }
-      await axios.get('https://api.tdameritrade.com/v1/accounts', config)
+
+      await axios.get('https://api.tdameritrade.com/v1/accounts', headers = config)
         .then(response => {
           httpResponse.status(200).json(response.data[0]);
         })

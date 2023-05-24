@@ -11,6 +11,8 @@ const {
   copyTradingAccountDBBOperation,
 } = require("../data-access/index.js");
 
+const { puppeteer_login_account, get_access_token_from_cache, fetch_trading_account_info_api } = require("./tradingAccountPuppeteer.js")
+
 // get stock pair 
 async function copy_trading_stock_pair_list() {
   try {
@@ -52,7 +54,7 @@ async function copy_trading_place_order(httpRequest) {
   const { token } = httpRequest.cookies;
   if (token) {
     try {
-      let agentDocument = await jwt.verify(token, jwtSecret, {});
+      let agentDocument = jwt.verify(token, jwtSecret, {});
       const agentID = agentDocument.id;
       // get agent trading sessionID
       let result = await agentDBOperation.searchAgentTradingSessionID(agentID);
@@ -68,10 +70,59 @@ async function copy_trading_place_order(httpRequest) {
       if (result.success != true) {
         return { success: false, data: result.error };
       }
-      const accountsDocument = result.data;
+      const accountDocument = result.data;
+
+      Object.keys(accountDocument).forEach(async function (key, index) {
+        // need to go Ameritrade website to check whether it is successful to convert to connect to website or not
+
+        let accountUsername = accountDocument[index].accountUsername;
+        const authToken = await get_access_token_from_cache(agentID, accountUsername);
+
+        if (authToken != null) {
+          let config = {
+            headers: {
+              'Authorization': `Bearer ${authToken}`
+            }
+          }
+
+          let payload = {
+            "orderType": "MARKET",
+            "session": "NORMAL",
+            "duration": "DAY",
+            "orderStrategyType": "SINGLE",
+            "orderLegCollection": [
+              {
+                "instruction": "Buy",
+                "quantity": 1,
+                "instrument": {
+                  "symbol": "GOOG",
+                  "assetType": "EQUITY"
+                }
+              }
+            ]
+          }
+
+          await axios.get('https://api.tdameritrade.com/v1/accounts', headers = config, data = payload)
+            .then(response => {
+              console.log(response.message)
+              //httpResponse.status(200).json(response.data[0]);
+            })
+            .catch(error => {
+              // Handle any errors
+              console.log(error.message)
+              //httpResponse.status(400).json(error.message);
+            });
+        } else {
+          console.error(`No access token for agent ID ${agentID} and account username ${accountUsername}`);
+
+        }
+
+      });
+
+
       result =
         await copyTradingAccountDBBOperation.createCopyTradingAccountItem(
-          accountsDocument,
+          accountDocument,
           agentID,
           agentTradingSessionID,
           stockName,
@@ -108,7 +159,7 @@ async function copy_trading_database(httpRequest) {
 
   if (token) {
     try {
-      let agentDocument = await jwt.verify(token, jwtSecret, {});
+      let agentDocument = jwt.verify(token, jwtSecret, {});
       agentID = agentDocument.id;
 
       // get agent trading sessionID
@@ -129,11 +180,11 @@ async function copy_trading_database(httpRequest) {
       if (result.success != true) {
         return { success: false, data: result.error };
       }
-      copyTradingAccountsDocument = result.data;
+      copyTradingAccountDocument = result.data;
 
       let copyTradingAccountData = [];
-      for (let index = 0; index < copyTradingAccountsDocument.length; index++) {
-        const currCopyTradingAccount = copyTradingAccountsDocument[index];
+      for (let index = 0; index < copyTradingAccountDocument.length; index++) {
+        const currCopyTradingAccount = copyTradingAccountDocument[index];
         copyTradingAccountData.push({
           accountName: currCopyTradingAccount.accountName,
           accountUsername: currCopyTradingAccount.accountUsername,
@@ -165,7 +216,7 @@ async function copy_trading_history_database(httpRequest) {
 
   if (token) {
     try {
-      const agentDocument = await jwt.verify(token, jwtSecret, {});
+      const agentDocument = jwt.verify(token, jwtSecret, {});
       agentID = agentDocument.id;
 
       try {
@@ -178,16 +229,16 @@ async function copy_trading_history_database(httpRequest) {
         if (result.success != true) {
           return { success: false, data: result.error };
         }
-        const copyTradingAccountsDocument = result.data;
+        const copyTradingAccountDocument = result.data;
 
         let tradeHistoryData = [];
 
         for (
-          let index = copyTradingAccountsDocument.length - 1;
+          let index = copyTradingAccountDocument.length - 1;
           0 <= index;
           index--
         ) {
-          const currCopyTradingAccount = copyTradingAccountsDocument[index];
+          const currCopyTradingAccount = copyTradingAccountDocument[index];
 
           tradeHistoryData.push({
             agentTradingSessionID: currCopyTradingAccount.agentTradingSessionID,

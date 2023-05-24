@@ -101,7 +101,7 @@ async function agent_profile(httpRequest) {
   const { token } = httpRequest.cookies;
   if (token) {
     try {
-      const agentDocument = await jwt.verify(token, jwtSecret, {});
+      const agentDocument = jwt.verify(token, jwtSecret, {});
       const dbQueryResult = await agentDBOperation.searchAgentByID(agentDocument.id);
       if (dbQueryResult.success) {
         const { id, agentUsername } = dbQueryResult.data;

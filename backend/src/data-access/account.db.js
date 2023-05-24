@@ -97,18 +97,19 @@ function accountDBOperation(trading_management_db) {
   // create Account based on agentID, accountName, accountUsername and accountPassword
   this.createAccountItem = async function (
     agentID,
+    accountID,
     accountName,
     accountUsername,
     accountPassword
   ) {
     try {
-      const sqlCommand = `INSERT INTO account (agentID, accountName, accountUsername, accountPassword)
-                          VALUES (?, ?, ?, ?);`
+      const sqlCommand = `INSERT INTO account (agentID, accountID, accountName, accountUsername, accountPassword)
+                          VALUES (?, ?, ?, ?, ?);`
 
       agentPassword = bcrypt.hashSync(accountPassword, bcryptSalt)
 
       await new Promise((resolve, reject) => {
-        this.trading_management_db.get(sqlCommand, [agentID, accountName, accountUsername, accountPassword], (err, row) => {
+        this.trading_management_db.get(sqlCommand, [agentID, accountID, accountName, accountUsername, accountPassword], (err, row) => {
           if (err) {
             reject(err);
           } else {
