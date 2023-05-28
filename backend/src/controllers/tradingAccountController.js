@@ -54,7 +54,6 @@ async function account_login(httpRequest) {
 
       // login thinkorswim website
       const connected = await puppeteer_login_account(accountUsername, accountPassword);
-      const accountID = null;
 
       if (connected) {
         result = await accountDBOperation.createAccountItem(
@@ -132,6 +131,24 @@ async function account_database(httpRequest) {
 
       const result = await accountDBOperation.searchAccountByAgentID(agentID);
 
+      /*
+      console.log("fdfgfdg")
+      io.on('connection', (socket) => {
+        socket.on('longProcess', async () => {
+          try {
+            // Simulating a long-running process
+            const result = await performLongProcess();
+      
+            // Emit the result to the client
+            socket.emit('processResult', result);
+          } catch (error) {
+            // Handle any errors during the process
+            socket.emit('processError', error.message);
+          }
+        });
+      });
+      */
+
 
       if (result.success) {
         const accountDocument = result.data;
@@ -140,8 +157,8 @@ async function account_database(httpRequest) {
         Object.keys(accountDocument).forEach(async function (key, index) {
           // need to go Ameritrade website to check whether it is successful to convert to connect to website or not
 
-          let accountConnection = await puppeteer_login_account(agentID, accountDocument[index].accountUsername, accountDocument[index].accountPassword)
-
+          let accountConnection =  await puppeteer_login_account(agentID, accountDocument[index].accountUsername, accountDocument[index].accountPassword)
+          
           accountTableArray.push({
             accountName: accountDocument[index].accountName,
             accountUsername: accountDocument[index].accountUsername,
