@@ -100,16 +100,17 @@ function accountDBOperation(trading_management_db) {
     accountID,
     accountName,
     accountUsername,
-    accountPassword
+    accountPassword,
+    refreshToken
   ) {
     try {
-      const sqlCommand = `INSERT INTO account (agentID, accountID, accountName, accountUsername, accountPassword)
-                          VALUES (?, ?, ?, ?, ?);`
+      const sqlCommand = `INSERT INTO account (agentID, accountID, accountName, accountUsername, accountPassword, refreshToken)
+                          VALUES (?, ?, ?, ?, ?, ?);`
 
       agentPassword = bcrypt.hashSync(accountPassword, bcryptSalt)
 
       await new Promise((resolve, reject) => {
-        this.trading_management_db.get(sqlCommand, [agentID, accountID, accountName, accountUsername, accountPassword], (err, row) => {
+        this.trading_management_db.get(sqlCommand, [agentID, accountID, accountName, accountUsername, accountPassword, refreshToken], (err, row) => {
           if (err) {
             reject(err);
           } else {
@@ -122,5 +123,50 @@ function accountDBOperation(trading_management_db) {
       return { success: false, error: error };
     }
   };
+
+  // get refresh token
+  this.getRefreshToken = async function (agentID, accountUsername) {
+    try {
+      const sqlCommand = `SELECT refreshToken FROM account WHERE agentID=? AND accountUsername=?`;
+
+      const queryResult = await new Promise((resolve, reject) => {
+        this.trading_management_db.all(sqlCommand, [agentID, accountUsername], (err, row) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(row);
+          }
+        });
+      });
+
+      return { success: true, data: queryResult };
+    } catch (error) {
+      return { success: false, error: error };
+    }
+  };
+
+  // get refresh token
+  this.updateRefreshToken = async function (refreshToken, agentID, accountUsername) {
+    try {
+
+      const sqlCommand = `UPDATE account SET refreshToken=? WHERE agentID=? AND accountUsername=?`;
+
+      const queryResult = await new Promise((resolve, reject) => {
+        this.trading_management_db.all(sqlCommand, [refreshToken, agentID, accountUsername], (err, row) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(row);
+          }
+        });
+      });
+
+      return { success: true, data: queryResult };
+    } catch (error) {
+      return { success: false, error: error };
+    }
+  };
 }
+
+
 module.exports = accountDBOperation;

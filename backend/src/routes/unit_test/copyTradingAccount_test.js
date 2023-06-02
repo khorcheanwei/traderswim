@@ -16,11 +16,11 @@ describe("Copy trading API unit test", () => {
         "token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0M2E5N2FlMTU0YjdjMDE2MWE5ZmY3OCIsImlhdCI6MTY4MTU2MzI2NH0.iys83-jv3jVGDZFmY2VT5NGqgWcvcH9tFpYOHOo3NaU"
       )
       .send({
-        stockName: "TSLA",
-        stockTradeAction: "BUY",
-        stockTradeType: "LIMIT",
-        stockSharesTotal: 0,
-        stockEntryPrice: 0,
+        optionChainSymbol: "TSLA",
+        optionChainAction: "BUY",
+        optionChainType: "LIMIT",
+        optionContractTotal: 0,
+        optionContractPrice: 0,
       })
       .end((err, response) => {
         assert(response.status === 200);

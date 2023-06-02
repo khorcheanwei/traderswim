@@ -15,7 +15,7 @@ export default function AccountAdd({ onClose }) {
         event.preventDefault()
         try {
             setDisabledButton(true)
-            const { data } = await axios.post("http://localhost:4000/trading_account/login/", { accountName, accountUsername, accountPassword });
+            const { data } = await axios.post("/trading_account/login/", { accountName, accountUsername, accountPassword });
             
             if (typeof data.accountName === "undefined") {
                 alert("Account added failed. " + data);

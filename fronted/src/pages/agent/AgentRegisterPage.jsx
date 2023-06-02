@@ -12,7 +12,7 @@ export default function AgentRegisterPage() {
     async function registerUser(event) {
         event.preventDefault();
         try {
-            await axios.post("http://localhost:4000/agent_account/register/", {
+            await axios.post("/agent_account/register/", {
                 agentUsername,
                 agentPassword,
             }).then(response => {

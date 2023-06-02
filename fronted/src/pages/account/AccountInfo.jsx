@@ -17,7 +17,7 @@ export default function AccountInfo({rowAccount, onClose}) {
 
     async function account_fetch() {""
       try {
-        const response = await axios.post("http://localhost:4000/trading_account/account_fetch", {accountUsername}); 
+        const response = await axios.post("/trading_account/account_fetch", {accountUsername}); 
         const result = response.data;
 
         if (result != undefined) {

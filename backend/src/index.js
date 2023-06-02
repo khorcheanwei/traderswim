@@ -22,7 +22,12 @@ app.use(router);
 
 let port = process.env.PORT || 4000;
 
+const http = require('http').Server(app);
+const io = require('socket.io')(http);
 
+// socket.io object
+//var tradingAccountController = require('./controllers/tradingAccountController');
+//tradingAccountController.start(io);
 
 const { tradingAccountCronJob } = require('./controllers/tradingAccountPuppeteer');
 // setup cron 

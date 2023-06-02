@@ -33,7 +33,7 @@ export default function TradingStockList() {
   
   async function getStockNameList() {
        try {
-        const response = await axios.get("http://localhost:4000/copy_trading_account/get_stock_pair_list")
+        const response = await axios.get("/copy_trading_account/get_stock_pair_list")
         setStockNameListLength(response.data.length)
         setStockNameList(response.data)
       } catch (error) {

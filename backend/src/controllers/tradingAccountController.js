@@ -8,6 +8,27 @@ const jwt = require("jsonwebtoken");
 const { Cluster } = require('puppeteer-cluster');
 const jwtSecret = "traderswim";
 
+// To fetch trading account info
+async function fetch_trading_account_id(agentID, accountUsername) {
+  try {
+
+    const authToken = await get_access_token_from_cache(agentID, accountUsername);
+    let config = {
+      headers: {
+        'Authorization': `Bearer ${authToken}`
+      }
+    }
+
+    const response = await axios.get('https://api.tdameritrade.com/v1/accounts', headers = config);
+    const accountID = response.data[0]["securitiesAccount"]["accountId"];
+
+    return accountID;
+
+  } catch (error) {
+    console.log(`${agentID} and ${accountUsername} . Error is ${error}`)
+  }
+}
+
 // To login new account
 async function account_login(httpRequest) {
   const { accountName, accountUsername, accountPassword } = httpRequest.body;
@@ -15,7 +36,7 @@ async function account_login(httpRequest) {
   const { token } = httpRequest.cookies;
   if (token) {
     try {
-      const agentDocument = await jwt.verify(token, jwtSecret, {});
+      const agentDocument = jwt.verify(token, jwtSecret, {});
       const agentID = agentDocument.id;
 
       // search for accountName
@@ -53,16 +74,18 @@ async function account_login(httpRequest) {
       }
 
       // login thinkorswim website
-      const connected = await puppeteer_login_account(accountUsername, accountPassword);
-      const accountID = null;
+      let { connected, refreshToken } = await puppeteer_login_account(agentID, accountUsername, accountPassword);
 
       if (connected) {
+
+        const accountID = await fetch_trading_account_id(agentID, accountUsername);
         result = await accountDBOperation.createAccountItem(
           agentID,
           accountID,
           accountName,
           accountUsername,
-          accountPassword
+          accountPassword,
+          refreshToken
         );
 
         if (result.success) {
@@ -132,6 +155,24 @@ async function account_database(httpRequest) {
 
       const result = await accountDBOperation.searchAccountByAgentID(agentID);
 
+      /*
+      console.log("fdfgfdg")
+      io.on('connection', (socket) => {
+        socket.on('longProcess', async () => {
+          try {
+            // Simulating a long-running process
+            const result = await performLongProcess();
+      
+            // Emit the result to the client
+            socket.emit('processResult', result);
+          } catch (error) {
+            // Handle any errors during the process
+            socket.emit('processError', error.message);
+          }
+        });
+      });
+      */
+
 
       if (result.success) {
         const accountDocument = result.data;
@@ -140,13 +181,13 @@ async function account_database(httpRequest) {
         Object.keys(accountDocument).forEach(async function (key, index) {
           // need to go Ameritrade website to check whether it is successful to convert to connect to website or not
 
-          let accountConnection = await puppeteer_login_account(agentID, accountDocument[index].accountUsername, accountDocument[index].accountPassword)
+          let { connected, refreshToken } = await puppeteer_login_account(agentID, accountDocument[index].accountUsername, accountDocument[index].accountPassword)
 
           accountTableArray.push({
             accountName: accountDocument[index].accountName,
             accountUsername: accountDocument[index].accountUsername,
             accountBalance: 1000,
-            accountConnection: accountConnection,
+            accountConnection: connected,
           });
         });
 
@@ -170,7 +211,7 @@ async function account_delete(httpRequest) {
 
   if (token) {
     try {
-      const agentDocument = await jwt.verify(token, jwtSecret, {});
+      const agentDocument = jwt.verify(token, jwtSecret, {});
 
       const agentID = agentDocument.id;
 
