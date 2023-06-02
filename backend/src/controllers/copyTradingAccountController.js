@@ -81,7 +81,7 @@ async function post_place_order_multiple_account(post_place_order_list, payload)
 // get latest orderID 
 async function get_latest_order_id(accountID, auth_token) {
   accountID = 220373070;
-  auth_token = 'gpaEBQIdPh9tuwIza0ioMqWOdds21zVlAie0p31Q5fv0g9uKR4gowoELjEbH5u0nXxMGxh1ouaVOgwypvTR9HHpZfPIeyThOssUjQdybyqEO9/7bbZld1KmA5C9msOt9EqsPLByZHilXaKUqlB2RigpEn3b7FQodtlVoCOkKJM2330rHkZIZfankIWbKiNz8Y89MHljF50p/t7AUeTz9WyzL5KGJ7rIYy/hfQWhWbZtACxCrHjpIAvDSAE6QWtWJbzlO8vQ50CP/4ezJBTo42WmrZtBzKHyaTl/f54aPolqu/Pf/VTODhvgipSUKTjivIu2tBoGi6iCJ+Tc/Mhu2LvaSYEc0xhW3Cy1f0teuModG7zdfbM2kCGWDDWflGpNuKIFv1rSZ0VtoJnsmbNEIzi1qINEYCeAudZTRkkcqR09O5zgLpI0C+5jSrvTR4x03pwkds16V4fKRNR1up8B9C/PtesyeWVAxI9kvur7BwN+ovMcrezxnNB+xVf3y/xyeLKyInWRbNVDkcp/zWhuTHjbZ+xn100MQuG4LYrgoVi/JHHvlsHtsCaZ3Qn/KkqytbwM3hjfW5SuMgMEjTTBPKZs7H4r4V8MUklKn27bZVFP1Obt7kCc4BnWWxxFfSBaAyHqi+Nz3WJIn/2AQrViU/VI4N4nqS6TonUOrqXoWm7ZUeKA7qe5cbRY/rgig0gXAECuDw6doXHzENlWEA3RVxFb+0iKmmlVyxABch70AMTKuI1dQOKxo1QesL4wpQMdHI2rHNE3bUdy4GubyKthSpgVIF000AVoiqXDKMubumN6N4zH7M3TLuhrgM4Y327Fh2budyrJynnKiuWQ387H5+1Bwh19EnYpbXTtLKUSEL40UEvk+yfQx5lBCI/cOiQyqfke5xBrjKXHSn14jKS8euuh5mGWgRmcgewwHOf77QhOzOAzqlWuq/FZEUgTCLyC0WWrmuQX9Hj/AcEuI2UCt2WsizYSNQXVn4/36cEHcGYhxI6fAJcv7BIohs8OS+SGa5eW2EjKI5Rp91WByieoEDYvBzU6hNn9TU+l+QJHPx36XlWrnW/2g1i49t5L4JDhZpYOkZG0Rm9I=212FD3x19z9sWBHDJACbC00B75E';
+  auth_token = 'JXXvJB38M5kE69dvlyQomaSbgOLcE9RX6wh9H9/39Rx3CLJQXOb8s2qFVamMho9Tj9x5l/y1gQ3c2e1sb2bcby5p1aqhGM1lQXXbDfpuPCYpqBBpI8v5qOhSxMMfhM22NNO6dr8BJ8w9o2xq+RKa3X1+YuoDN5YCZYe5zb9Aj8XQxd0a25bmRaO05/PXh+hNJuQ4ivtyr9S2JTF/Gjhg+J6Tjna1yjeE/b6gvy9bBz+NpQZpWbRGMV2RFH97/23uekph4EOV/P6pgd4sieV2J1aIbHsvG2u3uAXNzwpGXspZhNevcgnuilScYeIt+ov+KVc3FS40GvHsSP35y0F0arp2RHth+2I0UTvyxGi8EJzE68CCi8JATpslmYOVRRVq9efEouWqX7uFNjOR1caCaZpz+wZ0Xq/3FEkXpaer84wv6NAodupOMsBUlpByhSxqfu6mzOfWkDy7+RKdkxMeoWkD/4zLNso3NmYRCD+omdOZv5Tz220fvPHIrNLIKjIR8/eFKXlybfZTvylYGdN+X9qqXo+100MQuG4LYrgoVi/JHHvl9avj8zNtBpB/oqOU41aIGjNUrGwt4HcGV/J937Dr59YB/WJ+FG8l27iC9Zk6ycC+7W55vg0MITOqcq8U/EKjEBjpDr/nvitGxHAghcoQu//3xNyFbc8VCrJiCMT2SFfaAKmg/EcqfEL5MKBacrLQ/hQe2AQa5jxO049wC0yuiXP/Y4QqWiBfdNxSy3kDBNAGtKYqlHJ0nUj9pC40X0O/WSG0T89PGjVBQSXPchv/tSmxrCHjKniK0DdoyXXvdbjaArewy1Rjf7mlbbgq8cmIB2Ib3Sgi5FaoG7XrhYY8+LWAhmSSJWP7TCSVrfdY+tkelEWhX43p37mo378BEQWn4fORMCXcGtDGznvgKh39q//vooQ8F10UYRpKl3nCBZ2NPmTVzzg9U2ADeccpDQsSVrYZxANztu3XJF9r9WOCvEpNmr0ut6PILFvlMgNuXE5PFWCfZSGIXMOdOXyDuzhnGRwZmNhrNhc/ybqLpKbHv5NVSflnGv7wB/K0POmX3pcfSbX+fFaGq6KnO64xTYFHu9c4Iiw=212FD3x19z9sWBHDJACbC00B75E';
   const config = {
     method: 'get',
     maxBodyLength: Infinity,
@@ -89,16 +89,81 @@ async function get_latest_order_id(accountID, auth_token) {
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${auth_token}`
+    },
+    params: {
+      'fields': 'orders'
     }
   }
 
   try {
     const response = await axios.request(config)
-    console.log(response);
+
+    let total_orders = response.data["securitiesAccount"]["orderStrategies"].length;
+    let latest_enteredTime = null;
+    let latest_index = 0;
+
+    for (let index = 0; index < total_orders; index++) {
+      let current_enteredTime = response.data["securitiesAccount"]["orderStrategies"][index]["enteredTime"];
+      console.log(current_enteredTime)
+      if (latest_enteredTime == null) {
+        latest_enteredTime = current_enteredTime;
+      } else {
+
+        if (latest_enteredTime < current_enteredTime) {
+          latest_enteredTime = current_enteredTime;
+          latest_index = index;
+        }
+      }
+    }
+
+    let get_latest_order_id = response.data["securitiesAccount"]["orderStrategies"][latest_index]["orderId"];
+    return get_latest_order_id;
   } catch (error) {
     console.error(`Error get latest order ID for accountID ${accountID}, ${error}`);
   }
 }
+
+// get latest order information 
+async function get_latest_order_information(accountID, auth_token, orderID) {
+  accountID = 220373070;
+  orderID = 6247118696;
+  auth_token = 'LHhm2YNwWWGeL3cV5aHGWali6Lf9m7Uj8XUrxCqAoB2w1RPk4jSP/dmK9WRsO2DAvwj5+KJVRLlVtBRDQ+poai+7Qn9Lkk/6L2aYaxmakg1XCKcL4GKhJ2s5LD1vnMp7jNgRvxIuxHOta9NgsQid2JLzQWb/D+Dwls77R0uVuw6UHiWYa2gxdtMqnjzcoKkcIq4XLOpF9KCYxt2H8mkxUVYFqPQ3g1IPeVIRRfHaLKAYIuIHsA8mdFCjOO1/GargpAry7RTI4yldcg6VNI0LNmPeJyMdMwCyrjLaDEV69trcbvR9//bzrB/AH3CMfYjaD1X16hVlBsstnjQLa6dpedqhoUpvY2LzJxsiUWTJ5F7soLCaQdJ7rwBsNW9/71gjeJbQmWKaC2/bsHH195WKSK9Qrc8f1AaJWXK9r0+J+nFCQRxBEpp/eir6IdHjUkpfTjxm47lsM3LelsVhTvKGrU5DzYimDbR8Yd+eepkdHwlzcS+B/KvNrh5nHmw5EsGyta2ll4k/Z/Z60h28m+7fBuOJTMC100MQuG4LYrgoVi/JHHvlNt5vXhGfNcfkWJJ4SQewENyeP1VGOd0EDr03lPg03CRCDLpCp39nxRQggdTl9tHBOPzqDTHMJO6GeZhFJOWsWbyB51uHsWAA4wuupkkbe+o+HkzN5j70gf2GEp5ryIp+Vs66fEeM5Jw+ldITCZyUjkF+U/EbyWoIVOBDhoRVAWcEWBc47P4049k6oFYH1UHrxfsAWj4bBHhG/RgIOlmJQXr+pFGV+48kaldGj7+bCWW3RJbexmP5ZA2wgKlZyMu8W5p4CO6fXIMP3HjIEHRmHmBzgMPEYenVvPusb5CQr/UA46P086/C+h3BITySoX63jVNwocchMWRyPcakY/qNjUZy6m+WlXpFhO6n5h247wqKyPgGz5vD6hl7n2AjUvujIOgd9qgd5848AtgTzZvU3AbavFBC/YfhCAJ1WvVi3G4ooRsf4U/XOsQnV5908KNiszLsQVmcNzdyFF5hMxwn7g4zeKuJJu/0VH/q4TXfb345bOh+HH3l6C+76LbhyQQ4KY8PnR/SeEL8mR+ETm14VYu8Sjo=212FD3x19z9sWBHDJACbC00B75E';
+  const config = {
+    method: 'get',
+    maxBodyLength: Infinity,
+    url: `https://api.tdameritrade.com/v1/orders`,
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${auth_token}`
+    },
+    params: {
+      'accountId': accountID
+    }
+  }
+
+  try {
+    const response = await axios.request(config);
+    const order_list = response.data;
+
+    for (let index = 0; index < order_list.length; index++) {
+      const current_order = order_list[index];
+      const current_orderId = current_order.orderId;
+      if (orderID == current_orderId) {
+        const current_enteredTime = current_order.enteredTime;
+        const current_filledQuantity = current_order.filledQuantity;
+        const current_status = current_order.status;
+
+        return { "enteredTime": current_enteredTime, "filledQuantity": current_filledQuantity, "status": current_status };
+      }
+    }
+    return { "enteredTime": null, "filledQuantity": null, "status": null };
+
+  } catch (error) {
+    console.error(`Error get latest order ID for accountID ${accountID}, ${error}`);
+    return { "enteredTime": null, "filledQuantity": null, "status": null };
+  }
+}
+
 
 // Copy trading place order
 async function copy_trading_place_order(httpRequest) {
@@ -156,9 +221,10 @@ async function copy_trading_place_order(httpRequest) {
       for (let index = 0; index < accountDocument.length; index++) {
         let accountID = accountDocument[index].accountID;
 
-        get_latest_order_id(accountID, auth_token)
+        let auth_token = "LHhm2YNwWWGeL3cV5aHGWali6Lf9m7Uj8XUrxCqAoB2w1RPk4jSP/dmK9WRsO2DAvwj5+KJVRLlVtBRDQ+poai+7Qn9Lkk/6L2aYaxmakg1XCKcL4GKhJ2s5LD1vnMp7jNgRvxIuxHOta9NgsQid2JLzQWb/D+Dwls77R0uVuw6UHiWYa2gxdtMqnjzcoKkcIq4XLOpF9KCYxt2H8mkxUVYFqPQ3g1IPeVIRRfHaLKAYIuIHsA8mdFCjOO1/GargpAry7RTI4yldcg6VNI0LNmPeJyMdMwCyrjLaDEV69trcbvR9//bzrB/AH3CMfYjaD1X16hVlBsstnjQLa6dpedqhoUpvY2LzJxsiUWTJ5F7soLCaQdJ7rwBsNW9/71gjeJbQmWKaC2/bsHH195WKSK9Qrc8f1AaJWXK9r0+J+nFCQRxBEpp/eir6IdHjUkpfTjxm47lsM3LelsVhTvKGrU5DzYimDbR8Yd+eepkdHwlzcS+B/KvNrh5nHmw5EsGyta2ll4k/Z/Z60h28m+7fBuOJTMC100MQuG4LYrgoVi/JHHvlNt5vXhGfNcfkWJJ4SQewENyeP1VGOd0EDr03lPg03CRCDLpCp39nxRQggdTl9tHBOPzqDTHMJO6GeZhFJOWsWbyB51uHsWAA4wuupkkbe+o+HkzN5j70gf2GEp5ryIp+Vs66fEeM5Jw+ldITCZyUjkF+U/EbyWoIVOBDhoRVAWcEWBc47P4049k6oFYH1UHrxfsAWj4bBHhG/RgIOlmJQXr+pFGV+48kaldGj7+bCWW3RJbexmP5ZA2wgKlZyMu8W5p4CO6fXIMP3HjIEHRmHmBzgMPEYenVvPusb5CQr/UA46P086/C+h3BITySoX63jVNwocchMWRyPcakY/qNjUZy6m+WlXpFhO6n5h247wqKyPgGz5vD6hl7n2AjUvujIOgd9qgd5848AtgTzZvU3AbavFBC/YfhCAJ1WvVi3G4ooRsf4U/XOsQnV5908KNiszLsQVmcNzdyFF5hMxwn7g4zeKuJJu/0VH/q4TXfb345bOh+HH3l6C+76LbhyQQ4KY8PnR/SeEL8mR+ETm14VYu8Sjo=212FD3x19z9sWBHDJACbC00B75E";
+        await get_latest_order_information(1, 1, 1)
+        //await get_latest_order_id(accountID, auth_token)
 
-        let auth_token = "3Nk2ReMq2rb8DMfpOGx4gHr/m4n9ZcPwN0Dg4UhmzsUWTK1QkkoXqYQD8JAkLwyZExJ498su3mQ53lTzegbpkc57vdDRorsqg35tWVCzR2SR3UPhPt1408paGvQTjaT/k0OeZzbpZC9N4++H2iaaTNMj6TaeYmuxMcRf7JwFstmdjUTRcYIPrIoW2w8HTBUvlwRjk2A5ZLGFMlM74kO5hmVbKOdgdpnhEf21VKnGRHe7L/HxDh0WadU8xgpspGvidMwEQKFlpzJq5Pg3yF+LiV8iEeJZqRuHGJVoMFlyLSkmeApEiXP0KKn4/Jik2iIcHzYSh4JJIVKfU5ODQHWSXsA2h8/O3v2dSJxpgj2KfITVAUr126Dauu6Btuxo6bxO+D9wdIEajU0NTNTHM6x0EjLUOAitYWmt6ZIh0iYlvKHr3tb09N6Myf9IxTSlY0H6kMjuwQpBCDpwF9mnmQtluyYKF627U01gFKMnVw64GCzNtTghUi4xOkKWsCIu26zphgDFZiz8wL0ioWuHtyRNv4RGaKBH0BhN0NuOF100MQuG4LYrgoVi/JHHvlhiPLUQwetFBLZCShBp4hucpIhe4mdimQcDmFD3bIHpkI735AM8jODSx4gJf+/v1MsuRzzvtFAS6kHPg0U+F0Msp8t3ndO9kmKc752pSmKcG1Zo3lcTrWZcJMMWnKLFVvPISQqLpOERby/rKH5cFtvFR2hjCFCdwH6dGX37Q9Wihd/we9kqrUL1wz1iqC07BWSdnGuoBQ2EbNcDkvMR95nLYplNUoUAXTZrEB2aCQnKe2CCyVHh9Wd2BcJkwt2pKoRgFKF5T32qNjrM/UCoj+6S3YupTW7V0b2jVznreEiHSZC8ju81suNQPFQXFAM2Bhk6bvn9/YcZXorOxixAiOjjWOLQOMNa60CT/fMYs1ljuvlhM/K3F5dJfQCZgLDfIJ+RJeZLjWniMZam5iab1vnSMjHTmlem43PjkuxsnmMCGhsUBKH7ZYNwOfwmCBZpqLCDP+aldjD8tXfs+DIavO84mHwjo+dzZgOToPFDSnLKR97QkLmULEk7KpG2oPXsEv+VBjv3oyOILbhuqp+hgiZJXpcE7Y25TiXbBvxr212FD3x19z9sWBHDJACbC00B75E";
         //let auth_token = await get_access_token_from_cache(agentID, accountUsername);
         post_place_order_list.push({ accountID: accountID, auth_token: auth_token })
       }
@@ -215,7 +281,7 @@ async function copy_trading_get_option_chain_list(httpRequest) {
       let agentDocument = jwt.verify(token, jwtSecret, {});
       const agentID = agentDocument.id;
 
-      const authToken = "3Nk2ReMq2rb8DMfpOGx4gHr/m4n9ZcPwN0Dg4UhmzsUWTK1QkkoXqYQD8JAkLwyZExJ498su3mQ53lTzegbpkc57vdDRorsqg35tWVCzR2SR3UPhPt1408paGvQTjaT/k0OeZzbpZC9N4++H2iaaTNMj6TaeYmuxMcRf7JwFstmdjUTRcYIPrIoW2w8HTBUvlwRjk2A5ZLGFMlM74kO5hmVbKOdgdpnhEf21VKnGRHe7L/HxDh0WadU8xgpspGvidMwEQKFlpzJq5Pg3yF+LiV8iEeJZqRuHGJVoMFlyLSkmeApEiXP0KKn4/Jik2iIcHzYSh4JJIVKfU5ODQHWSXsA2h8/O3v2dSJxpgj2KfITVAUr126Dauu6Btuxo6bxO+D9wdIEajU0NTNTHM6x0EjLUOAitYWmt6ZIh0iYlvKHr3tb09N6Myf9IxTSlY0H6kMjuwQpBCDpwF9mnmQtluyYKF627U01gFKMnVw64GCzNtTghUi4xOkKWsCIu26zphgDFZiz8wL0ioWuHtyRNv4RGaKBH0BhN0NuOF100MQuG4LYrgoVi/JHHvlhiPLUQwetFBLZCShBp4hucpIhe4mdimQcDmFD3bIHpkI735AM8jODSx4gJf+/v1MsuRzzvtFAS6kHPg0U+F0Msp8t3ndO9kmKc752pSmKcG1Zo3lcTrWZcJMMWnKLFVvPISQqLpOERby/rKH5cFtvFR2hjCFCdwH6dGX37Q9Wihd/we9kqrUL1wz1iqC07BWSdnGuoBQ2EbNcDkvMR95nLYplNUoUAXTZrEB2aCQnKe2CCyVHh9Wd2BcJkwt2pKoRgFKF5T32qNjrM/UCoj+6S3YupTW7V0b2jVznreEiHSZC8ju81suNQPFQXFAM2Bhk6bvn9/YcZXorOxixAiOjjWOLQOMNa60CT/fMYs1ljuvlhM/K3F5dJfQCZgLDfIJ+RJeZLjWniMZam5iab1vnSMjHTmlem43PjkuxsnmMCGhsUBKH7ZYNwOfwmCBZpqLCDP+aldjD8tXfs+DIavO84mHwjo+dzZgOToPFDSnLKR97QkLmULEk7KpG2oPXsEv+VBjv3oyOILbhuqp+hgiZJXpcE7Y25TiXbBvxr212FD3x19z9sWBHDJACbC00B75E";
+      const authToken = "LHhm2YNwWWGeL3cV5aHGWali6Lf9m7Uj8XUrxCqAoB2w1RPk4jSP/dmK9WRsO2DAvwj5+KJVRLlVtBRDQ+poai+7Qn9Lkk/6L2aYaxmakg1XCKcL4GKhJ2s5LD1vnMp7jNgRvxIuxHOta9NgsQid2JLzQWb/D+Dwls77R0uVuw6UHiWYa2gxdtMqnjzcoKkcIq4XLOpF9KCYxt2H8mkxUVYFqPQ3g1IPeVIRRfHaLKAYIuIHsA8mdFCjOO1/GargpAry7RTI4yldcg6VNI0LNmPeJyMdMwCyrjLaDEV69trcbvR9//bzrB/AH3CMfYjaD1X16hVlBsstnjQLa6dpedqhoUpvY2LzJxsiUWTJ5F7soLCaQdJ7rwBsNW9/71gjeJbQmWKaC2/bsHH195WKSK9Qrc8f1AaJWXK9r0+J+nFCQRxBEpp/eir6IdHjUkpfTjxm47lsM3LelsVhTvKGrU5DzYimDbR8Yd+eepkdHwlzcS+B/KvNrh5nHmw5EsGyta2ll4k/Z/Z60h28m+7fBuOJTMC100MQuG4LYrgoVi/JHHvlNt5vXhGfNcfkWJJ4SQewENyeP1VGOd0EDr03lPg03CRCDLpCp39nxRQggdTl9tHBOPzqDTHMJO6GeZhFJOWsWbyB51uHsWAA4wuupkkbe+o+HkzN5j70gf2GEp5ryIp+Vs66fEeM5Jw+ldITCZyUjkF+U/EbyWoIVOBDhoRVAWcEWBc47P4049k6oFYH1UHrxfsAWj4bBHhG/RgIOlmJQXr+pFGV+48kaldGj7+bCWW3RJbexmP5ZA2wgKlZyMu8W5p4CO6fXIMP3HjIEHRmHmBzgMPEYenVvPusb5CQr/UA46P086/C+h3BITySoX63jVNwocchMWRyPcakY/qNjUZy6m+WlXpFhO6n5h247wqKyPgGz5vD6hl7n2AjUvujIOgd9qgd5848AtgTzZvU3AbavFBC/YfhCAJ1WvVi3G4ooRsf4U/XOsQnV5908KNiszLsQVmcNzdyFF5hMxwn7g4zeKuJJu/0VH/q4TXfb345bOh+HH3l6C+76LbhyQQ4KY8PnR/SeEL8mR+ETm14VYu8Sjo=212FD3x19z9sWBHDJACbC00B75E";
 
       if (authToken != null) {
         let config = {
