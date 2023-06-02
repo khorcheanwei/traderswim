@@ -40,7 +40,7 @@ export default function AccountsPage() {
   async function fetchAccountData() {
     try {
 
-      const response = await axios.get('http://localhost:4000/trading_account/database')
+      const response = await axios.get('/trading_account/database')
       console.log(response.data);
       if (response.data != null) {
         setAccountTableData(response.data)

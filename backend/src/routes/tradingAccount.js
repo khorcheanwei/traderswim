@@ -40,17 +40,15 @@ tradingAccountRouter.get("/database", async (httpRequest, httpResponse) => {
   }
 });
 
-tradingAccountRouter.post(
-  "/delete_account",
-  async (httpRequest, httpResponse) => {
-    const result = await account_delete(httpRequest);
+tradingAccountRouter.post("/delete_account", async (httpRequest, httpResponse) => {
+  const result = await account_delete(httpRequest);
 
-    if (result.success == true) {
-      httpResponse.status(200).json(result.data);
-    } else {
-      httpResponse.status(400).json(result.data);
-    }
+  if (result.success == true) {
+    httpResponse.status(200).json(result.data);
+  } else {
+    httpResponse.status(400).json(result.data);
   }
+}
 );
 
 /*

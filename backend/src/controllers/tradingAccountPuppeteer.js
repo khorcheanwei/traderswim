@@ -1,5 +1,6 @@
 const puppeteer = require('puppeteer');
 const axios = require('axios');
+var qs = require('qs');
 
 const node_cache = require("node-cache");
 const auth_cache = new node_cache();
@@ -39,34 +40,81 @@ async function get_access_token_from_cache(agentID, accountUsername) {
     }
 }
 
+async function get_access_token_from_refresh_token(auth_cache_key, refreshToken) {
+    try {
+        let data = qs.stringify({
+            'grant_type': 'refresh_token',
+            'refresh_token': refreshToken,
+            'access_type': '',
+            'code': '',
+            'client_id': 'TDATRADERX@AMER.OAUTHAP',
+            'redirect_uri': ''
+        });
+
+        let config = {
+            method: 'post',
+            maxBodyLength: Infinity,
+            url: 'https://api.tdameritrade.com/v1/oauth2/token',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            data: data
+        };
+
+
+        const response = await axios.request(config)
+
+        // save authToken to cache
+        let authTokenTimeInSeconds = Math.floor(Date.now() / 1000);
+
+        let accessToken = response.data["access_token"];
+        let authToken = accessToken;
+
+        let auth_cache_value = [authToken, authTokenTimeInSeconds];
+        auth_cache.set(auth_cache_key, auth_cache_value);
+
+        return true
+
+    } catch (error) {
+        console.error(error);
+        return false;
+    }
+
+}
+
 async function puppeteer_login_account(agentID, accountUsername, accountPassword) {
     /* Two cache key used
     - auth_cache_key {agentID}.{accountUsername}.{authToken}- Store authToken and authToken login time
     - auth_login_cache_key {agentID}.{accountUsername}.{authToken_login} - If true, now login process. If false, can start new login process 
     */
 
-    console.log(accountUsername)
-    console.log(accountPassword)
+    const maxRetries = 3;
+    let attempt = 1;
+    let success = false;
+
+    let refreshToken = null;
+    let authToken, authTokenTimeInSeconds;
+
+    let auth_cache_key = agentID + "." + accountUsername + "." + "authToken";
+    let auth_cache_value = auth_cache.get(auth_cache_key);
+
+    let auth_login_cache_key = agentID + "." + accountUsername + "." + "authToken_login";
+
     try {
-        const maxRetries = 3;
-        let attempt = 1;
-        let success = false;
-
-        let authToken, authTokenTimeInSeconds;
-
-        let auth_cache_key = agentID + "." + accountUsername + "." + "authToken";
-        let auth_cache_value = auth_cache.get(auth_cache_key);
-
-        let auth_login_cache_key = agentID + "." + accountUsername + "." + "authToken_login";
-
-        console.log(auth_cache.get(auth_login_cache_key))
         if (auth_cache.get(auth_login_cache_key) == true) {
             console.log(`Website login loading for account name ${accountUsername}`)
-            return false
+            return { connected: false, refreshToken: refreshToken }
+        } else {
+            auth_cache.set(auth_login_cache_key, true)
+        }
+
+        // get refresh token
+        const queryResult = await accountDBOperation.getRefreshToken(agentID, accountUsername);
+        if (queryResult["data"].length != 0) {
+            refreshToken = queryResult["data"][0]["refreshToken"];
         }
 
         let need_login = false;
-
         if (auth_cache_value != undefined) {
             authToken = auth_cache_value[0];
             authTokenTimeInSeconds = auth_cache_value[1];
@@ -74,7 +122,8 @@ async function puppeteer_login_account(agentID, accountUsername, accountPassword
             if (check_access_token_exceed_time_limit(accountUsername, authTokenTimeInSeconds)) {
                 need_login = true;
             } else {
-                return true;
+                auth_cache.set(auth_login_cache_key, false)
+                return { connected: true, refreshToken: refreshToken }
             }
         } else {
             need_login = true;
@@ -82,7 +131,13 @@ async function puppeteer_login_account(agentID, accountUsername, accountPassword
 
         if (need_login) {
 
-            auth_cache.set(auth_login_cache_key, true)
+            // post Auth API
+            const get_access_token_success = await get_access_token_from_refresh_token(auth_cache_key, refreshToken);
+
+            if (get_access_token_success) {
+                auth_cache.set(auth_login_cache_key, false)
+                return { connected: true, refreshToken: refreshToken }
+            }
 
             let sessionStorageData;
 
@@ -135,7 +190,15 @@ async function puppeteer_login_account(agentID, accountUsername, accountPassword
 
                     if (sessionStorageData != undefined) {
                         authToken = sessionStorageData["authToken"];
+                        refreshToken = sessionStorageData["refreshToken"];
 
+                        // save refreshToken to database. Failed to save refreshToken is not considered as severe for this case.
+                        const queryResult = await accountDBOperation.updateRefreshToken(refreshToken, agentID, accountUsername);
+                        if (queryResult.success == false) {
+                            console.log(queryResult.error);
+                        }
+
+                        // save authToken to cache 
                         auth_cache_value = [authToken, authTokenTimeInSeconds]
                         auth_cache.set(auth_cache_key, auth_cache_value)
                     }
@@ -143,24 +206,28 @@ async function puppeteer_login_account(agentID, accountUsername, accountPassword
                     await browser.close();
                 }
             }
-            auth_cache.set(auth_login_cache_key, false)
+
         }
+
+        auth_cache.set(auth_login_cache_key, false)
 
         if (authToken != undefined) {
             console.log(authToken)
             console.log(`Login successfully with ${accountUsername}`)
-            return true;
+            return { connected: true, refreshToken: refreshToken }
         } else {
             console.log(`Login failed with ${accountUsername}`)
-            return false;
+            return { connected: false, refreshToken: refreshToken }
         }
 
     } catch (error) {
         auth_cache.set(auth_login_cache_key, false)
         console.error(`Error ${error} for ${accountUsername}`)
-        return false;
+        return { connected: false, refreshToken: refreshToken }
     }
 };
+
+
 
 async function store_agent_list_to_cache(agentID) {
     try {
@@ -183,6 +250,7 @@ async function store_agent_list_to_cache(agentID) {
     }
 }
 
+// log out
 async function delete_agent_list_from_cache(agentID) {
     try {
         let agent_list_cache_key = "agent_list";
@@ -208,7 +276,7 @@ async function delete_agent_list_from_cache(agentID) {
     }
 }
 
-
+// log in
 async function tradingAccountCronJob() {
     try {
         let agent_list_cache_key = "agent_list";
@@ -226,7 +294,7 @@ async function tradingAccountCronJob() {
                         let accountUsername = accountDocument[index].accountUsername;
                         let accountPassword = accountDocument[index].accountPassword;
 
-                        await puppeteer_login_account(agentID, accountUsername, accountPassword);
+                        let { connected, refreshToken } = await puppeteer_login_account(agentID, accountUsername, accountPassword);
                     });
                 } else {
                 }
