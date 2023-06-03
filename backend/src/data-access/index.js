@@ -3,7 +3,7 @@ let sqlite3 = require('sqlite3').verbose();;
 // create trading_management database 
 const trading_management_db = new sqlite3.Database('trading_management.db', (err) => {
   if (err) {
-    console.error(err.message);
+    console.log(err.message);
   } else {
     console.log('Connected to the database');
   }
@@ -13,7 +13,7 @@ const trading_management_db = new sqlite3.Database('trading_management.db', (err
 const AgentSchemaSql = require("../models/Agent");
 trading_management_db.run(AgentSchemaSql), (err) => {
   if (err) {
-    console.error(err.message);
+    console.log(err.message);
   }
   console.log('Agent table created (if it did not already exist).');
 };
@@ -22,7 +22,7 @@ trading_management_db.run(AgentSchemaSql), (err) => {
 const AccountSchemaSql = require("../models/Account");
 trading_management_db.run(AccountSchemaSql), (err) => {
   if (err) {
-    console.error(err.message);
+    console.log(err.message);
   }
   console.log('Account table created (if it did not already exist).');
 };
@@ -32,7 +32,7 @@ trading_management_db.run(AccountSchemaSql), (err) => {
 const CopyTradingAccountSchemaSql = require("../models/CopyTradingAccount");
 trading_management_db.run(CopyTradingAccountSchemaSql), (err) => {
   if (err) {
-    console.error(err.message);
+    console.log(err.message);
   }
   console.log('Copy trading table created (if it did not already exist).');
 };

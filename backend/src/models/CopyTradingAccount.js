@@ -3,19 +3,21 @@ const CopyTradingAccountSchemaSql = `
     id INTEGER PRIMARY KEY,
     agentID INTEGER NOT NULL,
     agentTradingSessionID INTEGER NOT NULL,
-    accountID INTEGER NOT NULL,
+    accountId INTEGER NOT NULL,
     accountName TEXT NOT NULL,
     accountUsername TEXT NOT NULL,
     optionChainSymbol TEXT NOT NULL,
-    optionChainAction TEXT NOT NULL,
-    optionChainType TEXT NOT NULL,
-    optionContractPrice REAL NOT NULL,
-    stockEntryPriceCurrency TEXT NOT NULL,
-    orderQuantity INTEGER NOT NULL,
-    filledQuantity INTEGER NOT NULL,
-    orderDate DATETIME NOT NULL,
+    optionChainDescription TEXT NOT NULL,
+    optionChainOrderId TEXT NOT NULL,
+    optionChainOrderType TEXT NOT NULL,
+    optionChainInstruction TEXT NOT NULL,
+    optionChainPrice REAL NOT NULL,
+    optionChainQuantity INTEGER NOT NULL,
+    optionChainFilledQuantity INTEGER NOT NULL,
+    optionChainStatus INTEGER NOT NULL,
+    optionChainEnteredTime DATETIME NOT NULL,
     FOREIGN KEY (agentID) REFERENCES agent (id),
-    FOREIGN KEY (accountID) REFERENCES account (id)
+    FOREIGN KEY (accountId) REFERENCES account (id)
 );`
 
 module.exports = CopyTradingAccountSchemaSql;

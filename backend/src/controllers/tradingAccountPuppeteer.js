@@ -76,7 +76,7 @@ async function get_access_token_from_refresh_token(auth_cache_key, refreshToken)
         return true
 
     } catch (error) {
-        console.error(error);
+        console.log(error);
         return false;
     }
 
@@ -182,7 +182,7 @@ async function puppeteer_login_account(agentID, accountUsername, accountPassword
                     });
                     success = true;
                 } catch (error) {
-                    console.error(`Login failed for ${accountUsername}: ${error}`);
+                    console.log(`Login failed for ${accountUsername}: ${error}`);
                     attempt++;
                 } finally {
 
@@ -222,7 +222,7 @@ async function puppeteer_login_account(agentID, accountUsername, accountPassword
 
     } catch (error) {
         auth_cache.set(auth_login_cache_key, false)
-        console.error(`Error ${error} for ${accountUsername}`)
+        console.log(`Error ${error} for ${accountUsername}`)
         return { connected: false, refreshToken: refreshToken }
     }
 };

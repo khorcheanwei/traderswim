@@ -20,9 +20,9 @@ async function fetch_trading_account_id(agentID, accountUsername) {
     }
 
     const response = await axios.get('https://api.tdameritrade.com/v1/accounts', headers = config);
-    const accountID = response.data[0]["securitiesAccount"]["accountId"];
+    const accountId = response.data[0]["securitiesAccount"]["accountId"];
 
-    return accountID;
+    return accountId;
 
   } catch (error) {
     console.log(`${agentID} and ${accountUsername} . Error is ${error}`)
@@ -78,10 +78,10 @@ async function account_login(httpRequest) {
 
       if (connected) {
 
-        const accountID = await fetch_trading_account_id(agentID, accountUsername);
+        const accountId = await fetch_trading_account_id(agentID, accountUsername);
         result = await accountDBOperation.createAccountItem(
           agentID,
-          accountID,
+          accountId,
           accountName,
           accountUsername,
           accountPassword,

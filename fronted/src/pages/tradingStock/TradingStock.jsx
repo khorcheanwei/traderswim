@@ -7,8 +7,8 @@ import TradingStockList from './TradingStockList';
 
 export default function TradingStock({ onClose }) {
 
-    var optionChainActionList = ["BUY_TO_OPEN", "BUY_TO_CLOSE", "SELL_TO_OPEN", "SELL_TO_CLOSE"];
-    var optionChainTypeList = ["LIMIT", "MARKET", "MARKET_ON_CLOSE", "STOP", "STOP_LIMIT", "TRAILING_STOP"];
+    var optionChainInstructionList = ["BUY_TO_OPEN", "BUY_TO_CLOSE", "SELL_TO_OPEN", "SELL_TO_CLOSE"];
+    var optionChainOrderTypeList = ["LIMIT", "MARKET", "MARKET_ON_CLOSE", "STOP", "STOP_LIMIT", "TRAILING_STOP"];
 
     const { isOpenTradingStock, setIsOpenTradingStock, setIsCopyTradingAccountSuccessful } = useContext(CopyTradingAccountContext);
 
@@ -20,16 +20,16 @@ export default function TradingStock({ onClose }) {
     const [optionChainDate, setOptionChainDate] = useState([]);
     const [optionChainStrikeList, setOptionChainStrikeList] = useState([]);
 
-    const [optionChainAction, setOptionChainAction] = useState(optionChainActionList[0]);
-    const [optionChainType, setOptionChainType] = useState("LIMIT");
-    const [optionContractTotal, setOptionContractTotal] = useState(0)
-    const [optionContractPrice, setOptionContractPrice] = useState(0)
+    const [optionChainInstruction, setOptionChainInstruction] = useState(optionChainInstructionList[0]);
+    const [optionChainOrderType, setOptionChainOrderType] = useState("LIMIT");
+    const [optionChainQuantity, setOptionContractTotal] = useState(0)
+    const [optionChainPrice, setOptionChainPrice] = useState(0)
     const [disabledButton, setDisabledButton] = useState(false)
 
     async function handlePlaceOrder() {
         try {
             setDisabledButton(true)
-            const { data } = await axios.post("/copy_trading_account/place_order/", { optionChainSymbol, optionChainAction, optionChainType, optionContractTotal, optionContractPrice })
+            const { data } = await axios.post("/copy_trading_account/place_order/", { optionChainSymbol, optionChainInstruction, optionChainOrderType, optionChainQuantity, optionChainPrice })
 
             if (data != "success") {
                 alert("Copy trading failed");
@@ -68,7 +68,7 @@ export default function TradingStock({ onClose }) {
 
     async function getOptionChainBidPrice(option_chain_strike) {
         try {
-            setOptionContractPrice(optionChainData[optionChainDate][option_chain_strike][0]["bid"]);
+            setOptionChainPrice(optionChainData[optionChainDate][option_chain_strike][0]["bid"]);
             setOptionChainSymbol(optionChainData[optionChainDate][option_chain_strike][0]["symbol"])
         } catch (error) {
             console.log(error.message);
@@ -139,10 +139,10 @@ export default function TradingStock({ onClose }) {
                     <div>
                         <select
                             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                            onChange={event => setOptionChainAction(event.target.value)}>
+                            onChange={event => setOptionChainInstruction(event.target.value)}>
                             {
-                                optionChainActionList.map((stock_trade_action, index) => (
-                                    <option key={index}>{stock_trade_action}</option>
+                                optionChainInstructionList.map((option_chain_instruction, index) => (
+                                    <option key={index}>{option_chain_instruction}</option>
                                 ))
                             }
                         </select>
@@ -150,10 +150,10 @@ export default function TradingStock({ onClose }) {
                     <div>
                         <select
                             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                            onChange={event => setOptionChainType(event.target.value)}>
+                            onChange={event => setOptionChainOrderType(event.target.value)}>
                             {
-                                optionChainTypeList.map((stock_trade_type, index) => (
-                                    <option key={index}>{stock_trade_type}</option>
+                                optionChainOrderTypeList.map((option_chain_order_type, index) => (
+                                    <option key={index}>{option_chain_order_type}</option>
                                 ))
                             }
                         </select>
@@ -165,7 +165,7 @@ export default function TradingStock({ onClose }) {
                             className="block px-2.5 pb-1.5 pt-3 w-full text-sm text-gray-900 bg-transparent  border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                             type="text"
                             onChange={event => setOptionContractTotal(event.target.value)}
-                            value={optionContractTotal}
+                            value={optionChainQuantity}
                             placeholder=" " />
                         <label
                             className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
@@ -176,8 +176,8 @@ export default function TradingStock({ onClose }) {
                     <div className="relative">
                         <input className="block px-2.5 pb-1.5 pt-3 w-full text-sm text-gray-900 bg-transparent  border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                             type="text"
-                            onChange={event => setOptionContractPrice(event.target.value)}
-                            value={optionContractPrice}
+                            onChange={event => setOptionChainPrice(event.target.value)}
+                            value={optionChainPrice}
                             placeholder=" " />
                         <label
                             className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"

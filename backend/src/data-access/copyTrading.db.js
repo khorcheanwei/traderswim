@@ -53,23 +53,22 @@ function copyTradingAccountDBOperation(trading_management_db) {
     agentID,
     agentTradingSessionID,
     optionChainSymbol,
-    optionChainAction,
-    optionChainType,
-    optionContractPrice,
-    optionContractTotal
+    optionChainOrderType,
+    optionChainPrice,
+    optionChainQuantity
   ) {
     try {
       for (let index = 0; index < accountDocument.length; index++) {
 
         try {
-          const sqlCommand = `INSERT INTO copyTradingAccount (agentID,agentTradingSessionID,accountID,accountName,accountUsername,optionChainSymbol,optionChainAction,optionChainType,optionContractPrice,stockEntryPriceCurrency,orderQuantity,filledQuantity,orderDate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`
+          const sqlCommand = `INSERT INTO copyTradingAccount (agentID,agentTradingSessionID,accountId,accountName,accountUsername,optionChainSymbol,optionChainOrderType,optionChainPrice,optionChainQuantity,optionChainFilledQuantity,optionChainEnteredTime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`
 
           const timestamp = Date.now();
           const date = new Date(timestamp);
           const localTime = date.toLocaleString('en-US');
 
           await new Promise((resolve, reject) => {
-            this.trading_management_db.get(sqlCommand, [agentID, agentTradingSessionID, accountDocument[index].id, accountDocument[index].accountName, accountDocument[index].accountUsername, optionChainSymbol, optionChainAction, optionChainType, optionContractPrice, "USD", optionContractTotal, 0, localTime], (err, row) => {
+            this.trading_management_db.get(sqlCommand, [agentID, agentTradingSessionID, accountDocument[index].id, accountDocument[index].accountName, accountDocument[index].accountUsername, optionChainSymbol, optionChainOrderType, optionChainPrice, "USD", optionChainQuantity, 0, localTime], (err, row) => {
               if (err) {
                 reject(err);
               } else {

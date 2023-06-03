@@ -17,10 +17,9 @@ describe("Copy trading API unit test", () => {
       )
       .send({
         optionChainSymbol: "TSLA",
-        optionChainAction: "BUY",
-        optionChainType: "LIMIT",
-        optionContractTotal: 0,
-        optionContractPrice: 0,
+        optionChainOrderType: "LIMIT",
+        optionChainQuantity: 0,
+        optionChainPrice: 0,
       })
       .end((err, response) => {
         assert(response.status === 200);
