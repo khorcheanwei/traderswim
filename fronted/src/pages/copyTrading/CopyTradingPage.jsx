@@ -10,39 +10,47 @@ export default function CopyTradingPage() {
 
   const columns = React.useMemo(() => [
     {
-      Header: "Name",
+      Header: 'Name',
       accessor: 'accountName',
     },
     {
-      Header: "Account Username",
+      Header: 'Account Username',
       accessor: 'accountUsername',
     },
     {
-      Header: " Stock pair",
-      accessor: 'stockPair',
+      Header: 'Time',
+      accessor: 'optionChainEnteredTime',
     },
     {
-      Header: "Action",
-      accessor: 'stockTradeAction',
+      Header: 'Side Pos Effect',
+      accessor: 'optionChainInstruction',
     },
     {
-      Header: "Entry price",
-      accessor: 'entryPrice',
+      Header: 'Qty',
+      accessor: 'optionChainQuantity',
     },
     {
-      Header: "Order Quantity",
-      accessor: 'orderQuantity',
+      Header: 'Filled Qty',
+      accessor: 'optionChainFilledQuantity',
     },
     {
-      Header: "Filled Quantity",
-      accessor: 'filledQuantity',
+      Header: 'Symbol description',
+      accessor: 'optionChainDescription',
     },
     {
-      Header: "Order date",
-      accessor: 'orderDate',
+      Header: 'Price',
+      accessor: 'optionChainPrice',
     },
     {
-      Header: "Place new order",
+      Header: 'Order type',
+      accessor: 'optionChainOrderType',
+    },
+    {
+      Header: 'Status',
+      accessor: 'optionChainStatus',
+    },
+    {
+      Header: 'Place new order',
       accessor: 'placeNewOrder',
       Cell: SettingsPanel,
     },
@@ -55,7 +63,7 @@ export default function CopyTradingPage() {
   async function fetchCopyTradingAccountData() {
     try {
 
-      const response = await axios.get("/copy_trading_account/database")
+      const response = await axios.get('/copy_trading_account/database')
       if (response.data != null) {
         setCopyTradingAccountData(response.data)
       }
@@ -77,9 +85,9 @@ export default function CopyTradingPage() {
 
   return (
     <div>
-      <div className="min-h-screen bg-gray-100 text-black">
-        <main className="mx-auto px-4 sm:px-6 lg:px-8 pt-4">
-          <div className="mt-6">
+      <div className='min-h-screen bg-gray-100 text-black'>
+        <main className='mx-auto px-4 sm:px-6 lg:px-8 pt-4'>
+          <div className='mt-6'>
             <CopyTradingTable columns={columns} data={data} />
           </div>
         </main>
