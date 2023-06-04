@@ -70,8 +70,8 @@ async function copy_trading_get_option_chain_list(httpRequest) {
         console.log(`Successful in get option chain list`);
         return { success: true, data: response.data.putExpDateMap };
       } else {
-        console.log(`Failed in get option chain list. No access token for agent ID ${agentID} and account username ${accountUsername}`);
-        return { success: false, data: `No access token for agent ID ${agentID} and account username ${accountUsername}` };
+        console.log(`Failed in get option chain list. No access token for agent ID ${agentID}`);
+        return { success: false, data: `Failed in get option chain list. No access token for agent ID ${agentID}` };
       }
     } catch (error) {
       console.log(`Failed in get option chain list. Error: ${error.message}`);
