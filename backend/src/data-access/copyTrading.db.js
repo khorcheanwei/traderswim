@@ -86,6 +86,28 @@ function copyTradingAccountDBOperation(trading_management_db) {
         return false;
       }
   }
+
+  // get all orderID for all trading accounts
+  this.getAllOrderID = async function (agentID, agentTradingSessionID) {
+    try {
+
+      const sqlCommand = `SELECT id, agentID, accountUsername, optionChainOrderId FROM copyTradingAccount WHERE agentID=? AND agentTradingSessionID=?`;
+
+      const queryResult = await new Promise((resolve, reject) => {
+        this.trading_management_db.all(sqlCommand, [agentID, agentTradingSessionID], (err, row) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(row);
+          }
+        });
+      });
+
+      return { success: true, data: queryResult };
+    } catch (error) {
+      return { success: false, error: error };
+    }
+  }
 };
 
 module.exports = copyTradingAccountDBOperation;

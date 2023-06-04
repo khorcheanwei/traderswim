@@ -43,7 +43,7 @@ async function copy_trading_stock_pair_list() {
 
 // get option chain list
 async function copy_trading_get_option_chain_list(httpRequest) {
-  const { stockName } = httpRequest.query;
+  const { stockName, optionChainCallPut } = httpRequest.query;
 
   // when stock name is undefined
   if (stockName == undefined || stockName == '') {
@@ -56,7 +56,14 @@ async function copy_trading_get_option_chain_list(httpRequest) {
       let agentDocument = jwt.verify(token, jwtSecret, {});
       const agentID = agentDocument.id;
 
-      const authToken = "Fy20VFr9sVO7dK+CV9g2xKJWDdQh9iztiCKxx/hGt/7Od4wxSmKeONqsI1TAQaYSSkv6FJrNr8Fa8950hxfp3PZmLp255fldegIceMI6BLe+f5r7RuHFkQpVlNPSMXasQZyIz2NaEh7nOKP0GTSnSuFMzSxwX0RRuoQtDtkZ7Fbb941dpp8uR0u0bROok/djmqZs+SHJnRNT0mrmOAR38QsPEgOQa+s/NVZ0z4LZMtJsrcrgDPiQA0wifqQ3d+RUJYQmo28zzmQ/s3YcOq74hHquSdtwiv4leyj+m6rs2t0fC5uLcephvphlWiF9ddoLA3ZWu461K4Fi/0T1idaLYLk1Fzzb3MsPivzbvDShuLQ4SMvWBMsctOIH/xvWaG4xPRc8XCFxMs/N2sB813wbx6wmDcybSND6VDGAV5ShjeXaK4cy+S0z0aoTKRpgg3FL4y0WUD42/sDDP8zn8HOV9sBlwmcVBJCm7bUcJyO3JZFX3evgtRlTuW+zYMjGAWN3c0yrLCFeriFP3u9e8ccRVHRWpvPa6wVXKHkpX100MQuG4LYrgoVi/JHHvl86xsfs6BFMvoE/qRr3eDx7xUzh4sMHLtMHWbxPmnezP/ZVIXOg+UbGSy7IlFbMUag21/XxVWSNgI5qhweN7ec8+qgUmc+Fxivt57X/kxoKatlkzB07kkUQedKobA/OLTKbRA0WHSatvQfNYMuy+7XQrVNgksq3UpDjF50joQ3oGB+pORK8GL7xk1lmKtTliLz1Tm2jbN0Ca2ERQFJbsU0N8DsbHX8xWY8X6C1V1D5ztP2XrdYR4cMnLvQB44YB3j3S5+ECfkApxPweyZxvPMiFx/1C6s62SWg80F34k2R8FbKfyVPVkqPiKfMi3LUAYz7PyTuHXETq4gASESZzJtSca7tEfsrDPWiNXVrfzlZBZQwworAU2kxhI5Ds1HiX9ZtB3TAgHJFsaxcuSsWPJq4yDCJPW/jdJrIhiTdIfZ5ezj7MlQ0TFmn+UCWU5CXi7wKu4f4UOA4EhOVNrJWGOoMp/ksZEEq+Tq3YwMcwiQPEj5Bv/2BpiTUaCealAsKKAZD7qL/ks6euLM5C2ECSQ7V1jPbRJsAOYHMOWx1R212FD3x19z9sWBHDJACbC00B75E";
+      const result = await accountDBOperation.searchAccountByAgentID(agentID);
+      const accountDocument = result.data;
+      if (accountDocument.length == 0) {
+        return { success: false, data: `No account registered for this agent ID ${agentID}` }; 
+      }
+
+      const accountUsername = accountDocument[0]["accountUsername"];
+      const authToken = await get_access_token_from_cache(agentID, accountUsername);
 
       if (authToken != null) {
         let config = {
@@ -68,7 +75,11 @@ async function copy_trading_get_option_chain_list(httpRequest) {
 
         const response = await axios.get(`https://api.tdameritrade.com/v1/marketdata/chains?symbol=${stockName}`, headers = config)
         console.log(`Successful in get option chain list`);
-        return { success: true, data: response.data.putExpDateMap };
+        if (optionChainCallPut == "CALL") {
+          return { success: true, data: response.data.callExpDateMap };
+        } else {
+          return { success: true, data: response.data.putExpDateMap };
+        }
       } else {
         console.log(`Failed in get option chain list. No access token for agent ID ${agentID}`);
         return { success: false, data: `Failed in get option chain list. No access token for agent ID ${agentID}` };
@@ -103,32 +114,15 @@ async function place_order(config, accountUsername) {
 // Post place order for all trading accounts
 async function post_place_order_all_accounts(all_trading_accounts_list, payload) {
   const post_place_order_api_requests = all_trading_accounts_list.map(async (api_data) => {
-    const { accountId, accountUsername, auth_token } = api_data;
-    payload = {
-      "complexOrderStrategyType": "NONE",
-      "orderType": "LIMIT",
-      "session": "NORMAL",
-      "price": "1.45",
-      "duration": "DAY",
-      "orderStrategyType": "SINGLE",
-      "orderLegCollection": [
-        {
-          "instruction": "BUY_TO_OPEN",
-          "quantity": 1,
-          "instrument": {
-            "symbol": "TSLA_060923P20",
-            "assetType": "OPTION"
-          }
-        }
-      ]
-    }
+    const { accountId, accountUsername, authToken } = api_data;
+    
     const config = {
       method: 'post',
       maxBodyLength: Infinity,
       url: `https://api.tdameritrade.com/v1/accounts/${accountId}/orders`,
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${auth_token}`
+        'Authorization': `Bearer ${authToken}`
       },
       data: payload
     }
@@ -174,7 +168,7 @@ async function get_latest_order_id(config, accountUsername) {
     console.log(`Successful get latest order ID - accountUsername: ${accountUsername} with ${JSON.stringify(config)}. Status: ${response.status}`)
     return latest_order_id;
   } catch (error) {
-    console.error(`Failed pget latest order ID - accountUsername: ${accountUsername} with ${JSON.stringify(config)}. Error: ${error.message}`);
+    console.error(`Failed get latest order ID - accountUsername: ${accountUsername} with ${JSON.stringify(config)}. Error: ${error.message}`);
     return latest_order_id;
   }
 }
@@ -188,14 +182,14 @@ async function get_latest_order_id_all_accounts(all_trading_accounts_list, resul
       return null;
     }
 
-    const { accountId, accountUsername, auth_token } = api_data;
+    const { accountId, accountUsername, authToken } = api_data;
     const config = {
       method: 'get',
       maxBodyLength: Infinity,
       url: `https://api.tdameritrade.com/v1/accounts/${accountId}`,
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${auth_token}`
+        'Authorization': `Bearer ${authToken}`
       },
       params: {
         'fields': 'orders'
@@ -262,14 +256,14 @@ async function get_latest_order_information_all_accounts(all_trading_accounts_li
       return null;
     }
 
-    const { accountId, accountUsername, auth_token } = api_data;
+    const { accountId, accountUsername, authToken } = api_data;
     const config = {
       method: 'get',
       maxBodyLength: Infinity,
       url: `https://api.tdameritrade.com/v1/orders`,
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${auth_token}`
+        'Authorization': `Bearer ${authToken}`
       },
       params: {
         'accountId': accountId
@@ -345,7 +339,7 @@ async function copy_trading_place_order(httpRequest) {
       }
 
       agentDocument = result.data;
-      const agentTradingSessionID = agentDocument.agentTradingSessionID + 1;
+      const agentTradingSessionID = agentDocument.agentTradingSessionID;
 
       // get all accountName of particular agentID
       result = await accountDBOperation.searchAccountByAgentID(agentID);
@@ -380,21 +374,11 @@ async function copy_trading_place_order(httpRequest) {
       for (let index = 0; index < accountDocument.length; index++) {
         let accountId = accountDocument[index].accountId;
         let accountUsername = accountDocument[index].accountUsername;
-        let auth_token = "b72q2Q9zhDcHgUQ5iGFNRU3Qmhi0SvC5n4stBPp3VQdYAQrQ22C6LfFfZB3ng3usUysXM1orcdR3srtGMiT2Y9XoQMW8q35VS/CRBEnv6BNQ3RaCSAUUhBvLDEgf1qzdEWDV18GgfQpw5DYhqlPy4c7kxntXRyeZq8+ysT5x5CBdLZoHqWeZLtbbHFcnd5DZtwppCQUKSVBtrye5ZUvupHMd6gTb23JBcHiH7ulavQR/kFF5/Z1LLp2bjeTdfkxNZ/i3T6JDT7/uUTT2HTNHu2POffzYf49BvBSWF07ly5KmJK7Me7FpAyBYBVFZHgDhJ88lplz7ggGDs3QwdWMlAconsrMKmT8xc6ZL7cQ2MJmsqqkhotPsrktG0cmyVBZi0pa6B4Aut1ghy/Xf5tUStqcoOMmY9d19Ui8IpW7njYW59IjQLmS0/k9rMyXAIgDLRhKEaKAOVa4qxSBMMVcKJ6nEtr6AeCMvs9H3nPg3H1SoIj4ytvCSSPJezIPcm8ZImRdZ6uukWVBmzFq/Kk3CRKfXiG5100MQuG4LYrgoVi/JHHvlkhf661XVqXM3QR/RNKvFJJkr9/1duRvVgzh8yl+hhUJdaUGDRv2LHO6anIEslMT6ip5uE4vOSWr7ZEFI31D6rRnjJu7xOnb4Od/f1hXvLcMCP/saFJAJ0BEylxBMP+86ruBF9IZ9yrmXMIprAuC4QG56haR85GNlXi9hYaM9ShPB6EXpj/hW9cQKrNN2ZyJma3s9BUnhyWv9nzqg+p673rW9bZ9kzY7bjHwz5Ey+Kl002mVphiQFAJTU9eraPCNoDn+47RcNMopPDitl7Omer1fhogNNANIZkqlHlmeAS8Cod9zl0VXOWP+DZgf1NgriTytP/iZ40+UrrMyAnFYkmnSDYe3EUxRK2BVNYu7bytYa/kNDk08t20dLCcWV4G86+OvoRT4pSGJ38umQCHXIIo3Gfv0vglnoaWVZLTqu+XG9wXDe45GoIji50xHTLQKosUVD6mfNrBe3rMRqF8PhKJd0PWpXdkmeeaB/azBSO38QWxxB+QniDUFFFGPWRIUmTLW6q/y6VmSRyyLrfFL5JXqrKIQ=212FD3x19z9sWBHDJACbC00B75E";
+        let authToken = await get_access_token_from_cache(agentID, accountUsername);
 
-        //let auth_token = await get_access_token_from_cache(agentID, accountUsername);
-        all_trading_accounts_list.push({ accountId: accountId, accountUsername: accountUsername, auth_token: auth_token })
+        all_trading_accounts_list.push({ accountId: accountId, accountUsername: accountUsername, authToken: authToken })
       }
-      /*
-      for (let index = 0; index < 2; index++) {
-        let accountId = accountDocument[0].accountId;
-        let accountUsername = accountDocument[0].accountUsername;
-        let auth_token = "DfBkBWI2mYhfAi/pGfPbeixsRu1DiH3mJ8DCWZkLjBncHbLemxbNkDgLtRg4KTAM6K5l7yUu7IQFG5rh0ZhmnKAAP70/Z1cLCsM9UwMlEwv3A0w0+s2MsdWyYR0q4wpNIV1qyO8d4YEDDb/HhN4x0TrdCyh0N7F8ZYlK9nXDOd1ossO2OyuXJqpdy+MHjtCOWAbouJCeWNmUrbDdjsSGrMZ++FK6LqjoX62WeUYbvXvwkqJ9d8kfuY3IF5ODyZdvpmq52BsQGiDtIdQHEKVYtBkw2EdpuUM8MoJ171J5PGC60KzLa+9NYoQTguVR/x/3oGGEAq0gBj4finy8AfPM6octq86otor0NGPnUwV5MNHKF0XZmV19I4GfbmSBGD5P6EksFaN3KxOoI1yec6cHxQGIjScX+zo8qzvOxBG98xwExrTX76W40/M5hZY9RYjj9EKPODFkE8mCyWzoq1SRkaQU3N+u/KHx7uXTptv7WcEgvoYMNPArJHMs1GMcw0+PbxtguRC3yjdCHfUVHR5YV9YGXxp100MQuG4LYrgoVi/JHHvlL/WgG5FtKePh+L5ynv7AxVA/RFRAWpLnnh+WrihTgxfL8agYZLaiAymSH0etDfkWlQ9BBwlVsv8ZvyQ8Ncs2fXPQgnG4ChEU4Kyu0BqhkcnY+w9x0Htv1mm4PTbVO53R54RFvlbOsblRZfr7ldKKOWhH1nKbWrlJLiyn/Ssuo4SPP4Q8nE5r4wEjQPDsfzkK9EyvEe4CwuRZGZcUPs9nCQIpDQ5nAjrd64y+D5togLP3qFsDrunT9QRQJqJ8LKDPRyeH5v/+SJPxAa7JIsAMvs7Ojqe98ByqyG4Mj54xOFMKEkFz7wo/epsfDqzEEgsdzpYGkAAdcfD1iy+bWL/d8fTYKzPhNPrRil++fbgOFJz5dcYvS+x89lTfKYuWVIr+OMimxz0lHvYWk3ZEqzAeV/cP7ecHiIhO6LgLlg+KYYKCIbXpLs+mvtAftaIc9YANbxsQTCIeK32rsrv9h4a6IHW64jtcinWA1vR/8bsXnwbs5KubiA8+2IDzBfs8nccxOLX11aRvszYsGAnhaITKXQxa300=212FD3x19z9sWBHDJACbC00B75E";
-
-        //let auth_token = await get_access_token_from_cache(agentID, accountUsername);
-        all_trading_accounts_list.push({ accountId: accountId, accountUsername: accountUsername, auth_token: auth_token })
-      }*/
-
+    
       // Post place order for all trading accounts
       const result_promise_place_order = await post_place_order_all_accounts(all_trading_accounts_list, payload);
 
@@ -428,6 +412,21 @@ async function copy_trading_place_order(httpRequest) {
   }
 }
 
+// sync order and save to copy trading table for all trading accounts
+async function sync_order_and_save_to_copy_trading_database(agentID, agentTradingSessionID) {
+  try {
+    // get all orderID for all trading accounts
+    let result = await copyTradingAccountDBBOperation.getAllOrderID(agentID, agentTradingSessionID);
+    if (result.success != true) {
+      return { success: false, data: result.error };
+    }
+
+    
+  } catch (error) {
+    return { success: false, data: error.message };
+  }
+}
+
 // Copy trading database
 async function copy_trading_database(httpRequest) {
   const { token } = httpRequest.cookies;
@@ -445,6 +444,9 @@ async function copy_trading_database(httpRequest) {
       agentDocument = result.data;
       const agentTradingSessionID = agentDocument.agentTradingSessionID;
 
+      // sync order and save to copy trading table for all trading accounts
+      await sync_order_and_save_to_copy_trading_database(agentID, agentTradingSessionID)
+
       // get CopyTradingAccount based on agentID and agentTradingSessionID
       result =
         await copyTradingAccountDBBOperation.searchCopyTradingAccountBasedTradingSessionID(
@@ -455,7 +457,7 @@ async function copy_trading_database(httpRequest) {
       if (result.success != true) {
         return { success: false, data: result.error };
       }
-      copyTradingAccountDocument = result.data;
+      const copyTradingAccountDocument = result.data;
 
       let copyTradingAccountData = [];
       for (let index = 0; index < copyTradingAccountDocument.length; index++) {
@@ -463,13 +465,14 @@ async function copy_trading_database(httpRequest) {
         copyTradingAccountData.push({
           accountName: currCopyTradingAccount.accountName,
           accountUsername: currCopyTradingAccount.accountUsername,
-          stockPair:
-            currCopyTradingAccount.optionChainSymbol,
-          entryPrice: currCopyTradingAccount.optionChainPrice,
+          optionChainEnteredTime: currCopyTradingAccount.optionChainEnteredTime,
+          optionChainInstruction: currCopyTradingAccount.optionChainInstruction,
           optionChainQuantity: currCopyTradingAccount.optionChainQuantity,
           optionChainFilledQuantity: currCopyTradingAccount.optionChainFilledQuantity,
-          optionChainEnteredTime: currCopyTradingAccount.optionChainEnteredTime.toLocaleString("en-US"),
-          placeNewOrder: "",
+          optionChainDescription: currCopyTradingAccount.optionChainDescription,
+          optionChainPrice: currCopyTradingAccount.optionChainPrice,
+          optionChainOrderType: currCopyTradingAccount.optionChainOrderType,
+          optionChainStatus: currCopyTradingAccount.optionChainStatus,
         });
       }
 

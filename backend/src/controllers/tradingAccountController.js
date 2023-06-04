@@ -145,6 +145,61 @@ async function fetch_trading_account_info(httpRequest, httpResponse) {
   }
 }
 
+
+// Get account value
+async function get_account_value(agentID, accountUsername) {
+
+  try {
+    const authToken = await get_access_token_from_cache(agentID, accountUsername);
+    let config = {
+      headers: {
+        'Authorization': `Bearer ${authToken}`
+      }
+    }
+    const response = await axios.get('https://api.tdameritrade.com/v1/accounts', headers = config);
+    const result = response.data[0];
+    if (response.status == 200) {
+      console.error(`Successful get account value - accountUsername: ${accountUsername}. Status: ${response.status}`);
+      const accountValue = result["securitiesAccount"]["initialBalances"]["accountValue"];
+      return accountValue;
+    } else {
+      console.error(`Failed get account value - accountUsername: ${accountUsername}. Status: ${response.status}`);
+      return null;
+    }
+    
+
+  } catch (error) {
+    console.error(`Failed get account value - accountUsername: ${accountUsername}. Error: ${error.message}`);
+    return null;
+  }
+}
+
+// Puppeteer login for all accounts
+async function puppeteer_login_all_accounts(accountDocument) {
+
+  const get_latest_order_id_requests =  accountDocument.map(async (accountDocumentPart, index) => {
+    // need to go Ameritrade website to check whether it is successful to convert to connect to website or not
+    let { connected, refreshToken } = await puppeteer_login_account(agentID, accountDocumentPart.accountUsername, accountDocument[index].accountPassword);
+    let accountValue  = await get_account_value(agentID, accountDocumentPart.accountUsername)
+    return {
+      accountName: accountDocumentPart.accountName,
+      accountUsername: accountDocumentPart.accountUsername,
+      accountBalance: accountValue,
+      accountConnection: connected,
+    };
+  });
+
+  try {
+    const result_promise = await Promise.all(get_latest_order_id_requests);
+    console.log('Puppeteer login for all accounts promise requests completed');
+    return result_promise;
+  } catch (error) {
+    console.log(`Error in Puppeteer login for all accounts requests completed. Error: ${error.message}`);
+    return null;
+  }
+}
+
+
 // To get all accounts of particular agent
 async function account_database(httpRequest) {
   const { token } = httpRequest.cookies;
@@ -155,42 +210,11 @@ async function account_database(httpRequest) {
 
       const result = await accountDBOperation.searchAccountByAgentID(agentID);
 
-      /*
-      console.log("fdfgfdg")
-      io.on('connection', (socket) => {
-        socket.on('longProcess', async () => {
-          try {
-            // Simulating a long-running process
-            const result = await performLongProcess();
-      
-            // Emit the result to the client
-            socket.emit('processResult', result);
-          } catch (error) {
-            // Handle any errors during the process
-            socket.emit('processError', error.message);
-          }
-        });
-      });
-      */
-
-
       if (result.success) {
         const accountDocument = result.data;
 
-        let accountTableArray = [];
-        Object.keys(accountDocument).forEach(async function (key, index) {
-          // need to go Ameritrade website to check whether it is successful to convert to connect to website or not
-
-          let { connected, refreshToken } = await puppeteer_login_account(agentID, accountDocument[index].accountUsername, accountDocument[index].accountPassword)
-
-          accountTableArray.push({
-            accountName: accountDocument[index].accountName,
-            accountUsername: accountDocument[index].accountUsername,
-            accountBalance: 1000,
-            accountConnection: connected,
-          });
-        });
-
+        let accountTableArray = await puppeteer_login_all_accounts(accountDocument);
+       
         return { success: true, data: accountTableArray };
       } else {
         return { success: false, data: result.error };

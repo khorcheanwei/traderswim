@@ -9,7 +9,7 @@ const { accountDBOperation } = require("../data-access/index.js");
 
 function check_access_token_exceed_time_limit(accountUsername, authTokenTimeInSeconds) {
 
-    const authTokenAccessTime = 1800 - 60;
+    const authTokenAccessTime = 1800 - 300;
 
     let currentTimeInSeconds = Math.floor(Date.now() / 1000);
     let authTokenTimeDifference = currentTimeInSeconds - authTokenTimeInSeconds;
@@ -18,7 +18,28 @@ function check_access_token_exceed_time_limit(accountUsername, authTokenTimeInSe
         console.log(`Access token current time ${authTokenTimeDifference}s for account name ${accountUsername}`)
         return true
     } else {
-        console.log(`Access token does not exceed ${authTokenTimeDifference}s for account name ${accountUsername}`)
+        console.log(`Access token does not exceed time limit with time ${authTokenTimeDifference}s for account name ${accountUsername}`)
+        return false;
+    }
+}
+
+async function check_access_with_get_account(accountUsername, authToken) { 
+    const config = {
+        method: 'get',
+        maxBodyLength: Infinity,
+        url: `https://api.tdameritrade.com/v1/accounts/`,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${authToken}`
+        }
+      }
+    
+    const response = await axios.request(config);
+    if (response.status == 200) {
+        console.log(`Successful in check access with get accounts API for account name ${accountUsername}`)
+        return true
+    } else {
+        console.log(`Failed in check access with get accounts API for account name ${accountUsername}`)
         return false;
     }
 }
@@ -119,7 +140,8 @@ async function puppeteer_login_account(agentID, accountUsername, accountPassword
             authToken = auth_cache_value[0];
             authTokenTimeInSeconds = auth_cache_value[1];
 
-            if (check_access_token_exceed_time_limit(accountUsername, authTokenTimeInSeconds)) {
+            const check_access_account = await check_access_with_get_account(accountUsername, authToken);
+            if (check_access_token_exceed_time_limit(accountUsername, authTokenTimeInSeconds) && check_access_account) {
                 need_login = true;
             } else {
                 auth_cache.set(auth_login_cache_key, false)
