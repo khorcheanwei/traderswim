@@ -49,41 +49,43 @@ function copyTradingAccountDBOperation(trading_management_db) {
 
   // create new copyTradingAccount
   this.createCopyTradingAccountItem = async function (
-    accountDocument,
-    agentID,
     agentTradingSessionID,
-    optionChainSymbol,
-    optionChainOrderType,
-    optionChainPrice,
-    optionChainQuantity
+    accountDocumentPart,
+    order_information,
   ) {
-    try {
-      for (let index = 0; index < accountDocument.length; index++) {
+      try {
+        const agentID = accountDocumentPart['agentID'];
+        const accountId = accountDocumentPart['accountId'];
+        const accountName = accountDocumentPart['accountName'];
+        const accountUsername = accountDocumentPart['accountUsername'];
+        const optionChainSymbol = order_information['optionChainSymbol'];
+        const optionChainDescription = order_information['optionChainDescription'];
+        const optionChainOrderId = order_information['optionChainOrderId'];
+        const optionChainOrderType = order_information['optionChainOrderType'];
+        const optionChainInstruction = order_information['optionChainInstruction'];
+        const optionChainPrice = order_information['optionChainPrice'];
+        const optionChainQuantity = order_information['optionChainQuantity'];
+        const optionChainFilledQuantity = order_information['optionChainFilledQuantity'];
+        const optionChainStatus = order_information['optionChainStatus'];
+        const optionChainEnteredTime = order_information['optionChainEnteredTime'];
+        const sqlCommand = `INSERT INTO copyTradingAccount (agentID, agentTradingSessionID, accountId, accountName, accountUsername, optionChainSymbol, optionChainDescription, optionChainOrderId, optionChainOrderType, optionChainInstruction, optionChainPrice, optionChainQuantity, optionChainFilledQuantity, optionChainStatus, optionChainEnteredTime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`
 
-        try {
-          const sqlCommand = `INSERT INTO copyTradingAccount (agentID,agentTradingSessionID,accountId,accountName,accountUsername,optionChainSymbol,optionChainOrderType,optionChainPrice,optionChainQuantity,optionChainFilledQuantity,optionChainEnteredTime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`
-
-          const timestamp = Date.now();
-          const date = new Date(timestamp);
-          const localTime = date.toLocaleString('en-US');
-
-          await new Promise((resolve, reject) => {
-            this.trading_management_db.get(sqlCommand, [agentID, agentTradingSessionID, accountDocument[index].id, accountDocument[index].accountName, accountDocument[index].accountUsername, optionChainSymbol, optionChainOrderType, optionChainPrice, "USD", optionChainQuantity, 0, localTime], (err, row) => {
-              if (err) {
-                reject(err);
-              } else {
-                resolve(row);
-              }
-            });
+        await new Promise((resolve, reject) => {
+          this.trading_management_db.get(sqlCommand, [agentID, agentTradingSessionID, accountId, accountName, accountUsername, optionChainSymbol, optionChainDescription, optionChainOrderId, optionChainOrderType, optionChainInstruction, optionChainPrice, optionChainQuantity, optionChainFilledQuantity, optionChainStatus, optionChainEnteredTime], (err, row) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(row);
+            }
           });
-        } catch (error) {
-          return { success: false, error: error };
-        }
+        });
+        console.log(`Successful save orders for all trading accounts to copyTradingAccount table - accountUsername: ${accountUsername}`)
+        return true;
+      } catch (error) {
+        console.log(`Failed save orders for all trading accounts to copyTradingAccount table. Error: ${error.message}`);
+        return false;
       }
-      return { success: true };
-    } catch (error) {
-      return { success: false, error: error };
-    }
-  };
-}
+  }
+};
+
 module.exports = copyTradingAccountDBOperation;
