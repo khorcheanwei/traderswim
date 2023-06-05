@@ -4,7 +4,7 @@ import { useContext, useState, useEffect } from 'react';
 import { CopyTradingAccountContext } from '../context/CopyTradingAccountContext';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 
-import CopyTradingPositionTable, { SettingsPanel } from './CopyTradingPositionTable'
+import CopyTradingPositionTable from './CopyTradingPositionTable'
 
 export default function CopyTradingPositionPage() {
 
@@ -18,56 +18,43 @@ export default function CopyTradingPositionPage() {
       accessor: 'accountUsername',
     },
     {
-      Header: 'Time',
-      accessor: 'optionChainEnteredTime',
-    },
-    {
-      Header: 'Side Pos Effect',
-      accessor: 'optionChainInstruction',
-    },
-    {
-      Header: 'Qty',
-      accessor: 'optionChainQuantity',
-    },
-    {
-      Header: 'Filled Qty',
-      accessor: 'optionChainFilledQuantity',
+      Header: 'Symbol',
+      accessor: 'optionChainSymbol',
     },
     {
       Header: 'Symbol description',
       accessor: 'optionChainDescription',
     },
     {
-      Header: 'Price',
-      accessor: 'optionChainPrice',
+      Header: 'Average price',
+      accessor: 'optionChainAveragePrice',
     },
     {
-      Header: 'Order type',
-      accessor: 'optionChainOrderType',
+      Header: 'Long Qty',
+      accessor: 'optionChainLongQuantity',
     },
     {
-      Header: 'Status',
-      accessor: 'optionChainStatus',
+      Header: 'Settled Long Qty',
+      accessor: 'optionChainSettledLongQuantity',
     },
     {
-      Header: 'Place new order',
-      accessor: 'placeNewOrder',
-      Cell: SettingsPanel,
+      Header: 'Short Qty',
+      accessor: 'optionChainShortQuantity',
     },
+    {
+      Header: 'Settled Short Qty',
+      accessor: 'optionChainSettledShortQuantity',
+    }
   ], [])
 
-  const [copyTradingAccountData, setCopyTradingAccountData] = useState([]);
-  const { isCopyTradingAccountSuccessful, setIsCopyTradingAccountSuccessful } = useContext(CopyTradingAccountContext);
+  const [copyTradingPositionAccountData, setCopyTradingPositionAccountData] = useState([]);
 
-  function wait(ms) {
-    return new Promise( (resolve) => {setTimeout(resolve, ms)});
-  }
   
-  async function fetchCopyTradingAccountData() {
+  async function fetchCopyTradingPositionAccountData() {
     try {
-      const response = await axios.get('/copy_trading_account/database')
+      const response = await axios.get('/copy_trading_position_account/database')
       if (response.data != null && response.data.length != 0) {
-        setCopyTradingAccountData(response.data)
+        setCopyTradingPositionAccountData(response.data)
       }
 
     } catch (error) {
@@ -76,14 +63,11 @@ export default function CopyTradingPositionPage() {
   }
 
   useEffect(() => {
-    fetchCopyTradingAccountData();
+    fetchCopyTradingPositionAccountData();
   }, [])
 
-  if (isCopyTradingAccountSuccessful) {
-    fetchCopyTradingAccountData();
-  }
 
-  var data = React.useMemo(() => copyTradingAccountData, [copyTradingAccountData])
+  var data = React.useMemo(() => copyTradingPositionAccountData, [copyTradingPositionAccountData])
 
   return (
     <div>

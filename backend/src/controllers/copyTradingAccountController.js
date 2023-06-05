@@ -217,20 +217,20 @@ async function get_latest_order_information(config, accountUsername, orderId) {
     const order_list = response.data;
 
     for (let index = 0; index < order_list.length; index++) {
-      const current_order = order_list[index];
-      const current_orderId = current_order["orderId"];
+      let current_order = order_list[index];
+      let current_orderId = current_order["orderId"];
       if (orderId == current_orderId) {
-        const current_accountId = current_order["accountId"];
-        const current_symbol = current_order["orderLegCollection"][0]["instrument"]["symbol"];
-        const current_description = current_order["orderLegCollection"][0]["instrument"]["description"];
-        const current_orderId = current_order["orderId"];
-        const current_orderType = current_order["orderType"];
-        const current_instruction = current_order["orderLegCollection"][0]["instruction"];
-        const current_price = current_order["price"];
-        const current_quantity = current_order["quantity"];
-        const current_optionChainFilledQuantity = current_order["filledQuantity"]
-        const current_status = current_order["status"];
-        const current_enteredTime = current_order["enteredTime"];
+        let current_accountId = current_order["accountId"];
+        let current_symbol = current_order["orderLegCollection"][0]["instrument"]["symbol"];
+        let current_description = current_order["orderLegCollection"][0]["instrument"]["description"];
+        let current_orderId = current_order["orderId"];
+        let current_orderType = current_order["orderType"];
+        let current_instruction = current_order["orderLegCollection"][0]["instruction"];
+        let current_price = current_order["price"];
+        let current_quantity = current_order["quantity"];
+        let current_optionChainFilledQuantity = current_order["filledQuantity"]
+        let current_status = current_order["status"];
+        let current_enteredTime = current_order["enteredTime"];
         
         return {accountId: current_accountId, optionChainSymbol: current_symbol, optionChainDescription: current_description,
           optionChainOrderId: current_orderId, optionChainOrderType: current_orderType, optionChainInstruction: current_instruction,
@@ -348,6 +348,16 @@ async function copy_trading_place_order(httpRequest) {
       }
       const accountDocument = result.data;
 
+      let all_trading_accounts_list = [];
+
+      for (let index = 0; index < accountDocument.length; index++) {
+        let accountId = accountDocument[index].accountId;
+        let accountUsername = accountDocument[index].accountUsername;
+        let authToken = await get_access_token_from_cache(agentID, accountUsername);
+
+        all_trading_accounts_list.push({ accountId: accountId, accountUsername: accountUsername, authToken: authToken })
+      }
+
       // place order with all accounts of particular agent
       let payload = {
         "complexOrderStrategyType": "NONE",
@@ -368,17 +378,6 @@ async function copy_trading_place_order(httpRequest) {
         ]
       }
 
-      let all_trading_accounts_list = [];
-
-      
-      for (let index = 0; index < accountDocument.length; index++) {
-        let accountId = accountDocument[index].accountId;
-        let accountUsername = accountDocument[index].accountUsername;
-        let authToken = await get_access_token_from_cache(agentID, accountUsername);
-
-        all_trading_accounts_list.push({ accountId: accountId, accountUsername: accountUsername, authToken: authToken })
-      }
-    
       // Post place order for all trading accounts
       const result_promise_place_order = await post_place_order_all_accounts(all_trading_accounts_list, payload);
 
@@ -433,7 +432,7 @@ async function sync_order_and_save_to_copy_trading_database(agentID, agentTradin
       let accountUsername = all_trading_accounts_order_list[index]["accountUsername"];
       let optionChainOrderId = all_trading_accounts_order_list[index]["optionChainOrderId"];
       let authToken = await get_access_token_from_cache(agentID, accountUsername);
-      authToken = 1;
+
       all_trading_accounts_list.push({accountId: accountId,  accountUsername:accountUsername, authToken:authToken});
 
       // it can be confusing with this term `result_promise_place_order` in sync_order_and_save_to_copy_trading_database function

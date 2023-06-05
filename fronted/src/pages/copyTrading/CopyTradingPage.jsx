@@ -59,10 +59,6 @@ export default function CopyTradingPage() {
   const [copyTradingAccountData, setCopyTradingAccountData] = useState([]);
   const { isCopyTradingAccountSuccessful, setIsCopyTradingAccountSuccessful } = useContext(CopyTradingAccountContext);
 
-  function wait(ms) {
-    return new Promise( (resolve) => {setTimeout(resolve, ms)});
-  }
-  
   async function fetchCopyTradingAccountData() {
     try {
       const response = await axios.get('/copy_trading_account/database')

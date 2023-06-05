@@ -9,7 +9,7 @@ const { accountDBOperation } = require("../data-access/index.js");
 
 function check_access_token_exceed_time_limit(accountUsername, authTokenTimeInSeconds) {
 
-    const authTokenAccessTime = 1800 - 300;
+    const authTokenAccessTime = 1800 - 600;
 
     let currentTimeInSeconds = Math.floor(Date.now() / 1000);
     let authTokenTimeDifference = currentTimeInSeconds - authTokenTimeInSeconds;
