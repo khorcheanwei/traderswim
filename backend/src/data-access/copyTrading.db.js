@@ -91,7 +91,7 @@ function copyTradingAccountDBOperation(trading_management_db) {
   this.getAllOrderID = async function (agentID, agentTradingSessionID) {
     try {
 
-      const sqlCommand = `SELECT id, agentID, accountUsername, optionChainOrderId FROM copyTradingAccount WHERE agentID=? AND agentTradingSessionID=?`;
+      const sqlCommand = `SELECT id, agentID, accountId, accountUsername, optionChainOrderId FROM copyTradingAccount WHERE agentID=? AND agentTradingSessionID=?`;
 
       const queryResult = await new Promise((resolve, reject) => {
         this.trading_management_db.all(sqlCommand, [agentID, agentTradingSessionID], (err, row) => {
@@ -107,6 +107,47 @@ function copyTradingAccountDBOperation(trading_management_db) {
     } catch (error) {
       return { success: false, error: error };
     }
+  }
+
+  // update order information for all trading accounts
+  this.updateAllOrderInformation = async function (agentID, agentTradingSessionID, copy_trading_table_id_list, result_promise_order_information) {
+    try {
+
+      const sqlCommand = `UPDATE copyTradingAccount SET optionChainSymbol=?, optionChainDescription=?, optionChainOrderType=?, optionChainInstruction=?, optionChainPrice=?, optionChainQuantity=?, optionChainFilledQuantity=?, optionChainStatus=?, optionChainEnteredTime=? WHERE id=?`;
+      
+      const queryResult = await new Promise((resolve, reject) => {
+        for (let index = 0; index < copy_trading_table_id_list.length; index++) {
+          const copy_trading_table_id = copy_trading_table_id_list[index];
+          const copy_trading_table_row = result_promise_order_information[index];
+
+          const optionChainSymbol = copy_trading_table_row["optionChainSymbol"];
+          if (optionChainSymbol == null) {
+            continue;
+          }
+          const optionChainDescription = copy_trading_table_row["optionChainDescription"];
+          const optionChainOrderType = copy_trading_table_row["optionChainOrderType"];
+          const optionChainInstruction = copy_trading_table_row["optionChainInstruction"];
+          const optionChainPrice = copy_trading_table_row["optionChainPrice"];
+          const optionChainQuantity = copy_trading_table_row["optionChainQuantity"];
+          const optionChainFilledQuantity = copy_trading_table_row["optionChainFilledQuantity"];
+          const optionChainStatus = copy_trading_table_row["optionChainStatus"];
+          const optionChainEnteredTime = copy_trading_table_row["optionChainEnteredTime"];
+
+          this.trading_management_db.all(sqlCommand, [optionChainSymbol, optionChainDescription, optionChainOrderType, optionChainInstruction, optionChainPrice, optionChainQuantity, optionChainFilledQuantity, optionChainStatus, optionChainEnteredTime, copy_trading_table_id], (err, row) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(row);
+            }
+          });
+        }
+      });
+
+      return { success: true, data: queryResult };
+    } catch (error) {
+      return { success: false, error: error };
+    }
+    
   }
 };
 

@@ -29,6 +29,10 @@ export default function AccountsPage() {
       Cell: ConnectionPanel,
     },
     {
+      Header: 'Connection time (minutes)',
+      accessor: 'accountConnectionTime',
+    },
+    {
       Header: 'Settings',
       accessor: 'name',
       Cell: SettingsPanel,
@@ -40,8 +44,7 @@ export default function AccountsPage() {
   async function fetchAccountData() {
     try {
 
-      const response = await axios.get('/trading_account/database')
-      console.log(response.data);
+      const response = await axios.get('/trading_account/database');
       if (response.data != null) {
         setAccountTableData(response.data)
       }

@@ -21,33 +21,41 @@ export default function TradeActivityPage() {
       accessor: 'accountName',
     },
     {
-      Header: "Account Username",
+      Header: 'Account Username',
       accessor: 'accountUsername',
     },
     {
-      Header: " Stock pair",
-      accessor: 'stockPair',
+      Header: 'Time',
+      accessor: 'optionChainEnteredTime',
     },
     {
-      Header: "Action",
-      accessor: 'stockTradeAction',
+      Header: 'Side Pos Effect',
+      accessor: 'optionChainInstruction',
     },
     {
-      Header: "Entry price",
-      accessor: 'entryPrice',
+      Header: 'Qty',
+      accessor: 'optionChainQuantity',
     },
     {
-      Header: "Order Quantity",
-      accessor: 'orderQuantity',
+      Header: 'Filled Qty',
+      accessor: 'optionChainFilledQuantity',
     },
     {
-      Header: "Filled Quantity",
-      accessor: 'filledQuantity',
+      Header: 'Symbol description',
+      accessor: 'optionChainDescription',
     },
     {
-      Header: "Order date",
-      accessor: 'orderDate',
-    }
+      Header: 'Price',
+      accessor: 'optionChainPrice',
+    },
+    {
+      Header: 'Order type',
+      accessor: 'optionChainOrderType',
+    },
+    {
+      Header: 'Status',
+      accessor: 'optionChainStatus',
+    },
   ], [])
 
   const { tradeHistoryTableData, setTradeHistoryTableData } = useContext(TradeHistoryContext);

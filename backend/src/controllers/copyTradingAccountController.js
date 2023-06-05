@@ -421,7 +421,35 @@ async function sync_order_and_save_to_copy_trading_database(agentID, agentTradin
       return { success: false, data: result.error };
     }
 
-    
+    let all_trading_accounts_order_list = result.data;
+
+    let all_trading_accounts_list = [];
+    let result_promise_place_order = [];
+    let orderId_list = [];
+
+    let copy_trading_table_id_list = [];
+    for (let index = 0; index < all_trading_accounts_order_list.length; index++) {
+      let accountId = all_trading_accounts_order_list[index]["accountId"];
+      let accountUsername = all_trading_accounts_order_list[index]["accountUsername"];
+      let optionChainOrderId = all_trading_accounts_order_list[index]["optionChainOrderId"];
+      let authToken = await get_access_token_from_cache(agentID, accountUsername);
+      authToken = 1;
+      all_trading_accounts_list.push({accountId: accountId,  accountUsername:accountUsername, authToken:authToken});
+
+      // it can be confusing with this term `result_promise_place_order` in sync_order_and_save_to_copy_trading_database function
+      result_promise_place_order.push(true);
+      orderId_list.push(optionChainOrderId);
+
+      const id = all_trading_accounts_order_list[index]["id"];
+      copy_trading_table_id_list.push(id)
+    }
+
+    // Get latest order information for all trading accounts 
+    const result_promise_order_information = await get_latest_order_information_all_accounts(all_trading_accounts_list, result_promise_place_order, orderId_list);
+
+    // Update latest order information for all trading accounts to copy trading table
+    copyTradingAccountDBBOperation.updateAllOrderInformation(agentID, agentTradingSessionID, copy_trading_table_id_list, result_promise_order_information)
+
   } catch (error) {
     return { success: false, data: error.message };
   }
@@ -476,6 +504,7 @@ async function copy_trading_database(httpRequest) {
         });
       }
 
+      //await new Promise(resolve => setTimeout(resolve, 500)); 
       return { success: true, data: copyTradingAccountData };
     } catch (error) {
       return { success: false, data: error.message };
@@ -519,12 +548,14 @@ async function copy_trading_history_database(httpRequest) {
             agentTradingSessionID: currCopyTradingAccount.agentTradingSessionID,
             accountName: currCopyTradingAccount.accountName,
             accountUsername: currCopyTradingAccount.accountUsername,
-            stockPair:
-              currCopyTradingAccount.optionChainSymbol,
-            entryPrice: currCopyTradingAccount.optionChainPrice,
+            optionChainEnteredTime: currCopyTradingAccount.optionChainEnteredTime,
+            optionChainInstruction: currCopyTradingAccount.optionChainInstruction,
             optionChainQuantity: currCopyTradingAccount.optionChainQuantity,
             optionChainFilledQuantity: currCopyTradingAccount.optionChainFilledQuantity,
-            optionChainEnteredTime: currCopyTradingAccount.optionChainEnteredTime.toLocaleString("en-US"),
+            optionChainDescription: currCopyTradingAccount.optionChainDescription,
+            optionChainPrice: currCopyTradingAccount.optionChainPrice,
+            optionChainOrderType: currCopyTradingAccount.optionChainOrderType,
+            optionChainStatus: currCopyTradingAccount.optionChainStatus,
           });
         }
         return { success: true, data: tradeHistoryData };

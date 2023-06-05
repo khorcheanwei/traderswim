@@ -4,9 +4,9 @@ import { useContext, useState, useEffect } from 'react';
 import { CopyTradingAccountContext } from '../context/CopyTradingAccountContext';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 
-import CopyTradingTable, { SettingsPanel } from './CopyTradingTable'
+import CopyTradingPositionTable, { SettingsPanel } from './CopyTradingPositionTable'
 
-export default function CopyTradingPage() {
+export default function CopyTradingPositionPage() {
 
   const columns = React.useMemo(() => [
     {
@@ -90,7 +90,7 @@ export default function CopyTradingPage() {
       <div className='min-h-screen bg-gray-100 text-black'>
         <main className='mx-auto px-4 sm:px-6 lg:px-8 pt-4'>
           <div className='mt-6'>
-            <CopyTradingTable columns={columns} data={data} />
+            <CopyTradingPositionTable columns={columns} data={data} />
           </div>
         </main>
       </div>

@@ -24,22 +24,27 @@ function check_access_token_exceed_time_limit(accountUsername, authTokenTimeInSe
 }
 
 async function check_access_with_get_account(accountUsername, authToken) { 
-    const config = {
-        method: 'get',
-        maxBodyLength: Infinity,
-        url: `https://api.tdameritrade.com/v1/accounts/`,
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${authToken}`
+    try {
+        const config = {
+            method: 'get',
+            maxBodyLength: Infinity,
+            url: `https://api.tdameritrade.com/v1/accounts/`,
+            headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authToken}`
+            }
         }
-      }
-    
-    const response = await axios.request(config);
-    if (response.status == 200) {
-        console.log(`Successful in check access with get accounts API for account name ${accountUsername}`)
-        return true
-    } else {
-        console.log(`Failed in check access with get accounts API for account name ${accountUsername}`)
+        
+        const response = await axios.request(config);
+        if (response.data[0]["securitiesAccount"]["accountId"] != null) {
+            console.log(`Successful in check access with get accounts API for account name ${accountUsername}`)
+            return true
+        } else {
+            console.log(`Failed in check access with get accounts API for account name ${accountUsername}`)
+            return false;
+        } 
+    } catch (error) {
+        console.log(`Failed in check access with get accounts API for account name ${accountUsername}. Error: ${error.message}`)
         return false;
     }
 }
@@ -100,7 +105,30 @@ async function get_access_token_from_refresh_token(auth_cache_key, refreshToken)
         console.log(error);
         return false;
     }
+}
 
+async function get_auth_connection_time(agentID, accountUsername) {
+
+    try {
+        let auth_cache_key = agentID + "." + accountUsername + "." + "authToken";
+        let auth_cache_value = auth_cache.get(auth_cache_key);
+
+        let currentTimeInSeconds = Math.floor(Date.now() / 1000);
+        
+
+        if (auth_cache_value != undefined) {
+            authTokenTimeInSeconds = auth_cache_value[1];
+
+            let authTokenTimeDifference = currentTimeInSeconds - authTokenTimeInSeconds;
+            return authTokenTimeDifference;
+        } else {
+            return null
+        }
+    } catch(error) {
+        console.log(`Failed to get auth connection time for accountUsername: ${accountUsername}. Error: ${error.message}`)
+        return null
+    }
+    
 }
 
 async function puppeteer_login_account(agentID, accountUsername, accountPassword) {
@@ -141,7 +169,7 @@ async function puppeteer_login_account(agentID, accountUsername, accountPassword
             authTokenTimeInSeconds = auth_cache_value[1];
 
             const check_access_account = await check_access_with_get_account(accountUsername, authToken);
-            if (check_access_token_exceed_time_limit(accountUsername, authTokenTimeInSeconds) && check_access_account) {
+            if (check_access_token_exceed_time_limit(accountUsername, authTokenTimeInSeconds) == true || check_access_account == false) {
                 need_login = true;
             } else {
                 auth_cache.set(auth_login_cache_key, false)
@@ -330,6 +358,7 @@ async function tradingAccountCronJob() {
 }
 
 module.exports = {
+    get_auth_connection_time,
     puppeteer_login_account,
     get_access_token_from_cache,
     store_agent_list_to_cache,

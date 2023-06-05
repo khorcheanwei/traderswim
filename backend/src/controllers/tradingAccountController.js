@@ -1,5 +1,5 @@
 const { accountDBOperation } = require("../data-access/index.js");
-const { puppeteer_login_account, get_access_token_from_cache, fetch_trading_account_info_api } = require("./tradingAccountPuppeteer.js")
+const { get_auth_connection_time, puppeteer_login_account, get_access_token_from_cache, fetch_trading_account_info_api } = require("./tradingAccountPuppeteer.js")
 const common = require("../common.js");
 
 const puppeteer = require('puppeteer');
@@ -174,18 +174,33 @@ async function get_account_value(agentID, accountUsername) {
   }
 }
 
+// Get account connection time
+async function get_account_connection_time(agentID, accountUsername) {
+
+  try {
+    const authTokenTimeDifference = await get_auth_connection_time(agentID, accountUsername);
+    return authTokenTimeDifference;
+  } catch (error) {
+    console.error(`Failed get account value - accountUsername: ${accountUsername}. Error: ${error.message}`);
+    return null;
+  }
+}
+
+
 // Puppeteer login for all accounts
-async function puppeteer_login_all_accounts(accountDocument) {
+async function puppeteer_login_all_accounts(agentID, accountDocument) {
 
   const get_latest_order_id_requests =  accountDocument.map(async (accountDocumentPart, index) => {
     // need to go Ameritrade website to check whether it is successful to convert to connect to website or not
-    let { connected, refreshToken } = await puppeteer_login_account(agentID, accountDocumentPart.accountUsername, accountDocument[index].accountPassword);
-    let accountValue  = await get_account_value(agentID, accountDocumentPart.accountUsername)
+    let { connected, refreshToken } = await puppeteer_login_account(agentID, accountDocumentPart.accountUsername, accountDocumentPart.accountPassword);
+    let accountValue  = await get_account_value(agentID, accountDocumentPart.accountUsername);
+    let authTokenTimeInSeconds = await get_account_connection_time(agentID, accountDocumentPart.accountUsername)
     return {
       accountName: accountDocumentPart.accountName,
       accountUsername: accountDocumentPart.accountUsername,
       accountBalance: accountValue,
       accountConnection: connected,
+      accountConnectionTime: (authTokenTimeInSeconds/60).toFixed(2),
     };
   });
 
@@ -206,14 +221,14 @@ async function account_database(httpRequest) {
   if (token) {
     const agentDocument = jwt.verify(token, jwtSecret, {});
     try {
-      agentID = agentDocument.id;
+      const agentID = agentDocument.id;
 
       const result = await accountDBOperation.searchAccountByAgentID(agentID);
 
       if (result.success) {
         const accountDocument = result.data;
 
-        let accountTableArray = await puppeteer_login_all_accounts(accountDocument);
+        let accountTableArray = await puppeteer_login_all_accounts(agentID, accountDocument);
        
         return { success: true, data: accountTableArray };
       } else {
