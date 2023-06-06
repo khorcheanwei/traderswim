@@ -10,6 +10,15 @@ export default function CopyTradingPage() {
 
   const columns = React.useMemo(() => [
     {
+      Header: 'ID',
+      accessor: 'agentTradingSessionID',
+    },
+    {
+      Header: 'Place new order',
+      accessor: 'placeNewOrder',
+      Cell: SettingsPanel,
+    },
+    {
       Header: 'Name',
       accessor: 'accountName',
     },
@@ -48,12 +57,7 @@ export default function CopyTradingPage() {
     {
       Header: 'Status',
       accessor: 'optionChainStatus',
-    },
-    {
-      Header: 'Place new order',
-      accessor: 'placeNewOrder',
-      Cell: SettingsPanel,
-    },
+    }
   ], [])
 
   const [copyTradingAccountData, setCopyTradingAccountData] = useState([]);
