@@ -5,6 +5,7 @@ import { useContext, useState, useEffect } from 'react';
 import { CopyTradingAccountContext } from '../context/CopyTradingAccountContext';
 import CopyTradingDeleteOrderConfirmation from './CopyTradingDeleteOrderConfirmation';
 import TradingStock from '../tradingStock/TradingStock';
+import TradingStockReplaceOrder from '../tradingStock/TradingStockReplaceOrder';
 
 import Overlay from "./../Overlay";
 import { async } from 'regenerator-runtime'
@@ -58,7 +59,7 @@ function GlobalFilter({
 }
 
 export function SettingsPanel(row) {
-  const { isOpenTradingStock, setIsOpenTradingStock, isOpenOrderDelete, setIsOpenOrderDelete } = useContext(CopyTradingAccountContext);
+  const { isOpenTradingStock, setIsOpenTradingStock, isOpenOrderReplace, setIsOpenOrderReplace, isOpenOrderDelete, setIsOpenOrderDelete } = useContext(CopyTradingAccountContext);
   
   const { rowCopyTradingAccount, setRowCopyTradingAccount } = useContext(CopyTradingAccountContext);
  
@@ -68,6 +69,13 @@ export function SettingsPanel(row) {
       setRowCopyTradingAccount(row)
     }
     setIsOpenTradingStock(!isOpenTradingStock)
+  }
+
+  const orderReplaceClose = async () => {
+    if (isOpenOrderReplace == false) {
+      setRowCopyTradingAccount(row)
+    }
+    setIsOpenOrderReplace(!isOpenOrderReplace)
   }
 
   const orderDeleteClose = async () => {
@@ -83,15 +91,18 @@ export function SettingsPanel(row) {
         <div onClick={placeOrderClose} className="cursor-pointer relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-red-600 rounded-full dark:bg-red-600">
           <span className="font-medium text-white dark:text-white">S</span>
         </div>
-        <div onClick={placeOrderClose} className="cursor-pointer relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-yellow-300 rounded-full dark:bg-yellow-300">
+        <div onClick={orderReplaceClose} className="cursor-pointer relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-yellow-300 rounded-full dark:bg-yellow-300">
         <span className="font-medium text-white dark:text-white">R</span>
         </div>
-        <div onClick={orderDeleteClose} className="cursor-pointer relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-100">
-          <span className="font-medium text-black dark:text-black">C</span>
+        <div onClick={orderDeleteClose} className="cursor-pointer relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-appleWhite rounded-full dark:bg-appleWhite">
+          <span className="font-medium text-white dark:text-white">C</span>
         </div>
       </div>
       <Overlay isOpen={isOpenTradingStock} >
         <TradingStock onClose={placeOrderClose}></TradingStock>
+      </Overlay>
+      <Overlay isOpen={isOpenOrderReplace} >
+        <TradingStockReplaceOrder rowCopyTradingAccount={rowCopyTradingAccount} onClose={orderReplaceClose}></TradingStockReplaceOrder>
       </Overlay>
       <Overlay isOpen={isOpenOrderDelete} >
         <CopyTradingDeleteOrderConfirmation rowCopyTradingAccount={rowCopyTradingAccount} onClose={orderDeleteClose}></CopyTradingDeleteOrderConfirmation>

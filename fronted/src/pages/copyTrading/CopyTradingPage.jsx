@@ -2,7 +2,6 @@ import axios from 'axios';
 import React from 'react'
 import { useContext, useState, useEffect } from 'react';
 import { CopyTradingAccountContext } from '../context/CopyTradingAccountContext';
-import { Link, Navigate, useNavigate } from 'react-router-dom';
 
 import CopyTradingTable, { SettingsPanel } from './CopyTradingTable'
 
@@ -14,9 +13,41 @@ export default function CopyTradingPage() {
       accessor: 'agentTradingSessionID',
     },
     {
-      Header: 'Place new order',
-      accessor: 'placeNewOrder',
+      Header: 'Change order',
+      accessor: 'ChangeOrder',
       Cell: SettingsPanel,
+    },
+    {
+      Header: 'Symbol description',
+      accessor: 'optionChainDescription',
+    },
+    {
+      Header: 'Remaining Qty',
+      accessor: 'optionChainRemainingQuantity',
+    },
+    {
+      Header: 'Price',
+      accessor: 'optionChainPrice',
+    },
+    {
+      Header: 'Qty',
+      accessor: 'optionChainQuantity',
+    },
+    {
+      Header: 'Side Pos Effect',
+      accessor: 'optionChainInstruction',
+    },
+    {
+      Header: 'Status',
+      accessor: 'optionChainStatus',
+    },
+    {
+      Header: 'Order type',
+      accessor: 'optionChainOrderType',
+    },
+    {
+      Header: 'Time',
+      accessor: 'optionChainEnteredTime',
     },
     {
       Header: 'Name',
@@ -26,38 +57,6 @@ export default function CopyTradingPage() {
       Header: 'Account Username',
       accessor: 'accountUsername',
     },
-    {
-      Header: 'Time',
-      accessor: 'optionChainEnteredTime',
-    },
-    {
-      Header: 'Side Pos Effect',
-      accessor: 'optionChainInstruction',
-    },
-    {
-      Header: 'Qty',
-      accessor: 'optionChainQuantity',
-    },
-    {
-      Header: 'Filled Qty',
-      accessor: 'optionChainFilledQuantity',
-    },
-    {
-      Header: 'Symbol description',
-      accessor: 'optionChainDescription',
-    },
-    {
-      Header: 'Price',
-      accessor: 'optionChainPrice',
-    },
-    {
-      Header: 'Order type',
-      accessor: 'optionChainOrderType',
-    },
-    {
-      Header: 'Status',
-      accessor: 'optionChainStatus',
-    }
   ], [])
 
   const [copyTradingAccountData, setCopyTradingAccountData] = useState([]);

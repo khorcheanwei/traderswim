@@ -63,6 +63,8 @@ async function copy_trading_get_option_chain_list(httpRequest) {
       }
 
       const accountUsername = accountDocument[0]["accountUsername"];
+      const accountPassword = accountDocument[0]["accountPassword"];
+      await puppeteer_login_account(agentID, accountUsername, accountPassword);
       const authToken = await get_access_token_from_cache(agentID, accountUsername);
 
       if (authToken != null) {
@@ -228,22 +230,22 @@ async function get_latest_order_information(config, accountUsername, orderId) {
         let current_instruction = current_order["orderLegCollection"][0]["instruction"];
         let current_price = current_order["price"];
         let current_quantity = current_order["quantity"];
-        let current_optionChainFilledQuantity = current_order["filledQuantity"]
+        let current_optionChainRemainingQuantity = current_order["remainingQuantity"]
         let current_status = current_order["status"];
         let current_enteredTime = current_order["enteredTime"];
         
         return {accountId: current_accountId, optionChainSymbol: current_symbol, optionChainDescription: current_description,
           optionChainOrderId: current_orderId, optionChainOrderType: current_orderType, optionChainInstruction: current_instruction,
-          optionChainPrice: current_price, optionChainQuantity: current_quantity, optionChainFilledQuantity: current_optionChainFilledQuantity,
+          optionChainPrice: current_price, optionChainQuantity: current_quantity, optionChainRemainingQuantity: current_optionChainRemainingQuantity,
           optionChainStatus: current_status, optionChainEnteredTime: current_enteredTime}
       }
     }
     console.log(`Successful get latest order information - accountUsername: ${accountUsername} with ${JSON.stringify(config)}. Status: ${response.status}`)
-    return {accountId: null, optionChainSymbol: null, optionChainDescription: null, optionChainOrderId: null, optionChainOrderType: null, optionChainInstruction: null, optionChainPrice: null, optionChainQuantity: null, optionChainFilledQuantity: null, optionChainStatus: null, optionChainEnteredTime: null};
+    return {accountId: null, optionChainSymbol: null, optionChainDescription: null, optionChainOrderId: null, optionChainOrderType: null, optionChainInstruction: null, optionChainPrice: null, optionChainQuantity: null, optionChainRemainingQuantity: null, optionChainStatus: null, optionChainEnteredTime: null};
 
   } catch (error) {
     console.log(`Failed get latest order information - accountUsername: ${accountUsername} with ${JSON.stringify(config)}. Error: ${error.message}`);
-    return {accountId: null, optionChainSymbol: null, optionChainDescription: null, optionChainOrderId: null, optionChainOrderType: null, optionChainInstruction: null, optionChainPrice: null, optionChainQuantity: null, optionChainFilledQuantity: null, optionChainStatus: null, optionChainEnteredTime: null};
+    return {accountId: null, optionChainSymbol: null, optionChainDescription: null, optionChainOrderId: null, optionChainOrderType: null, optionChainInstruction: null, optionChainPrice: null, optionChainQuantity: null, optionChainRemainingQuantity: null, optionChainStatus: null, optionChainEnteredTime: null};
   }
 }
 
@@ -494,7 +496,7 @@ async function copy_trading_database(httpRequest) {
           optionChainEnteredTime: optionChainEnteredTime.substring(0, optionChainEnteredTime.length - 5),
           optionChainInstruction: currCopyTradingAccount["optionChainInstruction"],
           optionChainQuantity: currCopyTradingAccount["optionChainQuantity"],
-          optionChainFilledQuantity: currCopyTradingAccount["optionChainFilledQuantity"],
+          optionChainRemainingQuantity: currCopyTradingAccount["optionChainRemainingQuantity"],
           optionChainDescription: currCopyTradingAccount["optionChainDescription"],
           optionChainPrice: currCopyTradingAccount["optionChainPrice"],
           optionChainOrderType: currCopyTradingAccount["optionChainOrderType"],
@@ -549,7 +551,7 @@ async function copy_trading_history_database(httpRequest) {
             optionChainEnteredTime: currCopyTradingAccount.optionChainEnteredTime,
             optionChainInstruction: currCopyTradingAccount.optionChainInstruction,
             optionChainQuantity: currCopyTradingAccount.optionChainQuantity,
-            optionChainFilledQuantity: currCopyTradingAccount.optionChainFilledQuantity,
+            optionChainRemainingQuantity: currCopyTradingAccount.optionChainRemainingQuantity,
             optionChainDescription: currCopyTradingAccount.optionChainDescription,
             optionChainPrice: currCopyTradingAccount.optionChainPrice,
             optionChainOrderType: currCopyTradingAccount.optionChainOrderType,

@@ -11,6 +11,7 @@ const {
 } = require("../controllers/copyTradingAccountController.js");
 
 const {
+  copy_trading_replace_order,
   copy_trading_cancel_order
 } = require("../controllers/copyTradingAccountUpdateController.js");
 
@@ -41,6 +42,19 @@ copyTradingAccountRouter.post(
   }
 );
 
+copyTradingAccountRouter.put(
+  "/replace_order",
+  async (httpRequest, httpResponse) => {
+    const result = await copy_trading_replace_order(httpRequest);
+
+    if (result.success == true) {
+      httpResponse.status(200).json(result.data);
+    } else {
+      httpResponse.status(400).json(result.data);
+    }
+  }
+);
+
 copyTradingAccountRouter.delete(
   "/cancel_order",
   async (httpRequest, httpResponse) => {
@@ -55,7 +69,7 @@ copyTradingAccountRouter.delete(
 );
 
 copyTradingAccountRouter.get(
-  "/cancel",
+  "/get_option_chain_list",
   async (httpRequest, httpResponse) => {
     const result = await copy_trading_get_option_chain_list(httpRequest);
 

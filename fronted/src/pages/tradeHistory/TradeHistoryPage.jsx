@@ -17,44 +17,44 @@ export default function TradeActivityPage() {
       accessor: "agentTradingSessionID",
     },
     {
-      Header: "Name",
-      accessor: 'accountName',
-    },
-    {
-      Header: 'Account Username',
-      accessor: 'accountUsername',
-    },
-    {
-      Header: 'Time',
-      accessor: 'optionChainEnteredTime',
-    },
-    {
-      Header: 'Side Pos Effect',
-      accessor: 'optionChainInstruction',
-    },
-    {
-      Header: 'Qty',
-      accessor: 'optionChainQuantity',
-    },
-    {
-      Header: 'Filled Qty',
-      accessor: 'optionChainFilledQuantity',
-    },
-    {
       Header: 'Symbol description',
       accessor: 'optionChainDescription',
+    },
+    {
+      Header: 'Remaining Qty',
+      accessor: 'optionChainRemainingQuantity',
     },
     {
       Header: 'Price',
       accessor: 'optionChainPrice',
     },
     {
-      Header: 'Order type',
-      accessor: 'optionChainOrderType',
+      Header: 'Qty',
+      accessor: 'optionChainQuantity',
+    },
+    {
+      Header: 'Side Pos Effect',
+      accessor: 'optionChainInstruction',
     },
     {
       Header: 'Status',
       accessor: 'optionChainStatus',
+    },
+    {
+      Header: 'Order type',
+      accessor: 'optionChainOrderType',
+    },
+    {
+      Header: 'Time',
+      accessor: 'optionChainEnteredTime',
+    },
+    {
+      Header: 'Name',
+      accessor: 'accountName',
+    },
+    {
+      Header: 'Account Username',
+      accessor: 'accountUsername',
     },
   ], [])
 

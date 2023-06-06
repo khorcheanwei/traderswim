@@ -1,12 +1,12 @@
 import axios from "axios";
 import {useContext } from 'react';
-import { AccountContext } from '../context/AccountContext';
+import { CopyTradingAccountContext } from '../context/CopyTradingAccountContext';
 
 export default function CopyTradingDeleteOrderConfirmation({rowCopyTradingAccount, onClose}) {
     
-    /*
-    const { isOpenAccountDelete, setIsOpenAccountDelete} = useContext(AccountContext);
-    */
+  
+    const { isOpenOrderDelete, setIsOpenOrderDelete} = useContext(CopyTradingAccountContext);
+    
     const optionChainDescription = rowCopyTradingAccount.cell.row.original.optionChainDescription;
     const agentTradingSessionID = rowCopyTradingAccount.cell.row.original.agentTradingSessionID;
     
@@ -14,13 +14,13 @@ export default function CopyTradingDeleteOrderConfirmation({rowCopyTradingAccoun
       // delete order 
       try {
   
-        const { success } = await axios.delete("/copy_trading_account/cancel_order/", { data: { agentTradingSessionID: agentTradingSessionID }});
-        if (success == true) {
+        const response = await axios.delete("/copy_trading_account/cancel_order/", { data: { agentTradingSessionID: agentTradingSessionID }});
+        if (response.data == "success") {
           alert("Order deleted successful");
         } else {
           alert("Order deleted failed")
         }
-        setIsOpenAccountDelete(!isOpenAccountDelete); 
+        setIsOpenOrderDelete(!isOpenOrderDelete); 
 
       } catch(error) {
           alert("Order deleted failed")
@@ -31,7 +31,7 @@ export default function CopyTradingDeleteOrderConfirmation({rowCopyTradingAccoun
     return ( 
         <form>
             <div className="mb-4">
-                <h1 className="block text-gray-700 text-lm font-bold mb-2">Delete order</h1>
+                <h1 className="block text-gray-700 text-lm font-bold mb-2">Option Delete Order</h1>
             </div>
             <div className="mb-4">Are you sure to delete this order <b>{optionChainDescription}</b> ?</div>
             <div className="flex justify-end gap-5">
@@ -47,7 +47,7 @@ export default function CopyTradingDeleteOrderConfirmation({rowCopyTradingAccoun
                 className="inline-block rounded bg-teal-300 px-7 pt-3 pb-2.5 text-sm font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-teal-300-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-teal-300-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-teal-300-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
                 onClick={deleteOrder}
                 >
-                DELETE
+                DELETE ORDER
               </button>
             </div>
         </form>
