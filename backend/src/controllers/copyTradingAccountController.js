@@ -63,6 +63,8 @@ async function copy_trading_get_option_chain_list(httpRequest) {
       }
 
       const accountUsername = accountDocument[0]["accountUsername"];
+      const accountPassword = accountDocument[0]["accountPassword"];
+      await puppeteer_login_account(agentID, accountUsername, accountPassword);
       const authToken = await get_access_token_from_cache(agentID, accountUsername);
 
       if (authToken != null) {
@@ -99,7 +101,7 @@ async function place_order(config, accountUsername) {
   try {
     const response = await axios.request(config);
     console.log(`Successful place order - accountUsername: ${accountUsername} with ${JSON.stringify(config)}. Status: ${response.status}`)
-    if (response.status) {
+    if (response.status == 200 || response.status == 201) {
       return true;
     } else {
       return false;
@@ -228,22 +230,22 @@ async function get_latest_order_information(config, accountUsername, orderId) {
         let current_instruction = current_order["orderLegCollection"][0]["instruction"];
         let current_price = current_order["price"];
         let current_quantity = current_order["quantity"];
-        let current_optionChainFilledQuantity = current_order["filledQuantity"]
+        let current_optionChainRemainingQuantity = current_order["remainingQuantity"]
         let current_status = current_order["status"];
         let current_enteredTime = current_order["enteredTime"];
         
         return {accountId: current_accountId, optionChainSymbol: current_symbol, optionChainDescription: current_description,
           optionChainOrderId: current_orderId, optionChainOrderType: current_orderType, optionChainInstruction: current_instruction,
-          optionChainPrice: current_price, optionChainQuantity: current_quantity, optionChainFilledQuantity: current_optionChainFilledQuantity,
+          optionChainPrice: current_price, optionChainQuantity: current_quantity, optionChainRemainingQuantity: current_optionChainRemainingQuantity,
           optionChainStatus: current_status, optionChainEnteredTime: current_enteredTime}
       }
     }
     console.log(`Successful get latest order information - accountUsername: ${accountUsername} with ${JSON.stringify(config)}. Status: ${response.status}`)
-    return {accountId: null, optionChainSymbol: null, optionChainDescription: null, optionChainOrderId: null, optionChainOrderType: null, optionChainInstruction: null, optionChainPrice: null, optionChainQuantity: null, optionChainFilledQuantity: null, optionChainStatus: null, optionChainEnteredTime: null};
+    return {accountId: null, optionChainSymbol: null, optionChainDescription: null, optionChainOrderId: null, optionChainOrderType: null, optionChainInstruction: null, optionChainPrice: null, optionChainQuantity: null, optionChainRemainingQuantity: null, optionChainStatus: null, optionChainEnteredTime: null};
 
   } catch (error) {
     console.log(`Failed get latest order information - accountUsername: ${accountUsername} with ${JSON.stringify(config)}. Error: ${error.message}`);
-    return {accountId: null, optionChainSymbol: null, optionChainDescription: null, optionChainOrderId: null, optionChainOrderType: null, optionChainInstruction: null, optionChainPrice: null, optionChainQuantity: null, optionChainFilledQuantity: null, optionChainStatus: null, optionChainEnteredTime: null};
+    return {accountId: null, optionChainSymbol: null, optionChainDescription: null, optionChainOrderId: null, optionChainOrderType: null, optionChainInstruction: null, optionChainPrice: null, optionChainQuantity: null, optionChainRemainingQuantity: null, optionChainStatus: null, optionChainEnteredTime: null};
   }
 }
 
@@ -339,7 +341,7 @@ async function copy_trading_place_order(httpRequest) {
       }
 
       agentDocument = result.data;
-      const agentTradingSessionID = agentDocument.agentTradingSessionID;
+      const agentTradingSessionID = agentDocument.agentTradingSessionID + 1;
 
       // get all accountName of particular agentID
       result = await accountDBOperation.searchAccountByAgentID(agentID);
@@ -390,8 +392,6 @@ async function copy_trading_place_order(httpRequest) {
       // save orders for all trading accounts to copyTradingAccount table
       await createCopyTradingAccountItem_all_accounts(agentTradingSessionID, accountDocument, result_promise_order_information, result_promise_place_order)
       
-
-      /*
       result = await agentDBOperation.updateAgentTradingSessionID(
         agentID,
         agentTradingSessionID
@@ -399,7 +399,6 @@ async function copy_trading_place_order(httpRequest) {
       if (result.success != true) {
         return { success: false, data: result.error };
       }
-      */
 
       // save agentTradingSessionID and agentIsTradingSession to table Agent
       return { success: true, data: "success" };
@@ -447,7 +446,7 @@ async function sync_order_and_save_to_copy_trading_database(agentID, agentTradin
     const result_promise_order_information = await get_latest_order_information_all_accounts(all_trading_accounts_list, result_promise_place_order, orderId_list);
 
     // Update latest order information for all trading accounts to copy trading table
-    copyTradingAccountDBBOperation.updateAllOrderInformation(agentID, agentTradingSessionID, copy_trading_table_id_list, result_promise_order_information)
+    copyTradingAccountDBBOperation.updateAllOrderInformation(copy_trading_table_id_list, result_promise_order_information)
 
   } catch (error) {
     return { success: false, data: error.message };
@@ -489,17 +488,19 @@ async function copy_trading_database(httpRequest) {
       let copyTradingAccountData = [];
       for (let index = 0; index < copyTradingAccountDocument.length; index++) {
         const currCopyTradingAccount = copyTradingAccountDocument[index];
+        const optionChainEnteredTime = currCopyTradingAccount["optionChainEnteredTime"];
         copyTradingAccountData.push({
-          accountName: currCopyTradingAccount.accountName,
-          accountUsername: currCopyTradingAccount.accountUsername,
-          optionChainEnteredTime: currCopyTradingAccount.optionChainEnteredTime,
-          optionChainInstruction: currCopyTradingAccount.optionChainInstruction,
-          optionChainQuantity: currCopyTradingAccount.optionChainQuantity,
-          optionChainFilledQuantity: currCopyTradingAccount.optionChainFilledQuantity,
-          optionChainDescription: currCopyTradingAccount.optionChainDescription,
-          optionChainPrice: currCopyTradingAccount.optionChainPrice,
-          optionChainOrderType: currCopyTradingAccount.optionChainOrderType,
-          optionChainStatus: currCopyTradingAccount.optionChainStatus,
+          agentTradingSessionID: currCopyTradingAccount["agentTradingSessionID"],
+          accountName: currCopyTradingAccount["accountName"],
+          accountUsername: currCopyTradingAccount["accountUsername"],
+          optionChainEnteredTime: optionChainEnteredTime.substring(0, optionChainEnteredTime.length - 5),
+          optionChainInstruction: currCopyTradingAccount["optionChainInstruction"],
+          optionChainQuantity: currCopyTradingAccount["optionChainQuantity"],
+          optionChainRemainingQuantity: currCopyTradingAccount["optionChainRemainingQuantity"],
+          optionChainDescription: currCopyTradingAccount["optionChainDescription"],
+          optionChainPrice: currCopyTradingAccount["optionChainPrice"],
+          optionChainOrderType: currCopyTradingAccount["optionChainOrderType"],
+          optionChainStatus: currCopyTradingAccount["optionChainStatus"],
         });
       }
 
@@ -550,7 +551,7 @@ async function copy_trading_history_database(httpRequest) {
             optionChainEnteredTime: currCopyTradingAccount.optionChainEnteredTime,
             optionChainInstruction: currCopyTradingAccount.optionChainInstruction,
             optionChainQuantity: currCopyTradingAccount.optionChainQuantity,
-            optionChainFilledQuantity: currCopyTradingAccount.optionChainFilledQuantity,
+            optionChainRemainingQuantity: currCopyTradingAccount.optionChainRemainingQuantity,
             optionChainDescription: currCopyTradingAccount.optionChainDescription,
             optionChainPrice: currCopyTradingAccount.optionChainPrice,
             optionChainOrderType: currCopyTradingAccount.optionChainOrderType,
@@ -575,4 +576,5 @@ module.exports = {
   copy_trading_place_order,
   copy_trading_database,
   copy_trading_history_database,
+  sync_order_and_save_to_copy_trading_database,
 };

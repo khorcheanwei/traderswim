@@ -1,15 +1,12 @@
 import React from 'react'
 import { useAsyncDebounce } from 'react-table'
 import { Button, PageButton } from './../shared/Button'
-import { classNames } from './../shared/Utils'
-import { SortIcon, SortUpIcon, SortDownIcon } from './../shared/Icons'
 import { useContext, useState, useEffect } from 'react';
-import { UserContext } from '../context/UserContext';
-import { AccountContext } from '../context/AccountContext';
 import { CopyTradingAccountContext } from '../context/CopyTradingAccountContext';
+import CopyTradingDeleteOrderConfirmation from './CopyTradingDeleteOrderConfirmation';
 import TradingStock from '../tradingStock/TradingStock';
+import TradingStockReplaceOrder from '../tradingStock/TradingStockReplaceOrder';
 
-import axios from 'axios';
 import Overlay from "./../Overlay";
 import { async } from 'regenerator-runtime'
 import CommonTable from '../shared/Table';
@@ -61,39 +58,54 @@ function GlobalFilter({
   )
 }
 
-export function SettingsPanel(rowCopyTrading) {
-  const { isOpenTradingStock, setIsOpenTradingStock } = useContext(CopyTradingAccountContext);
-
-  const orderQuantity = rowCopyTrading.cell.row.original.orderQuantity;
-  const filledQuantity = rowCopyTrading.cell.row.original.filledQuantity;
-
-  var disabledPlaceOrder = true;
-
-  if (filledQuantity < orderQuantity) {
-    disabledPlaceOrder = false
-  }
-
-  function changePlaceOrderOpacity(disabled) {
-    let classes = "h-6 w-6"
-    if (disabled) {
-      classes += " opacity-25"
-    } else {
-      classes += " cursor-pointer"
-    }
-    return classes
-  }
+export function SettingsPanel(row) {
+  const { isOpenTradingStock, setIsOpenTradingStock, isOpenOrderReplace, setIsOpenOrderReplace, isOpenOrderDelete, setIsOpenOrderDelete } = useContext(CopyTradingAccountContext);
+  
+  const { rowCopyTradingAccount, setRowCopyTradingAccount } = useContext(CopyTradingAccountContext);
+ 
 
   const placeOrderClose = async () => {
+    if (isOpenTradingStock == false) {
+      setRowCopyTradingAccount(row)
+    }
     setIsOpenTradingStock(!isOpenTradingStock)
+  }
+
+  const orderReplaceClose = async () => {
+    if (isOpenOrderReplace == false) {
+      setRowCopyTradingAccount(row)
+    }
+    setIsOpenOrderReplace(!isOpenOrderReplace)
+  }
+
+  const orderDeleteClose = async () => {
+    if (isOpenOrderDelete == false) {
+      setRowCopyTradingAccount(row)
+    }
+    setIsOpenOrderDelete(!isOpenOrderDelete)
   }
 
   return (
     <div className="flex">
-      <svg onClick={placeOrderClose} xmlns="http://www.w3.org/2000/svg" className={changePlaceOrderOpacity(disabledPlaceOrder)} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
-      </svg>
+      <div className="flex space-x-2">
+        <div onClick={placeOrderClose} className="cursor-pointer relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-red-600 rounded-full dark:bg-red-600">
+          <span className="font-medium text-white dark:text-white">S</span>
+        </div>
+        <div onClick={orderReplaceClose} className="cursor-pointer relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-yellow-300 rounded-full dark:bg-yellow-300">
+        <span className="font-medium text-white dark:text-white">R</span>
+        </div>
+        <div onClick={orderDeleteClose} className="cursor-pointer relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-appleWhite rounded-full dark:bg-appleWhite">
+          <span className="font-medium text-white dark:text-white">C</span>
+        </div>
+      </div>
       <Overlay isOpen={isOpenTradingStock} >
         <TradingStock onClose={placeOrderClose}></TradingStock>
+      </Overlay>
+      <Overlay isOpen={isOpenOrderReplace} >
+        <TradingStockReplaceOrder rowCopyTradingAccount={rowCopyTradingAccount} onClose={orderReplaceClose}></TradingStockReplaceOrder>
+      </Overlay>
+      <Overlay isOpen={isOpenOrderDelete} >
+        <CopyTradingDeleteOrderConfirmation rowCopyTradingAccount={rowCopyTradingAccount} onClose={orderDeleteClose}></CopyTradingDeleteOrderConfirmation>
       </Overlay>
     </div>
   );

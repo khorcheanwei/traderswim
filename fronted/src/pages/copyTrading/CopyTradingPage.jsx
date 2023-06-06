@@ -2,7 +2,6 @@ import axios from 'axios';
 import React from 'react'
 import { useContext, useState, useEffect } from 'react';
 import { CopyTradingAccountContext } from '../context/CopyTradingAccountContext';
-import { Link, Navigate, useNavigate } from 'react-router-dom';
 
 import CopyTradingTable, { SettingsPanel } from './CopyTradingTable'
 
@@ -10,49 +9,53 @@ export default function CopyTradingPage() {
 
   const columns = React.useMemo(() => [
     {
-      Header: 'Name',
-      accessor: 'accountName',
+      Header: 'ID',
+      accessor: 'agentTradingSessionID',
     },
     {
-      Header: 'Account Username',
-      accessor: 'accountUsername',
-    },
-    {
-      Header: 'Time',
-      accessor: 'optionChainEnteredTime',
-    },
-    {
-      Header: 'Side Pos Effect',
-      accessor: 'optionChainInstruction',
-    },
-    {
-      Header: 'Qty',
-      accessor: 'optionChainQuantity',
-    },
-    {
-      Header: 'Filled Qty',
-      accessor: 'optionChainFilledQuantity',
+      Header: 'Change order',
+      accessor: 'ChangeOrder',
+      Cell: SettingsPanel,
     },
     {
       Header: 'Symbol description',
       accessor: 'optionChainDescription',
     },
     {
+      Header: 'Remaining Qty',
+      accessor: 'optionChainRemainingQuantity',
+    },
+    {
       Header: 'Price',
       accessor: 'optionChainPrice',
     },
     {
-      Header: 'Order type',
-      accessor: 'optionChainOrderType',
+      Header: 'Qty',
+      accessor: 'optionChainQuantity',
+    },
+    {
+      Header: 'Side Pos Effect',
+      accessor: 'optionChainInstruction',
     },
     {
       Header: 'Status',
       accessor: 'optionChainStatus',
     },
     {
-      Header: 'Place new order',
-      accessor: 'placeNewOrder',
-      Cell: SettingsPanel,
+      Header: 'Order type',
+      accessor: 'optionChainOrderType',
+    },
+    {
+      Header: 'Time',
+      accessor: 'optionChainEnteredTime',
+    },
+    {
+      Header: 'Name',
+      accessor: 'accountName',
+    },
+    {
+      Header: 'Account Username',
+      accessor: 'accountUsername',
     },
   ], [])
 

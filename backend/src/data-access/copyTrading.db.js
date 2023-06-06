@@ -8,10 +8,11 @@ function copyTradingAccountDBOperation(trading_management_db) {
   ) {
 
     try {
-      const sqlCommand = `SELECT * FROM copyTradingAccount WHERE agentID=? and agentTradingSessionID=?`;
+      //const sqlCommand = `SELECT * FROM copyTradingAccount WHERE agentID=? and agentTradingSessionID=?`;
+      const sqlCommand = `SELECT * FROM copyTradingAccount WHERE agentID=?`;
 
       const queryResult = await new Promise((resolve, reject) => {
-        this.trading_management_db.all(sqlCommand, [agentID, agentTradingSessionID], (err, row) => {
+        this.trading_management_db.all(sqlCommand, [agentID], (err, row) => {
           if (err) {
             reject(err);
           } else {
@@ -65,13 +66,13 @@ function copyTradingAccountDBOperation(trading_management_db) {
         const optionChainInstruction = order_information['optionChainInstruction'];
         const optionChainPrice = order_information['optionChainPrice'];
         const optionChainQuantity = order_information['optionChainQuantity'];
-        const optionChainFilledQuantity = order_information['optionChainFilledQuantity'];
+        const optionChainRemainingQuantity = order_information['optionChainRemainingQuantity'];
         const optionChainStatus = order_information['optionChainStatus'];
         const optionChainEnteredTime = order_information['optionChainEnteredTime'];
-        const sqlCommand = `INSERT INTO copyTradingAccount (agentID, agentTradingSessionID, accountId, accountName, accountUsername, optionChainSymbol, optionChainDescription, optionChainOrderId, optionChainOrderType, optionChainInstruction, optionChainPrice, optionChainQuantity, optionChainFilledQuantity, optionChainStatus, optionChainEnteredTime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`
+        const sqlCommand = `INSERT INTO copyTradingAccount (agentID, agentTradingSessionID, accountId, accountName, accountUsername, optionChainSymbol, optionChainDescription, optionChainOrderId, optionChainOrderType, optionChainInstruction, optionChainPrice, optionChainQuantity, optionChainRemainingQuantity, optionChainStatus, optionChainEnteredTime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`
 
         await new Promise((resolve, reject) => {
-          this.trading_management_db.get(sqlCommand, [agentID, agentTradingSessionID, accountId, accountName, accountUsername, optionChainSymbol, optionChainDescription, optionChainOrderId, optionChainOrderType, optionChainInstruction, optionChainPrice, optionChainQuantity, optionChainFilledQuantity, optionChainStatus, optionChainEnteredTime], (err, row) => {
+          this.trading_management_db.get(sqlCommand, [agentID, agentTradingSessionID, accountId, accountName, accountUsername, optionChainSymbol, optionChainDescription, optionChainOrderId, optionChainOrderType, optionChainInstruction, optionChainPrice, optionChainQuantity, optionChainRemainingQuantity, optionChainStatus, optionChainEnteredTime], (err, row) => {
             if (err) {
               reject(err);
             } else {
@@ -110,10 +111,10 @@ function copyTradingAccountDBOperation(trading_management_db) {
   }
 
   // update order information for all trading accounts
-  this.updateAllOrderInformation = async function (agentID, agentTradingSessionID, copy_trading_table_id_list, result_promise_order_information) {
+  this.updateAllOrderInformation = async function (copy_trading_table_id_list, result_promise_order_information) {
     try {
 
-      const sqlCommand = `UPDATE copyTradingAccount SET optionChainSymbol=?, optionChainDescription=?, optionChainOrderType=?, optionChainInstruction=?, optionChainPrice=?, optionChainQuantity=?, optionChainFilledQuantity=?, optionChainStatus=?, optionChainEnteredTime=? WHERE id=?`;
+      const sqlCommand = `UPDATE copyTradingAccount SET optionChainSymbol=?, optionChainDescription=?, optionChainOrderType=?, optionChainInstruction=?, optionChainPrice=?, optionChainQuantity=?, optionChainRemainingQuantity=?, optionChainStatus=?, optionChainEnteredTime=? WHERE id=?`;
       
       const queryResult = await new Promise((resolve, reject) => {
         for (let index = 0; index < copy_trading_table_id_list.length; index++) {
@@ -129,11 +130,11 @@ function copyTradingAccountDBOperation(trading_management_db) {
           const optionChainInstruction = copy_trading_table_row["optionChainInstruction"];
           const optionChainPrice = copy_trading_table_row["optionChainPrice"];
           const optionChainQuantity = copy_trading_table_row["optionChainQuantity"];
-          const optionChainFilledQuantity = copy_trading_table_row["optionChainFilledQuantity"];
+          const optionChainRemainingQuantity = copy_trading_table_row["optionChainRemainingQuantity"];
           const optionChainStatus = copy_trading_table_row["optionChainStatus"];
           const optionChainEnteredTime = copy_trading_table_row["optionChainEnteredTime"];
 
-          this.trading_management_db.all(sqlCommand, [optionChainSymbol, optionChainDescription, optionChainOrderType, optionChainInstruction, optionChainPrice, optionChainQuantity, optionChainFilledQuantity, optionChainStatus, optionChainEnteredTime, copy_trading_table_id], (err, row) => {
+          this.trading_management_db.all(sqlCommand, [optionChainSymbol, optionChainDescription, optionChainOrderType, optionChainInstruction, optionChainPrice, optionChainQuantity, optionChainRemainingQuantity, optionChainStatus, optionChainEnteredTime, copy_trading_table_id], (err, row) => {
             if (err) {
               reject(err);
             } else {

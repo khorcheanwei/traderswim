@@ -13,7 +13,7 @@ const CopyTradingAccountSchemaSql = `
     optionChainInstruction TEXT NOT NULL,
     optionChainPrice REAL NOT NULL,
     optionChainQuantity INTEGER NOT NULL,
-    optionChainFilledQuantity INTEGER NOT NULL,
+    optionChainRemainingQuantity INTEGER NOT NULL,
     optionChainStatus TEXT NOT NULL,
     optionChainEnteredTime DATETIME NOT NULL,
     FOREIGN KEY (agentID) REFERENCES agent (id),
