@@ -99,7 +99,7 @@ async function place_order(config, accountUsername) {
   try {
     const response = await axios.request(config);
     console.log(`Successful place order - accountUsername: ${accountUsername} with ${JSON.stringify(config)}. Status: ${response.status}`)
-    if (response.status) {
+    if (response.status == 200 || response.status == 201) {
       return true;
     } else {
       return false;
@@ -339,7 +339,7 @@ async function copy_trading_place_order(httpRequest) {
       }
 
       agentDocument = result.data;
-      const agentTradingSessionID = agentDocument.agentTradingSessionID;
+      const agentTradingSessionID = agentDocument.agentTradingSessionID + 1;
 
       // get all accountName of particular agentID
       result = await accountDBOperation.searchAccountByAgentID(agentID);
@@ -390,8 +390,6 @@ async function copy_trading_place_order(httpRequest) {
       // save orders for all trading accounts to copyTradingAccount table
       await createCopyTradingAccountItem_all_accounts(agentTradingSessionID, accountDocument, result_promise_order_information, result_promise_place_order)
       
-
-      /*
       result = await agentDBOperation.updateAgentTradingSessionID(
         agentID,
         agentTradingSessionID
@@ -399,7 +397,6 @@ async function copy_trading_place_order(httpRequest) {
       if (result.success != true) {
         return { success: false, data: result.error };
       }
-      */
 
       // save agentTradingSessionID and agentIsTradingSession to table Agent
       return { success: true, data: "success" };
@@ -447,7 +444,7 @@ async function sync_order_and_save_to_copy_trading_database(agentID, agentTradin
     const result_promise_order_information = await get_latest_order_information_all_accounts(all_trading_accounts_list, result_promise_place_order, orderId_list);
 
     // Update latest order information for all trading accounts to copy trading table
-    copyTradingAccountDBBOperation.updateAllOrderInformation(agentID, agentTradingSessionID, copy_trading_table_id_list, result_promise_order_information)
+    copyTradingAccountDBBOperation.updateAllOrderInformation(copy_trading_table_id_list, result_promise_order_information)
 
   } catch (error) {
     return { success: false, data: error.message };
@@ -489,17 +486,19 @@ async function copy_trading_database(httpRequest) {
       let copyTradingAccountData = [];
       for (let index = 0; index < copyTradingAccountDocument.length; index++) {
         const currCopyTradingAccount = copyTradingAccountDocument[index];
+        const optionChainEnteredTime = currCopyTradingAccount["optionChainEnteredTime"];
         copyTradingAccountData.push({
-          accountName: currCopyTradingAccount.accountName,
-          accountUsername: currCopyTradingAccount.accountUsername,
-          optionChainEnteredTime: currCopyTradingAccount.optionChainEnteredTime,
-          optionChainInstruction: currCopyTradingAccount.optionChainInstruction,
-          optionChainQuantity: currCopyTradingAccount.optionChainQuantity,
-          optionChainFilledQuantity: currCopyTradingAccount.optionChainFilledQuantity,
-          optionChainDescription: currCopyTradingAccount.optionChainDescription,
-          optionChainPrice: currCopyTradingAccount.optionChainPrice,
-          optionChainOrderType: currCopyTradingAccount.optionChainOrderType,
-          optionChainStatus: currCopyTradingAccount.optionChainStatus,
+          agentTradingSessionID: currCopyTradingAccount["agentTradingSessionID"],
+          accountName: currCopyTradingAccount["accountName"],
+          accountUsername: currCopyTradingAccount["accountUsername"],
+          optionChainEnteredTime: optionChainEnteredTime.substring(0, optionChainEnteredTime.length - 5),
+          optionChainInstruction: currCopyTradingAccount["optionChainInstruction"],
+          optionChainQuantity: currCopyTradingAccount["optionChainQuantity"],
+          optionChainFilledQuantity: currCopyTradingAccount["optionChainFilledQuantity"],
+          optionChainDescription: currCopyTradingAccount["optionChainDescription"],
+          optionChainPrice: currCopyTradingAccount["optionChainPrice"],
+          optionChainOrderType: currCopyTradingAccount["optionChainOrderType"],
+          optionChainStatus: currCopyTradingAccount["optionChainStatus"],
         });
       }
 
@@ -575,4 +574,5 @@ module.exports = {
   copy_trading_place_order,
   copy_trading_database,
   copy_trading_history_database,
+  sync_order_and_save_to_copy_trading_database,
 };

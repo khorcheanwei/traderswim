@@ -8,10 +8,11 @@ function copyTradingAccountDBOperation(trading_management_db) {
   ) {
 
     try {
-      const sqlCommand = `SELECT * FROM copyTradingAccount WHERE agentID=? and agentTradingSessionID=?`;
+      //const sqlCommand = `SELECT * FROM copyTradingAccount WHERE agentID=? and agentTradingSessionID=?`;
+      const sqlCommand = `SELECT * FROM copyTradingAccount WHERE agentID=?`;
 
       const queryResult = await new Promise((resolve, reject) => {
-        this.trading_management_db.all(sqlCommand, [agentID, agentTradingSessionID], (err, row) => {
+        this.trading_management_db.all(sqlCommand, [agentID], (err, row) => {
           if (err) {
             reject(err);
           } else {
@@ -110,7 +111,7 @@ function copyTradingAccountDBOperation(trading_management_db) {
   }
 
   // update order information for all trading accounts
-  this.updateAllOrderInformation = async function (agentID, agentTradingSessionID, copy_trading_table_id_list, result_promise_order_information) {
+  this.updateAllOrderInformation = async function (copy_trading_table_id_list, result_promise_order_information) {
     try {
 
       const sqlCommand = `UPDATE copyTradingAccount SET optionChainSymbol=?, optionChainDescription=?, optionChainOrderType=?, optionChainInstruction=?, optionChainPrice=?, optionChainQuantity=?, optionChainFilledQuantity=?, optionChainStatus=?, optionChainEnteredTime=? WHERE id=?`;

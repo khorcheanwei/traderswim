@@ -10,6 +10,10 @@ const {
   copy_trading_history_database,
 } = require("../controllers/copyTradingAccountController.js");
 
+const {
+  copy_trading_cancel_order
+} = require("../controllers/copyTradingAccountUpdateController.js");
+
 // get all stock pair list
 copyTradingAccountRouter.get(
   "/get_stock_pair_list",
@@ -37,8 +41,21 @@ copyTradingAccountRouter.post(
   }
 );
 
+copyTradingAccountRouter.delete(
+  "/cancel_order",
+  async (httpRequest, httpResponse) => {
+    const result = await copy_trading_cancel_order(httpRequest);
+
+    if (result.success == true) {
+      httpResponse.status(200).json(result.data);
+    } else {
+      httpResponse.status(400).json(result.data);
+    }
+  }
+);
+
 copyTradingAccountRouter.get(
-  "/get_option_chain_list",
+  "/cancel",
   async (httpRequest, httpResponse) => {
     const result = await copy_trading_get_option_chain_list(httpRequest);
 
