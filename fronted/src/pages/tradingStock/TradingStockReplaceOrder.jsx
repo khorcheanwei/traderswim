@@ -21,7 +21,7 @@ export default function TradingStockReplaceOrder({ rowCopyTradingAccount, onClos
   
     async function handleReplaceOrder() {
         try {
-            const { data } = await axios.post("/copy_trading_account/replace_order/", { agentTradingSessionID, optionChainInstruction, optionChainOrderType, optionChainQuantity, optionChainPrice })
+            const { data } = await axios.put("/copy_trading_account/replace_order/", { agentTradingSessionID, optionChainInstruction, optionChainOrderType, optionChainQuantity, optionChainPrice })
 
             if (data != "success") {
                 alert("Replace order failed");
