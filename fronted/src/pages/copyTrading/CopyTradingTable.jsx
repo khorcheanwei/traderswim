@@ -6,6 +6,7 @@ import { CopyTradingAccountContext } from '../context/CopyTradingAccountContext'
 import CopyTradingDeleteOrderConfirmation from './CopyTradingDeleteOrderConfirmation';
 import TradingStock from '../tradingStock/TradingStock';
 import TradingStockReplaceOrder from '../tradingStock/TradingStockReplaceOrder';
+import TradingStockExitOrder from '../tradingStock/TradingStockExitOrder';
 
 import Overlay from "./../Overlay";
 import { async } from 'regenerator-runtime'
@@ -59,7 +60,7 @@ function GlobalFilter({
 }
 
 export function SettingsPanel(row) {
-  const { isOpenTradingStock, setIsOpenTradingStock, isOpenOrderReplace, setIsOpenOrderReplace, isOpenOrderDelete, setIsOpenOrderDelete } = useContext(CopyTradingAccountContext);
+  const { isOpenTradingStock, setIsOpenTradingStock, isOpenOrderExit, setIsOpenOrderExit,  isOpenOrderReplace, setIsOpenOrderReplace, isOpenOrderDelete, setIsOpenOrderDelete } = useContext(CopyTradingAccountContext);
   
   const { rowCopyTradingAccount, setRowCopyTradingAccount } = useContext(CopyTradingAccountContext);
  
@@ -69,6 +70,13 @@ export function SettingsPanel(row) {
       setRowCopyTradingAccount(row)
     }
     setIsOpenTradingStock(!isOpenTradingStock)
+  }
+
+  const orderExitClose = async () => {
+    if (isOpenOrderExit == false) {
+      setRowCopyTradingAccount(row)
+    }
+    setIsOpenOrderExit(!isOpenOrderExit)
   }
 
   const orderReplaceClose = async () => {
@@ -88,7 +96,7 @@ export function SettingsPanel(row) {
   return (
     <div className="flex">
       <div className="flex space-x-2">
-        <div onClick={placeOrderClose} className="cursor-pointer relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-red-600 rounded-full dark:bg-red-600">
+        <div onClick={orderExitClose} className="cursor-pointer relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-red-600 rounded-full dark:bg-red-600">
           <span className="font-medium text-white dark:text-white">S</span>
         </div>
         <div onClick={orderReplaceClose} className="cursor-pointer relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-yellow-300 rounded-full dark:bg-yellow-300">
@@ -100,6 +108,9 @@ export function SettingsPanel(row) {
       </div>
       <Overlay isOpen={isOpenTradingStock} >
         <TradingStock onClose={placeOrderClose}></TradingStock>
+      </Overlay>
+      <Overlay isOpen={isOpenOrderExit} >
+        <TradingStockExitOrder rowCopyTradingAccount={rowCopyTradingAccount} onClose={orderExitClose}></TradingStockExitOrder>
       </Overlay>
       <Overlay isOpen={isOpenOrderReplace} >
         <TradingStockReplaceOrder rowCopyTradingAccount={rowCopyTradingAccount} onClose={orderReplaceClose}></TradingStockReplaceOrder>

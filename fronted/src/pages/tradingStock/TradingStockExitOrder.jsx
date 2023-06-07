@@ -2,11 +2,11 @@ import axios from 'axios';
 import { useContext, useState, useEffect } from 'react';
 import { CopyTradingAccountContext } from '../context/CopyTradingAccountContext';
 
-export default function TradingStockReplaceOrder({ rowCopyTradingAccount, onClose }) {
+export default function TradingStockExitOrder({ rowCopyTradingAccount, onClose }) {
 
-    const {isOpenOrderReplace, setIsOpenOrderReplace} = useContext(CopyTradingAccountContext);
+    const {isOpenOrderExit, setIsOpenOrderExit} = useContext(CopyTradingAccountContext);
 
-    var optionChainInstructionList = ["BUY_TO_OPEN", "SELL_TO_CLOSE"];
+    var optionChainInstructionList = ["SELL_TO_CLOSE", "BUY_TO_OPEN"];
     var optionChainOrderTypeList = ["LIMIT", "MARKET", "MARKET_ON_CLOSE", "STOP", "STOP_LIMIT", "TRAILING_STOP"];
 
     const agentTradingSessionID = rowCopyTradingAccount.cell.row.original.agentTradingSessionID;
@@ -19,18 +19,18 @@ export default function TradingStockReplaceOrder({ rowCopyTradingAccount, onClos
     const [optionChainQuantity, setOptionContractTotal] = useState(rowOptionChainQuantity)
     const [optionChainPrice, setOptionChainPrice] = useState(rowOptionChainPrice)
   
-    async function handleReplaceOrder() {
+    async function handleExitOrder() {
         try {
-            const { data } = await axios.post("/copy_trading_account/replace_order/", { agentTradingSessionID, optionChainInstruction, optionChainOrderType, optionChainQuantity, optionChainPrice })
+            const { data } = await axios.post("/copy_trading_account/exit_order/", { agentTradingSessionID, optionChainInstruction, optionChainOrderType, optionChainQuantity, optionChainPrice })
 
             if (data != "success") {
-                alert("Replace order failed");
+                alert("Exit order failed");
             } else {
-                alert("Replace order successful");
+                alert("Exit order successful");
             }
-            setIsOpenOrderReplace(!isOpenOrderReplace); 
+            setIsOpenOrderExit(!isOpenOrderExit); 
         } catch (error) {
-            alert("Replace order failed")
+            alert("Exit order failed")
             console.log(error.message);
         }
     }
@@ -38,7 +38,7 @@ export default function TradingStockReplaceOrder({ rowCopyTradingAccount, onClos
     return (
         <div>
             <div className="mb-4">
-                <h1 className="block text-gray-700 text-lm font-bold mb-2">Option Replace Order</h1>
+                <h1 className="block text-gray-700 text-lm font-bold mb-2">Option Exit Order</h1>
             </div>
             <div>
                 <div className="relative">
@@ -123,8 +123,8 @@ export default function TradingStockReplaceOrder({ rowCopyTradingAccount, onClos
                 <button
                     type="button"
                     className="inline-block rounded bg-teal-300 px-7 pt-3 pb-2.5 text-sm font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-teal-300-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-teal-300-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-teal-300-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
-                    onClick={handleReplaceOrder}>
-                    Replace order
+                    onClick={handleExitOrder}>
+                    Exit order
                 </button>
             </div>
         </div>

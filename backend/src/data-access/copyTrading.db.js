@@ -110,6 +110,50 @@ function copyTradingAccountDBOperation(trading_management_db) {
     }
   }
 
+  // get all optionChainSymbol for all trading accounts
+  this.getAllOptionChainSymbol = async function (agentID, agentTradingSessionID) {
+    try {
+
+        const sqlCommand = `SELECT optionChainSymbol FROM copyTradingAccount WHERE agentID=? AND agentTradingSessionID=?`;
+
+        const queryResult = await new Promise((resolve, reject) => {
+          this.trading_management_db.all(sqlCommand, [agentID, agentTradingSessionID], (err, row) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(row);
+            }
+          });
+        });
+
+        return { success: true, data: queryResult };
+    } catch (error) {
+      return { success: false, error: error };
+    }
+  }
+
+  // get all optionChainStatus for all trading accounts
+  this.getAllOptionChainStatus = async function (agentID, agentTradingSessionID) {
+    try {
+
+        const sqlCommand = `SELECT optionChainStatus FROM copyTradingAccount WHERE agentID=? AND agentTradingSessionID=?`;
+
+        const queryResult = await new Promise((resolve, reject) => {
+          this.trading_management_db.all(sqlCommand, [agentID, agentTradingSessionID], (err, row) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(row);
+            }
+          });
+        });
+
+        return { success: true, data: queryResult };
+    } catch (error) {
+      return { success: false, error: error };
+    }
+  }
+
   // update order information for all trading accounts
   this.updateAllOrderInformation = async function (copy_trading_table_id_list, result_promise_order_information) {
     try {
