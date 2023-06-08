@@ -11,7 +11,7 @@ export default function TradingStock({ onClose }) {
     var optionChainCallPutList = ["CALL", "PUT"];
     var optionChainOrderTypeList = ["LIMIT", "MARKET", "MARKET_ON_CLOSE", "STOP", "STOP_LIMIT", "TRAILING_STOP"];
 
-    const { isOpenTradingStock, setIsOpenTradingStock, setIsCopyTradingAccountSuccessful } = useContext(CopyTradingAccountContext);
+    const { isOpenTradingStock, setIsOpenTradingStock } = useContext(CopyTradingAccountContext);
 
     const [stockName, setStockName] = useState("");
     const [optionChainCallPut, setOptionChainCallPut] = useState("CALL");
@@ -39,7 +39,6 @@ export default function TradingStock({ onClose }) {
             } else {
                 alert("Copy trading successful");
                 setIsOpenTradingStock(!isOpenTradingStock)
-                setIsCopyTradingAccountSuccessful(true)
             }
             setDisabledButton(false)
         } catch (error) {
@@ -47,6 +46,34 @@ export default function TradingStock({ onClose }) {
             console.log(error.message);
         }
         setDisabledButton(false)
+    }
+
+    function getRevertOptionChainRealDate(currentRevertOptionChainDate) {
+        let currentDate = currentRevertOptionChainDate.split(" ")[0];
+        let currentTradeDay = currentRevertOptionChainDate.split(" ")[1];
+
+        let currentDateList = currentDate.split("-");
+        let currentDay = currentDateList[0];
+        let currentMonth = currentDateList[1];
+        let currentYear = currentDateList[2];
+
+        currentTradeDay = currentTradeDay.split("(")[1];
+        currentTradeDay = currentTradeDay.split(")")[0];
+
+        return currentYear+"-"+currentMonth+"-"+currentDay+":"+currentTradeDay;
+    }
+
+    function getOptionChainRealDate(currentOptionChainDate) {
+
+        let currentDate = currentOptionChainDate.split(":")[0];
+        let currentTradeDay = currentOptionChainDate.split(":")[1];
+
+        let currentDateList = currentDate.split("-");
+        let currentYear = currentDateList[0];
+        let currentMonth = currentDateList[1];
+        let currentDay = currentDateList[2];
+
+        return currentDay+"-"+currentMonth+"-"+currentYear + " (" + currentTradeDay + ")";
     }
 
     async function getOptionChainList() {
@@ -146,6 +173,7 @@ export default function TradingStock({ onClose }) {
                         <div className="relative">
                             <select
                                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                                value={optionChainCallPut}
                                 onChange={event => setOptionChainCallPut(event.target.value)}>
                                 {
                                     optionChainCallPutList.map((option_chain_call_put, index) => (
@@ -171,11 +199,12 @@ export default function TradingStock({ onClose }) {
                 <div className="relative">
                     <select
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                        onChange={event => { getOptionChainStrikeList(event.target.value)}}
+                        value={optionChainDate}
+                        onChange={event => { getOptionChainStrikeList(getRevertOptionChainRealDate(event.target.value))}}
                         >
                         {
                             optionChainDateList.map((option_chain_date, index) => (
-                                <option key={index}>{option_chain_date}</option>
+                                <option key={index}>{getOptionChainRealDate(option_chain_date)}</option>
                             ))
                         }
                     </select>
@@ -215,6 +244,7 @@ export default function TradingStock({ onClose }) {
                     <div className="relative">
                         <select
                             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                            value={optionChainInstruction}
                             onChange={event => setOptionChainInstruction(event.target.value)}>
                             {
                                 optionChainInstructionList.map((option_chain_instruction, index) => (
@@ -231,6 +261,7 @@ export default function TradingStock({ onClose }) {
                     <div className="relative">
                         <select
                             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                            value={optionChainOrderType}
                             onChange={event => setOptionChainOrderType(event.target.value)}>
                             {
                                 optionChainOrderTypeList.map((option_chain_order_type, index) => (

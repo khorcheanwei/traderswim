@@ -2,12 +2,8 @@
 import axios from 'axios';
 import React from 'react'
 import { useContext, useState, useEffect } from 'react';
-import { async } from 'regenerator-runtime';
-import { UserContext } from '../context/UserContext';
 import { TradeHistoryContext } from '../context/TradeHistoryContext';
 import TradingActivityTable from './TradeHistoryTable'
-import { Link, Navigate, useNavigate } from 'react-router-dom';
-
 
 export default function TradeActivityPage() {
 
@@ -59,9 +55,9 @@ export default function TradeActivityPage() {
   ], [])
 
   const { tradeHistoryTableData, setTradeHistoryTableData } = useContext(TradeHistoryContext);
-  const navigate = useNavigate();
 
   async function fetchTradeHistoryData() {
+    console.log("kcw")
     try {
       const response = await axios.get("/copy_trading_account/trade_history_database")
 
@@ -77,11 +73,6 @@ export default function TradeActivityPage() {
   useEffect(() => {
     fetchTradeHistoryData();
   }, [])
-
-  /*
-  if (isAccountLoginSuccessful) {
-    fetchAccountData();
-  } */
 
   var data = React.useMemo(() => tradeHistoryTableData, [tradeHistoryTableData])
 

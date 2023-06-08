@@ -7,7 +7,7 @@ export default function AccountAdd({ onClose }) {
     const [accountUsername, setAccountUsername] = useState("");
     const [accountPassword, setAccountPassword] = useState("");
 
-    const { isOpenAccountLogin, setIsOpenAccountLogin, setIsAccountLoginSuccessful } = useContext(AccountContext);
+    const { isOpenAccountLogin, setIsOpenAccountLogin } = useContext(AccountContext);
 
     const [disabledButton, setDisabledButton] = useState(false)
 
@@ -22,7 +22,6 @@ export default function AccountAdd({ onClose }) {
             } else {
                 alert("Account added successful");
                 setIsOpenAccountLogin(!isOpenAccountLogin)
-                setIsAccountLoginSuccessful(true)
             }
             setDisabledButton(false)
         } catch (error) {

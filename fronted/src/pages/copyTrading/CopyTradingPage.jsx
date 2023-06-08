@@ -1,7 +1,6 @@
 import axios from 'axios';
 import React from 'react'
-import { useContext, useState, useEffect } from 'react';
-import { CopyTradingAccountContext } from '../context/CopyTradingAccountContext';
+import { useContext, useState, useEffect, useRef  } from 'react';
 
 import CopyTradingTable, { SettingsPanel } from './CopyTradingTable'
 
@@ -60,8 +59,7 @@ export default function CopyTradingPage() {
   ], [])
 
   const [copyTradingAccountData, setCopyTradingAccountData] = useState([]);
-  const { isCopyTradingAccountSuccessful, setIsCopyTradingAccountSuccessful } = useContext(CopyTradingAccountContext);
-
+  
   async function fetchCopyTradingAccountData() {
     try {
       const response = await axios.get('/copy_trading_account/database')
@@ -69,18 +67,22 @@ export default function CopyTradingPage() {
         setCopyTradingAccountData(response.data)
       }
 
+      await axios.get('/trading_account/database');
+
     } catch (error) {
       console.log(error.message);
     }
   }
 
+  const ref = useRef(null)
   useEffect(() => {
-    fetchCopyTradingAccountData();
+    ref.current = setInterval(fetchCopyTradingAccountData, 2 * 1000);
+    return () => {
+      if(ref.current){
+        clearInterval(ref.current);
+      }
+    }
   }, [])
-
-  if (isCopyTradingAccountSuccessful) {
-    fetchCopyTradingAccountData();
-  }
 
   var data = React.useMemo(() => copyTradingAccountData, [copyTradingAccountData])
 

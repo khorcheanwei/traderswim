@@ -7,6 +7,7 @@ import AccountInfo from './AccountInfo'
 import AccountDeleteConfirmation from './AccountDeleteConfirmation'
 import { AccountContext } from '../context/AccountContext';
 import CommonTable from '../shared/Table';
+import axios from 'axios';
 
 import Overlay from "../Overlay";
 
@@ -58,12 +59,9 @@ function GlobalFilter({
   )
 }
 
+
 export function ConnectionPanel(row) {
 
-  /*
-  for (let i = 0; i < row.data.length; i++) {
-    console.log(row.data[i])
-  } */
   const accountConnection = row.cell.row.original.accountConnection;
 
   return (
@@ -75,6 +73,41 @@ export function ConnectionPanel(row) {
     </div>
   );
 };
+
+export function TradingActiveToggle(row) {
+  
+  const { accountTableData, setAccountTableData} = useContext(AccountContext);
+  let accountTradingActive = true;
+  if (row.cell.row.original.accountTradingActive == false) {
+    accountTradingActive = false;
+  }
+
+  async function updateTradingActive(accountUsername, accountTradingActive) {
+    try {
+      // trigger connection ON/OFF to account trading session
+      await axios.post("/trading_account/trading_active", {accountUsername, accountTradingActive})
+      var response = await axios.get("/trading_account/database")
+      if (response.data != null) {
+        setAccountTableData(response.data)
+      }
+
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  function handleTradingActiveChange() {
+    var accountUsername = row.cell.row.original.accountUsername
+    updateTradingActive(accountUsername, !accountTradingActive)
+  }
+  
+  return (
+    <label className="relative inline-flex content-center">
+      <input type="checkbox" value="" className="sr-only peer" checked={accountTradingActive} onChange={handleTradingActiveChange}></input>
+      <div className="w-11 h-6 cursor-pointer bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-green-800"></div>
+    </label>
+  );
+}
 
 export function SettingsPanel(row) {
 

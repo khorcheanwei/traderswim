@@ -11,11 +11,13 @@ export default function TradingStockReplaceOrder({ rowCopyTradingAccount, onClos
 
     const agentTradingSessionID = rowCopyTradingAccount.cell.row.original.agentTradingSessionID;
     const optionChainDescription = rowCopyTradingAccount.cell.row.original.optionChainDescription;
+    const rowOptionChainInstruction =rowCopyTradingAccount.cell.row.original.optionChainInstruction;
+    const rowOptionChainOrderType =rowCopyTradingAccount.cell.row.original.optionChainOrderType;
     const rowOptionChainQuantity =rowCopyTradingAccount.cell.row.original.optionChainQuantity;
     const rowOptionChainPrice =rowCopyTradingAccount.cell.row.original.optionChainPrice;
 
-    const [optionChainInstruction, setOptionChainInstruction] = useState(optionChainInstructionList[0]);
-    const [optionChainOrderType, setOptionChainOrderType] = useState("LIMIT");
+    const [optionChainInstruction, setOptionChainInstruction] = useState(rowOptionChainInstruction);
+    const [optionChainOrderType, setOptionChainOrderType] = useState(rowOptionChainOrderType);
     const [optionChainQuantity, setOptionContractTotal] = useState(rowOptionChainQuantity)
     const [optionChainPrice, setOptionChainPrice] = useState(rowOptionChainPrice)
   
@@ -55,7 +57,9 @@ export default function TradingStockReplaceOrder({ rowCopyTradingAccount, onClos
                     <div className="relative">
                         <select
                             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                            onChange={event => setOptionChainInstruction(event.target.value)}>
+                            value={optionChainInstruction}
+                            onChange={event => setOptionChainInstruction(event.target.value)}
+                            >
                             {
                                 optionChainInstructionList.map((option_chain_instruction, index) => (
                                     <option key={index}>{option_chain_instruction}</option>
@@ -71,6 +75,7 @@ export default function TradingStockReplaceOrder({ rowCopyTradingAccount, onClos
                     <div className="relative">
                         <select
                             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                            value={optionChainOrderType}
                             onChange={event => setOptionChainOrderType(event.target.value)}>
                             {
                                 optionChainOrderTypeList.map((option_chain_order_type, index) => (

@@ -1,10 +1,10 @@
 import axios from 'axios';
 import React from 'react'
-import { useContext, useState, useEffect } from 'react';
+import { useContext, useState, useEffect, useRef  } from 'react';
 import { AccountContext } from '../context/AccountContext';
 import io from 'socket.io-client';
 
-import AccountsTable, { SettingsPanel, ConnectionPanel } from './AccountTable'  // new
+import AccountsTable, { SettingsPanel, TradingActiveToggle, ConnectionPanel } from './AccountTable'  // new
 
 export default function AccountsPage() {
 
@@ -33,13 +33,18 @@ export default function AccountsPage() {
       accessor: 'accountConnectionTime',
     },
     {
+      Header: "Trading Active",
+      accessor: 'accountTradingActive',
+      Cell: TradingActiveToggle,
+    },
+    {
       Header: 'Settings',
       accessor: 'name',
       Cell: SettingsPanel,
     },
   ], [])
 
-  const { accountTableData, setAccountTableData, isAccountLoginSuccessful, setIsAccountLoginSuccessful } = useContext(AccountContext);
+  const { accountTableData, setAccountTableData } = useContext(AccountContext);
 
   async function fetchAccountData() {
     try {
@@ -54,13 +59,15 @@ export default function AccountsPage() {
     }
   }
 
+  const ref = useRef(null)
   useEffect(() => {
-    fetchAccountData();
+    ref.current = setInterval(fetchAccountData, 2 * 1000);
+    return () => {
+      if(ref.current){
+        clearInterval(ref.current);
+      }
+    }
   }, [])
-
-  if (isAccountLoginSuccessful) {
-    fetchAccountData();
-  }
 
   var data = React.useMemo(() => accountTableData, [accountTableData])
 
