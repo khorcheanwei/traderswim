@@ -7,6 +7,7 @@ const AccountSchemaSql = `
     accountName TEXT NOT NULL,
     accountUsername TEXT NOT NULL,
     accountPassword TEXT NOT NULL,
+    accountTradingActive BOOLEAN NOT NULL default true,
     refreshToken TEXT,
     FOREIGN KEY (agentID) REFERENCES agent (id)
 );`

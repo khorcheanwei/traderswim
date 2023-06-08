@@ -355,9 +355,13 @@ async function copy_trading_place_order(httpRequest) {
       for (let index = 0; index < accountDocument.length; index++) {
         let accountId = accountDocument[index].accountId;
         let accountUsername = accountDocument[index].accountUsername;
+        let accountTradingActive = accountDocument[index].accountTradingActive;
         let authToken = await get_access_token_from_cache(agentID, accountUsername);
 
-        all_trading_accounts_list.push({ accountId: accountId, accountUsername: accountUsername, authToken: authToken })
+        if (accountTradingActive == 1) {
+          all_trading_accounts_list.push({ accountId: accountId, accountUsername: accountUsername, authToken: authToken });
+        }
+        
       }
 
       // place order with all accounts of particular agent

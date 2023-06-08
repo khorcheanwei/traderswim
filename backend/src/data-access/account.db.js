@@ -123,6 +123,28 @@ function accountDBOperation(trading_management_db) {
       return { success: false, error: error };
     }
   };
+  
+
+  // update update trading active for account
+  this.updateTradingActive = async function (agentID, accountUsername, accountTradingActive) {
+    try {
+      const sqlCommand = `UPDATE account SET accountTradingActive=? WHERE agentID=? AND accountUsername=?`;
+
+      const queryResult = await new Promise((resolve, reject) => {
+        this.trading_management_db.all(sqlCommand, [accountTradingActive, agentID, accountUsername], (err, row) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(row);
+          }
+        });
+      });
+
+      return { success: true, data: queryResult };
+    } catch (error) {
+      return { success: false, error: error };
+    }
+  }
 
   // get refresh token
   this.getRefreshToken = async function (agentID, accountUsername) {

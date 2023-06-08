@@ -19,7 +19,7 @@ export default function TradingStock({ onClose }) {
 
     const [optionChainData, setOptionChainData] = useState([]);
     const [optionChainDateList, setOptionChainDateList] = useState([]);
-    const [optionChainDate, setOptionChainDate] = useState([]);
+    const [optionChainDate, setOptionChainDate] = useState("None");
     const [optionChainStrikeList, setOptionChainStrikeList] = useState([]);
     const [optionChainDescription, setOptionChainDescription] = useState("None");
 
@@ -49,6 +49,10 @@ export default function TradingStock({ onClose }) {
     }
 
     function getRevertOptionChainRealDate(currentRevertOptionChainDate) {
+        if (currentRevertOptionChainDate == "None") {
+            return "None"
+        }
+
         let currentDate = currentRevertOptionChainDate.split(" ")[0];
         let currentTradeDay = currentRevertOptionChainDate.split(" ")[1];
 
@@ -65,6 +69,9 @@ export default function TradingStock({ onClose }) {
 
     function getOptionChainRealDate(currentOptionChainDate) {
 
+        if (currentOptionChainDate == "None") {
+            return "None"
+        }
         let currentDate = currentOptionChainDate.split(":")[0];
         let currentTradeDay = currentOptionChainDate.split(":")[1];
 
@@ -199,7 +206,7 @@ export default function TradingStock({ onClose }) {
                 <div className="relative">
                     <select
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                        value={optionChainDate}
+                        value={getOptionChainRealDate(optionChainDate)}
                         onChange={event => { getOptionChainStrikeList(getRevertOptionChainRealDate(event.target.value))}}
                         >
                         {

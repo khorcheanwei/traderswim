@@ -145,6 +145,39 @@ async function fetch_trading_account_info(httpRequest, httpResponse) {
   }
 }
 
+// update trading active for account
+async function account_update_trading_active(httpRequest, httpResponse) {
+  const { token } = httpRequest.cookies;
+  if (token) {
+    try {
+      const agentDocument = jwt.verify(token, jwtSecret, {});
+      const agentID = agentDocument.id;
+
+      const { accountUsername, accountTradingActive } = httpRequest.body;
+
+      result = await accountDBOperation.updateTradingActive(
+        agentID,
+        accountUsername,
+        accountTradingActive
+      );
+
+      if (result.success) {
+        return {
+          success: true,
+          data: { accountUsername },
+        };
+      } else {
+        return { success: false, data: result.error };
+      }
+
+
+    } catch (error) {
+      httpResponse.status(400).json(error.message);
+    }
+  } else {
+    httpResponse.status(200).json(null);
+  }
+}
 
 // Get account value
 async function get_account_value(agentID, accountUsername) {
@@ -200,7 +233,8 @@ async function puppeteer_login_all_accounts(agentID, accountDocument) {
       accountUsername: accountDocumentPart.accountUsername,
       accountBalance: accountValue,
       accountConnection: connected,
-      accountConnectionTime: (authTokenTimeInSeconds/60).toFixed(2),
+      accountTradingActive: accountDocumentPart.accountTradingActive,
+      accountConnectionTime: (20 - (authTokenTimeInSeconds/60)).toFixed(2),
     };
   });
 
@@ -274,6 +308,7 @@ async function account_delete(httpRequest) {
 
 module.exports = {
   account_login,
+  account_update_trading_active,
   fetch_trading_account_info,
   account_database,
   account_delete,

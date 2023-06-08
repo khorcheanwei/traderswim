@@ -12,12 +12,12 @@ export default function TradingStockExitOrder({ rowCopyTradingAccount, onClose }
     const agentTradingSessionID = rowCopyTradingAccount.cell.row.original.agentTradingSessionID;
     const optionChainDescription = rowCopyTradingAccount.cell.row.original.optionChainDescription;
 
-    const rowOptionChainInstruction =rowCopyTradingAccount.cell.row.original.optionChainInstruction;
+    //const rowOptionChainInstruction =rowCopyTradingAccount.cell.row.original.optionChainInstruction;
     const rowOptionChainOrderType =rowCopyTradingAccount.cell.row.original.optionChainOrderType;
     const rowOptionChainQuantity =rowCopyTradingAccount.cell.row.original.optionChainQuantity;
     const rowOptionChainPrice =rowCopyTradingAccount.cell.row.original.optionChainPrice;
 
-    const [optionChainInstruction, setOptionChainInstruction] = useState(rowOptionChainInstruction);
+    const [optionChainInstruction, setOptionChainInstruction] = useState(optionChainInstructionList[0]);
     const [optionChainOrderType, setOptionChainOrderType] = useState(rowOptionChainOrderType);
     const [optionChainQuantity, setOptionContractTotal] = useState(rowOptionChainQuantity)
     const [optionChainPrice, setOptionChainPrice] = useState(rowOptionChainPrice)

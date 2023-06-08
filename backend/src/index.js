@@ -29,12 +29,14 @@ const io = require('socket.io')(http);
 //var tradingAccountController = require('./controllers/tradingAccountController');
 //tradingAccountController.start(io);
 
+/*
 const { tradingAccountCronJob } = require('./controllers/tradingAccountPuppeteer');
 // setup cron 
 cron.schedule('* * * * *', () => {
   console.log('Trading account cron job task every minute');
   tradingAccountCronJob()
 });
+*/
 
 app.listen(port, "localhost");
 
