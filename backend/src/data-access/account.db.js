@@ -53,6 +53,27 @@ function accountDBOperation(trading_management_db) {
   };
 
   // search all Account by agentID
+  this.searchAccountByAgentIDAndAccountTradingActive = async function (agentID) {
+    try {
+      const sqlCommand = `SELECT * FROM account WHERE agentID=? AND accountTradingActive=1`;
+
+      const queryResult = await new Promise((resolve, reject) => {
+        this.trading_management_db.all(sqlCommand, [agentID], (err, row) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(row);
+          }
+        });
+      });
+
+      return { success: true, data: queryResult };
+    } catch (error) {
+      return { success: false, error: error };
+    }
+  };
+
+  // search all Account by agentID and 
   this.searchAccountByAgentID = async function (agentID) {
     try {
       const sqlCommand = `SELECT * FROM account WHERE agentID=?`;
