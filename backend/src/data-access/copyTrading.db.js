@@ -1,18 +1,41 @@
 function copyTradingAccountDBOperation(trading_management_db) {
   this.trading_management_db = trading_management_db;
 
-  // search searchCopyTradingAccount based on tradingSessionID
+  // search searchCopyTradingAccount based on agentID
+  this.searchCopyTradingAccountBasedAgentID = async function (
+    agentID
+  ) {
+
+    try {
+      const sqlCommand = `SELECT * FROM copyTradingAccount WHERE agentID=?`;
+
+      const queryResult = await new Promise((resolve, reject) => {
+        this.trading_management_db.all(sqlCommand, [agentID], (err, row) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(row);
+          }
+        });
+      });
+
+      return { success: true, data: queryResult };
+    } catch (error) {
+      return { success: false, error: error };
+    }
+  };
+
+  // search searchCopyTradingAccount based on agentID and agentTradingSessionID
   this.searchCopyTradingAccountBasedTradingSessionID = async function (
     agentID,
     agentTradingSessionID
   ) {
 
     try {
-      //const sqlCommand = `SELECT * FROM copyTradingAccount WHERE agentID=? and agentTradingSessionID=?`;
-      const sqlCommand = `SELECT * FROM copyTradingAccount WHERE agentID=?`;
+      const sqlCommand = `SELECT * FROM copyTradingAccount WHERE agentID=? and agentTradingSessionID=?`;
 
       const queryResult = await new Promise((resolve, reject) => {
-        this.trading_management_db.all(sqlCommand, [agentID], (err, row) => {
+        this.trading_management_db.all(sqlCommand, [agentID, agentTradingSessionID], (err, row) => {
           if (err) {
             reject(err);
           } else {

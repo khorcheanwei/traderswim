@@ -83,7 +83,7 @@ async function copy_trading_exit_order(httpRequest) {
       const agentID = agentDocument.id;
 
       // get all accountName of particular agentID
-      let result = await accountDBOperation.searchAccountByAgentID(agentID);
+      let result = await copyTradingAccountDBBOperation.searchCopyTradingAccountBasedTradingSessionID(agentID, agentTradingSessionID);
       if (result.success != true) {
         return { success: false, data: result.error };
       }
@@ -218,7 +218,7 @@ async function copy_trading_replace_order(httpRequest) {
       const agentID = agentDocument.id;
 
       // get all accountName of particular agentID
-      let result = await accountDBOperation.searchAccountByAgentID(agentID);
+      let result = await copyTradingAccountDBBOperation.searchCopyTradingAccountBasedTradingSessionID(agentID, agentTradingSessionID);
       if (result.success != true) {
         return { success: false, data: result.error };
       }
@@ -372,7 +372,7 @@ async function copy_trading_cancel_order(httpRequest) {
       const agentID = agentDocument.id;
 
       // get all accountName of particular agentID
-      let result = await accountDBOperation.searchAccountByAgentID(agentID);
+      let result = await copyTradingAccountDBBOperation.searchCopyTradingAccountBasedTradingSessionID(agentID, agentTradingSessionID);
       if (result.success != true) {
         return { success: false, data: result.error };
       }
