@@ -2,6 +2,7 @@ import React from 'react'
 import { useAsyncDebounce } from 'react-table'
 import { Button, PageButton } from './../shared/Button'
 import { useContext, useState, useEffect } from 'react';
+
 import { CopyTradingAccountContext } from '../context/CopyTradingAccountContext';
 import CopyTradingDeleteOrderConfirmation from './CopyTradingDeleteOrderConfirmation';
 import TradingStock from '../tradingStock/TradingStock';
@@ -62,20 +63,24 @@ function GlobalFilter({
 
 export function viewAllOrdersPanel(row) {
   const { isOpenViewAllOrders, setIsOpenViewAllOrders } = useContext(CopyTradingAccountContext);
+  const { rowCopyTradingAccount, setRowCopyTradingAccount } = useContext(CopyTradingAccountContext);
 
   const viewAllOrdersClose = async () => {
+    if (isOpenViewAllOrders == false) {
+      setRowCopyTradingAccount(row)
+    }
     setIsOpenViewAllOrders(!isOpenViewAllOrders)
   }
 
   return (
     <div className="flex">
       <div className="flex space-x-2">
-        <div onClick={viewAllOrdersClose} className="cursor-pointer relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-red-600 rounded-full dark:bg-red-600">
-          <span className="font-medium text-white dark:text-white">S</span>
+        <div onClick={viewAllOrdersClose} className="cursor-pointer relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-black rounded-full dark:bg-black">
+          <span className="font-medium text-white dark:text-white">V</span>
         </div>
       </div>
       <Overlay isOpen={isOpenViewAllOrders} >
-        <CopyTradingAllAccountOrderPage onClose={viewAllOrdersClose}></CopyTradingAllAccountOrderPage>
+        <CopyTradingAllAccountOrderPage rowCopyTradingAccount={rowCopyTradingAccount}  onClose={viewAllOrdersClose}></CopyTradingAllAccountOrderPage>
       </Overlay>
     </div>
   );

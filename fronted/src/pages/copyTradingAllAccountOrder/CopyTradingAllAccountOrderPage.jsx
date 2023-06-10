@@ -2,9 +2,10 @@ import axios from 'axios';
 import React from 'react'
 import { useContext, useState, useEffect, useRef  } from 'react';
 
+import { CopyTradingAccountContext } from '../context/CopyTradingAccountContext';
 import CopyTradingAllAccountOrderTable from './CopyTradingAllAccountOrderTable'
 
-export default function CopyTradingAllAccountOrderPage({ onClose }) {
+export default function CopyTradingAllAccountOrderPage({ rowCopyTradingAccount, onClose }) {
 
   const columns = React.useMemo(() => [
     {
@@ -53,33 +54,12 @@ export default function CopyTradingAllAccountOrderPage({ onClose }) {
     },
   ], [])
 
-  const [copyTradingAccountData, setCopyTradingAccountData] = useState([]);
+  const agentTradingSessionID = rowCopyTradingAccount.row.original.agentTradingSessionID;
   
-  async function fetchCopyTradingAccountData() {
-    try {
-      const response = await axios.get('/copy_trading_account/database')
-      if (response.data != null && response.data.length != 0) {
-        setCopyTradingAccountData(response.data)
-      }
+  const {copyTradingAccountDataDict, setCopyTradingAccountDataDict} = useContext(CopyTradingAccountContext);
+  const copyTradingAllAccountData = copyTradingAccountDataDict[agentTradingSessionID];
 
-      await axios.get('/trading_account/database');
-
-    } catch (error) {
-      console.log(error.message);
-    }
-  }
-
-  const ref = useRef(null)
-  useEffect(() => {
-    ref.current = setInterval(fetchCopyTradingAccountData, 2 * 1000);
-    return () => {
-      if(ref.current){
-        clearInterval(ref.current);
-      }
-    }
-  }, [])
-
-  var data = React.useMemo(() => copyTradingAccountData, [copyTradingAccountData])
+  var data = React.useMemo(() => copyTradingAllAccountData, [copyTradingAllAccountData])
 
   return (
     <div>

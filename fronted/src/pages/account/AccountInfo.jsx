@@ -1,12 +1,8 @@
 import axios from "axios";
-import {useContext, useState, useEffect } from 'react';
-import { AccountContext } from '../context/AccountContext';
 
 
 export default function AccountInfo({rowAccount, onClose}) {
     
-    const { accountTableData, setAccountTableData} = useContext(AccountContext);
-    const { isOpenAccountDelete, setIsOpenAccountDelete} = useContext(AccountContext);
 
     const [accountValue, setAccountValue] = useState(null);
     const [cashBalance, setCashBalance] = useState(null)

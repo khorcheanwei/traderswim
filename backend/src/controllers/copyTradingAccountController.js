@@ -484,12 +484,15 @@ async function copy_trading_database(httpRequest) {
       }
       const copyTradingAccountDocument = result.data;
 
-      let copyTradingAccountData = [];
+      let copyTradingAccountDataDict = {};
       for (let index = 0; index < copyTradingAccountDocument.length; index++) {
         const currCopyTradingAccount = copyTradingAccountDocument[index];
         const optionChainEnteredTime = currCopyTradingAccount["optionChainEnteredTime"];
-        copyTradingAccountData.push({
-          agentTradingSessionID: currCopyTradingAccount["agentTradingSessionID"],
+
+        const agentTradingSessionID = currCopyTradingAccount["agentTradingSessionID"];
+
+        const currCopyTradingAccountData = {
+          agentTradingSessionID: agentTradingSessionID,
           accountName: currCopyTradingAccount["accountName"],
           accountUsername: currCopyTradingAccount["accountUsername"],
           optionChainEnteredTime: optionChainEnteredTime.substring(0, optionChainEnteredTime.length - 5),
@@ -500,11 +503,16 @@ async function copy_trading_database(httpRequest) {
           optionChainPrice: currCopyTradingAccount["optionChainPrice"],
           optionChainOrderType: currCopyTradingAccount["optionChainOrderType"],
           optionChainStatus: currCopyTradingAccount["optionChainStatus"],
-        });
-      }
+        }
 
+        if (copyTradingAccountDataDict.hasOwnProperty(agentTradingSessionID) == false) {
+          copyTradingAccountDataDict[agentTradingSessionID] = [currCopyTradingAccountData]
+        } else {
+          copyTradingAccountDataDict[agentTradingSessionID].push(currCopyTradingAccountData);
+        }
+      }
       //await new Promise(resolve => setTimeout(resolve, 500)); 
-      return { success: true, data: copyTradingAccountData };
+      return { success: true, data: copyTradingAccountDataDict };
     } catch (error) {
       return { success: false, data: error.message };
     }

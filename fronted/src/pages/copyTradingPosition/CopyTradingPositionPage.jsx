@@ -3,6 +3,7 @@ import React from 'react'
 import { useContext, useState, useEffect } from 'react';
 import { CopyTradingAccountContext } from '../context/CopyTradingAccountContext';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
+import { viewAllOrdersPanel } from './CopyTradingPositionTable'
 
 import CopyTradingPositionTable from './CopyTradingPositionTable'
 
@@ -10,12 +11,9 @@ export default function CopyTradingPositionPage() {
 
   const columns = React.useMemo(() => [
     {
-      Header: 'Name',
-      accessor: 'accountName',
-    },
-    {
-      Header: 'Account Username',
-      accessor: 'accountUsername',
+      Header: 'View',
+      accessor: 'viewAllOrders',
+      Cell: viewAllOrdersPanel,
     },
     {
       Header: 'Symbol',
@@ -44,6 +42,14 @@ export default function CopyTradingPositionPage() {
     {
       Header: 'Settled Short Qty',
       accessor: 'optionChainSettledShortQuantity',
+    },
+    {
+      Header: 'Name',
+      accessor: 'accountName',
+    },
+    {
+      Header: 'Account Username',
+      accessor: 'accountUsername',
     }
   ], [])
 
