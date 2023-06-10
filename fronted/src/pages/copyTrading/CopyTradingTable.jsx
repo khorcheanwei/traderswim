@@ -7,6 +7,7 @@ import CopyTradingDeleteOrderConfirmation from './CopyTradingDeleteOrderConfirma
 import TradingStock from '../tradingStock/TradingStock';
 import TradingStockReplaceOrder from '../tradingStock/TradingStockReplaceOrder';
 import TradingStockExitOrder from '../tradingStock/TradingStockExitOrder';
+import CopyTradingAllAccountOrderPage from '../copyTradingAllAccountOrder/CopyTradingAllAccountOrderPage';
 
 import Overlay from "./../Overlay";
 import { async } from 'regenerator-runtime'
@@ -59,19 +60,32 @@ function GlobalFilter({
   )
 }
 
+export function viewAllOrdersPanel(row) {
+  const { isOpenViewAllOrders, setIsOpenViewAllOrders } = useContext(CopyTradingAccountContext);
+
+  const viewAllOrdersClose = async () => {
+    setIsOpenViewAllOrders(!isOpenViewAllOrders)
+  }
+
+  return (
+    <div className="flex">
+      <div className="flex space-x-2">
+        <div onClick={viewAllOrdersClose} className="cursor-pointer relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-red-600 rounded-full dark:bg-red-600">
+          <span className="font-medium text-white dark:text-white">S</span>
+        </div>
+      </div>
+      <Overlay isOpen={isOpenViewAllOrders} >
+        <CopyTradingAllAccountOrderPage onClose={viewAllOrdersClose}></CopyTradingAllAccountOrderPage>
+      </Overlay>
+    </div>
+  );
+}
+
 export function SettingsPanel(row) {
-  const { isOpenTradingStock, setIsOpenTradingStock, isOpenOrderExit, setIsOpenOrderExit,  isOpenOrderReplace, setIsOpenOrderReplace, isOpenOrderDelete, setIsOpenOrderDelete } = useContext(CopyTradingAccountContext);
+  const { isOpenOrderExit, setIsOpenOrderExit,  isOpenOrderReplace, setIsOpenOrderReplace, isOpenOrderDelete, setIsOpenOrderDelete } = useContext(CopyTradingAccountContext);
   
   const { rowCopyTradingAccount, setRowCopyTradingAccount } = useContext(CopyTradingAccountContext);
  
-
-  const placeOrderClose = async () => {
-    if (isOpenTradingStock == false) {
-      setRowCopyTradingAccount(row)
-    }
-    setIsOpenTradingStock(!isOpenTradingStock)
-  }
-
   const orderExitClose = async () => {
     if (isOpenOrderExit == false) {
       setRowCopyTradingAccount(row)
@@ -106,9 +120,6 @@ export function SettingsPanel(row) {
           <span className="font-medium text-white dark:text-white">C</span>
         </div>
       </div>
-      <Overlay isOpen={isOpenTradingStock} >
-        <TradingStock onClose={placeOrderClose}></TradingStock>
-      </Overlay>
       <Overlay isOpen={isOpenOrderExit} >
         <TradingStockExitOrder rowCopyTradingAccount={rowCopyTradingAccount} onClose={orderExitClose}></TradingStockExitOrder>
       </Overlay>
