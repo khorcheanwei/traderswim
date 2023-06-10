@@ -70,14 +70,6 @@ export default function CopyTradingPositionPage() {
   var data = React.useMemo(() => copyTradingPositionAccountData, [copyTradingPositionAccountData])
 
   return (
-    <div>
-      <div className='min-h-screen bg-gray-100 text-black'>
-        <main className='mx-auto px-4 sm:px-6 lg:px-8 pt-4'>
-          <div className='mt-6'>
-            <CopyTradingPositionTable columns={columns} data={data} />
-          </div>
-        </main>
-      </div>
-    </div>
+    <CopyTradingPositionTable columns={columns} data={data} />
   );
 }

@@ -38,7 +38,6 @@ export default function Header() {
                 {!(location.hash == "#/login") && !(location.hash == "#/register") && <nav className="w-full flex justify-center mt-8 gap-2 mb-8">
                     <Link className={linkClasses('account')} to={"/trading/account"}>Account</Link>
                     <Link className={linkClasses('copytrading')} to={"/trading/copytrading"}>Copy Trading</Link>
-                    <Link className={linkClasses('copytradingposition')} to={"/trading/copytradingposition"}>Copy Trading Position</Link>
                     <Link className={linkClasses('tradehistory')} to={"/trading/tradehistory"}>Trade History</Link>
                 </nav>}
                 <div className="flex items-center gap-3 py-2 px-5">
