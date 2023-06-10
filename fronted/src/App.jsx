@@ -8,6 +8,7 @@ import TradingPage from './pages/TradingPage';
 import { UserContextProvider } from './pages/context/UserContext';
 import { AccountContextProvider } from './pages/context/AccountContext';
 import { CopyTradingAccountContextProvider } from './pages/context/CopyTradingAccountContext';
+import { CopyTradingPositionContextProvider } from './pages/context/CopyTradingPositionContext';
 import { TradeHistoryContextProvider } from './pages/context/TradeHistoryContext';
 import {TradeStockContextProvider } from './pages/context/TradeStockContext';
  
@@ -20,17 +21,19 @@ function App() {
     <UserContextProvider>
       <AccountContextProvider>
         <CopyTradingAccountContextProvider>
-          <TradeHistoryContextProvider>
-            <TradeStockContextProvider>
-              <Routes>
-                <Route path="/" element={<Layout />}>
-                  <Route path="/login" element={<AgentLoginPage />} />
-                  <Route path="/register" element={<AgentRegisterPage />} />
-                  <Route path="/trading/:subpage?" element={<TradingPage />} />
-                </Route>
-              </Routes>
-            </TradeStockContextProvider>
-          </TradeHistoryContextProvider>
+          <CopyTradingPositionContextProvider>
+            <TradeHistoryContextProvider>
+              <TradeStockContextProvider>
+                <Routes>
+                  <Route path="/" element={<Layout />}>
+                    <Route path="/login" element={<AgentLoginPage />} />
+                    <Route path="/register" element={<AgentRegisterPage />} />
+                    <Route path="/trading/:subpage?" element={<TradingPage />} />
+                  </Route>
+                </Routes>
+              </TradeStockContextProvider>
+            </TradeHistoryContextProvider>
+          </CopyTradingPositionContextProvider>
         </CopyTradingAccountContextProvider>
       </AccountContextProvider>
     </UserContextProvider>

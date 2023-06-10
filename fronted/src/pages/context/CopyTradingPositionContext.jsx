@@ -4,8 +4,12 @@ import { useState} from 'react';
 export const CopyTradingPositionContext = createContext({});
 
 export function CopyTradingPositionContextProvider({children}) {
+    const [copyTradingPositionAccountDataDict, setCopyTradingPositionAccountDataDict] = useState({});
+    const [copyTradingPositionMainAccountData, setCopyTradingPositionMainAccountData] = useState([]);
    
     const [rowCopyTradingPosition, setRowCopyTradingPosition] = useState([]);
+
+    const [isOpenViewAllPosition, setIsOpenViewAllPosition] = useState(false);
 
     const [isCopyTradingPositionSuccessful, setIsCopyTradingPositionSuccessful] =  useState(false);
     const [isOpenCopyTradingPositionDelete, setIsOpenCopyTradingPositionDelete] = useState(false);
@@ -13,7 +17,7 @@ export function CopyTradingPositionContextProvider({children}) {
     const [isOpenTradingStock, setIsOpenTradingStock] = useState(false);
     
     return (
-        <CopyTradingPositionContext.Provider value={{ rowCopyTradingPosition, setRowCopyTradingPosition, isCopyTradingPositionSuccessful, setIsCopyTradingPositionSuccessful,  isOpenCopyTradingPositionDelete, setIsOpenCopyTradingPositionDelete, isOpenTradingStock, setIsOpenTradingStock}}>
+        <CopyTradingPositionContext.Provider value={{ copyTradingPositionAccountDataDict, setCopyTradingPositionAccountDataDict, copyTradingPositionMainAccountData, setCopyTradingPositionMainAccountData, rowCopyTradingPosition, setRowCopyTradingPosition, isOpenViewAllPosition, setIsOpenViewAllPosition, isCopyTradingPositionSuccessful, setIsCopyTradingPositionSuccessful,  isOpenCopyTradingPositionDelete, setIsOpenCopyTradingPositionDelete, isOpenTradingStock, setIsOpenTradingStock}}>
             {children}
         </CopyTradingPositionContext.Provider>
     );

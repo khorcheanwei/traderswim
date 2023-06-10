@@ -7,7 +7,8 @@ import { SortIcon, SortUpIcon, SortDownIcon } from '../shared/Icons'
 
 
 function CommonTable({ columns, data, GlobalFilter }) {
-
+  const initialState = { hiddenColumns: ['optionChainSymbol'] };
+  
   // Use the state and functions returned from useTable to build your UI
   const {
     getTableProps,
@@ -33,6 +34,7 @@ function CommonTable({ columns, data, GlobalFilter }) {
   } = useTable({
     columns,
     data,
+    initialState
   },
     useFilters, // useFilters!
     useGlobalFilter,

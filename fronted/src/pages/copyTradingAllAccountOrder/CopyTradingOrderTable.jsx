@@ -61,11 +61,11 @@ function GlobalFilter({
   )
 }
 
-export function viewAllOrdersPanel(row) {
+export function viewAllOrderPanel(row) {
   const { isOpenViewAllOrders, setIsOpenViewAllOrders } = useContext(CopyTradingAccountContext);
   const { rowCopyTradingAccount, setRowCopyTradingAccount } = useContext(CopyTradingAccountContext);
 
-  const viewAllOrdersClose = async () => {
+  const viewAllOrderClose = async () => {
     if (isOpenViewAllOrders == false) {
       setRowCopyTradingAccount(row)
     }
@@ -75,18 +75,18 @@ export function viewAllOrdersPanel(row) {
   return (
     <div className="flex">
       <div className="flex space-x-2">
-        <div onClick={viewAllOrdersClose} className="cursor-pointer relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-black rounded-full dark:bg-black">
+        <div onClick={viewAllOrderClose} className="cursor-pointer relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-black rounded-full dark:bg-black">
           <span className="font-medium text-white dark:text-white">V</span>
         </div>
       </div>
       <Overlay isOpen={isOpenViewAllOrders} >
-        <CopyTradingAllAccountOrderPage rowCopyTradingAccount={rowCopyTradingAccount}  onClose={viewAllOrdersClose}></CopyTradingAllAccountOrderPage>
+        <CopyTradingAllAccountOrderPage rowCopyTradingAccount={rowCopyTradingAccount}  onClose={viewAllOrderClose}></CopyTradingAllAccountOrderPage>
       </Overlay>
     </div>
   );
 }
 
-export function SettingsPanel(row) {
+export function ChangeOrderPanel(row) {
   const { isOpenOrderExit, setIsOpenOrderExit,  isOpenOrderReplace, setIsOpenOrderReplace, isOpenOrderDelete, setIsOpenOrderDelete } = useContext(CopyTradingAccountContext);
   
   const { rowCopyTradingAccount, setRowCopyTradingAccount } = useContext(CopyTradingAccountContext);

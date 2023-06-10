@@ -13,6 +13,10 @@ export default function CopyTradingAllAccountOrderPage({ rowCopyTradingAccount, 
       accessor: 'agentTradingSessionID',
     },
     {
+      Header: 'Symbol',
+      accessor: 'optionChainSymbol',
+    },
+    {
       Header: 'Symbol description',
       accessor: 'optionChainDescription',
     },

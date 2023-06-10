@@ -499,6 +499,7 @@ async function copy_trading_database(httpRequest) {
           optionChainInstruction: currCopyTradingAccount["optionChainInstruction"],
           optionChainQuantity: currCopyTradingAccount["optionChainQuantity"],
           optionChainRemainingQuantity: currCopyTradingAccount["optionChainRemainingQuantity"],
+          optionChainSymbol: currCopyTradingAccount["optionChainSymbol"],
           optionChainDescription: currCopyTradingAccount["optionChainDescription"],
           optionChainPrice: currCopyTradingAccount["optionChainPrice"],
           optionChainOrderType: currCopyTradingAccount["optionChainOrderType"],

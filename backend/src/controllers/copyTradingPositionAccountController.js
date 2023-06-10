@@ -41,7 +41,7 @@ async function get_position_information(config, accountName, accountUsername, op
             let current_shortQuantity = current_position["shortQuantity"];
             let current_settledShortQuantity = current_position["settledShortQuantity"];
             
-            copyTradingPositionAccountData.push({accountName: accountName, accountUsername: accountUsername, optionChainDescription: current_description, optionChainAveragePrice: current_averagePrice,
+            copyTradingPositionAccountData.push({accountName: accountName, accountUsername: accountUsername, optionChainSymbol: current_symbol, optionChainDescription: current_description, optionChainAveragePrice: current_averagePrice,
               optionChainLongQuantity: current_longQuantity, optionChainSettledLongQuantity: current_settledLongQuantity, optionChainShortQuantity: current_shortQuantity,
               optionChainSettledShortQuantity: current_settledShortQuantity})
         }
@@ -124,9 +124,31 @@ async function copy_trading_position_database(httpRequest) {
           optionChainSymbolList.push(optionChainSymbol);
         }
 
-        let copyTradingPositionAccountData = await get_position_information_all_accounts(all_trading_accounts_list, optionChainSymbolList);
+        const copyTradingPositionAccountDocument = await get_position_information_all_accounts(all_trading_accounts_list, optionChainSymbolList);
+        let copyTradingPositionAccountDataDict = {};
+        for (let index = 0; index < copyTradingPositionAccountDocument.length; index++) {
+          const currCopyTradingAccount = copyTradingPositionAccountDocument[index];
+          const current_optionChainDescription = currCopyTradingAccount["optionChainDescription"];
 
-        return { success: true, data: copyTradingPositionAccountData };
+          const currCopyTradingPositionAccountData = {
+            accountName: currCopyTradingAccount["accountName"],
+            accountUsername: currCopyTradingAccount["accountUsername"],
+            optionChainAveragePrice: currCopyTradingAccount["optionChainAveragePrice"],
+            optionChainSymbol: currCopyTradingAccount["optionChainSymbol"],
+            optionChainDescription: current_optionChainDescription,
+            optionChainLongQuantity: currCopyTradingAccount["optionChainLongQuantity"],
+            optionChainSettledLongQuantity: currCopyTradingAccount["optionChainSettledLongQuantity"],
+            optionChainSettledShortQuantity: currCopyTradingAccount["optionChainSettledShortQuantity"],
+            optionChainShortQuantity: currCopyTradingAccount["optionChainShortQuantity"],
+          }
+  
+          if (copyTradingPositionAccountDataDict.hasOwnProperty(current_optionChainDescription) == false) {
+            copyTradingPositionAccountDataDict[current_optionChainDescription] = [currCopyTradingPositionAccountData]
+          } else {
+            copyTradingPositionAccountDataDict[current_optionChainDescription].push(currCopyTradingPositionAccountData);
+          }
+        }
+        return { success: true, data: copyTradingPositionAccountDataDict };
 
     } catch (error) {
       return { success: false, data: error.message };

@@ -1,19 +1,23 @@
 import axios from 'axios';
 import React from 'react'
 import { useContext, useState, useEffect } from 'react';
-import { CopyTradingAccountContext } from '../context/CopyTradingAccountContext';
+import { CopyTradingPositionContext } from '../context/CopyTradingPositionContext';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
-import { viewAllPositionsPanel } from './CopyTradingPositionTable'
-
-import CopyTradingPositionTable from './CopyTradingPositionTable'
+import { viewAllPositionPanel } from './CopyTradingPositionTable'
+import CopyTradingAllAccountPositionTable from './CopyTradingAllAccountPositionTable'
 
 export default function CopyTradingPositionPage() {
+  const {copyTradingPositionMainAccountData, setCopyTradingPositionMainAccountData} = useContext(CopyTradingPositionContext);
 
   const columns = React.useMemo(() => [
     {
       Header: 'View',
-      accessor: 'viewAllOrders',
-      Cell: viewAllPositionsPanel,
+      accessor: 'viewAllOrder',
+      Cell: viewAllPositionPanel,
+    },
+    {
+      Header: 'Symbol',
+      accessor: 'optionChainSymbol',
     },
     {
       Header: 'Symbol description',
@@ -49,29 +53,10 @@ export default function CopyTradingPositionPage() {
     }
   ], [])
 
-  const [copyTradingPositionAccountDataDict, setCopyTradingPositionAccountDataDict] = useState([]);
-
   
-  async function fetchCopyTradingPositionAccountData() {
-    try {
-      const response = await axios.get('/copy_trading_position_account/database')
-      if (response.data != null && response.data.length != 0) {
-        setCopyTradingPositionAccountDataDict(response.data)
-      }
-
-    } catch (error) {
-      console.log(error.message);
-    }
-  }
-
-  useEffect(() => {
-    fetchCopyTradingPositionAccountData();
-  }, [])
-
-
-  var data = React.useMemo(() => copyTradingPositionAccountDataDict, [copyTradingPositionAccountDataDict])
+  var data = React.useMemo(() => copyTradingPositionMainAccountData, [copyTradingPositionMainAccountData])
 
   return (
-    <CopyTradingPositionTable columns={columns} data={data} />
+    <CopyTradingAllAccountPositionTable columns={columns} data={data} />
   );
 }
