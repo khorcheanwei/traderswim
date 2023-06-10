@@ -22,30 +22,30 @@ function GlobalFilter({
   )
 }
 
-export function viewAllOrdersPanel(row) {
-  /*
-  const { isOpenViewAllOrders, setIsOpenViewAllOrders } = useContext(CopyTradingAccountContext);
+export function viewAllPositionsPanel(row) {
+  
+  const { isOpenViewAllPositions, setIsOpenViewAllPositions } = useContext(CopyTradingAccountContext);
   const { rowCopyTradingAccount, setRowCopyTradingAccount } = useContext(CopyTradingAccountContext);
 
-  const viewAllOrdersClose = async () => {
-    if (isOpenViewAllOrders == false) {
+  const viewAllPositionsClose = async () => {
+    if (isOpenViewAllPositions == false) {
       setRowCopyTradingAccount(row)
     }
-    setIsOpenViewAllOrders(!isOpenViewAllOrders)
+    setIsOpenViewAllPositions(!isOpenViewAllPositions)
   }
 
   return (
     <div className="flex">
       <div className="flex space-x-2">
-        <div onClick={viewAllOrdersClose} className="cursor-pointer relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-black rounded-full dark:bg-black">
+        <div onClick={viewAllPositionsClose} className="cursor-pointer relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-black rounded-full dark:bg-black">
           <span className="font-medium text-white dark:text-white">V</span>
         </div>
       </div>
-      <Overlay isOpen={isOpenViewAllOrders} >
-        <CopyTradingPositionPage rowCopyTradingAccount={rowCopyTradingAccount}  onClose={viewAllOrdersClose}></CopyTradingPositionPage>
+      <Overlay isOpen={isOpenViewAllPositions} >
+        <CopyTradingPositionPage rowCopyTradingAccount={rowCopyTradingAccount}  onClose={viewAllPositionsClose}></CopyTradingPositionPage>
       </Overlay>
     </div>
-  );*/
+  );
 }
 
 function CopyTradingPositionTable({ columns, data }) {

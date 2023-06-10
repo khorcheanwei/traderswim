@@ -3,7 +3,7 @@ import React from 'react'
 import { useContext, useState, useEffect } from 'react';
 import { CopyTradingAccountContext } from '../context/CopyTradingAccountContext';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
-import { viewAllOrdersPanel } from './CopyTradingPositionTable'
+import { viewAllPositionsPanel } from './CopyTradingPositionTable'
 
 import CopyTradingPositionTable from './CopyTradingPositionTable'
 
@@ -13,11 +13,7 @@ export default function CopyTradingPositionPage() {
     {
       Header: 'View',
       accessor: 'viewAllOrders',
-      Cell: viewAllOrdersPanel,
-    },
-    {
-      Header: 'Symbol',
-      accessor: 'optionChainSymbol',
+      Cell: viewAllPositionsPanel,
     },
     {
       Header: 'Symbol description',
@@ -53,14 +49,14 @@ export default function CopyTradingPositionPage() {
     }
   ], [])
 
-  const [copyTradingPositionAccountData, setCopyTradingPositionAccountData] = useState([]);
+  const [copyTradingPositionAccountDataDict, setCopyTradingPositionAccountDataDict] = useState([]);
 
   
   async function fetchCopyTradingPositionAccountData() {
     try {
       const response = await axios.get('/copy_trading_position_account/database')
       if (response.data != null && response.data.length != 0) {
-        setCopyTradingPositionAccountData(response.data)
+        setCopyTradingPositionAccountDataDict(response.data)
       }
 
     } catch (error) {
@@ -73,7 +69,7 @@ export default function CopyTradingPositionPage() {
   }, [])
 
 
-  var data = React.useMemo(() => copyTradingPositionAccountData, [copyTradingPositionAccountData])
+  var data = React.useMemo(() => copyTradingPositionAccountDataDict, [copyTradingPositionAccountDataDict])
 
   return (
     <CopyTradingPositionTable columns={columns} data={data} />

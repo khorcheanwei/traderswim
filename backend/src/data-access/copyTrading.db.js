@@ -177,6 +177,29 @@ function copyTradingAccountDBOperation(trading_management_db) {
     }
   }
 
+  // get all optionChainSymbol for all trading accounts
+  this.getAllOptionChainSymbolList = async function () {
+    try {
+
+        const sqlCommand = `SELECT DISTINCT optionChainSymbol FROM copyTradingAccount`;
+
+        const queryResult = await new Promise((resolve, reject) => {
+          this.trading_management_db.all(sqlCommand, [], (err, row) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(row);
+            }
+          });
+        });
+
+        return { success: true, data: queryResult };
+    } catch (error) {
+      return { success: false, error: error };
+    }
+  }
+
+
   // update order information for all trading accounts
   this.updateAllOrderInformation = async function (copy_trading_table_id_list, result_promise_order_information) {
     try {

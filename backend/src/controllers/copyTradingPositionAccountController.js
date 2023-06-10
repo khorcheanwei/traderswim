@@ -14,18 +14,26 @@ const {
 const { puppeteer_login_account, get_access_token_from_cache, fetch_trading_account_info_api } = require("./tradingAccountPuppeteer.js")
 
 // get position information
-async function get_position_information(config, accountName, accountUsername) {
+async function get_position_information(config, accountName, accountUsername, optionChainSymbolList) {
   let copyTradingPositionAccountData = [];
 
   try {
     let response = await axios.request(config);
     let position_list = response.data["securitiesAccount"]["positions"];
 
+    if (position_list == undefined) {
+      console.log(`Failed get position information - accountUsername: ${accountUsername} with ${JSON.stringify(config)}.`);
+      return copyTradingPositionAccountData;
+    }
+
     for (let index = 0; index < position_list.length; index++) {
 
         let current_position = position_list[index];
         if (current_position["instrument"]["assetType"] == "OPTION") {
             let current_symbol = current_position["instrument"]["symbol"];
+            if (optionChainSymbolList.includes(current_symbol) == false) {
+              continue
+            }
             let current_description = current_position["instrument"]["description"];
             let current_averagePrice = current_position["averagePrice"];
             let current_longQuantity = current_position["longQuantity"];
@@ -33,7 +41,7 @@ async function get_position_information(config, accountName, accountUsername) {
             let current_shortQuantity = current_position["shortQuantity"];
             let current_settledShortQuantity = current_position["settledShortQuantity"];
             
-            copyTradingPositionAccountData.push({accountName: accountName, accountUsername: accountUsername, optionChainSymbol: current_symbol, optionChainDescription: current_description, optionChainAveragePrice: current_averagePrice,
+            copyTradingPositionAccountData.push({accountName: accountName, accountUsername: accountUsername, optionChainDescription: current_description, optionChainAveragePrice: current_averagePrice,
               optionChainLongQuantity: current_longQuantity, optionChainSettledLongQuantity: current_settledLongQuantity, optionChainShortQuantity: current_shortQuantity,
               optionChainSettledShortQuantity: current_settledShortQuantity})
         }
@@ -48,7 +56,7 @@ async function get_position_information(config, accountName, accountUsername) {
 }
 
 // get position information for all accounts
-async function get_position_information_all_accounts(all_trading_accounts_list) {
+async function get_position_information_all_accounts(all_trading_accounts_list, optionChainSymbolList) {
   const get_position_information_requests = all_trading_accounts_list.map(async (api_data, index) => {
     let { accountId, accountName, accountUsername, authToken } = api_data;
     let config = {
@@ -64,7 +72,7 @@ async function get_position_information_all_accounts(all_trading_accounts_list) 
         }
     }
 
-    const result = await get_position_information(config, accountName, accountUsername);
+    const result = await get_position_information(config, accountName, accountUsername, optionChainSymbolList);
     return result;
   });
 
@@ -88,7 +96,7 @@ async function copy_trading_position_database(httpRequest) {
         agentID = agentDocument.id;
         
         // get all accountName of particular agentID
-        result = await accountDBOperation.searchAccountByAgentID(agentID);
+        let result = await accountDBOperation.searchAccountByAgentID(agentID);
         if (result.success != true) {
           return { success: false, data: result.error };
         }
@@ -105,7 +113,18 @@ async function copy_trading_position_database(httpRequest) {
           all_trading_accounts_list.push({ accountId: accountId, accountName: accountName, accountUsername: accountUsername, authToken: authToken })
         }
 
-        let copyTradingPositionAccountData = await get_position_information_all_accounts(all_trading_accounts_list);
+        // get all optionChainSymbol list
+        result = await copyTradingAccountDBBOperation.getAllOptionChainSymbolList();
+        if (result.success != true) {
+          return { success: false, data: result.error };
+        }
+        let optionChainSymbolList = [];
+        for (let index = 0; index < result.data.length; index++) {
+          const optionChainSymbol = result.data[index]["optionChainSymbol"];
+          optionChainSymbolList.push(optionChainSymbol);
+        }
+
+        let copyTradingPositionAccountData = await get_position_information_all_accounts(all_trading_accounts_list, optionChainSymbolList);
 
         return { success: true, data: copyTradingPositionAccountData };
 
