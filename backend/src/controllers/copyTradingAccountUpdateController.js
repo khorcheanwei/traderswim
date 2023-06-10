@@ -133,7 +133,10 @@ async function copy_trading_exit_order(httpRequest) {
       const result_promise_order_information = await get_latest_order_information_all_accounts(all_trading_accounts_list, result_promise_exit_order, orderId_list)
 
       // exit order will create new orderId, thus agentTradingSessionID increases by 1
-      agentTradingSessionID = agentTradingSessionID + 1
+      result = await agentDBOperation.searchAgentTradingSessionID(agentID);
+
+      agentDocument = result.data;
+      agentTradingSessionID = agentDocument.agentTradingSessionID + 1;
       // save orders for all trading accounts to copyTradingAccount table
       await createCopyTradingAccountItem_all_accounts(agentTradingSessionID, accountDocument, result_promise_order_information, result_promise_exit_order)
       
@@ -205,6 +208,7 @@ async function put_replace_order_all_accounts(all_trading_accounts_list, optionC
 async function copy_trading_replace_order(httpRequest) {
   let {
     agentTradingSessionID,
+    optionChainSymbol,
     optionChainInstruction,
     optionChainOrderType,
     optionChainQuantity,
@@ -233,10 +237,6 @@ async function copy_trading_replace_order(httpRequest) {
 
         all_trading_accounts_list.push({ accountId: accountId, accountUsername: accountUsername, authToken: authToken })
       }
-
-      // get optionChainSymbol based on agentTradingSessionID
-      result = await copyTradingAccountDBBOperation.getAllOptionChainSymbol(agentID, agentTradingSessionID);
-      const optionChainSymbol = result.data[0]["optionChainSymbol"];
 
       // replace order with all accounts of particular agent
       let payload = {
@@ -292,7 +292,11 @@ async function copy_trading_replace_order(httpRequest) {
       const result_promise_order_information = await get_latest_order_information_all_accounts(all_trading_accounts_list, result_promise_replace_order_status, orderId_list)
 
       // replace order will create new orderId, thus agentTradingSessionID increases by 1
-      agentTradingSessionID = agentTradingSessionID + 1
+      result = await agentDBOperation.searchAgentTradingSessionID(agentID);
+
+      agentDocument = result.data;
+      agentTradingSessionID = agentDocument.agentTradingSessionID + 1;
+
       // save orders for all trading accounts to copyTradingAccount table
       await createCopyTradingAccountItem_all_accounts(agentTradingSessionID, accountDocument, result_promise_order_information, result_promise_replace_order_status)
       

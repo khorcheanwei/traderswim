@@ -2,7 +2,7 @@ import axios from "axios";
 import {useContext } from 'react';
 import { CopyTradingAccountContext } from '../context/CopyTradingAccountContext';
 
-export default function CopyTradingDeleteOrderConfirmation({rowCopyTradingAccount, onClose}) {
+export default function TradingStockDeleteOrder({rowCopyTradingAccount, onClose}) {
     
   
     const { isOpenOrderDelete, setIsOpenOrderDelete} = useContext(CopyTradingAccountContext);

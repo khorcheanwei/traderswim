@@ -4,7 +4,7 @@ import { Button, PageButton } from './../shared/Button'
 import { useContext, useState, useEffect } from 'react';
 
 import { CopyTradingAccountContext } from '../context/CopyTradingAccountContext';
-import CopyTradingDeleteOrderConfirmation from './CopyTradingDeleteOrderConfirmation';
+import TradingStockDeleteOrder from '../tradingStock/TradingStockDeleteOrder';
 import TradingStock from '../tradingStock/TradingStock';
 import TradingStockReplaceOrder from '../tradingStock/TradingStockReplaceOrder';
 import TradingStockExitOrder from '../tradingStock/TradingStockExitOrder';
@@ -132,7 +132,7 @@ export function ChangeOrderPanel(row) {
         <TradingStockReplaceOrder rowCopyTradingAccount={rowCopyTradingAccount} onClose={orderReplaceClose}></TradingStockReplaceOrder>
       </Overlay>
       <Overlay isOpen={isOpenOrderDelete} >
-        <CopyTradingDeleteOrderConfirmation rowCopyTradingAccount={rowCopyTradingAccount} onClose={orderDeleteClose}></CopyTradingDeleteOrderConfirmation>
+        <TradingStockDeleteOrder rowCopyTradingAccount={rowCopyTradingAccount} onClose={orderDeleteClose}></TradingStockDeleteOrder>
       </Overlay>
     </div>
   );

@@ -11,11 +11,13 @@ export default function TradingStockReplaceOrder({ rowCopyTradingAccount, onClos
 
     const agentTradingSessionID = rowCopyTradingAccount.cell.row.original.agentTradingSessionID;
     const optionChainDescription = rowCopyTradingAccount.cell.row.original.optionChainDescription;
+    const rowOptionChainSymbol = rowCopyTradingAccount.cell.row.original.optionChainSymbol;
     const rowOptionChainInstruction =rowCopyTradingAccount.cell.row.original.optionChainInstruction;
     const rowOptionChainOrderType =rowCopyTradingAccount.cell.row.original.optionChainOrderType;
     const rowOptionChainQuantity =rowCopyTradingAccount.cell.row.original.optionChainQuantity;
     const rowOptionChainPrice =rowCopyTradingAccount.cell.row.original.optionChainPrice;
 
+    const [optionChainSymbol, setOptionChainSymboln] = useState(rowOptionChainSymbol);
     const [optionChainInstruction, setOptionChainInstruction] = useState(rowOptionChainInstruction);
     const [optionChainOrderType, setOptionChainOrderType] = useState(rowOptionChainOrderType);
     const [optionChainQuantity, setOptionContractTotal] = useState(rowOptionChainQuantity)
@@ -23,7 +25,7 @@ export default function TradingStockReplaceOrder({ rowCopyTradingAccount, onClos
   
     async function handleReplaceOrder() {
         try {
-            const { data } = await axios.put("/copy_trading_account/replace_order/", { agentTradingSessionID, optionChainInstruction, optionChainOrderType, optionChainQuantity, optionChainPrice })
+            const { data } = await axios.put("/copy_trading_account/replace_order/", { agentTradingSessionID, optionChainSymbol, optionChainInstruction, optionChainOrderType, optionChainQuantity, optionChainPrice })
 
             if (data != "success") {
                 alert("Replace order failed");
