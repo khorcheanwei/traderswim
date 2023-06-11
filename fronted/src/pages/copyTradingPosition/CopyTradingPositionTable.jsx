@@ -69,10 +69,32 @@ export function ChangePositionPanel(row) {
       </div>
       <Overlay isOpen={isOpenOrderExit} >
         <TradingStockExitOrder rowCopyTradingPosition={rowCopyTradingPosition} onClose={orderExitClose}></TradingStockExitOrder>
-    </Overlay>
+      </Overlay>
     </div>
   );
 };
+
+export function SettledQuantityColorChange(row) {
+  const optionChainSettledQuantity = row.cell.row.original.optionChainSettledQuantity;
+
+  const settledQuantityColorChange = (optionChainSettledQuantity) => {
+    let className = ''
+    if (optionChainSettledQuantity > 0) {
+      className = 'text-green-600'
+    } 
+
+    if (optionChainSettledQuantity < 0) {
+      className = 'text-red-600'
+    } 
+
+    return className;
+  }
+  return (
+    <div>
+     <span className={settledQuantityColorChange(optionChainSettledQuantity)}>{optionChainSettledQuantity}</span>
+    </div>
+  )
+}
 
 function CopyTradingPositionTable({ columns, data }) {
   return CommonTable({ columns, data, GlobalFilter })

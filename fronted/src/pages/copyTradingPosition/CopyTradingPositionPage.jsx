@@ -3,7 +3,7 @@ import React from 'react'
 import { useContext, useState, useEffect } from 'react';
 import { CopyTradingPositionContext } from '../context/CopyTradingPositionContext';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
-import { viewAllPositionPanel, ChangePositionPanel } from './CopyTradingPositionTable'
+import { viewAllPositionPanel, ChangePositionPanel, SettledQuantityColorChange } from './CopyTradingPositionTable'
 import CopyTradingAllAccountPositionTable from './CopyTradingAllAccountPositionTable'
 
 export default function CopyTradingPositionPage() {
@@ -29,24 +29,13 @@ export default function CopyTradingPositionPage() {
       accessor: 'optionChainDescription',
     },
     {
+      Header: 'Settled Qty',
+      accessor: 'optionChainSettledQuantity',
+      Cell: SettledQuantityColorChange,
+    },
+    {
       Header: 'Average price',
       accessor: 'optionChainAveragePrice',
-    },
-    {
-      Header: 'Long Qty',
-      accessor: 'optionChainLongQuantity',
-    },
-    {
-      Header: 'Settled Long Qty',
-      accessor: 'optionChainSettledLongQuantity',
-    },
-    {
-      Header: 'Short Qty',
-      accessor: 'optionChainShortQuantity',
-    },
-    {
-      Header: 'Settled Short Qty',
-      accessor: 'optionChainSettledShortQuantity',
     },
     {
       Header: 'Name',
