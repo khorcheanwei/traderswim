@@ -122,7 +122,7 @@ async function copy_trading_position_database(httpRequest) {
         }
 
         const copyTradingPositionAccountDocument = await get_position_information_all_accounts(all_trading_accounts_list, optionChainSymbolList);
-        let copyTradingPositionAccountDataDict = {};
+        let copyTradingPositionDataDict = {};
         for (let index = 0; index < copyTradingPositionAccountDocument.length; index++) {
           const current_copyTradingAccount = copyTradingPositionAccountDocument[index];
           const current_optionChainDescription = current_copyTradingAccount["optionChainDescription"];
@@ -143,13 +143,13 @@ async function copy_trading_position_database(httpRequest) {
             optionChainSettledQuantity: current_optionChainSettledQuantity,
           }
   
-          if (copyTradingPositionAccountDataDict.hasOwnProperty(current_optionChainDescription) == false) {
-            copyTradingPositionAccountDataDict[current_optionChainDescription] = [currCopyTradingPositionAccountData]
+          if (copyTradingPositionDataDict.hasOwnProperty(current_optionChainDescription) == false) {
+            copyTradingPositionDataDict[current_optionChainDescription] = [currCopyTradingPositionAccountData]
           } else {
-            copyTradingPositionAccountDataDict[current_optionChainDescription].push(currCopyTradingPositionAccountData);
+            copyTradingPositionDataDict[current_optionChainDescription].push(currCopyTradingPositionAccountData);
           }
         }
-        return { success: true, data: copyTradingPositionAccountDataDict };
+        return { success: true, data: copyTradingPositionDataDict };
 
     } catch (error) {
       return { success: false, data: error.message };

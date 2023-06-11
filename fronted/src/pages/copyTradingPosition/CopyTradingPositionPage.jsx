@@ -7,7 +7,7 @@ import { viewAllPositionPanel, ChangePositionPanel, SettledQuantityColorChange }
 import CopyTradingAllAccountPositionTable from './CopyTradingAllAccountPositionTable'
 
 export default function CopyTradingPositionPage() {
-  const {copyTradingPositionMainAccountData, setCopyTradingPositionMainAccountData} = useContext(CopyTradingPositionContext);
+  const {copyTradingPositionMainData, setCopyTradingPositionMainData} = useContext(CopyTradingPositionContext);
 
   const columns = React.useMemo(() => [
     {
@@ -48,7 +48,7 @@ export default function CopyTradingPositionPage() {
   ], [])
 
   
-  var data = React.useMemo(() => copyTradingPositionMainAccountData, [copyTradingPositionMainAccountData])
+  var data = React.useMemo(() => copyTradingPositionMainData, [copyTradingPositionMainData])
 
   return (
     <CopyTradingAllAccountPositionTable columns={columns} data={data} />

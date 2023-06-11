@@ -48,8 +48,8 @@ export default function CopyTradingAllAccountPositionPage({ rowCopyTradingPositi
 
   const optionChainDescription = rowCopyTradingPosition.row.original.optionChainDescription;
   
-  const {copyTradingPositionAccountDataDict, setCopyTradingPositionAccountDataDict} = useContext(CopyTradingPositionContext);
-  const copyTradingPositionAllAccountData = copyTradingPositionAccountDataDict[optionChainDescription];
+  const {copyTradingPositionDataDict, setCopyTradingPositionDataDict} = useContext(CopyTradingPositionContext);
+  const copyTradingPositionAllAccountData = copyTradingPositionDataDict[optionChainDescription];
 
   var data = React.useMemo(() => copyTradingPositionAllAccountData, [copyTradingPositionAllAccountData])
 

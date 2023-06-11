@@ -7,7 +7,7 @@ import CopyTradingOrderTable, { ChangeOrderPanel, viewAllOrderPanel } from './Co
 import CopyTradingPositionPage from '../copyTradingPosition/CopyTradingPositionPage'
 
 export default function CopyTradingOrderPage() {
-  const {copyTradingMainAccountData, setCopyTradingMainAccountData} = useContext(CopyTradingOrderContext);
+  const {copyTradingOrderMainData, setCopyTradingOrderMainData} = useContext(CopyTradingOrderContext);
 
   const columns = React.useMemo(() => [
     {
@@ -70,7 +70,7 @@ export default function CopyTradingOrderPage() {
     },
   ], [])
   
-  var data = React.useMemo(() => copyTradingMainAccountData, [copyTradingMainAccountData])
+  var data = React.useMemo(() => copyTradingOrderMainData, [copyTradingOrderMainData])
 
   return (
     <CopyTradingOrderTable columns={columns} data={data} />

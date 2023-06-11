@@ -484,7 +484,7 @@ async function copy_trading_database(httpRequest) {
       }
       const copyTradingAccountDocument = result.data;
 
-      let copyTradingAccountDataDict = {};
+      let copyTradingOrderDataDict = {};
       for (let index = 0; index < copyTradingAccountDocument.length; index++) {
         const currCopyTradingAccount = copyTradingAccountDocument[index];
         const optionChainEnteredTime = currCopyTradingAccount["optionChainEnteredTime"];
@@ -506,14 +506,14 @@ async function copy_trading_database(httpRequest) {
           optionChainStatus: currCopyTradingAccount["optionChainStatus"],
         }
 
-        if (copyTradingAccountDataDict.hasOwnProperty(agentTradingSessionID) == false) {
-          copyTradingAccountDataDict[agentTradingSessionID] = [currCopyTradingAccountData]
+        if (copyTradingOrderDataDict.hasOwnProperty(agentTradingSessionID) == false) {
+          copyTradingOrderDataDict[agentTradingSessionID] = [currCopyTradingAccountData]
         } else {
-          copyTradingAccountDataDict[agentTradingSessionID].push(currCopyTradingAccountData);
+          copyTradingOrderDataDict[agentTradingSessionID].push(currCopyTradingAccountData);
         }
       }
       //await new Promise(resolve => setTimeout(resolve, 500)); 
-      return { success: true, data: copyTradingAccountDataDict };
+      return { success: true, data: copyTradingOrderDataDict };
     } catch (error) {
       return { success: false, data: error.message };
     }

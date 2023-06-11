@@ -2,13 +2,13 @@ import axios from "axios";
 import {useContext } from 'react';
 import { CopyTradingOrderContext } from '../context/CopyTradingOrderContext';
 
-export default function TradingStockDeleteOrder({rowCopyTradingAccount, onClose}) {
+export default function TradingStockDeleteOrder({rowCopyTradingOrder, onClose}) {
     
   
     const { isOpenOrderDelete, setIsOpenOrderDelete} = useContext(CopyTradingOrderContext);
     
-    const optionChainDescription = rowCopyTradingAccount.cell.row.original.optionChainDescription;
-    const agentTradingSessionID = rowCopyTradingAccount.cell.row.original.agentTradingSessionID;
+    const optionChainDescription = rowCopyTradingOrder.cell.row.original.optionChainDescription;
+    const agentTradingSessionID = rowCopyTradingOrder.cell.row.original.agentTradingSessionID;
     
     async function deleteOrder() {
       // delete order 

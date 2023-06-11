@@ -61,14 +61,14 @@ function GlobalFilter({
 }
 
 export function viewAllOrderPanel(row) {
-  const { isOpenViewAllOrders, setIsOpenViewAllOrders } = useContext(CopyTradingOrderContext);
-  const { rowCopyTradingAccount, setRowCopyTradingAccount } = useContext(CopyTradingOrderContext);
+  const { isOpenViewAllOrder, setIsOpenViewAllOrder } = useContext(CopyTradingOrderContext);
+  const { rowCopyTradingOrder, setRowCopyTradingOrder } = useContext(CopyTradingOrderContext);
 
   const viewAllOrderClose = async () => {
-    if (isOpenViewAllOrders == false) {
-      setRowCopyTradingAccount(row)
+    if (isOpenViewAllOrder == false) {
+      setRowCopyTradingOrder(row)
     }
-    setIsOpenViewAllOrders(!isOpenViewAllOrders)
+    setIsOpenViewAllOrder(!isOpenViewAllOrder)
   }
 
   return (
@@ -78,8 +78,8 @@ export function viewAllOrderPanel(row) {
           <span className="font-medium text-white dark:text-white">V</span>
         </div>
       </div>
-      <Overlay isOpen={isOpenViewAllOrders} >
-        <CopyTradingAllAccountOrderPage rowCopyTradingAccount={rowCopyTradingAccount}  onClose={viewAllOrderClose}></CopyTradingAllAccountOrderPage>
+      <Overlay isOpen={isOpenViewAllOrder} >
+        <CopyTradingAllAccountOrderPage rowCopyTradingOrder={rowCopyTradingOrder}  onClose={viewAllOrderClose}></CopyTradingAllAccountOrderPage>
       </Overlay>
     </div>
   );
@@ -88,18 +88,18 @@ export function viewAllOrderPanel(row) {
 export function ChangeOrderPanel(row) {
   const { isOpenOrderExit, setIsOpenOrderExit,  isOpenOrderReplace, setIsOpenOrderReplace, isOpenOrderDelete, setIsOpenOrderDelete } = useContext(CopyTradingOrderContext);
   
-  const { rowCopyTradingAccount, setRowCopyTradingAccount } = useContext(CopyTradingOrderContext);
+  const { rowCopyTradingOrder, setRowCopyTradingOrder } = useContext(CopyTradingOrderContext);
 
   const orderReplaceClose = async () => {
     if (isOpenOrderReplace == false) {
-      setRowCopyTradingAccount(row)
+      setRowCopyTradingOrder(row)
     }
     setIsOpenOrderReplace(!isOpenOrderReplace)
   }
 
   const orderDeleteClose = async () => {
     if (isOpenOrderDelete == false) {
-      setRowCopyTradingAccount(row)
+      setRowCopyTradingOrder(row)
     }
     setIsOpenOrderDelete(!isOpenOrderDelete)
   }
@@ -115,10 +115,10 @@ export function ChangeOrderPanel(row) {
         </div>
       </div>
       <Overlay isOpen={isOpenOrderReplace} >
-        <TradingStockReplaceOrder rowCopyTradingAccount={rowCopyTradingAccount} onClose={orderReplaceClose}></TradingStockReplaceOrder>
+        <TradingStockReplaceOrder rowCopyTradingOrder={rowCopyTradingOrder} onClose={orderReplaceClose}></TradingStockReplaceOrder>
       </Overlay>
       <Overlay isOpen={isOpenOrderDelete} >
-        <TradingStockDeleteOrder rowCopyTradingAccount={rowCopyTradingAccount} onClose={orderDeleteClose}></TradingStockDeleteOrder>
+        <TradingStockDeleteOrder rowCopyTradingOrder={rowCopyTradingOrder} onClose={orderDeleteClose}></TradingStockDeleteOrder>
       </Overlay>
     </div>
   );

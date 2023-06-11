@@ -5,7 +5,7 @@ import { useContext, useState, useEffect, useRef  } from 'react';
 import { CopyTradingOrderContext } from '../context/CopyTradingOrderContext';
 import CopyTradingAllAccountOrderTable from './CopyTradingAllAccountOrderTable'
 
-export default function CopyTradingAllAccountOrderPage({ rowCopyTradingAccount, onClose }) {
+export default function CopyTradingAllAccountOrderPage({ rowCopyTradingOrder, onClose }) {
 
   const columns = React.useMemo(() => [
     {
@@ -58,10 +58,10 @@ export default function CopyTradingAllAccountOrderPage({ rowCopyTradingAccount, 
     },
   ], [])
 
-  const agentTradingSessionID = rowCopyTradingAccount.row.original.agentTradingSessionID;
+  const agentTradingSessionID = rowCopyTradingOrder.row.original.agentTradingSessionID;
   
-  const {copyTradingAccountDataDict, setCopyTradingAccountDataDict} = useContext(CopyTradingOrderContext);
-  const copyTradingAllAccountData = copyTradingAccountDataDict[agentTradingSessionID];
+  const {copyTradingOrderDataDict, setCopyTradingOrderDataDict} = useContext(CopyTradingOrderContext);
+  const copyTradingAllAccountData = copyTradingOrderDataDict[agentTradingSessionID];
 
   var data = React.useMemo(() => copyTradingAllAccountData, [copyTradingAllAccountData])
 

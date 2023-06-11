@@ -9,15 +9,15 @@ import CopyTradingPositionPage from '../copyTradingPosition/CopyTradingPositionP
 
 export default function CopyTradingPage() {
 
-  const {copyTradingAccountDataDict, setCopyTradingAccountDataDict, copyTradingMainAccountData, setCopyTradingMainAccountData} = useContext(CopyTradingOrderContext);
-  const {copyTradingPositionAccountDataDict, setCopyTradingPositionAccountDataDict,copyTradingPositionMainAccountData, setCopyTradingPositionMainAccountData} = useContext(CopyTradingPositionContext);
+  const {copyTradingOrderDataDict, setCopyTradingOrderDataDict, copyTradingOrderMainData, setCopyTradingOrderMainData} = useContext(CopyTradingOrderContext);
+  const {copyTradingPositionDataDict, setCopyTradingPositionDataDict,copyTradingPositionMainData, setCopyTradingPositionMainData} = useContext(CopyTradingPositionContext);
   
   async function fetchCopyTradingAccountData() {
     try {
       // get order information
       let response = await axios.get('/copy_trading_account/database');
       const copyTradingAccountDataDictResponse = response.data;
-      setCopyTradingAccountDataDict(copyTradingAccountDataDictResponse);
+      setCopyTradingOrderDataDict(copyTradingAccountDataDictResponse);
 
       if (copyTradingAccountDataDictResponse != null && copyTradingAccountDataDictResponse.length != 0) {
 
@@ -25,21 +25,21 @@ export default function CopyTradingPage() {
         for (const [key, value] of Object.entries(copyTradingAccountDataDictResponse)) {
           copyTradingMainAccountDataList.push(value[0]);
         }
-        setCopyTradingMainAccountData(copyTradingMainAccountDataList)
+        setCopyTradingOrderMainData(copyTradingMainAccountDataList)
       }
 
       // get position information
       response = await axios.get('/copy_trading_position_account/database');
-      const copyTradingPositionAccountDataDictResponse = response.data;
-      setCopyTradingPositionAccountDataDict(copyTradingPositionAccountDataDictResponse);
+      const copyTradingPositionDataDictResponse = response.data;
+      setCopyTradingPositionDataDict(copyTradingPositionDataDictResponse);
 
-      if (copyTradingPositionAccountDataDictResponse != null && copyTradingPositionAccountDataDictResponse.length != 0) {
+      if (copyTradingPositionDataDictResponse != null && copyTradingPositionDataDictResponse.length != 0) {
 
         let copyTradingMainPositionAccountDataList = [];
-        for (const [key, value] of Object.entries(copyTradingPositionAccountDataDictResponse)) {
+        for (const [key, value] of Object.entries(copyTradingPositionDataDictResponse)) {
           copyTradingMainPositionAccountDataList.push(value[0]);
         }
-        setCopyTradingPositionMainAccountData(copyTradingMainPositionAccountDataList)
+        setCopyTradingPositionMainData(copyTradingMainPositionAccountDataList)
       }
 
       await axios.get('/trading_account/database');
