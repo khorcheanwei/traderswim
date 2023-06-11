@@ -1,7 +1,7 @@
 const axios = require('axios');
 const jwt = require("jsonwebtoken");
 const node_cache = require("node-cache");
-const cache = new node_cache();
+const copy_trading_position_cache = new node_cache();
 
 const jwtSecret = "traderswim";
 
@@ -83,6 +83,79 @@ async function get_position_information_all_accounts(all_trading_accounts_list, 
   }
 }
 
+
+// Copy trading position database for cron job 
+async function copy_trading_database_by_agent(agentID) { 
+  try {
+    // get all accountName of particular agentID
+    let result = await accountDBOperation.searchAccountByAgentID(agentID);
+    if (result.success != true) {
+      return { success: false, data: result.error };
+    }
+    const accountDocument = result.data;
+    let all_trading_accounts_list = [];
+
+    for (let index = 0; index < accountDocument.length; index++) {
+      let accountId = accountDocument[index]["accountId"];
+      let accountName = accountDocument[index]["accountName"];
+      let accountUsername = accountDocument[index]["accountUsername"];
+
+      let authToken = await get_access_token_from_cache(agentID, accountUsername);
+
+      all_trading_accounts_list.push({ accountId: accountId, accountName: accountName, accountUsername: accountUsername, authToken: authToken })
+    }
+
+    // get all optionChainSymbol list
+    result = await copyTradingAccountDBBOperation.getAllOptionChainSymbolList();
+    if (result.success != true) {
+      return { success: false, data: result.error };
+    }
+    let optionChainSymbolList = [];
+    for (let index = 0; index < result.data.length; index++) {
+      const optionChainSymbol = result.data[index]["optionChainSymbol"];
+      optionChainSymbolList.push(optionChainSymbol);
+    }
+
+    const copyTradingPositionAccountDocument = await get_position_information_all_accounts(all_trading_accounts_list, optionChainSymbolList);
+    let copyTradingPositionDataDict = {};
+    for (let index = 0; index < copyTradingPositionAccountDocument.length; index++) {
+      const current_copyTradingAccount = copyTradingPositionAccountDocument[index];
+      const current_optionChainDescription = current_copyTradingAccount["optionChainDescription"];
+      const current_optionChainSettledLongQuantity = current_copyTradingAccount["optionChainSettledLongQuantity"];
+      const current_optionChainSettledShortQuantity = current_copyTradingAccount["optionChainSettledShortQuantity"];
+
+      let current_optionChainSettledQuantity = current_optionChainSettledLongQuantity;
+      if (current_optionChainSettledLongQuantity == 0) {
+        current_optionChainSettledQuantity = current_optionChainSettledShortQuantity;
+      }
+
+      const currCopyTradingPositionAccountData = {
+        accountName: current_copyTradingAccount["accountName"],
+        accountUsername: current_copyTradingAccount["accountUsername"],
+        optionChainAveragePrice: current_copyTradingAccount["optionChainAveragePrice"],
+        optionChainSymbol: current_copyTradingAccount["optionChainSymbol"],
+        optionChainDescription: current_optionChainDescription,
+        optionChainSettledQuantity: current_optionChainSettledQuantity,
+      }
+
+      if (copyTradingPositionDataDict.hasOwnProperty(current_optionChainDescription) == false) {
+        copyTradingPositionDataDict[current_optionChainDescription] = [currCopyTradingPositionAccountData]
+      } else {
+        copyTradingPositionDataDict[current_optionChainDescription].push(currCopyTradingPositionAccountData);
+      }
+    }
+
+    // save copyTradingPositionDataDict from cache
+    let copyTradingPositionDataDict_key = agentID + "." + "copyTradingPositionDataDict";
+    copy_trading_position_cache.set(copyTradingPositionDataDict_key, copyTradingPositionDataDict);
+
+    return copyTradingPositionDataDict;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
 // Copy trading position database
 async function copy_trading_position_database(httpRequest) {
   const { token } = httpRequest.cookies;
@@ -91,64 +164,16 @@ async function copy_trading_position_database(httpRequest) {
     try {
         let agentDocument = jwt.verify(token, jwtSecret, {});
         agentID = agentDocument.id;
+
+        // get copyTradingPositionDataDict from cache
+        let copyTradingPositionDataDict_key = agentID + "." + "copyTradingPositionDataDict";
+        let copyTradingPositionDataDict = copy_trading_position_cache.get(copyTradingPositionDataDict_key);
+        if (copyTradingPositionDataDict != undefined) {
+          return { success: true, data: copyTradingPositionDataDict };
+        }
+
+        copyTradingPositionDataDict = await copy_trading_database_by_agent(agentID)
         
-        // get all accountName of particular agentID
-        let result = await accountDBOperation.searchAccountByAgentID(agentID);
-        if (result.success != true) {
-          return { success: false, data: result.error };
-        }
-        const accountDocument = result.data;
-        let all_trading_accounts_list = [];
-
-        for (let index = 0; index < accountDocument.length; index++) {
-          let accountId = accountDocument[index]["accountId"];
-          let accountName = accountDocument[index]["accountName"];
-          let accountUsername = accountDocument[index]["accountUsername"];
-    
-          let authToken = await get_access_token_from_cache(agentID, accountUsername);
-
-          all_trading_accounts_list.push({ accountId: accountId, accountName: accountName, accountUsername: accountUsername, authToken: authToken })
-        }
-
-        // get all optionChainSymbol list
-        result = await copyTradingAccountDBBOperation.getAllOptionChainSymbolList();
-        if (result.success != true) {
-          return { success: false, data: result.error };
-        }
-        let optionChainSymbolList = [];
-        for (let index = 0; index < result.data.length; index++) {
-          const optionChainSymbol = result.data[index]["optionChainSymbol"];
-          optionChainSymbolList.push(optionChainSymbol);
-        }
-
-        const copyTradingPositionAccountDocument = await get_position_information_all_accounts(all_trading_accounts_list, optionChainSymbolList);
-        let copyTradingPositionDataDict = {};
-        for (let index = 0; index < copyTradingPositionAccountDocument.length; index++) {
-          const current_copyTradingAccount = copyTradingPositionAccountDocument[index];
-          const current_optionChainDescription = current_copyTradingAccount["optionChainDescription"];
-          const current_optionChainSettledLongQuantity = current_copyTradingAccount["optionChainSettledLongQuantity"];
-          const current_optionChainSettledShortQuantity = current_copyTradingAccount["optionChainSettledShortQuantity"];
-
-          let current_optionChainSettledQuantity = current_optionChainSettledLongQuantity;
-          if (current_optionChainSettledLongQuantity == 0) {
-            current_optionChainSettledQuantity = current_optionChainSettledShortQuantity;
-          }
-
-          const currCopyTradingPositionAccountData = {
-            accountName: current_copyTradingAccount["accountName"],
-            accountUsername: current_copyTradingAccount["accountUsername"],
-            optionChainAveragePrice: current_copyTradingAccount["optionChainAveragePrice"],
-            optionChainSymbol: current_copyTradingAccount["optionChainSymbol"],
-            optionChainDescription: current_optionChainDescription,
-            optionChainSettledQuantity: current_optionChainSettledQuantity,
-          }
-  
-          if (copyTradingPositionDataDict.hasOwnProperty(current_optionChainDescription) == false) {
-            copyTradingPositionDataDict[current_optionChainDescription] = [currCopyTradingPositionAccountData]
-          } else {
-            copyTradingPositionDataDict[current_optionChainDescription].push(currCopyTradingPositionAccountData);
-          }
-        }
         return { success: true, data: copyTradingPositionDataDict };
 
     } catch (error) {

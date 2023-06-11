@@ -42,8 +42,6 @@ export default function CopyTradingPage() {
         setCopyTradingPositionMainData(copyTradingMainPositionAccountDataList)
       }
 
-      await axios.get('/trading_account/database');
-
     } catch (error) {
       console.log(error.message);
     }
@@ -51,7 +49,7 @@ export default function CopyTradingPage() {
 
   const ref = useRef(null)
   useEffect(() => {
-    ref.current = setInterval(fetchCopyTradingAccountData, 2 * 1000);
+    ref.current = setInterval(fetchCopyTradingAccountData, 1 * 1000);
     return () => {
       if(ref.current){
         clearInterval(ref.current);

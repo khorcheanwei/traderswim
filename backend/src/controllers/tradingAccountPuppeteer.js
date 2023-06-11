@@ -277,7 +277,18 @@ async function puppeteer_login_account(agentID, accountUsername, accountPassword
     }
 };
 
+// get agent list
+async function get_agent_list_to_cache() {
+    try {
+        let agent_list_cache_key = "agent_list";
+        let agent_list_cache_value = auth_cache.get(agent_list_cache_key);
 
+        return  agent_list_cache_value;
+    } catch (error) {
+        console.log(error.message);
+        return null;
+    }
+}
 
 async function store_agent_list_to_cache(agentID) {
     try {

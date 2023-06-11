@@ -1,7 +1,7 @@
 const axios = require('axios');
 const jwt = require("jsonwebtoken");
 const node_cache = require("node-cache");
-const cache = new node_cache();
+const copy_trading_account_cache = new node_cache();
 
 const jwtSecret = "traderswim";
 
@@ -453,6 +453,71 @@ async function sync_order_and_save_to_copy_trading_database(agentID, agentTradin
   }
 }
 
+// Copy trading order database for cron job 
+async function copy_trading_database_by_agent(agentID) {
+  try {
+    // get agent trading sessionID
+    let result = await agentDBOperation.searchAgentTradingSessionID(agentID);
+    if (result.success != true) {
+      return { success: false, data: result.error };
+    }
+    agentDocument = result.data;
+    const agentTradingSessionID = agentDocument.agentTradingSessionID;
+
+    // sync order and save to copy trading table for all trading accounts
+    await sync_order_and_save_to_copy_trading_database(agentID, agentTradingSessionID)
+
+    // get CopyTradingAccount based on agentID and agentTradingSessionID
+    result =
+      await copyTradingAccountDBBOperation.searchCopyTradingAccountBasedAgentID(
+        agentID
+      );
+
+    if (result.success != true) {
+      return { success: false, data: result.error };
+    }
+    const copyTradingAccountDocument = result.data;
+
+    let copyTradingOrderDataDict = {};
+    for (let index = 0; index < copyTradingAccountDocument.length; index++) {
+      const currCopyTradingAccount = copyTradingAccountDocument[index];
+      const optionChainEnteredTime = currCopyTradingAccount["optionChainEnteredTime"];
+
+      const agentTradingSessionID = currCopyTradingAccount["agentTradingSessionID"];
+
+      const currCopyTradingAccountData = {
+        agentTradingSessionID: agentTradingSessionID,
+        accountName: currCopyTradingAccount["accountName"],
+        accountUsername: currCopyTradingAccount["accountUsername"],
+        optionChainEnteredTime: optionChainEnteredTime.substring(0, optionChainEnteredTime.length - 5),
+        optionChainInstruction: currCopyTradingAccount["optionChainInstruction"],
+        optionChainQuantity: currCopyTradingAccount["optionChainQuantity"],
+        optionChainFilledQuantity: currCopyTradingAccount["optionChainFilledQuantity"],
+        optionChainSymbol: currCopyTradingAccount["optionChainSymbol"],
+        optionChainDescription: currCopyTradingAccount["optionChainDescription"],
+        optionChainPrice: currCopyTradingAccount["optionChainPrice"],
+        optionChainOrderType: currCopyTradingAccount["optionChainOrderType"],
+        optionChainStatus: currCopyTradingAccount["optionChainStatus"],
+      }
+
+      if (copyTradingOrderDataDict.hasOwnProperty(agentTradingSessionID) == false) {
+        copyTradingOrderDataDict[agentTradingSessionID] = [currCopyTradingAccountData]
+      } else {
+        copyTradingOrderDataDict[agentTradingSessionID].push(currCopyTradingAccountData);
+      }
+    }
+
+    // save copyTradingOrderDataDict from cache
+    let copyTradingOrderDataDict_key = agentID + "." + "copyTradingOrderDataDict";
+    copy_trading_account_cache.set(copyTradingOrderDataDict_key, copyTradingOrderDataDict);
+
+    return copyTradingOrderDataDict;
+  } catch (error) {
+    console.log(copyTradingOrderDataDict);
+    return null;
+  }
+}
+
 // Copy trading database
 async function copy_trading_database(httpRequest) {
   const { token } = httpRequest.cookies;
@@ -462,56 +527,15 @@ async function copy_trading_database(httpRequest) {
       let agentDocument = jwt.verify(token, jwtSecret, {});
       agentID = agentDocument.id;
 
-      // get agent trading sessionID
-      let result = await agentDBOperation.searchAgentTradingSessionID(agentID);
-      if (result.success != true) {
-        return { success: false, data: result.error };
+      // get copyTradingOrderDataDict from cache
+      let copyTradingOrderDataDict_key = agentID + "." + "copyTradingOrderDataDict";
+      let copyTradingOrderDataDict = copy_trading_account_cache.get(copyTradingOrderDataDict_key);
+      if (copyTradingOrderDataDict != undefined) {
+        return { success: true, data: copyTradingOrderDataDict };
       }
-      agentDocument = result.data;
-      const agentTradingSessionID = agentDocument.agentTradingSessionID;
 
-      // sync order and save to copy trading table for all trading accounts
-      await sync_order_and_save_to_copy_trading_database(agentID, agentTradingSessionID)
+      copyTradingOrderDataDict = await copy_trading_database_by_agent(agentID);
 
-      // get CopyTradingAccount based on agentID and agentTradingSessionID
-      result =
-        await copyTradingAccountDBBOperation.searchCopyTradingAccountBasedAgentID(
-          agentID
-        );
-
-      if (result.success != true) {
-        return { success: false, data: result.error };
-      }
-      const copyTradingAccountDocument = result.data;
-
-      let copyTradingOrderDataDict = {};
-      for (let index = 0; index < copyTradingAccountDocument.length; index++) {
-        const currCopyTradingAccount = copyTradingAccountDocument[index];
-        const optionChainEnteredTime = currCopyTradingAccount["optionChainEnteredTime"];
-
-        const agentTradingSessionID = currCopyTradingAccount["agentTradingSessionID"];
-
-        const currCopyTradingAccountData = {
-          agentTradingSessionID: agentTradingSessionID,
-          accountName: currCopyTradingAccount["accountName"],
-          accountUsername: currCopyTradingAccount["accountUsername"],
-          optionChainEnteredTime: optionChainEnteredTime.substring(0, optionChainEnteredTime.length - 5),
-          optionChainInstruction: currCopyTradingAccount["optionChainInstruction"],
-          optionChainQuantity: currCopyTradingAccount["optionChainQuantity"],
-          optionChainFilledQuantity: currCopyTradingAccount["optionChainFilledQuantity"],
-          optionChainSymbol: currCopyTradingAccount["optionChainSymbol"],
-          optionChainDescription: currCopyTradingAccount["optionChainDescription"],
-          optionChainPrice: currCopyTradingAccount["optionChainPrice"],
-          optionChainOrderType: currCopyTradingAccount["optionChainOrderType"],
-          optionChainStatus: currCopyTradingAccount["optionChainStatus"],
-        }
-
-        if (copyTradingOrderDataDict.hasOwnProperty(agentTradingSessionID) == false) {
-          copyTradingOrderDataDict[agentTradingSessionID] = [currCopyTradingAccountData]
-        } else {
-          copyTradingOrderDataDict[agentTradingSessionID].push(currCopyTradingAccountData);
-        }
-      }
       //await new Promise(resolve => setTimeout(resolve, 500)); 
       return { success: true, data: copyTradingOrderDataDict };
     } catch (error) {
