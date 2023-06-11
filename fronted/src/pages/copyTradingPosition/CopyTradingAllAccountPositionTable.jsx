@@ -19,19 +19,8 @@ function GlobalFilter({
   const onChange = useAsyncDebounce(value => {
     setGlobalFilter(value || undefined)
   }, 200)
-
-  const { isOpenTradingStock, setIsOpenTradingStock } = useContext(CopyTradingAccountContext);
-
-  const placeOrderClose = async () => {
-    setIsOpenTradingStock(!isOpenTradingStock)
-  }
-
   return (
-    
       <div>
-        <Overlay isOpen={isOpenTradingStock} >
-          <TradingStock onClose={placeOrderClose}></TradingStock>
-        </Overlay>
       </div>
     
   )

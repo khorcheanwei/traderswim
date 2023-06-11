@@ -3,7 +3,7 @@ import React from 'react'
 import { useContext, useState, useEffect } from 'react';
 import { CopyTradingPositionContext } from '../context/CopyTradingPositionContext';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
-import { viewAllPositionPanel } from './CopyTradingPositionTable'
+import { viewAllPositionPanel, ChangePositionPanel } from './CopyTradingPositionTable'
 import CopyTradingAllAccountPositionTable from './CopyTradingAllAccountPositionTable'
 
 export default function CopyTradingPositionPage() {
@@ -14,6 +14,11 @@ export default function CopyTradingPositionPage() {
       Header: 'View',
       accessor: 'viewAllOrder',
       Cell: viewAllPositionPanel,
+    },
+    {
+      Header: 'Change position',
+      accessor: 'ChangePosition',
+      Cell: ChangePositionPanel,
     },
     {
       Header: 'Symbol',

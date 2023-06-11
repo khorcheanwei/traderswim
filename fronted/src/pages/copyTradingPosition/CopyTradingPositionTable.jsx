@@ -4,6 +4,7 @@ import { useContext, useState, useEffect } from 'react';
 
 import { CopyTradingPositionContext } from '../context/CopyTradingPositionContext';
 import CopyTradingAllAccountPositionPage from './CopyTradingAllAccountPositionPage';
+import TradingStockExitOrder from '../tradingStock/TradingStockExitOrder';
 import Overlay from "./../Overlay";
 
 // Define a default UI for filtering
@@ -54,7 +55,7 @@ export function ChangePositionPanel(row) {
  
   const orderExitClose = async () => {
     if (isOpenOrderExit == false) {
-      setRowCopyTradingAccount(row)
+      setRowCopyTradingPosition(row)
     }
     setIsOpenOrderExit(!isOpenOrderExit)
   }
@@ -67,8 +68,8 @@ export function ChangePositionPanel(row) {
         </div>
       </div>
       <Overlay isOpen={isOpenOrderExit} >
-        <TradingStockExitOrder rowCopyTradingAccount={rowCopyTradingAccount} onClose={orderExitClose}></TradingStockExitOrder>
-      </Overlay>
+        <TradingStockExitOrder rowCopyTradingPosition={rowCopyTradingPosition} onClose={orderExitClose}></TradingStockExitOrder>
+    </Overlay>
     </div>
   );
 };
