@@ -86,7 +86,7 @@ export function viewAllOrderPanel(row) {
 }
 
 export function ChangeOrderPanel(row) {
-  const { isOpenOrderExit, setIsOpenOrderExit,  isOpenOrderReplace, setIsOpenOrderReplace, isOpenOrderDelete, setIsOpenOrderDelete } = useContext(CopyTradingOrderContext);
+  const { isOpenOrderReplace, setIsOpenOrderReplace, isOpenOrderDelete, setIsOpenOrderDelete } = useContext(CopyTradingOrderContext);
   
   const { rowCopyTradingOrder, setRowCopyTradingOrder } = useContext(CopyTradingOrderContext);
 

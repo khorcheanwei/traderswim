@@ -4,6 +4,7 @@ import { useContext, useState, useEffect, useRef  } from 'react';
 
 import { CopyTradingPositionContext } from '../context/CopyTradingPositionContext';
 import CopyTradingAllAccountPositionTable from './CopyTradingAllAccountPositionTable'
+import {  SettledQuantityColorChange } from './CopyTradingPositionTable'
 
 export default function CopyTradingAllAccountPositionPage({ rowCopyTradingPosition, onClose }) {
 
@@ -17,24 +18,13 @@ export default function CopyTradingAllAccountPositionPage({ rowCopyTradingPositi
       accessor: 'optionChainDescription',
     },
     {
+      Header: 'Settled Qty',
+      accessor: 'optionChainSettledQuantity',
+      Cell: SettledQuantityColorChange,
+    },
+    {
       Header: 'Average price',
       accessor: 'optionChainAveragePrice',
-    },
-    {
-      Header: 'Long Qty',
-      accessor: 'optionChainLongQuantity',
-    },
-    {
-      Header: 'Settled Long Qty',
-      accessor: 'optionChainSettledLongQuantity',
-    },
-    {
-      Header: 'Short Qty',
-      accessor: 'optionChainShortQuantity',
-    },
-    {
-      Header: 'Settled Short Qty',
-      accessor: 'optionChainSettledShortQuantity',
     },
     {
       Header: 'Name',
@@ -43,7 +33,7 @@ export default function CopyTradingAllAccountPositionPage({ rowCopyTradingPositi
     {
       Header: 'Account Username',
       accessor: 'accountUsername',
-    },
+    }
   ], [])
 
   const optionChainDescription = rowCopyTradingPosition.row.original.optionChainDescription;

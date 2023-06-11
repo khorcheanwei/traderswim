@@ -250,6 +250,27 @@ async function puppeteer_login_all_accounts(agentID, accountDocument) {
   }
 }
 
+// To get account database by agent
+async function account_database_by_agent(agentID) {
+  try {
+    const result = await accountDBOperation.searchAccountByAgentID(agentID);
+
+    if (result.success) {
+      const accountDocument = result.data;
+
+      let accountTableArray = await puppeteer_login_all_accounts(agentID, accountDocument);
+
+      // save accountTableArray to cache
+      let accountTableArray_key = agentID + "." + "accountTableArray";
+      account_cache.set(accountTableArray_key, accountTableArray);
+
+      return accountTableArray;
+    }
+  } catch(error) {
+    return null;
+  }
+} 
+
 
 // To get all accounts of particular agent
 async function account_database(httpRequest) {
@@ -259,26 +280,15 @@ async function account_database(httpRequest) {
     try {
       const agentID = agentDocument.id;
 
-      const result = await accountDBOperation.searchAccountByAgentID(agentID);
-
-      if (result.success) {
-        const accountDocument = result.data;
-
-        // get accountTableArray from cache
-        let accountTableArray_key = agentID + "." + "accountTableArray";
-        let accountTableArray = account_cache.get(accountTableArray_key);
-        if (accountTableArray != undefined) {
-          return { success: true, data: accountTableArray };
-        }
-        accountTableArray = await puppeteer_login_all_accounts(agentID, accountDocument);
-
-        // save accountTableArray from cache
-        account_cache.set(accountTableArray_key, accountTableArray);
-
+      // get accountTableArray from cache
+      let accountTableArray_key = agentID + "." + "accountTableArray";
+      let accountTableArray = account_cache.get(accountTableArray_key);
+      if (accountTableArray != undefined) {
         return { success: true, data: accountTableArray };
-      } else {
-        return { success: false, data: result.error };
       }
+
+      accountTableArray = await account_database_by_agent(agentID);
+      return {success: true, data: accountTableArray}
     } catch (error) {
       return { success: false, data: error.message };
     }
@@ -323,4 +333,5 @@ module.exports = {
   fetch_trading_account_info,
   account_database,
   account_delete,
+  account_database_by_agent,
 };

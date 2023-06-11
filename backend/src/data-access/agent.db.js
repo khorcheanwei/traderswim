@@ -4,6 +4,27 @@ const bcryptSalt = bcrypt.genSaltSync(12);
 function agentDBOperation(trading_management_db) {
   this.trading_management_db = trading_management_db;
 
+  // search all agent
+  this.searchAllAgentID = async function () {
+    try {
+      const sqlCommand = `SELECT id FROM agent`;
+
+      const queryResult = await new Promise((resolve, reject) => {
+        this.trading_management_db.all(sqlCommand, [], (err, row) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(row);
+          }
+        });
+      });
+
+      return { success: true, data: queryResult };
+    } catch (error) {
+      return { success: false, error: error };
+    }
+  };
+
   // search whether Agent existed by AgentUsername
   this.searchAgentName = async function (agentUsername) {
     try {

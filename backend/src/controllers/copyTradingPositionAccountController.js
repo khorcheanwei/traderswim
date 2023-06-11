@@ -186,4 +186,5 @@ async function copy_trading_position_database(httpRequest) {
 
 module.exports = {
     copy_trading_position_database,
+    copy_trading_position_by_agent
 };

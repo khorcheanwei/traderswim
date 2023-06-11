@@ -49,7 +49,7 @@ export default function CopyTradingPage() {
 
   const ref = useRef(null)
   useEffect(() => {
-    ref.current = setInterval(fetchCopyTradingAccountData, 1 * 1000);
+    ref.current = setInterval(fetchCopyTradingAccountData, 1 * 500);
     return () => {
       if(ref.current){
         clearInterval(ref.current);

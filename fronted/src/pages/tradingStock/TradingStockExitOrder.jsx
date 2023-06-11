@@ -1,32 +1,37 @@
 import axios from 'axios';
 import { useContext, useState, useEffect } from 'react';
-import { CopyTradingOrderContext } from '../context/CopyTradingOrderContext';
+import { CopyTradingPositionContext } from '../context/CopyTradingPositionContext';
 
 export default function TradingStockExitOrder({ rowCopyTradingPosition, onClose }) {
 
-    const {isOpenOrderExit, setIsOpenOrderExit} = useContext(CopyTradingOrderContext);
+    const {isOpenOrderExit, setIsOpenOrderExit} = useContext(CopyTradingPositionContext);
+    const {copyTradingPositionDataDict, setCopyTradingPositionDataDict} = useContext(CopyTradingPositionContext);
 
     var optionChainInstructionList = ["SELL_TO_CLOSE", "BUY_TO_OPEN"];
     var optionChainOrderTypeList = ["LIMIT", "MARKET", "MARKET_ON_CLOSE", "STOP", "STOP_LIMIT", "TRAILING_STOP"];
 
-    const agentTradingSessionID = rowCopyTradingPosition.cell.row.original.agentTradingSessionID;
     const optionChainDescription = rowCopyTradingPosition.cell.row.original.optionChainDescription;
+    const copyTradingPositionAllAccountData = copyTradingPositionDataDict[optionChainDescription];
+    const accountUsernameList = [];
+    for (let index = 0; index < copyTradingPositionAllAccountData.length; index++) {
+        accountUsernameList.push(copyTradingPositionAllAccountData[index]["accountUsername"])
+    }
 
     const rowOptionChainSymbol = rowCopyTradingPosition.cell.row.original.optionChainSymbol;
     //const rowOptionChainInstruction =rowCopyTradingPosition.cell.row.original.optionChainInstruction;
-    const rowOptionChainOrderType = rowCopyTradingPosition.cell.row.original.optionChainOrderType;
-    const rowOptionChainQuantity = rowCopyTradingPosition.cell.row.original.optionChainQuantity;
-    const rowOptionChainPrice = rowCopyTradingPosition.cell.row.original.optionChainPrice;
+    //const rowOptionChainOrderType = rowCopyTradingPosition.cell.row.original.optionChainOrderType;
+    const rowOptionChainSettledQuantity = rowCopyTradingPosition.cell.row.original.optionChainSettledQuantity;
+    const rowOptionChainAveragePrice = rowCopyTradingPosition.cell.row.original.optionChainAveragePrice;
 
     const [optionChainSymbol, setOptionChainSymbol] = useState(rowOptionChainSymbol) 
     const [optionChainInstruction, setOptionChainInstruction] = useState(optionChainInstructionList[0]);
-    const [optionChainOrderType, setOptionChainOrderType] = useState(rowOptionChainOrderType);
-    const [optionChainQuantity, setOptionContractTotal] = useState(rowOptionChainQuantity)
-    const [optionChainPrice, setOptionChainPrice] = useState(rowOptionChainPrice)
+    const [optionChainOrderType, setOptionChainOrderType] = useState(optionChainOrderTypeList[0]);
+    const [optionChainQuantity, setOptionChainQuantity] = useState(rowOptionChainSettledQuantity)
+    const [optionChainPrice, setOptionChainPrice] = useState(rowOptionChainAveragePrice)
   
     async function handleExitOrder() {
         try {
-            const { data } = await axios.post("/copy_trading_account/exit_order/", { agentTradingSessionID, optionChainSymbol, optionChainInstruction, optionChainOrderType, optionChainQuantity, optionChainPrice })
+            const { data } = await axios.post("/copy_trading_account/exit_order/", { optionChainSymbol, optionChainInstruction, optionChainOrderType, optionChainQuantity, optionChainPrice })
 
             if (data != "success") {
                 alert("Exit order failed");
@@ -97,7 +102,7 @@ export default function TradingStockExitOrder({ rowCopyTradingPosition, onClose 
                         <input
                             className="block px-2.5 pb-1.5 pt-3 w-full text-sm text-gray-900 bg-transparent  border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                             type="text"
-                            onChange={event => setOptionContractTotal(event.target.value)}
+                            onChange={event => setOptionChainQuantity(event.target.value)}
                             value={optionChainQuantity}
                             placeholder=" " />
                         <label

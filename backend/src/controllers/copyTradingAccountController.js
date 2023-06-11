@@ -612,4 +612,5 @@ module.exports = {
   copy_trading_database,
   copy_trading_history_database,
   sync_order_and_save_to_copy_trading_database,
+  copy_trading_database_by_agent,
 };

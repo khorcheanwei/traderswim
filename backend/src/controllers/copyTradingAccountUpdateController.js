@@ -69,7 +69,6 @@ async function post_exit_order_all_accounts(all_trading_accounts_list, payload) 
 // Copy trading exit order
 async function copy_trading_exit_order(httpRequest) {
   let {
-    agentTradingSessionID,
     optionChainSymbol,
     optionChainInstruction,
     optionChainOrderType,
@@ -84,7 +83,7 @@ async function copy_trading_exit_order(httpRequest) {
       const agentID = agentDocument.id;
 
       // get all accountName of particular agentID
-      let result = await copyTradingAccountDBBOperation.searchCopyTradingAccountBasedTradingSessionID(agentID, agentTradingSessionID);
+      let result = await copyTradingAccountDBBOperation.searchCopyTradingAccountBasedTradingSessionID(agentID);
       if (result.success != true) {
         return { success: false, data: result.error };
       }
@@ -133,7 +132,7 @@ async function copy_trading_exit_order(httpRequest) {
       result = await agentDBOperation.searchAgentTradingSessionID(agentID);
 
       agentDocument = result.data;
-      agentTradingSessionID = agentDocument.agentTradingSessionID + 1;
+      let agentTradingSessionID = agentDocument.agentTradingSessionID + 1;
       // save orders for all trading accounts to copyTradingAccount table
       await createCopyTradingAccountItem_all_accounts(agentTradingSessionID, accountDocument, result_promise_order_information, result_promise_exit_order)
       

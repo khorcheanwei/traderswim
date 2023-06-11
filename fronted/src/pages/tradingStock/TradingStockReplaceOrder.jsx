@@ -20,7 +20,7 @@ export default function TradingStockReplaceOrder({ rowCopyTradingOrder, onClose 
     const [optionChainSymbol, setOptionChainSymboln] = useState(rowOptionChainSymbol);
     const [optionChainInstruction, setOptionChainInstruction] = useState(rowOptionChainInstruction);
     const [optionChainOrderType, setOptionChainOrderType] = useState(rowOptionChainOrderType);
-    const [optionChainQuantity, setOptionContractTotal] = useState(rowOptionChainQuantity)
+    const [optionChainQuantity, setOptionChainQuantity] = useState(rowOptionChainQuantity)
     const [optionChainPrice, setOptionChainPrice] = useState(rowOptionChainPrice)
   
     async function handleReplaceOrder() {
@@ -97,7 +97,7 @@ export default function TradingStockReplaceOrder({ rowCopyTradingOrder, onClose 
                         <input
                             className="block px-2.5 pb-1.5 pt-3 w-full text-sm text-gray-900 bg-transparent  border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                             type="text"
-                            onChange={event => setOptionContractTotal(event.target.value)}
+                            onChange={event => setOptionChainQuantity(event.target.value)}
                             value={optionChainQuantity}
                             placeholder=" " />
                         <label

@@ -337,42 +337,11 @@ async function delete_agent_list_from_cache(agentID) {
     }
 }
 
-// log in
-async function tradingAccountCronJob() {
-    try {
-        let agent_list_cache_key = "agent_list";
-        let agent_list_cache_value = auth_cache.get(agent_list_cache_key);
-
-        if (agent_list_cache_value != undefined) {
-            for (let index = 0; index < agent_list_cache_value.length; index++) {
-                let agentID = agent_list_cache_value[index];
-                const result = await accountDBOperation.searchAccountByAgentID(agentID);
-
-                if (result.success) {
-                    const accountDocument = result.data;
-                    Object.keys(accountDocument).forEach(async function (key, index) {
-
-                        let accountUsername = accountDocument[index].accountUsername;
-                        let accountPassword = accountDocument[index].accountPassword;
-
-                        let { connected, refreshToken } = await puppeteer_login_account(agentID, accountUsername, accountPassword);
-                    });
-                } else {
-                }
-            }
-        }
-    } catch (error) {
-        console.log(error.message);
-        return null;
-    }
-
-}
-
 module.exports = {
     get_auth_connection_time,
     puppeteer_login_account,
     get_access_token_from_cache,
+    get_agent_list_to_cache,
     store_agent_list_to_cache,
     delete_agent_list_from_cache,
-    tradingAccountCronJob
 };
