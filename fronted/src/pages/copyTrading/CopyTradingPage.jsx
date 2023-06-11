@@ -4,7 +4,7 @@ import { useContext, useState, useEffect, useRef  } from 'react';
 
 import { CopyTradingAccountContext } from '../context/CopyTradingAccountContext';
 import { CopyTradingPositionContext } from '../context/CopyTradingPositionContext';
-import CopyTradingOrderPage from '../copyTradingAllAccountOrder/CopyTradingOrderPage.jsx'
+import CopyTradingOrderPage from '../copyTradingOrder/CopyTradingOrderPage.jsx'
 import CopyTradingPositionPage from '../copyTradingPosition/CopyTradingPositionPage'
 
 export default function CopyTradingPage() {
@@ -63,7 +63,7 @@ export default function CopyTradingPage() {
   return (
     <div>
       <CopyTradingOrderPage />
-      <CopyTradingPositionPage/>
+      {/*<CopyTradingPositionPage/>*/}
       
     </div>
   );

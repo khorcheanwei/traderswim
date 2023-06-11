@@ -61,7 +61,7 @@ export default function CopyTradingAllAccountPositionPage({ rowCopyTradingPositi
             onClick={onClose}>
             CANCEL
         </button>
-        <CopyTradingAllAccountPositionTable columns={columns} data={data} />
+        {/*<CopyTradingAllAccountPositionTable columns={columns} data={data} />*/}
     </div>
   );
 }

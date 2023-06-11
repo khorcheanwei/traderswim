@@ -7,7 +7,7 @@ import { viewAllPositionPanel } from './CopyTradingPositionTable'
 import CopyTradingAllAccountPositionTable from './CopyTradingAllAccountPositionTable'
 
 export default function CopyTradingPositionPage() {
-  const {copyTradingPositionMainAccountData, setCopyTradingPositionMainAccountData} = useContext(CopyTradingPositionContext);
+  //const {copyTradingPositionMainAccountData, setCopyTradingPositionMainAccountData} = useContext(CopyTradingPositionContext);
 
   const columns = React.useMemo(() => [
     {
@@ -15,6 +15,11 @@ export default function CopyTradingPositionPage() {
       accessor: 'viewAllOrder',
       Cell: viewAllPositionPanel,
     },
+    /*{
+      Header: 'Change position',
+      accessor: 'ChangePosition',
+      Cell: viewAllPositionPanel,
+    },*/
     {
       Header: 'Symbol',
       accessor: 'optionChainSymbol',
@@ -54,9 +59,9 @@ export default function CopyTradingPositionPage() {
   ], [])
 
   
-  var data = React.useMemo(() => copyTradingPositionMainAccountData, [copyTradingPositionMainAccountData])
+  //var data = React.useMemo(() => copyTradingPositionMainAccountData, [copyTradingPositionMainAccountData])
 
   return (
-    <CopyTradingAllAccountPositionTable columns={columns} data={data} />
+    {/*<CopyTradingAllAccountPositionTable columns={columns} data={data} />*/}
   );
 }
