@@ -2,7 +2,7 @@ import axios from 'axios';
 import React from 'react'
 import { useContext, useState, useEffect, useRef  } from 'react';
 
-import { CopyTradingAccountContext } from '../context/CopyTradingAccountContext';
+import { CopyTradingOrderContext } from '../context/CopyTradingOrderContext';
 import CopyTradingAllAccountOrderTable from './CopyTradingAllAccountOrderTable'
 
 export default function CopyTradingAllAccountOrderPage({ rowCopyTradingAccount, onClose }) {
@@ -60,7 +60,7 @@ export default function CopyTradingAllAccountOrderPage({ rowCopyTradingAccount, 
 
   const agentTradingSessionID = rowCopyTradingAccount.row.original.agentTradingSessionID;
   
-  const {copyTradingAccountDataDict, setCopyTradingAccountDataDict} = useContext(CopyTradingAccountContext);
+  const {copyTradingAccountDataDict, setCopyTradingAccountDataDict} = useContext(CopyTradingOrderContext);
   const copyTradingAllAccountData = copyTradingAccountDataDict[agentTradingSessionID];
 
   var data = React.useMemo(() => copyTradingAllAccountData, [copyTradingAllAccountData])

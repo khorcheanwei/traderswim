@@ -7,7 +7,7 @@ import AgentRegisterPage from './pages/agent/AgentRegisterPage';
 import TradingPage from './pages/TradingPage';
 import { UserContextProvider } from './pages/context/UserContext';
 import { AccountContextProvider } from './pages/context/AccountContext';
-import { CopyTradingAccountContextProvider } from './pages/context/CopyTradingAccountContext';
+import {CopyTradingOrderContextProvider } from './pages/context/CopyTradingOrderContext';
 import { CopyTradingPositionContextProvider } from './pages/context/CopyTradingPositionContext';
 import { TradeHistoryContextProvider } from './pages/context/TradeHistoryContext';
 import {TradeStockContextProvider } from './pages/context/TradeStockContext';
@@ -20,7 +20,7 @@ function App() {
   return (
     <UserContextProvider>
       <AccountContextProvider>
-        <CopyTradingAccountContextProvider>
+        <CopyTradingOrderContextProvider>
           <CopyTradingPositionContextProvider>
             <TradeHistoryContextProvider>
               <TradeStockContextProvider>
@@ -34,7 +34,7 @@ function App() {
               </TradeStockContextProvider>
             </TradeHistoryContextProvider>
           </CopyTradingPositionContextProvider>
-        </CopyTradingAccountContextProvider>
+          </CopyTradingOrderContextProvider>
       </AccountContextProvider>
     </UserContextProvider>
   )

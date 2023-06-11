@@ -2,14 +2,14 @@ import axios from 'axios';
 import React from 'react'
 import { useContext, useState, useEffect, useRef  } from 'react';
 
-import { CopyTradingAccountContext } from '../context/CopyTradingAccountContext';
+import { CopyTradingOrderContext } from '../context/CopyTradingOrderContext';
 import { CopyTradingPositionContext } from '../context/CopyTradingPositionContext';
 import CopyTradingOrderPage from '../copyTradingAllAccountOrder/CopyTradingOrderPage.jsx'
 import CopyTradingPositionPage from '../copyTradingPosition/CopyTradingPositionPage'
 
 export default function CopyTradingPage() {
 
-  const {copyTradingAccountDataDict, setCopyTradingAccountDataDict, copyTradingMainAccountData, setCopyTradingMainAccountData} = useContext(CopyTradingAccountContext);
+  const {copyTradingAccountDataDict, setCopyTradingAccountDataDict, copyTradingMainAccountData, setCopyTradingMainAccountData} = useContext(CopyTradingOrderContext);
   const {copyTradingPositionAccountDataDict, setCopyTradingPositionAccountDataDict,copyTradingPositionMainAccountData, setCopyTradingPositionMainAccountData} = useContext(CopyTradingPositionContext);
   
   async function fetchCopyTradingAccountData() {

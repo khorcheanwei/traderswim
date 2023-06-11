@@ -1,9 +1,9 @@
 import { createContext} from "react";
 import { useState} from 'react';
 
-export const CopyTradingAccountContext = createContext({});
+export const CopyTradingOrderContext = createContext({});
 
-export function CopyTradingAccountContextProvider({children}) {
+export function CopyTradingOrderContextProvider({children}) {
     const [copyTradingAccountDataDict, setCopyTradingAccountDataDict] = useState({});
     const [copyTradingMainAccountData, setCopyTradingMainAccountData] = useState([]);
 
@@ -16,8 +16,8 @@ export function CopyTradingAccountContextProvider({children}) {
     const [isOpenOrderDelete, setIsOpenOrderDelete] = useState(false);
     
     return (
-        <CopyTradingAccountContext.Provider value={{ copyTradingAccountDataDict, setCopyTradingAccountDataDict, copyTradingMainAccountData, setCopyTradingMainAccountData, rowCopyTradingAccount, setRowCopyTradingAccount, isOpenViewAllOrders, setIsOpenViewAllOrders, isOpenTradingStock, setIsOpenTradingStock, isOpenOrderReplace, setIsOpenOrderReplace, isOpenOrderDelete, setIsOpenOrderDelete}}>
+        <CopyTradingOrderContext.Provider value={{ copyTradingAccountDataDict, setCopyTradingAccountDataDict, copyTradingMainAccountData, setCopyTradingMainAccountData, rowCopyTradingAccount, setRowCopyTradingAccount, isOpenViewAllOrders, setIsOpenViewAllOrders, isOpenTradingStock, setIsOpenTradingStock, isOpenOrderReplace, setIsOpenOrderReplace, isOpenOrderDelete, setIsOpenOrderDelete}}>
             {children}
-        </CopyTradingAccountContext.Provider>
+        </CopyTradingOrderContext.Provider>
     );
 }

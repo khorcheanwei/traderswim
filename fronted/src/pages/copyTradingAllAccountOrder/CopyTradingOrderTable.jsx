@@ -3,7 +3,7 @@ import { useAsyncDebounce } from 'react-table'
 import { Button, PageButton } from './../shared/Button'
 import { useContext, useState, useEffect } from 'react';
 
-import { CopyTradingAccountContext } from '../context/CopyTradingAccountContext';
+import { CopyTradingOrderContext } from '../context/CopyTradingOrderContext';
 import TradingStockDeleteOrder from '../tradingStock/TradingStockDeleteOrder';
 import TradingStockPlaceOrder from '../tradingStock/TradingStockPlaceOrder';
 import TradingStockReplaceOrder from '../tradingStock/TradingStockReplaceOrder';
@@ -25,7 +25,7 @@ function GlobalFilter({
     setGlobalFilter(value || undefined)
   }, 200)
 
-  const { isOpenTradingStock, setIsOpenTradingStock } = useContext(CopyTradingAccountContext);
+  const { isOpenTradingStock, setIsOpenTradingStock } = useContext(CopyTradingOrderContext);
 
   const placeOrderClose = async () => {
     setIsOpenTradingStock(!isOpenTradingStock)
@@ -61,8 +61,8 @@ function GlobalFilter({
 }
 
 export function viewAllOrderPanel(row) {
-  const { isOpenViewAllOrders, setIsOpenViewAllOrders } = useContext(CopyTradingAccountContext);
-  const { rowCopyTradingAccount, setRowCopyTradingAccount } = useContext(CopyTradingAccountContext);
+  const { isOpenViewAllOrders, setIsOpenViewAllOrders } = useContext(CopyTradingOrderContext);
+  const { rowCopyTradingAccount, setRowCopyTradingAccount } = useContext(CopyTradingOrderContext);
 
   const viewAllOrderClose = async () => {
     if (isOpenViewAllOrders == false) {
@@ -86,9 +86,9 @@ export function viewAllOrderPanel(row) {
 }
 
 export function ChangeOrderPanel(row) {
-  const { isOpenOrderExit, setIsOpenOrderExit,  isOpenOrderReplace, setIsOpenOrderReplace, isOpenOrderDelete, setIsOpenOrderDelete } = useContext(CopyTradingAccountContext);
+  const { isOpenOrderExit, setIsOpenOrderExit,  isOpenOrderReplace, setIsOpenOrderReplace, isOpenOrderDelete, setIsOpenOrderDelete } = useContext(CopyTradingOrderContext);
   
-  const { rowCopyTradingAccount, setRowCopyTradingAccount } = useContext(CopyTradingAccountContext);
+  const { rowCopyTradingAccount, setRowCopyTradingAccount } = useContext(CopyTradingOrderContext);
 
   const orderReplaceClose = async () => {
     if (isOpenOrderReplace == false) {

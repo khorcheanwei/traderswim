@@ -1,10 +1,10 @@
 import axios from 'axios';
 import { useContext, useState, useEffect } from 'react';
-import { CopyTradingAccountContext } from '../context/CopyTradingAccountContext';
+import { CopyTradingOrderContext } from '../context/CopyTradingOrderContext';
 
 export default function TradingStockExitOrder({ rowCopyTradingPosition, onClose }) {
 
-    const {isOpenOrderExit, setIsOpenOrderExit} = useContext(CopyTradingAccountContext);
+    const {isOpenOrderExit, setIsOpenOrderExit} = useContext(CopyTradingOrderContext);
 
     var optionChainInstructionList = ["SELL_TO_CLOSE", "BUY_TO_OPEN"];
     var optionChainOrderTypeList = ["LIMIT", "MARKET", "MARKET_ON_CLOSE", "STOP", "STOP_LIMIT", "TRAILING_STOP"];

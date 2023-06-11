@@ -2,12 +2,12 @@ import axios from 'axios';
 import React from 'react'
 import { useContext, useState, useEffect, useRef  } from 'react';
 
-import { CopyTradingAccountContext } from '../context/CopyTradingAccountContext';
+import { CopyTradingOrderContext } from '../context/CopyTradingOrderContext';
 import CopyTradingOrderTable, { ChangeOrderPanel, viewAllOrderPanel } from './CopyTradingOrderTable'
 import CopyTradingPositionPage from '../copyTradingPosition/CopyTradingPositionPage'
 
 export default function CopyTradingOrderPage() {
-  const {copyTradingMainAccountData, setCopyTradingMainAccountData} = useContext(CopyTradingAccountContext);
+  const {copyTradingMainAccountData, setCopyTradingMainAccountData} = useContext(CopyTradingOrderContext);
 
   const columns = React.useMemo(() => [
     {
