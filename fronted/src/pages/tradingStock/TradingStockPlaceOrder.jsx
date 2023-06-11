@@ -1,9 +1,10 @@
 import axios from 'axios';
 import { useContext, useState, useEffect } from 'react';
 import { CopyTradingAccountContext } from '../context/CopyTradingAccountContext';
+import Autocomplete from './Autocomplete';
 
 
-export default function TradingStock({ onClose }) {
+export default function TradingStockPlceOrder({ onClose }) {
 
     var optionChainInstructionList = ["BUY_TO_OPEN", "SELL_TO_CLOSE"];
     var optionChainCallPutList = ["CALL", "PUT"];
@@ -220,6 +221,7 @@ export default function TradingStock({ onClose }) {
                     </label>
                 </div>
                 <div className="relative">
+                    {/* <Autocomplete items={optionChainStrikeList} /> */}
                     <select
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
                         onChange={event => getOptionChainBidPrice(event.target.value)}>

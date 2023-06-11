@@ -21,8 +21,8 @@ export default function CopyTradingAllAccountOrderPage({ rowCopyTradingAccount, 
       accessor: 'optionChainDescription',
     },
     {
-      Header: 'Remaining Qty',
-      accessor: 'optionChainRemainingQuantity',
+      Header: 'Filled Qty',
+      accessor: 'optionChainFilledQuantity',
     },
     {
       Header: 'Price',

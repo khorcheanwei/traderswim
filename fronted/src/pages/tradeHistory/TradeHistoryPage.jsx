@@ -17,8 +17,8 @@ export default function TradeActivityPage() {
       accessor: 'optionChainDescription',
     },
     {
-      Header: 'Remaining Qty',
-      accessor: 'optionChainRemainingQuantity',
+      Header: 'Filled Qty',
+      accessor: 'optionChainFilledQuantity',
     },
     {
       Header: 'Price',
