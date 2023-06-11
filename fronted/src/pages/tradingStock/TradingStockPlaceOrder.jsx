@@ -1,8 +1,6 @@
 import axios from 'axios';
 import { useContext, useState, useEffect } from 'react';
 import { CopyTradingAccountContext } from '../context/CopyTradingAccountContext';
-import useWebSocket from 'react-use-websocket';
-import TradingStockList from './TradingStockList';
 
 
 export default function TradingStock({ onClose }) {
@@ -147,7 +145,7 @@ export default function TradingStock({ onClose }) {
     return (
         <div>
             <div className="mb-4">
-                <h1 className="block text-gray-700 text-lm font-bold mb-2">Trade Stock</h1>
+                <h1 className="block text-gray-700 text-lm font-bold mb-2">Option Place Order</h1>
             </div>
             <div>
                 

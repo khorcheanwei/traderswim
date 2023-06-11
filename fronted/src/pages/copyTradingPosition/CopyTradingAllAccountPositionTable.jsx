@@ -1,11 +1,6 @@
 import React from 'react'
 import { useAsyncDebounce } from 'react-table'
-import { Button, PageButton } from '../shared/Button'
-import { useContext, useState, useEffect } from 'react';
-import { CopyTradingAccountContext } from '../context/CopyTradingAccountContext';
-import TradingStock from '../tradingStock/TradingStock';
 
-import Overlay from "../Overlay";
 import CommonTable from '../shared/Table';
 
 // Define a default UI for filtering

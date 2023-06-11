@@ -3,7 +3,7 @@ import { useAsyncDebounce } from 'react-table'
 import { Button, PageButton } from '../shared/Button'
 import { useContext, useState, useEffect } from 'react';
 import { CopyTradingAccountContext } from '../context/CopyTradingAccountContext';
-import TradingStock from '../tradingStock/TradingStock';
+import TradingStockPlaceOrder from '../tradingStock/TradingStockPlaceOrder';
 
 import Overlay from "../Overlay";
 import CommonTable from '../shared/Table';
@@ -30,7 +30,7 @@ function GlobalFilter({
     
       <div>
         <Overlay isOpen={isOpenTradingStock} >
-          <TradingStock onClose={placeOrderClose}></TradingStock>
+          <TradingStockPlaceOrder onClose={placeOrderClose}></TradingStockPlaceOrder>
         </Overlay>
       </div>
     

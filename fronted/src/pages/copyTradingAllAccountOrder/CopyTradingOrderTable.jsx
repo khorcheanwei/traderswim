@@ -5,7 +5,7 @@ import { useContext, useState, useEffect } from 'react';
 
 import { CopyTradingAccountContext } from '../context/CopyTradingAccountContext';
 import TradingStockDeleteOrder from '../tradingStock/TradingStockDeleteOrder';
-import TradingStock from '../tradingStock/TradingStock';
+import TradingStockPlaceOrder from '../tradingStock/TradingStockPlaceOrder';
 import TradingStockReplaceOrder from '../tradingStock/TradingStockReplaceOrder';
 import CopyTradingAllAccountOrderPage from '../copyTradingAllAccountOrder/CopyTradingAllAccountOrderPage';
 
@@ -53,7 +53,7 @@ function GlobalFilter({
       </div>
       <div>
         <Overlay isOpen={isOpenTradingStock} >
-          <TradingStock onClose={placeOrderClose}></TradingStock>
+          <TradingStockPlaceOrder onClose={placeOrderClose}></TradingStockPlaceOrder>
         </Overlay>
       </div>
     </div>
