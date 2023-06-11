@@ -2,21 +2,21 @@ import axios from 'axios';
 import { useContext, useState, useEffect } from 'react';
 import { CopyTradingAccountContext } from '../context/CopyTradingAccountContext';
 
-export default function TradingStockExitOrder({ rowCopyTradingAccount, onClose }) {
+export default function TradingStockExitOrder({ rowCopyTradingPosition, onClose }) {
 
     const {isOpenOrderExit, setIsOpenOrderExit} = useContext(CopyTradingAccountContext);
 
     var optionChainInstructionList = ["SELL_TO_CLOSE", "BUY_TO_OPEN"];
     var optionChainOrderTypeList = ["LIMIT", "MARKET", "MARKET_ON_CLOSE", "STOP", "STOP_LIMIT", "TRAILING_STOP"];
 
-    const agentTradingSessionID = rowCopyTradingAccount.cell.row.original.agentTradingSessionID;
-    const optionChainDescription = rowCopyTradingAccount.cell.row.original.optionChainDescription;
+    const agentTradingSessionID = rowCopyTradingPosition.cell.row.original.agentTradingSessionID;
+    const optionChainDescription = rowCopyTradingPosition.cell.row.original.optionChainDescription;
 
-    const rowOptionChainSymbol = rowCopyTradingAccount.cell.row.original.optionChainSymbol;
-    //const rowOptionChainInstruction =rowCopyTradingAccount.cell.row.original.optionChainInstruction;
-    const rowOptionChainOrderType = rowCopyTradingAccount.cell.row.original.optionChainOrderType;
-    const rowOptionChainQuantity = rowCopyTradingAccount.cell.row.original.optionChainQuantity;
-    const rowOptionChainPrice = rowCopyTradingAccount.cell.row.original.optionChainPrice;
+    const rowOptionChainSymbol = rowCopyTradingPosition.cell.row.original.optionChainSymbol;
+    //const rowOptionChainInstruction =rowCopyTradingPosition.cell.row.original.optionChainInstruction;
+    const rowOptionChainOrderType = rowCopyTradingPosition.cell.row.original.optionChainOrderType;
+    const rowOptionChainQuantity = rowCopyTradingPosition.cell.row.original.optionChainQuantity;
+    const rowOptionChainPrice = rowCopyTradingPosition.cell.row.original.optionChainPrice;
 
     const [optionChainSymbol, setOptionChainSymbol] = useState(rowOptionChainSymbol) 
     const [optionChainInstruction, setOptionChainInstruction] = useState(optionChainInstructionList[0]);

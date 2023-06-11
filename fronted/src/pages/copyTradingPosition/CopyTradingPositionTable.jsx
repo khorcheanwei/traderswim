@@ -67,9 +67,9 @@ export function ChangePositionPanel(row) {
           <span className="font-medium text-white dark:text-white">S</span>
         </div>
       </div>
-      {/*<Overlay isOpen={isOpenOrderExit} >
+      <Overlay isOpen={isOpenOrderExit} >
         <TradingStockExitOrder rowCopyTradingPosition={rowCopyTradingPosition} onClose={orderExitClose}></TradingStockExitOrder>
-  </Overlay>*/}
+    </Overlay>
     </div>
   );
 };

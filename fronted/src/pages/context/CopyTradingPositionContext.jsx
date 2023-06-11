@@ -14,10 +14,10 @@ export function CopyTradingPositionContextProvider({children}) {
     const [isCopyTradingPositionSuccessful, setIsCopyTradingPositionSuccessful] =  useState(false);
     const [isOpenCopyTradingPositionDelete, setIsOpenCopyTradingPositionDelete] = useState(false);
 
-    const [isOpenTradingStock, setIsOpenTradingStock] = useState(false);
+    const [isOpenOrderExit, setIsOpenOrderExit] = useState(false);
     
     return (
-        <CopyTradingPositionContext.Provider value={{ copyTradingPositionAccountDataDict, setCopyTradingPositionAccountDataDict, copyTradingPositionMainAccountData, setCopyTradingPositionMainAccountData, rowCopyTradingPosition, setRowCopyTradingPosition, isOpenViewAllPosition, setIsOpenViewAllPosition, isCopyTradingPositionSuccessful, setIsCopyTradingPositionSuccessful,  isOpenCopyTradingPositionDelete, setIsOpenCopyTradingPositionDelete, isOpenTradingStock, setIsOpenTradingStock}}>
+        <CopyTradingPositionContext.Provider value={{ copyTradingPositionAccountDataDict, setCopyTradingPositionAccountDataDict, copyTradingPositionMainAccountData, setCopyTradingPositionMainAccountData, rowCopyTradingPosition, setRowCopyTradingPosition, isOpenViewAllPosition, setIsOpenViewAllPosition, isCopyTradingPositionSuccessful, setIsCopyTradingPositionSuccessful,  isOpenCopyTradingPositionDelete, setIsOpenCopyTradingPositionDelete, isOpenOrderExit, setIsOpenOrderExit}}>
             {children}
         </CopyTradingPositionContext.Provider>
     );
