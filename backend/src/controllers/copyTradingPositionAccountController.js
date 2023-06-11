@@ -36,14 +36,11 @@ async function get_position_information(config, accountName, accountUsername, op
             }
             let current_description = current_position["instrument"]["description"];
             let current_averagePrice = current_position["averagePrice"];
-            let current_longQuantity = current_position["longQuantity"];
             let current_settledLongQuantity = current_position["settledLongQuantity"];
-            let current_shortQuantity = current_position["shortQuantity"];
             let current_settledShortQuantity = current_position["settledShortQuantity"];
             
             copyTradingPositionAccountData.push({accountName: accountName, accountUsername: accountUsername, optionChainSymbol: current_symbol, optionChainDescription: current_description, optionChainAveragePrice: current_averagePrice,
-              optionChainLongQuantity: current_longQuantity, optionChainSettledLongQuantity: current_settledLongQuantity, optionChainShortQuantity: current_shortQuantity,
-              optionChainSettledShortQuantity: current_settledShortQuantity})
+               optionChainSettledLongQuantity: current_settledLongQuantity, optionChainSettledShortQuantity: current_settledShortQuantity})
         }
     }
     console.log(`Successful get position information - accountUsername: ${accountUsername} with ${JSON.stringify(config)}. Status: ${response.status}`)
@@ -127,19 +124,23 @@ async function copy_trading_position_database(httpRequest) {
         const copyTradingPositionAccountDocument = await get_position_information_all_accounts(all_trading_accounts_list, optionChainSymbolList);
         let copyTradingPositionAccountDataDict = {};
         for (let index = 0; index < copyTradingPositionAccountDocument.length; index++) {
-          const currCopyTradingAccount = copyTradingPositionAccountDocument[index];
-          const current_optionChainDescription = currCopyTradingAccount["optionChainDescription"];
+          const current_copyTradingAccount = copyTradingPositionAccountDocument[index];
+          const current_optionChainDescription = current_copyTradingAccount["optionChainDescription"];
+          const current_optionChainSettledLongQuantity = current_copyTradingAccount["optionChainSettledLongQuantity"];
+          const current_optionChainSettledShortQuantity = current_copyTradingAccount["optionChainSettledShortQuantity"];
+
+          let current_optionChainSettledQuantity = current_optionChainSettledLongQuantity;
+          if (current_optionChainSettledLongQuantity == 0) {
+            current_optionChainSettledQuantity = current_optionChainSettledShortQuantity;
+          }
 
           const currCopyTradingPositionAccountData = {
-            accountName: currCopyTradingAccount["accountName"],
-            accountUsername: currCopyTradingAccount["accountUsername"],
-            optionChainAveragePrice: currCopyTradingAccount["optionChainAveragePrice"],
-            optionChainSymbol: currCopyTradingAccount["optionChainSymbol"],
+            accountName: current_copyTradingAccount["accountName"],
+            accountUsername: current_copyTradingAccount["accountUsername"],
+            optionChainAveragePrice: current_copyTradingAccount["optionChainAveragePrice"],
+            optionChainSymbol: current_copyTradingAccount["optionChainSymbol"],
             optionChainDescription: current_optionChainDescription,
-            optionChainLongQuantity: currCopyTradingAccount["optionChainLongQuantity"],
-            optionChainSettledLongQuantity: currCopyTradingAccount["optionChainSettledLongQuantity"],
-            optionChainSettledShortQuantity: currCopyTradingAccount["optionChainSettledShortQuantity"],
-            optionChainShortQuantity: currCopyTradingAccount["optionChainShortQuantity"],
+            optionChainSettledQuantity: current_optionChainSettledQuantity,
           }
   
           if (copyTradingPositionAccountDataDict.hasOwnProperty(current_optionChainDescription) == false) {
