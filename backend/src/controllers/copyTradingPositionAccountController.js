@@ -85,7 +85,7 @@ async function get_position_information_all_accounts(all_trading_accounts_list, 
 
 
 // Copy trading position database for cron job 
-async function copy_trading_database_by_agent(agentID) { 
+async function copy_trading_position_by_agent(agentID) { 
   try {
     // get all accountName of particular agentID
     let result = await accountDBOperation.searchAccountByAgentID(agentID);
@@ -172,7 +172,7 @@ async function copy_trading_position_database(httpRequest) {
           return { success: true, data: copyTradingPositionDataDict };
         }
 
-        copyTradingPositionDataDict = await copy_trading_database_by_agent(agentID)
+        copyTradingPositionDataDict = await copy_trading_position_by_agent(agentID)
         
         return { success: true, data: copyTradingPositionDataDict };
 
