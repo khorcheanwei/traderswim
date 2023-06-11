@@ -70,6 +70,7 @@ async function post_exit_order_all_accounts(all_trading_accounts_list, payload) 
 async function copy_trading_exit_order(httpRequest) {
   let {
     agentTradingSessionID,
+    optionChainSymbol,
     optionChainInstruction,
     optionChainOrderType,
     optionChainQuantity,
@@ -98,10 +99,6 @@ async function copy_trading_exit_order(httpRequest) {
 
         all_trading_accounts_list.push({ accountId: accountId, accountUsername: accountUsername, authToken: authToken })
       }
-
-      // get optionChainSymbol based on agentTradingSessionID
-      result = await copyTradingAccountDBBOperation.getAllOptionChainSymbol(agentID, agentTradingSessionID);
-      const optionChainSymbol = result.data[0]["optionChainSymbol"];
 
       // exit order with all accounts of particular agent
       let payload = {

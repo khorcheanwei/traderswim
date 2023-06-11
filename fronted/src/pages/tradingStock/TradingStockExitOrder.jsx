@@ -12,11 +12,13 @@ export default function TradingStockExitOrder({ rowCopyTradingAccount, onClose }
     const agentTradingSessionID = rowCopyTradingAccount.cell.row.original.agentTradingSessionID;
     const optionChainDescription = rowCopyTradingAccount.cell.row.original.optionChainDescription;
 
+    const rowOptionChainSymbol = rowCopyTradingAccount.cell.row.original.optionChainSymbol;
     //const rowOptionChainInstruction =rowCopyTradingAccount.cell.row.original.optionChainInstruction;
-    const rowOptionChainOrderType =rowCopyTradingAccount.cell.row.original.optionChainOrderType;
-    const rowOptionChainQuantity =rowCopyTradingAccount.cell.row.original.optionChainQuantity;
-    const rowOptionChainPrice =rowCopyTradingAccount.cell.row.original.optionChainPrice;
+    const rowOptionChainOrderType = rowCopyTradingAccount.cell.row.original.optionChainOrderType;
+    const rowOptionChainQuantity = rowCopyTradingAccount.cell.row.original.optionChainQuantity;
+    const rowOptionChainPrice = rowCopyTradingAccount.cell.row.original.optionChainPrice;
 
+    const [optionChainSymbol, setOptionChainSymbol] = useState(rowOptionChainSymbol) 
     const [optionChainInstruction, setOptionChainInstruction] = useState(optionChainInstructionList[0]);
     const [optionChainOrderType, setOptionChainOrderType] = useState(rowOptionChainOrderType);
     const [optionChainQuantity, setOptionContractTotal] = useState(rowOptionChainQuantity)
@@ -24,7 +26,7 @@ export default function TradingStockExitOrder({ rowCopyTradingAccount, onClose }
   
     async function handleExitOrder() {
         try {
-            const { data } = await axios.post("/copy_trading_account/exit_order/", { agentTradingSessionID, optionChainInstruction, optionChainOrderType, optionChainQuantity, optionChainPrice })
+            const { data } = await axios.post("/copy_trading_account/exit_order/", { agentTradingSessionID, optionChainSymbol, optionChainInstruction, optionChainOrderType, optionChainQuantity, optionChainPrice })
 
             if (data != "success") {
                 alert("Exit order failed");
