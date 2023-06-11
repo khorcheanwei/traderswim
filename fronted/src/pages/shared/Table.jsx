@@ -75,7 +75,7 @@ function CommonTable({ columns, data, GlobalFilter }) {
                         // we can add them into the header props
                         <th
                           scope="col"
-                          className="group px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                          className="group px-1 py-1 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                           {...column.getHeaderProps(column.getSortByToggleProps())}
                         >
                           <div className="flex items-center justify-between">
@@ -108,7 +108,7 @@ function CommonTable({ columns, data, GlobalFilter }) {
                           return (
                             <td
                               {...cell.getCellProps()}
-                              className="px-6 py-4 whitespace-nowrap"
+                              className="px-1 py-1 whitespace-nowrap"
                               role="cell"
                             >
                               {cell.column.Cell.name === "defaultRenderer"
