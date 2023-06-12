@@ -9,13 +9,13 @@ export default function TradingStockReplaceOrder({ rowCopyTradingOrder, onClose 
     var optionChainInstructionList = ["BUY_TO_OPEN", "SELL_TO_CLOSE"];
     var optionChainOrderTypeList = ["LIMIT", "MARKET", "MARKET_ON_CLOSE", "STOP", "STOP_LIMIT", "TRAILING_STOP"];
 
-    const agentTradingSessionID = rowCopyTradingOrder.cell.row.original.agentTradingSessionID;
-    const optionChainDescription = rowCopyTradingOrder.cell.row.original.optionChainDescription;
-    const rowOptionChainSymbol = rowCopyTradingOrder.cell.row.original.optionChainSymbol;
-    const rowOptionChainInstruction =rowCopyTradingOrder.cell.row.original.optionChainInstruction;
-    const rowOptionChainOrderType =rowCopyTradingOrder.cell.row.original.optionChainOrderType;
-    const rowOptionChainQuantity =rowCopyTradingOrder.cell.row.original.optionChainQuantity;
-    const rowOptionChainPrice =rowCopyTradingOrder.cell.row.original.optionChainPrice;
+    let agentTradingSessionID = rowCopyTradingOrder.cell.row.original.agentTradingSessionID;
+    let optionChainDescription = rowCopyTradingOrder.cell.row.original.optionChainDescription;
+    let rowOptionChainSymbol = rowCopyTradingOrder.cell.row.original.optionChainSymbol;
+    let rowOptionChainInstruction = rowCopyTradingOrder.cell.row.original.optionChainInstruction;
+    let rowOptionChainOrderType = rowCopyTradingOrder.cell.row.original.optionChainOrderType;
+    let rowOptionChainQuantity = rowCopyTradingOrder.cell.row.original.optionChainQuantity;
+    let rowOptionChainPrice = rowCopyTradingOrder.cell.row.original.optionChainPrice;
 
     const [optionChainSymbol, setOptionChainSymboln] = useState(rowOptionChainSymbol);
     const [optionChainInstruction, setOptionChainInstruction] = useState(rowOptionChainInstruction);

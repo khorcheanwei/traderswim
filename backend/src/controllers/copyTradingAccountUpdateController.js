@@ -69,6 +69,7 @@ async function post_exit_order_all_accounts(all_trading_accounts_list, payload) 
 // Copy trading exit order
 async function copy_trading_exit_order(httpRequest) {
   let {
+    accountUsernameList,
     optionChainSymbol,
     optionChainInstruction,
     optionChainOrderType,
@@ -83,7 +84,7 @@ async function copy_trading_exit_order(httpRequest) {
       const agentID = agentDocument.id;
 
       // get all accountName of particular agentID
-      let result = await copyTradingAccountDBBOperation.searchCopyTradingAccountBasedTradingSessionID(agentID);
+      let result = await accountDBOperation.searchAccountByAgentID(agentID);
       if (result.success != true) {
         return { success: false, data: result.error };
       }
@@ -92,11 +93,14 @@ async function copy_trading_exit_order(httpRequest) {
       let all_trading_accounts_list = [];
 
       for (let index = 0; index < accountDocument.length; index++) {
+
         let accountId = accountDocument[index].accountId;
         let accountUsername = accountDocument[index].accountUsername;
         let authToken = await get_access_token_from_cache(agentID, accountUsername);
 
-        all_trading_accounts_list.push({ accountId: accountId, accountUsername: accountUsername, authToken: authToken })
+        if (accountUsernameList.includes(accountUsername)) {
+          all_trading_accounts_list.push({ accountId: accountId, accountUsername: accountUsername, authToken: authToken });
+        }
       }
 
       // exit order with all accounts of particular agent

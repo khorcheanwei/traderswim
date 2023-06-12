@@ -9,7 +9,7 @@ export default function AccountInfo({rowAccount, onClose}) {
     const [cashAvailableForTrading, setCashAvailableForTrading] = useState(null)
     const [buyingPower, setBuyingPower] = useState(null)
 
-    const accountUsername = rowAccount.cell.row.original.accountUsername;
+    let accountUsername = rowAccount.cell.row.original.accountUsername;
 
     async function account_fetch() {""
       try {

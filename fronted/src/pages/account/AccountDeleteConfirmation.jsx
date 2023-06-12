@@ -7,7 +7,7 @@ export default function AccountDeleteConfirmation({rowAccount, onClose}) {
     const { accountTableData, setAccountTableData} = useContext(AccountContext);
     const { isOpenAccountDelete, setIsOpenAccountDelete} = useContext(AccountContext);
 
-    const accountName = rowAccount.cell.row.original.accountName;
+    let accountName = rowAccount.cell.row.original.accountName;
 
     async function deleteAccountDelete() {
       // delete account based on accountName

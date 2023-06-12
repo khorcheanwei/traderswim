@@ -75,7 +75,7 @@ export function ChangePositionPanel(row) {
 };
 
 export function SettledQuantityColorChange(row) {
-  const optionChainSettledQuantity = row.cell.row.original.optionChainSettledQuantity;
+  let optionChainSettledQuantity = row.cell.row.original.optionChainSettledQuantity;
 
   const settledQuantityColorChange = (optionChainSettledQuantity) => {
     let className = ''

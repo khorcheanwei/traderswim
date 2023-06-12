@@ -10,18 +10,22 @@ export default function TradingStockExitOrder({ rowCopyTradingPosition, onClose 
     var optionChainInstructionList = ["SELL_TO_CLOSE", "BUY_TO_OPEN"];
     var optionChainOrderTypeList = ["LIMIT", "MARKET", "MARKET_ON_CLOSE", "STOP", "STOP_LIMIT", "TRAILING_STOP"];
 
-    const optionChainDescription = rowCopyTradingPosition.cell.row.original.optionChainDescription;
+    let optionChainDescription = rowCopyTradingPosition.cell.row.original.optionChainDescription;
     const copyTradingPositionAllAccountData = copyTradingPositionDataDict[optionChainDescription];
     const accountUsernameList = [];
     for (let index = 0; index < copyTradingPositionAllAccountData.length; index++) {
         accountUsernameList.push(copyTradingPositionAllAccountData[index]["accountUsername"])
     }
 
-    const rowOptionChainSymbol = rowCopyTradingPosition.cell.row.original.optionChainSymbol;
-    //const rowOptionChainInstruction =rowCopyTradingPosition.cell.row.original.optionChainInstruction;
-    //const rowOptionChainOrderType = rowCopyTradingPosition.cell.row.original.optionChainOrderType;
-    const rowOptionChainSettledQuantity = rowCopyTradingPosition.cell.row.original.optionChainSettledQuantity;
-    const rowOptionChainAveragePrice = rowCopyTradingPosition.cell.row.original.optionChainAveragePrice;
+    let rowOptionChainSymbol = rowCopyTradingPosition.cell.row.original.optionChainSymbol;
+    //let rowOptionChainInstruction =rowCopyTradingPosition.cell.row.original.optionChainInstruction;
+    //let rowOptionChainOrderType = rowCopyTradingPosition.cell.row.original.optionChainOrderType;
+    let rowOptionChainSettledQuantity = rowCopyTradingPosition.cell.row.original.optionChainSettledQuantity;
+    if (rowOptionChainSettledQuantity < 0) {
+        rowOptionChainSettledQuantity = -rowOptionChainSettledQuantity;
+    }
+    
+    let rowOptionChainAveragePrice = rowCopyTradingPosition.cell.row.original.optionChainAveragePrice;
 
     const [optionChainSymbol, setOptionChainSymbol] = useState(rowOptionChainSymbol) 
     const [optionChainInstruction, setOptionChainInstruction] = useState(optionChainInstructionList[0]);
@@ -31,7 +35,7 @@ export default function TradingStockExitOrder({ rowCopyTradingPosition, onClose 
   
     async function handleExitOrder() {
         try {
-            const { data } = await axios.post("/copy_trading_account/exit_order/", { optionChainSymbol, optionChainInstruction, optionChainOrderType, optionChainQuantity, optionChainPrice })
+            const { data } = await axios.post("/copy_trading_account/exit_order/", { accountUsernameList, optionChainSymbol, optionChainInstruction, optionChainOrderType, optionChainQuantity, optionChainPrice })
 
             if (data != "success") {
                 alert("Exit order failed");

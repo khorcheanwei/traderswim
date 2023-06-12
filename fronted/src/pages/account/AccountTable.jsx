@@ -62,7 +62,7 @@ function GlobalFilter({
 
 export function ConnectionPanel(row) {
 
-  const accountConnection = row.cell.row.original.accountConnection;
+  let accountConnection = row.cell.row.original.accountConnection;
 
   return (
     <div>
@@ -97,7 +97,7 @@ export function TradingActiveToggle(row) {
   }
 
   function handleTradingActiveChange() {
-    var accountUsername = row.cell.row.original.accountUsername
+    let accountUsername = row.cell.row.original.accountUsername
     updateTradingActive(accountUsername, !accountTradingActive)
   }
   

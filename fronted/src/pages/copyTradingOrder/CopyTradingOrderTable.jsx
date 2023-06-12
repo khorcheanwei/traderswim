@@ -7,7 +7,7 @@ import { CopyTradingOrderContext } from '../context/CopyTradingOrderContext';
 import TradingStockDeleteOrder from '../tradingStock/TradingStockDeleteOrder';
 import TradingStockPlaceOrder from '../tradingStock/TradingStockPlaceOrder';
 import TradingStockReplaceOrder from '../tradingStock/TradingStockReplaceOrder';
-import CopyTradingAllAccountOrderPage from '../copyTradingAllAccountOrder/CopyTradingAllAccountOrderPage';
+import CopyTradingAllAccountOrderPage from '../copyTradingOrder/CopyTradingAllAccountOrderPage';
 
 import Overlay from "./../Overlay";
 import { async } from 'regenerator-runtime'
