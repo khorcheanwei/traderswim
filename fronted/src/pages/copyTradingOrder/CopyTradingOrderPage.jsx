@@ -4,7 +4,6 @@ import { useContext, useState, useEffect, useRef  } from 'react';
 
 import { CopyTradingOrderContext } from '../context/CopyTradingOrderContext';
 import CopyTradingOrderTable, { ChangeOrderPanel, viewAllOrderPanel } from './CopyTradingOrderTable'
-import CopyTradingPositionPage from '../copyTradingPosition/CopyTradingPositionPage'
 
 export default function CopyTradingOrderPage() {
   const {copyTradingOrderMainData, setCopyTradingOrderMainData} = useContext(CopyTradingOrderContext);

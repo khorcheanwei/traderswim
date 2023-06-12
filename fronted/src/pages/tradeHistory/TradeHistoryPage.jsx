@@ -57,7 +57,6 @@ export default function TradeActivityPage() {
   const { tradeHistoryTableData, setTradeHistoryTableData } = useContext(TradeHistoryContext);
 
   async function fetchTradeHistoryData() {
-    console.log("kcw")
     try {
       const response = await axios.get("/copy_trading_account/trade_history_database")
 

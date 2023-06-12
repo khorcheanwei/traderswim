@@ -75,7 +75,7 @@ async function copy_trading_get_option_chain_list(httpRequest) {
           }
         }
 
-        const response = await axios.get(`https://api.tdameritrade.com/v1/marketdata/chains?symbol=${stockName}`, headers = config)
+        const response = await axios.get(`https://api.tdameritrade.com/v1/marketdata/chains?symbol=${stockName}&contractType=${optionChainCallPut}`, headers = config)
         console.log(`Successful in get option chain list`);
         if (optionChainCallPut == "CALL") {
           return { success: true, data: response.data.callExpDateMap };
