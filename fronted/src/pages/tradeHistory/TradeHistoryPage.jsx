@@ -9,7 +9,7 @@ export default function TradeActivityPage() {
 
   const columns = React.useMemo(() => [
     {
-      Header: "Trading Session ID",
+      Header: "ID",
       accessor: "agentTradingSessionID",
     },
     {

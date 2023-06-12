@@ -22,7 +22,7 @@ export default function CopyTradingPage() {
       if (copyTradingAccountDataDictResponse != null && copyTradingAccountDataDictResponse.length != 0) {
 
         let copyTradingMainAccountDataList = [];
-        for (const [key, value] of Object.entries(copyTradingAccountDataDictResponse)) {
+        for (const [key, value] of Object.entries(copyTradingAccountDataDictResponse).reverse()) {
           copyTradingMainAccountDataList.push(value[0]);
         }
         setCopyTradingOrderMainData(copyTradingMainAccountDataList)
