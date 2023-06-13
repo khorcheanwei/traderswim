@@ -89,6 +89,7 @@ async function copy_trading_exit_order(httpRequest) {
         return { success: false, data: result.error };
       }
       const accountDocument = result.data;
+      let newAccountDocument = [];
 
       let all_trading_accounts_list = [];
 
@@ -99,6 +100,7 @@ async function copy_trading_exit_order(httpRequest) {
         let authToken = await get_access_token_from_cache(agentID, accountUsername);
 
         if (accountUsernameList.includes(accountUsername)) {
+          newAccountDocument.push(accountDocument[index]);
           all_trading_accounts_list.push({ accountId: accountId, accountUsername: accountUsername, authToken: authToken });
         }
       }
@@ -138,7 +140,7 @@ async function copy_trading_exit_order(httpRequest) {
       agentDocument = result.data;
       let agentTradingSessionID = agentDocument.agentTradingSessionID + 1;
       // save orders for all trading accounts to copyTradingAccount table
-      await createCopyTradingAccountItem_all_accounts(agentTradingSessionID, accountDocument, result_promise_order_information, result_promise_exit_order)
+      await createCopyTradingAccountItem_all_accounts(agentTradingSessionID, newAccountDocument, result_promise_order_information, result_promise_exit_order)
       
       result = await agentDBOperation.updateAgentTradingSessionID(
         agentID,
