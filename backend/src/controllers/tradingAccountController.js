@@ -196,7 +196,7 @@ async function get_account_value(agentID, accountUsername) {
     const result = response.data[0];
     if (response.status == 200) {
       console.error(`Successful get account value - accountUsername: ${accountUsername}. Status: ${response.status}`);
-      const accountValue = result["securitiesAccount"]["initialBalances"]["accountValue"];
+      const accountValue = result["securitiesAccount"]["currentBalances"]["accountValue"];
       return accountValue;
     } else {
       console.error(`Failed get account value - accountUsername: ${accountUsername}. Status: ${response.status}`);
