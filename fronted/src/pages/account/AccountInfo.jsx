@@ -4,8 +4,7 @@ import {  useState, useEffect } from 'react';
 export default function AccountInfo({rowAccount, onClose}) {
     
 
-    const [accountValue, setAccountValue] = useState(null);
-    const [cashBalance, setCashBalance] = useState(null)
+    const [cashBalance, setCashBalance] = useState(null);
     const [cashAvailableForTrading, setCashAvailableForTrading] = useState(null)
     const [buyingPower, setBuyingPower] = useState(null)
 
@@ -17,10 +16,9 @@ export default function AccountInfo({rowAccount, onClose}) {
         const result = response.data;
 
         if (result != undefined) {
-          setAccountValue(result["securitiesAccount"]["initialBalances"]["accountValue"])
-          setCashBalance(result["securitiesAccount"]["initialBalances"]["cashBalance"])
-          setCashAvailableForTrading(result["securitiesAccount"]["initialBalances"]["cashAvailableForTrading"])
-          setBuyingPower(result["securitiesAccount"]["initialBalances"]["buyingPower"])
+          setCashBalance(result["securitiesAccount"]["currentBalances"]["cashBalance"])
+          setCashAvailableForTrading(result["securitiesAccount"]["currentBalances"]["cashAvailableForTrading"])
+          setBuyingPower(result["securitiesAccount"]["currentBalances"]["buyingPower"])
         }
 
       } catch(error) {
@@ -39,8 +37,7 @@ export default function AccountInfo({rowAccount, onClose}) {
                 <h1 className="block text-gray-700 text-lm font-bold mb-2">Account Info</h1>
             </div>
             <div className="mb-4">
-                <h1 className="block text-gray-700 text-lm font-bold mb-2">Account value: <span>{accountValue}</span></h1>
-                <h1 className="block text-gray-700 text-lm font-bold mb-2">Cash balance: <span>{cashBalance}</span></h1>
+                <h1 className="block text-gray-700 text-lm font-bold mb-2">Cash Balance: <span>{cashBalance}</span></h1>
                 <h1 className="block text-gray-700 text-lm font-bold mb-2">Cash available for trading: <span>{cashAvailableForTrading}</span></h1>
                 <h1 className="block text-gray-700 text-lm font-bold mb-2">Buying power: <span>{buyingPower}</span></h1>
             </div>
