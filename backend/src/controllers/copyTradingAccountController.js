@@ -1,7 +1,8 @@
 const axios = require('axios');
 const jwt = require("jsonwebtoken");
-const node_cache = require("node-cache");
-const copy_trading_account_cache = new node_cache();
+
+var Memcached = require('memcached-promise');
+var copy_trading_account_cache = new Memcached('127.0.0.1:11211');
 
 const jwtSecret = "traderswim";
 
@@ -509,7 +510,8 @@ async function copy_trading_database_by_agent(agentID) {
 
     // save copyTradingOrderDataDict from cache
     let copyTradingOrderDataDict_key = agentID + "." + "copyTradingOrderDataDict";
-    copy_trading_account_cache.set(copyTradingOrderDataDict_key, copyTradingOrderDataDict);
+    await copy_trading_account_cache.set(copyTradingOrderDataDict_key, copyTradingOrderDataDict)
+
 
     return copyTradingOrderDataDict;
   } catch (error) {
@@ -529,11 +531,12 @@ async function copy_trading_database(httpRequest) {
 
       // get copyTradingOrderDataDict from cache
       let copyTradingOrderDataDict_key = agentID + "." + "copyTradingOrderDataDict";
-      let copyTradingOrderDataDict = copy_trading_account_cache.get(copyTradingOrderDataDict_key);
-      if (copyTradingOrderDataDict != undefined) {
+      let copyTradingOrderDataDict = await copy_trading_account_cache.get(copyTradingOrderDataDict_key);
+  
+      if(copyTradingOrderDataDict != undefined) {
         return { success: true, data: copyTradingOrderDataDict };
-      }
-
+      }     
+       
       copyTradingOrderDataDict = await copy_trading_database_by_agent(agentID);
 
       //await new Promise(resolve => setTimeout(resolve, 500)); 
