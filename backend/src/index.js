@@ -26,9 +26,9 @@ const http = require('http').Server(app);
 const io = require('socket.io')(http);
 
 
-//const { fork } = require("child_process");
+const { fork } = require("child_process");
 
-//fork("./src/cronProcess.js");
+fork("./src/cronProcess.js");
 /*
 var child = spawn("cmd.exe", ["/c", "node", "./src/cronProcess.js"], {
     detached: false,
