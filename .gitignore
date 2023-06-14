@@ -5,3 +5,6 @@ backend/trading_management.db
 backend/yarn.lock
 fronted/yarn.lock
 fronted/build/
+memcached
+trading_management.db
+
