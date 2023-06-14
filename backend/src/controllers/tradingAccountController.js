@@ -8,8 +8,8 @@ const jwt = require("jsonwebtoken");
 const { Cluster } = require('puppeteer-cluster');
 const jwtSecret = "traderswim";
 
-const node_cache = require("node-cache");
-const account_cache = new node_cache();
+var Memcached = require('memcached-promise');
+var account_cache = new Memcached('127.0.0.1:11211');
 
 // To fetch trading account info
 async function fetch_trading_account_id(agentID, accountUsername) {
@@ -262,7 +262,9 @@ async function account_database_by_agent(agentID) {
 
       // save accountTableArray to cache
       let accountTableArray_key = agentID + "." + "accountTableArray";
-      account_cache.set(accountTableArray_key, accountTableArray);
+  
+      await account_cache.set(accountTableArray_key, accountTableArray)
+      
 
       return accountTableArray;
     }
@@ -282,10 +284,11 @@ async function account_database(httpRequest) {
 
       // get accountTableArray from cache
       let accountTableArray_key = agentID + "." + "accountTableArray";
-      let accountTableArray = account_cache.get(accountTableArray_key);
-      if (accountTableArray != undefined) {
+      let accountTableArray = await account_cache.get(accountTableArray_key);
+
+      if(accountTableArray != undefined) {
         return { success: true, data: accountTableArray };
-      }
+      }     
 
       accountTableArray = await account_database_by_agent(agentID);
       return {success: true, data: accountTableArray}
