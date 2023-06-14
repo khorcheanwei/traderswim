@@ -8,6 +8,7 @@ import AccountDeleteConfirmation from './AccountDeleteConfirmation'
 import { AccountContext } from '../context/AccountContext';
 import CommonTable from '../shared/Table';
 import axios from 'axios';
+import { useState } from 'react';
 
 import Overlay from "../Overlay";
 
@@ -77,15 +78,16 @@ export function ConnectionPanel(row) {
 export function TradingActiveToggle(row) {
   
   const { accountTableData, setAccountTableData} = useContext(AccountContext);
-  let accountTradingActive = true;
-  if (row.cell.row.original.accountTradingActive == false) {
-    accountTradingActive = false;
-  }
+  const [accountTradingActive, setAccountTradingActive] = useState(row.cell.row.original.accountTradingActive);
 
-  async function updateTradingActive(accountUsername, accountTradingActive) {
+
+  async function updateTradingActive(accountUsername, accountTradingActiveUpdated) {
+    
     try {
       // trigger connection ON/OFF to account trading session
-      await axios.post("/trading_account/trading_active", {accountUsername, accountTradingActive})
+      await axios.post("/trading_account/trading_active", {accountUsername: accountUsername, accountTradingActive: accountTradingActiveUpdated})
+      setAccountTradingActive(accountTradingActiveUpdated)
+      
       var response = await axios.get("/trading_account/database")
       if (response.data != null) {
         setAccountTableData(response.data)
