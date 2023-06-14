@@ -37,8 +37,8 @@ async function get_position_information(config, accountName, accountUsername, op
             }
             let current_description = current_position["instrument"]["description"];
             let current_averagePrice = current_position["averagePrice"];
-            let current_settledLongQuantity = current_position["settledLongQuantity"];
-            let current_settledShortQuantity = current_position["settledShortQuantity"];
+            let current_settledLongQuantity = current_position["longQuantity"];
+            let current_settledShortQuantity = current_position["shortQuantity"];
             
             copyTradingPositionAccountData.push({accountName: accountName, accountUsername: accountUsername, optionChainSymbol: current_symbol, optionChainDescription: current_description, optionChainAveragePrice: current_averagePrice,
                optionChainSettledLongQuantity: current_settledLongQuantity, optionChainSettledShortQuantity: current_settledShortQuantity})
@@ -125,9 +125,13 @@ async function copy_trading_position_by_agent(agentID) {
       const current_optionChainSettledLongQuantity = current_copyTradingAccount["optionChainSettledLongQuantity"];
       const current_optionChainSettledShortQuantity = current_copyTradingAccount["optionChainSettledShortQuantity"];
 
-      let current_optionChainSettledQuantity = current_optionChainSettledLongQuantity;
-      if (current_optionChainSettledLongQuantity == 0) {
-        current_optionChainSettledQuantity = current_optionChainSettledShortQuantity;
+      let current_optionChainSettledQuantity = 0;
+      if (current_optionChainSettledLongQuantity != 0) {
+        current_optionChainSettledQuantity = current_optionChainSettledLongQuantity;
+      }
+
+      if (current_optionChainSettledShortQuantity != 0) {
+        current_optionChainSettledQuantity = -current_optionChainSettledShortQuantity;
       }
 
       const currCopyTradingPositionAccountData = {
