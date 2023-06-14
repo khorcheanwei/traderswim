@@ -20,7 +20,7 @@ cron.schedule('*/3 * * * * *', async () => {
   try {
     for (let index = 0; index < agent_list.length; index++) {
       const agentID = agent_list[index];
-      const data = await account_database_by_agent(agentID);
+      await account_database_by_agent(agentID);
       await copy_trading_database_by_agent(agentID);
       const copyTradingPositionDataDict = await copy_trading_position_by_agent(agentID);
       console.log(copyTradingPositionDataDict)
