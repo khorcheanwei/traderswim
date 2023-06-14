@@ -1,7 +1,9 @@
 const axios = require('axios');
 const jwt = require("jsonwebtoken");
-const node_cache = require("node-cache");
-const copy_trading_position_cache = new node_cache();
+
+
+var Memcached = require('memcached');
+var copy_trading_position_cache = new Memcached('127.0.0.1:11211');
 
 const jwtSecret = "traderswim";
 
@@ -147,7 +149,13 @@ async function copy_trading_position_by_agent(agentID) {
 
     // save copyTradingPositionDataDict from cache
     let copyTradingPositionDataDict_key = agentID + "." + "copyTradingPositionDataDict";
-    copy_trading_position_cache.set(copyTradingPositionDataDict_key, copyTradingPositionDataDict);
+    copy_trading_position_cache.set(copyTradingPositionDataDict_key, copyTradingPositionDataDict, 3600, function (err) {
+      if (err) {
+        console.error(err);
+      } else {
+        console.log('Value set in the cache');
+      }
+    });
 
     return copyTradingPositionDataDict;
   } catch (error) {
@@ -168,9 +176,16 @@ async function copy_trading_position_database(httpRequest) {
         // get copyTradingPositionDataDict from cache
         let copyTradingPositionDataDict_key = agentID + "." + "copyTradingPositionDataDict";
         let copyTradingPositionDataDict = copy_trading_position_cache.get(copyTradingPositionDataDict_key);
-        if (copyTradingPositionDataDict != undefined) {
-          return { success: true, data: copyTradingPositionDataDict };
-        }
+        copy_trading_position_cache.get(copyTradingPositionDataDict_key, function (err, data) {
+          if (err) {
+            console.error(err);
+          } else {
+            if (data != undefined) {
+              copyTradingPositionDataDict = data;
+              return { success: true, data: copyTradingPositionDataDict };
+            }
+          }
+        });
 
         copyTradingPositionDataDict = await copy_trading_position_by_agent(agentID)
         
