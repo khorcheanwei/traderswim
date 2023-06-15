@@ -23,11 +23,12 @@ export default function AccountsPage() {
       Header: 'Balance',
       accessor: 'accountBalance',
     },
+    /*
     {
       Header: 'Connection',
       accessor: 'accountConnection',
       Cell: ConnectionPanel,
-    },
+    },*/
     {
       Header: 'Connection time (minutes)',
       accessor: 'accountConnectionTime',

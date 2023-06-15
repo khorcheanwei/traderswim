@@ -9,7 +9,7 @@ const { copy_trading_position_by_agent } = require('./controllers/copyTradingPos
 // setup cron 
 
 
-cron.schedule('*/1 * * * * *', async () => {
+cron.schedule('*/2 * * * * *', async () => {
   console.log('Trading account cron job task every 2 seconds');
   const queryResult = await agentDBOperation.searchAllAgentID();
   let agent_list = [];
