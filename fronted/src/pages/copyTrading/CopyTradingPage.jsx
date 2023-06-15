@@ -2,10 +2,13 @@ import axios from 'axios';
 import React from 'react'
 import { useContext, useState, useEffect, useRef  } from 'react';
 
+import TradingStockPlaceOrder from '../tradingStock/TradingStockPlaceOrder';
 import { CopyTradingOrderContext } from '../context/CopyTradingOrderContext';
 import { CopyTradingPositionContext } from '../context/CopyTradingPositionContext';
 import CopyTradingOrderPage from '../copyTradingOrder/CopyTradingOrderPage.jsx'
 import CopyTradingPositionPage from '../copyTradingPosition/CopyTradingPositionPage'
+import { Button, PageButton } from './../shared/Button';
+import Overlay from "./../Overlay";
 
 export default function CopyTradingPage() {
 
@@ -57,12 +60,48 @@ export default function CopyTradingPage() {
     }
   }, [])
 
+  const { isOpenTradingStock, setIsOpenTradingStock } = useContext(CopyTradingOrderContext);
+
+  const placeOrderClose = async () => {
+    setIsOpenTradingStock(!isOpenTradingStock)
+  }
+
  
   return (
     <div>
-      <CopyTradingOrderPage />
-      <CopyTradingPositionPage/>
-      
+      <div className="w-full">
+        <div className="flex justify-between items-center">
+          <label className="flex gap-x-2 items-baseline">
+            {/*<span className="text-gray-700">Search: </span>
+            <input
+              type="text"
+              className="rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              value={value || ""}
+              onChange={e => {
+                setValue(e.target.value);
+                onChange(e.target.value);
+              }}
+              placeholder={`${count} records...`}
+            />*/}
+            </label> 
+          <div className="flex gap-6 h-12">
+            <Button className="text-gray-700 " onClick={placeOrderClose}>BUY/SELL</Button>
+          </div>
+        </div>
+        <div>
+          <Overlay isOpen={isOpenTradingStock} >
+            <TradingStockPlaceOrder onClose={placeOrderClose}></TradingStockPlaceOrder>
+          </Overlay>
+        </div>
+      </div>
+      <div className="h-screen">
+        <div className="h-[40%] overflow-y-auto">
+          <CopyTradingOrderPage />
+        </div>
+        <div className="h-[40%] overflow-y-auto">
+          <CopyTradingPositionPage />
+        </div>
+      </div>
     </div>
   );
 }

@@ -34,7 +34,8 @@ function CommonTable({ columns, data, GlobalFilter }) {
   } = useTable({
     columns,
     data,
-    initialState
+    initialState,
+    autoResetPage: false,
   },
     useFilters, // useFilters!
     useGlobalFilter,
