@@ -1,7 +1,8 @@
 import axios from 'axios';
 import { useContext, useState, useEffect } from 'react';
 import { CopyTradingOrderContext } from '../context/CopyTradingOrderContext';
-import Autocomplete from './Autocomplete';
+import AutocompleteList from './AutocompleteList';
+import { FixedSizeList } from "react-window";
 
 
 export default function TradingStockPlceOrder({ onClose }) {
@@ -142,16 +143,14 @@ export default function TradingStockPlceOrder({ onClose }) {
             console.log(error.message);
         }
     }
-
+;
     return (
         <div>
             <div className="mb-4">
                 <h1 className="block text-gray-700 text-lm font-bold mb-2">Option Place Order</h1>
             </div>
             <div>
-                
                 <div className="relative w-full lg:max-w-sm mb-6">
-                    
                     {/*<select
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
                         onChange={event => setStockName(event.target.value)}>
@@ -160,7 +159,7 @@ export default function TradingStockPlceOrder({ onClose }) {
                                 <FixedSizeList key={index}>{stock_name}</FixedSizeList>
                             ))
                         }
-                    </select> */}
+                    </select>*/}
                     <div className="grid items-end gap-6 mb-6 grid-cols-2">
                         <div className="relative">
                             <input
@@ -221,16 +220,7 @@ export default function TradingStockPlceOrder({ onClose }) {
                     </label>
                 </div>
                 <div className="relative">
-                    {/* <Autocomplete items={optionChainStrikeList} /> */}
-                    <select
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                        onChange={event => getOptionChainBidPrice(event.target.value)}>
-                        {
-                            optionChainStrikeList.map((option_chain_strike, index) => (
-                                <option key={index}>{option_chain_strike}</option>
-                            ))
-                        }
-                    </select>
+                    <AutocompleteList list={optionChainStrikeList} onData={getOptionChainBidPrice}></AutocompleteList>
                     <label
                         className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
                         htmlFor="small_outlined">
