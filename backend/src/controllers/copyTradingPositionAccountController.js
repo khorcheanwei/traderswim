@@ -99,6 +99,9 @@ async function copy_trading_position_by_agent(agentID) {
       let accountUsername = accountDocument[index]["accountUsername"];
 
       let authToken = await get_access_token_from_cache(agentID, accountUsername);
+      if (authToken == null) {
+        continue;
+      }
 
       all_trading_accounts_list.push({ accountId: accountId, accountName: accountName, accountUsername: accountUsername, authToken: authToken })
     }

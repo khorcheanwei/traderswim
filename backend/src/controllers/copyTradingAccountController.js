@@ -357,6 +357,9 @@ async function copy_trading_place_order(httpRequest) {
         let accountId = accountDocument[index].accountId;
         let accountUsername = accountDocument[index].accountUsername;
         let authToken = await get_access_token_from_cache(agentID, accountUsername);
+        if (authToken == null) {
+          continue;
+        }
 
         all_trading_accounts_list.push({ accountId: accountId, accountUsername: accountUsername, authToken: authToken });
       }
@@ -432,6 +435,10 @@ async function sync_order_and_save_to_copy_trading_database(agentID, agentTradin
       let accountUsername = all_trading_accounts_order_list[index]["accountUsername"];
       let optionChainOrderId = all_trading_accounts_order_list[index]["optionChainOrderId"];
       let authToken = await get_access_token_from_cache(agentID, accountUsername);
+
+      if (authToken == null) {
+        continue;
+      }
 
       all_trading_accounts_list.push({accountId: accountId,  accountUsername:accountUsername, authToken:authToken});
 

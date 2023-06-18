@@ -2,13 +2,10 @@ import axios from 'axios';
 import React from 'react'
 import { useContext, useState, useEffect, useRef  } from 'react';
 import { AccountContext } from '../context/AccountContext';
-import io from 'socket.io-client';
 
 import AccountsTable, { SettingsPanel, TradingActiveToggle, ConnectionPanel } from './AccountTable'  // new
 
 export default function AccountsPage() {
-
-  const socket = io('http://localhost:3000');
 
   const columns = React.useMemo(() => [
     {

@@ -230,14 +230,20 @@ async function puppeteer_login_all_accounts(agentID, accountDocument) {
       // need to go Ameritrade website to check whether it is successful to convert to connect to website or not
       let { connected, refreshToken } = await puppeteer_login_account(agentID, accountDocumentPart.accountUsername, accountDocumentPart.accountPassword);
       let accountValue  = await get_account_value(agentID, accountDocumentPart.accountUsername);
-      let authTokenTimeInSeconds = await get_account_connection_time(agentID, accountDocumentPart.accountUsername)
+      let authTokenTimeInSeconds = await get_account_connection_time(agentID, accountDocumentPart.accountUsername);
+      let authTokenTimeInMinutes = (20 - (authTokenTimeInSeconds/60)).toFixed(2);
+      if (accountValue == null) {
+        accountValue = "loading...";
+        authTokenTimeInMinutes = "loading..."
+      }
+
       return {
         accountName: accountDocumentPart.accountName,
         accountUsername: accountDocumentPart.accountUsername,
         accountBalance: accountValue,
         accountConnection: connected,
         accountTradingActive: accountDocumentPart.accountTradingActive,
-        accountConnectionTime: (20 - (authTokenTimeInSeconds/60)).toFixed(2),
+        accountConnectionTime: authTokenTimeInMinutes,
       };
     });
 
