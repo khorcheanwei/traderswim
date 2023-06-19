@@ -232,13 +232,10 @@ async function puppeteer_login_all_accounts(agentID, accountDocument) {
     let newAccountDocument = [];
     for(let index = 0; index < accountDocument.length; index++){
       const accountDocumentPart = accountDocument[index];
-      if (login_account_count >= 2) {
-        continue; 
-      }
       const accountUsername = accountDocumentPart.accountUsername;
       let need_login_account = await check_need_login_account(agentID, accountUsername);
 
-      if (need_login_account) {
+      if (need_login_account && login_account_count < 2) {
         accountDocumentPart["need_login"] = true;
         login_account_count = login_account_count + 1;
       } else {
