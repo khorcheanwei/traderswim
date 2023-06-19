@@ -1,5 +1,5 @@
 const { accountDBOperation } = require("../data-access/index.js");
-const { get_auth_connection_time, puppeteer_login_account, get_access_token_from_cache, fetch_trading_account_info_api } = require("./tradingAccountPuppeteer.js")
+const { get_auth_connection_time, puppeteer_login_account, check_need_login_account, get_access_token_from_cache, fetch_trading_account_info_api } = require("./tradingAccountPuppeteer.js")
 const common = require("../common.js");
 
 const puppeteer = require('puppeteer');
@@ -226,11 +226,36 @@ async function get_account_connection_time(agentID, accountUsername) {
 // Puppeteer login for all accounts
 async function puppeteer_login_all_accounts(agentID, accountDocument) {
   try {
-    const get_latest_order_id_requests =  accountDocument.map(async (accountDocumentPart, index) => {
-      // need to go Ameritrade website to check whether it is successful to convert to connect to website or not
-      let { connected, refreshToken } = await puppeteer_login_account(agentID, accountDocumentPart.accountUsername, accountDocumentPart.accountPassword);
-      let accountValue  = await get_account_value(agentID, accountDocumentPart.accountUsername);
-      let authTokenTimeInSeconds = await get_account_connection_time(agentID, accountDocumentPart.accountUsername);
+
+    // ensure only two login at one single time
+    let login_account_count = 0;
+    let newAccountDocument = [];
+    for(let index = 0; index < accountDocument.length; index++){
+      const accountDocumentPart = accountDocument[index];
+      if (login_account_count >= 3) {
+        break; 
+      }
+      const accountUsername = accountDocumentPart.accountUsername;
+      let need_login_account = await check_need_login_account(agentID, accountUsername);
+
+      if (need_login_account) {
+        accountDocumentPart["need_login"] = true;
+        login_account_count = login_account_count + 1;
+      } else {
+        accountDocumentPart["need_login"] = false;
+      }
+
+      newAccountDocument.push(accountDocumentPart);
+    }
+
+    // login all accounts
+    const login_all_accounts_requests =  newAccountDocument.map(async (accountDocumentPart, index) => {
+      const accountUsername = accountDocumentPart.accountUsername;
+      if (accountDocumentPart["need_login"]) {
+        let { connected, refreshToken } = await puppeteer_login_account(agentID, accountUsername, accountDocumentPart.accountPassword);
+      }
+      let accountValue  = await get_account_value(agentID, accountUsername);
+      let authTokenTimeInSeconds = await get_account_connection_time(agentID, accountUsername);
       let authTokenTimeInMinutes = (20 - (authTokenTimeInSeconds/60)).toFixed(2);
       if (accountValue == null) {
         accountValue = "loading...";
@@ -239,15 +264,15 @@ async function puppeteer_login_all_accounts(agentID, accountDocument) {
 
       return {
         accountName: accountDocumentPart.accountName,
-        accountUsername: accountDocumentPart.accountUsername,
+        accountUsername: accountUsername,
         accountBalance: accountValue,
-        accountConnection: connected,
+       // accountConnection: connected,
         accountTradingActive: accountDocumentPart.accountTradingActive,
         accountConnectionTime: authTokenTimeInMinutes,
       };
     });
 
-    const result_promise = await Promise.all(get_latest_order_id_requests);
+    const result_promise = await Promise.all(login_all_accounts_requests);
     console.log('Puppeteer login for all accounts promise requests completed');
     return result_promise;
   } catch (error) {

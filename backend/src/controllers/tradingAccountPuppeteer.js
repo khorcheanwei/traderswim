@@ -7,7 +7,7 @@ var auth_cache = new Memcached('127.0.0.1:11211');
 
 const { accountDBOperation } = require("../data-access/index.js");
 
-function check_access_token_exceed_time_limit(accountUsername, authTokenTimeInSeconds) {
+async function check_access_token_exceed_time_limit(accountUsername, authTokenTimeInSeconds) {
 
     const authTokenAccessTime = 1800 - 600;
 
@@ -131,6 +131,32 @@ async function get_auth_connection_time(agentID, accountUsername) {
     
 }
 
+async function check_need_login_account(agentID, accountUsername) {
+    try {
+        let auth_cache_key = agentID + "." + accountUsername + "." + "authToken";
+        let auth_cache_value = await auth_cache.get(auth_cache_key);
+
+        if (auth_cache_value != undefined) {
+            authToken = auth_cache_value[0];
+            authTokenTimeInSeconds = auth_cache_value[1];
+
+            const check_access_account = await check_access_with_get_account(accountUsername, authToken);
+            const check_exceed_time_limit_account = await check_access_token_exceed_time_limit(accountUsername, authTokenTimeInSeconds);
+            if ( check_exceed_time_limit_account == true || check_access_account == false) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return true;
+        }
+     
+    } catch(error) {
+        console.log(error);
+        return true;
+    }
+}
+
 async function puppeteer_login_account(agentID, accountUsername, accountPassword) {
     /* Two cache key used
     - auth_cache_key {agentID}.{accountUsername}.{authToken}- Store authToken and authToken login time
@@ -170,7 +196,8 @@ async function puppeteer_login_account(agentID, accountUsername, accountPassword
             authTokenTimeInSeconds = auth_cache_value[1];
 
             const check_access_account = await check_access_with_get_account(accountUsername, authToken);
-            if (check_access_token_exceed_time_limit(accountUsername, authTokenTimeInSeconds) == true || check_access_account == false) {
+            const check_exceed_time_limit_account = await check_access_token_exceed_time_limit(accountUsername, authTokenTimeInSeconds);
+            if ( check_exceed_time_limit_account == true || check_access_account == false) {
                 need_login = true;
             } else {
                 await auth_cache.set(auth_login_cache_key, false)
@@ -193,7 +220,7 @@ async function puppeteer_login_account(agentID, accountUsername, accountPassword
             let sessionStorageData;
 
             while (attempt <= maxRetries && !success) {
-                const browser = await puppeteer.launch({ headless: true });
+                const browser = await puppeteer.launch({ headless: false });
                 try {
                     const page = await browser.newPage();
 
@@ -342,6 +369,7 @@ module.exports = {
     get_auth_connection_time,
     puppeteer_login_account,
     get_access_token_from_cache,
+    check_need_login_account,
     get_agent_list_to_cache,
     store_agent_list_to_cache,
     delete_agent_list_from_cache,
