@@ -59,7 +59,7 @@ export default function AccountsPage() {
 
   const ref = useRef(null)
   useEffect(() => {
-    ref.current = setInterval(fetchAccountData, 1 * 500);
+    ref.current = setInterval(fetchAccountData, 1 * 1500);
     return () => {
       if(ref.current){
         clearInterval(ref.current);
