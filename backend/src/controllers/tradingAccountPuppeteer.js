@@ -157,6 +157,12 @@ async function check_need_login_account(agentID, accountUsername) {
     }
 }
 
+function delay(time) {
+    return new Promise(function(resolve) { 
+        setTimeout(resolve, time)
+    });
+ }
+ 
 async function puppeteer_login_account(agentID, accountUsername, accountPassword) {
     /* Two cache key used
     - auth_cache_key {agentID}.{accountUsername}.{authToken}- Store authToken and authToken login time
@@ -242,7 +248,7 @@ async function puppeteer_login_account(agentID, accountUsername, accountPassword
 
                     console.log('Login thinkorswim website...........................')
 
-                    await page.waitFor(1000);
+                    await delay(1000);
                     await page.waitForSelector('[id="accept"]'),
                     await page.click('[id="accept"]')
                     
