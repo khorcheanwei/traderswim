@@ -2,7 +2,7 @@ const axios = require('axios');
 const jwt = require("jsonwebtoken");
 
 var Memcached = require('memcached-promise');
-var copy_trading_position_cache = new Memcached('127.0.0.1:11211');
+var copy_trading_position_cache = new Memcached('127.0.0.1:11211', {maxExpiration: 2592000});
 
 const jwtSecret = "traderswim";
 
@@ -141,7 +141,7 @@ async function copy_trading_position_by_agent(agentID) {
 
     // save copyTradingPositionDataDict from cache
     let copyTradingPositionDataDict_key = agentID + "." + "copyTradingPositionDataDict";
-    await copy_trading_position_cache.set(copyTradingPositionDataDict_key, copyTradingPositionDataDict)
+    await copy_trading_position_cache.set(copyTradingPositionDataDict_key, copyTradingPositionDataDict, 3600)
 
     return copyTradingPositionDataDict;
   } catch (error) {

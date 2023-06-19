@@ -3,7 +3,7 @@ const axios = require('axios');
 var qs = require('qs');
 
 var Memcached = require('memcached-promise');
-var auth_cache = new Memcached('127.0.0.1:11211');
+var auth_cache = new Memcached('127.0.0.1:11211', {maxExpiration: 2592000});
 
 const { accountDBOperation } = require("../data-access/index.js");
 
@@ -97,7 +97,7 @@ async function get_access_token_from_refresh_token(auth_cache_key, refreshToken)
         let authToken = accessToken;
 
         let auth_cache_value = [authToken, authTokenTimeInSeconds];
-        await auth_cache.set(auth_cache_key, auth_cache_value);
+        await auth_cache.set(auth_cache_key, auth_cache_value, 3600);
 
         return true
 
@@ -187,7 +187,7 @@ async function puppeteer_login_account(agentID, accountUsername, accountPassword
             console.log(`Website login loading for account name ${accountUsername}`)
             return { connected: false, refreshToken: refreshToken }
         } else {
-            await auth_cache.set(auth_login_cache_key, true)
+            await auth_cache.set(auth_login_cache_key, true, 3600);
         }
 
         // get refresh token
@@ -206,7 +206,7 @@ async function puppeteer_login_account(agentID, accountUsername, accountPassword
             if ( check_exceed_time_limit_account == true || check_access_account == false) {
                 need_login = true;
             } else {
-                await auth_cache.set(auth_login_cache_key, false)
+                await auth_cache.set(auth_login_cache_key, false, 3600);
                 return { connected: true, refreshToken: refreshToken }
             }
         } else {
@@ -219,7 +219,7 @@ async function puppeteer_login_account(agentID, accountUsername, accountPassword
             const get_access_token_success = await get_access_token_from_refresh_token(auth_cache_key, refreshToken);
 
             if (get_access_token_success) {
-                await auth_cache.set(auth_login_cache_key, false)
+                await auth_cache.set(auth_login_cache_key, false, 3600);
                 return { connected: true, refreshToken: refreshToken }
             }
 
@@ -285,7 +285,7 @@ async function puppeteer_login_account(agentID, accountUsername, accountPassword
 
                         // save authToken to cache 
                         auth_cache_value = [authToken, authTokenTimeInSeconds]
-                        await auth_cache.set(auth_cache_key, auth_cache_value)
+                        await auth_cache.set(auth_cache_key, auth_cache_value, 3600);
                     }
 
                     await browser.close();
@@ -294,7 +294,7 @@ async function puppeteer_login_account(agentID, accountUsername, accountPassword
 
         }
 
-        await auth_cache.set(auth_login_cache_key, false)
+        await auth_cache.set(auth_login_cache_key, false, 3600);
 
         if (authToken != undefined) {
             console.log(authToken)
@@ -306,7 +306,7 @@ async function puppeteer_login_account(agentID, accountUsername, accountPassword
         }
 
     } catch (error) {
-        await auth_cache.set(auth_login_cache_key, false)
+        await auth_cache.set(auth_login_cache_key, false, 3600);
         console.log(`Error ${error} for ${accountUsername}`)
         return { connected: false, refreshToken: refreshToken }
     }
@@ -333,12 +333,12 @@ async function store_agent_list_to_cache(agentID) {
         if (agent_list_cache_value == undefined) {
             let agent_list = []
             agent_list.push(agentID);
-            await auth_cache.set(agent_list_cache_key, agent_list);
+            await auth_cache.set(agent_list_cache_key, agent_list, 3600);
         } else {
             if (agent_list_cache_value.includes(agentID) == false) {
                 agent_list_cache_value.push(agentID);
             }
-            await auth_cache.set(agent_list_cache_key, agent_list_cache_value);
+            await auth_cache.set(agent_list_cache_key, agent_list_cache_value, 3600);
         }
     } catch (error) {
         console.log(error.message);
@@ -354,7 +354,7 @@ async function delete_agent_list_from_cache(agentID) {
 
         if (agent_list_cache_value == undefined) {
             let agent_list = []
-            await auth_cache.set(agent_list_cache_key, agent_list);
+            await auth_cache.set(agent_list_cache_key, agent_list, 3600);
         } else {
             let new_agent_list = []
 
@@ -364,7 +364,7 @@ async function delete_agent_list_from_cache(agentID) {
                 }
             }
 
-            await auth_cache.set(agent_list_cache_key, new_agent_list);
+            await auth_cache.set(agent_list_cache_key, new_agent_list, 3600);
         }
     } catch (error) {
         console.log(error.message);

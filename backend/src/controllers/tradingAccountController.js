@@ -9,7 +9,7 @@ const { Cluster } = require('puppeteer-cluster');
 const jwtSecret = "traderswim";
 
 var Memcached = require('memcached-promise');
-var account_cache = new Memcached('127.0.0.1:11211');
+var account_cache = new Memcached('127.0.0.1:11211', {maxExpiration: 2592000});
 
 // To fetch trading account info
 async function fetch_trading_account_id(agentID, accountUsername) {
@@ -291,7 +291,7 @@ async function account_database_by_agent(agentID) {
       // save accountTableArray to cache
       let accountTableArray_key = agentID + "." + "accountTableArray";
   
-      await account_cache.set(accountTableArray_key, accountTableArray)
+      await account_cache.set(accountTableArray_key, accountTableArray, 3600)
       
 
       return accountTableArray;
