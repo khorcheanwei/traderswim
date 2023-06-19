@@ -235,7 +235,7 @@ async function puppeteer_login_all_accounts(agentID, accountDocument) {
       const accountUsername = accountDocumentPart.accountUsername;
       let need_login_account = await check_need_login_account(agentID, accountUsername);
 
-      if (need_login_account && login_account_count < 2) {
+      if (need_login_account && login_account_count < 1) {
         accountDocumentPart["need_login"] = true;
         login_account_count = login_account_count + 1;
       } else {
