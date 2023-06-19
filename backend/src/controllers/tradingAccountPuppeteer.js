@@ -242,11 +242,10 @@ async function puppeteer_login_account(agentID, accountUsername, accountPassword
 
                     console.log('Login thinkorswim website...........................')
 
-                    await Promise.all([
-                        page.waitForSelector('[id="accept"]'),
-                        page.click('[id="accept"]')
-                    ]);
-
+                    await page.waitFor(1000);
+                    await page.waitForSelector('[id="accept"]'),
+                    await page.click('[id="accept"]')
+                    
                     await page.waitForSelector('[data-testid="home-page"]', { timeout: 15000 });
                     console.log('Login successfully');
 
