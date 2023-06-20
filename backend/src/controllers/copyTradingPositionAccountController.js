@@ -12,7 +12,7 @@ const {
   copyTradingAccountDBBOperation,
 } = require("../data-access/index.js");
 
-const { puppeteer_login_account, get_access_token_from_cache, fetch_trading_account_info_api } = require("./tradingAccountPuppeteer.js")
+const { get_access_token_from_cache, fetch_trading_account_info_api } = require("./tradingAccountPuppeteer.js")
 
 // get position information
 async function get_position_information(config, accountName, accountUsername, optionChainSymbolList) {

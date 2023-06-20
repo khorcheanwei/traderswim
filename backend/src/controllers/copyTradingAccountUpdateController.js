@@ -16,7 +16,7 @@ const {
     sync_order_and_save_to_copy_trading_database
 } = require("./copyTradingAccountController.js");
 
-const { puppeteer_login_account, get_access_token_from_cache, fetch_trading_account_info_api } = require("./tradingAccountPuppeteer.js")
+const { get_access_token_from_cache, fetch_trading_account_info_api } = require("./tradingAccountPuppeteer.js")
 
 
 // exit order
@@ -206,7 +206,7 @@ async function put_replace_order_all_accounts(all_trading_accounts_list, optionC
     return result_promise;
   } catch (error) {
     console.log(`Error in PUT replace order API requests completed. Error: ${error.message}`);
-    return null;
+    return false;
   }
 }
 
@@ -281,14 +281,11 @@ async function copy_trading_replace_order(httpRequest) {
 
       // sync order and save to copy trading table for all trading accounts
       await sync_order_and_save_to_copy_trading_database(agentID, agentTradingSessionID)
-
-      // get status of all trading accounts
-      result = await copyTradingAccountDBBOperation.getAllOptionChainStatus(agentID, agentTradingSessionID);
-      let optionChainStatusResultList = result.data; 
+      
       let result_promise_replace_order_status = [];
-      for (let index = 0; index < optionChainStatusResultList.length; index++) {
-        const optionChainStatus = optionChainStatusResultList[index]["optionChainStatus"];
-        if (optionChainStatus == "CANCELED") {
+      for (let index = 0; index < result_promise_replace_order.length; index++) {
+        const replace_order_success = result_promise_replace_order[index];
+        if (replace_order_success == true) {
           result_promise_replace_order_status.push(true);
         } else {
           result_promise_replace_order_status.push(false);
