@@ -16,7 +16,7 @@ const {
     sync_order_and_save_to_copy_trading_database
 } = require("./copyTradingAccountController.js");
 
-const { puppeteer_login_account, get_access_token_from_cache, fetch_trading_account_info_api } = require("./tradingAccountPuppeteer.js")
+const { get_access_token_from_cache, fetch_trading_account_info_api } = require("./tradingAccountPuppeteer.js")
 
 
 // exit order

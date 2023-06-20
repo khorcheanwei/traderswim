@@ -177,17 +177,16 @@ async function puppeteer_login_account(agentID, accountUsername, accountPassword
     let authToken, authTokenTimeInSeconds;
 
     let auth_cache_key = agentID + "." + accountUsername + "." + "authToken";
-    let auth_cache_value = await auth_cache.get(auth_cache_key);
-
     let auth_login_cache_key = agentID + "." + accountUsername + "." + "authToken_login";
 
     try {
+        let auth_cache_value = await auth_cache.get(auth_cache_key);
         let auth_login_cache_value = await auth_cache.get(auth_login_cache_key)
         if (auth_login_cache_value == true) {
             console.log(`Website login loading for account name ${accountUsername}`)
             return { connected: false, refreshToken: refreshToken }
         } else {
-            await auth_cache.set(auth_login_cache_key, true, 3600);
+            await auth_cache.set(auth_login_cache_key, true, 60);
         }
 
         // get refresh token
