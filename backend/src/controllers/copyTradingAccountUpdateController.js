@@ -284,8 +284,8 @@ async function copy_trading_replace_order(httpRequest) {
       
       let result_promise_replace_order_status = [];
       for (let index = 0; index < result_promise_replace_order.length; index++) {
-        const optionChainStatus = result_promise_replace_order[index];
-        if (optionChainStatus == true) {
+        const replace_order_success = result_promise_replace_order[index];
+        if (replace_order_success == true) {
           result_promise_replace_order_status.push(true);
         } else {
           result_promise_replace_order_status.push(false);
