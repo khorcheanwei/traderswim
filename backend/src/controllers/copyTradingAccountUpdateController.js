@@ -206,7 +206,7 @@ async function put_replace_order_all_accounts(all_trading_accounts_list, optionC
     return result_promise;
   } catch (error) {
     console.log(`Error in PUT replace order API requests completed. Error: ${error.message}`);
-    return null;
+    return false;
   }
 }
 
@@ -281,14 +281,11 @@ async function copy_trading_replace_order(httpRequest) {
 
       // sync order and save to copy trading table for all trading accounts
       await sync_order_and_save_to_copy_trading_database(agentID, agentTradingSessionID)
-
-      // get status of all trading accounts
-      result = await copyTradingAccountDBBOperation.getAllOptionChainStatus(agentID, agentTradingSessionID);
-      let optionChainStatusResultList = result.data; 
+      
       let result_promise_replace_order_status = [];
-      for (let index = 0; index < optionChainStatusResultList.length; index++) {
-        const optionChainStatus = optionChainStatusResultList[index]["optionChainStatus"];
-        if (optionChainStatus == "CANCELED") {
+      for (let index = 0; index < result_promise_replace_order.length; index++) {
+        const optionChainStatus = result_promise_replace_order[index];
+        if (optionChainStatus == true) {
           result_promise_replace_order_status.push(true);
         } else {
           result_promise_replace_order_status.push(false);
