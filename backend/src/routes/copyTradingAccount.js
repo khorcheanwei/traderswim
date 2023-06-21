@@ -13,7 +13,9 @@ const {
 const {
   copy_trading_exit_order,
   copy_trading_replace_order,
-  copy_trading_cancel_order
+  copy_trading_put_replace_order_individual,
+  copy_trading_cancel_order,
+  copy_trading_delete_cancel_order_individual
 } = require("../controllers/copyTradingAccountUpdateController.js");
 
 // get all stock pair list
@@ -69,10 +71,36 @@ copyTradingAccountRouter.put(
   }
 );
 
+copyTradingAccountRouter.put(
+  "/replace_order_individual",
+  async (httpRequest, httpResponse) => {
+    const result = await copy_trading_put_replace_order_individual(httpRequest);
+
+    if (result.success == true) {
+      httpResponse.status(200).json(result.data);
+    } else {
+      httpResponse.status(400).json(result.data);
+    }
+  }
+);
+
 copyTradingAccountRouter.delete(
   "/cancel_order",
   async (httpRequest, httpResponse) => {
     const result = await copy_trading_cancel_order(httpRequest);
+
+    if (result.success == true) {
+      httpResponse.status(200).json(result.data);
+    } else {
+      httpResponse.status(400).json(result.data);
+    }
+  }
+);
+
+copyTradingAccountRouter.delete(
+  "/cancel_order_individual",
+  async (httpRequest, httpResponse) => {
+    const result = await copy_trading_delete_cancel_order_individual(httpRequest);
 
     if (result.success == true) {
       httpResponse.status(200).json(result.data);
