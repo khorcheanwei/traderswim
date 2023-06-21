@@ -234,6 +234,9 @@ async function get_latest_order_information(config, accountUsername, orderId) {
         let current_optionChainFilledQuantity = current_order["filledQuantity"]
         let current_status = current_order["status"];
         let current_enteredTime = current_order["enteredTime"];
+        if (current_order["closeTime"] != undefined) {
+          current_enteredTime = current_order["closeTime"];
+        }
         
         return {accountId: current_accountId, optionChainSymbol: current_symbol, optionChainDescription: current_description,
           optionChainOrderId: current_orderId, optionChainOrderType: current_orderType, optionChainInstruction: current_instruction,
