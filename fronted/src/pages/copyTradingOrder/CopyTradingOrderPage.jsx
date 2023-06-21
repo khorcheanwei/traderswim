@@ -14,6 +14,10 @@ export default function CopyTradingOrderPage() {
       accessor: 'agentTradingSessionID',
     },
     {
+      Header: 'Account Id',
+      accessor: 'accountId',
+    },
+    {
       Header: 'View',
       accessor: 'viewAllOrder',
       Cell: viewAllOrderPanel,
@@ -30,6 +34,10 @@ export default function CopyTradingOrderPage() {
     {
       Header: 'Symbol description',
       accessor: 'optionChainDescription',
+    },
+    {
+      Header: 'Option chain order Id',
+      accessor: 'optionChainOrderId',
     },
     {
       Header: 'Filled Qty',

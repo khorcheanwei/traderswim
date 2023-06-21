@@ -495,6 +495,7 @@ async function copy_trading_database_by_agent(agentID) {
 
       const currCopyTradingAccountData = {
         agentTradingSessionID: agentTradingSessionID,
+        accountId: currCopyTradingAccount["accountId"],
         accountName: currCopyTradingAccount["accountName"],
         accountUsername: currCopyTradingAccount["accountUsername"],
         optionChainEnteredTime: optionChainEnteredTime.substring(0, optionChainEnteredTime.length - 5),
@@ -503,6 +504,7 @@ async function copy_trading_database_by_agent(agentID) {
         optionChainFilledQuantity: currCopyTradingAccount["optionChainFilledQuantity"],
         optionChainSymbol: currCopyTradingAccount["optionChainSymbol"],
         optionChainDescription: currCopyTradingAccount["optionChainDescription"],
+        optionChainOrderId: currCopyTradingAccount["optionChainOrderId"],
         optionChainPrice: currCopyTradingAccount["optionChainPrice"],
         optionChainOrderType: currCopyTradingAccount["optionChainOrderType"],
         optionChainStatus: currCopyTradingAccount["optionChainStatus"],

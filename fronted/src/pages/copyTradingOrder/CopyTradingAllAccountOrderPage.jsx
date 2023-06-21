@@ -4,6 +4,7 @@ import { useContext, useState, useEffect, useRef  } from 'react';
 
 import { CopyTradingOrderContext } from '../context/CopyTradingOrderContext';
 import CopyTradingAllAccountOrderTable from './CopyTradingAllAccountOrderTable'
+import { ChangeOrderIndividualPanel} from './CopyTradingAllAccountOrderTable'
 
 export default function CopyTradingAllAccountOrderPage({ rowCopyTradingOrder, onClose }) {
 
@@ -13,12 +14,25 @@ export default function CopyTradingAllAccountOrderPage({ rowCopyTradingOrder, on
       accessor: 'agentTradingSessionID',
     },
     {
+      Header: 'Account Id',
+      accessor: 'accountId',
+    },
+    {
       Header: 'Symbol',
       accessor: 'optionChainSymbol',
     },
     {
+      Header: 'Change order',
+      accessor: 'ChangeOrder',
+      Cell: ChangeOrderIndividualPanel,
+    },
+    {
       Header: 'Symbol description',
       accessor: 'optionChainDescription',
+    },
+    {
+      Header: 'Option chain order Id',
+      accessor: 'optionChainOrderId',
     },
     {
       Header: 'Filled Qty',

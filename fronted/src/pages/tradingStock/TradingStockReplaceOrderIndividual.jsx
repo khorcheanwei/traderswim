@@ -2,20 +2,23 @@ import axios from 'axios';
 import { useContext, useState, useEffect } from 'react';
 import { CopyTradingOrderContext } from '../context/CopyTradingOrderContext';
 
-export default function TradingStockReplaceOrder({ rowCopyTradingOrder, onClose }) {
+export default function TradingStockReplaceOrderIndividual({ rowCopyTradingOrderIndividual, onClose }) {
 
-    const {isOpenOrderReplace, setIsOpenOrderReplace} = useContext(CopyTradingOrderContext);
+    const {isOpenOrderReplaceIndividual, setIsOpenOrderReplaceIndividual} = useContext(CopyTradingOrderContext);
 
     var optionChainInstructionList = ["BUY_TO_OPEN", "SELL_TO_CLOSE"];
     var optionChainOrderTypeList = ["LIMIT", "MARKET", "MARKET_ON_CLOSE", "STOP", "STOP_LIMIT", "TRAILING_STOP"];
 
-    let agentTradingSessionID = rowCopyTradingOrder.cell.row.original.agentTradingSessionID;
-    let optionChainDescription = rowCopyTradingOrder.cell.row.original.optionChainDescription;
-    let rowOptionChainSymbol = rowCopyTradingOrder.cell.row.original.optionChainSymbol;
-    let rowOptionChainInstruction = rowCopyTradingOrder.cell.row.original.optionChainInstruction;
-    let rowOptionChainOrderType = rowCopyTradingOrder.cell.row.original.optionChainOrderType;
-    let rowOptionChainQuantity = rowCopyTradingOrder.cell.row.original.optionChainQuantity;
-    let rowOptionChainPrice = rowCopyTradingOrder.cell.row.original.optionChainPrice;
+    let accountId = rowCopyTradingOrderIndividual.cell.row.original.accountId;
+    let accountUsername = rowCopyTradingOrderIndividual.cell.row.original.accountUsername;
+    let agentTradingSessionID = rowCopyTradingOrderIndividual.cell.row.original.agentTradingSessionID;
+    let optionChainOrderId = rowCopyTradingOrderIndividual.cell.row.original.optionChainOrderId;
+    let optionChainDescription = rowCopyTradingOrderIndividual.cell.row.original.optionChainDescription;
+    let rowOptionChainSymbol = rowCopyTradingOrderIndividual.cell.row.original.optionChainSymbol;
+    let rowOptionChainInstruction = rowCopyTradingOrderIndividual.cell.row.original.optionChainInstruction;
+    let rowOptionChainOrderType = rowCopyTradingOrderIndividual.cell.row.original.optionChainOrderType;
+    let rowOptionChainQuantity = rowCopyTradingOrderIndividual.cell.row.original.optionChainQuantity;
+    let rowOptionChainPrice = rowCopyTradingOrderIndividual.cell.row.original.optionChainPrice;
 
     const [optionChainSymbol, setOptionChainSymbol] = useState(rowOptionChainSymbol);
     const [optionChainInstruction, setOptionChainInstruction] = useState(rowOptionChainInstruction);
@@ -23,16 +26,16 @@ export default function TradingStockReplaceOrder({ rowCopyTradingOrder, onClose 
     const [optionChainQuantity, setOptionChainQuantity] = useState(rowOptionChainQuantity)
     const [optionChainPrice, setOptionChainPrice] = useState(rowOptionChainPrice)
   
-    async function handleReplaceOrder() {
+    async function handleReplaceOrderIndividual() {
         try {
-            const { data } = await axios.put("/copy_trading_account/replace_order/", { agentTradingSessionID, optionChainSymbol, optionChainInstruction, optionChainOrderType, optionChainQuantity, optionChainPrice })
+            const { data } = await axios.put("/copy_trading_account/replace_order_individual/", { agentTradingSessionID, accountId, accountUsername, optionChainOrderId, optionChainSymbol, optionChainInstruction, optionChainOrderType, optionChainQuantity, optionChainPrice })
 
             if (data != "success") {
                 alert("Replace order failed");
             } else {
                 alert("Replace order successful");
             }
-            setIsOpenOrderReplace(!isOpenOrderReplace); 
+            setIsOpenOrderReplaceIndividual(!isOpenOrderReplaceIndividual); 
         } catch (error) {
             alert("Replace order failed")
             console.log(error.message);
@@ -42,7 +45,7 @@ export default function TradingStockReplaceOrder({ rowCopyTradingOrder, onClose 
     return (
         <div>
             <div className="mb-4">
-                <h1 className="block text-gray-700 text-lm font-bold mb-2">Option Replace Order</h1>
+                <h1 className="block text-gray-700 text-lm font-bold mb-2">Option Replace Order (Individual) - <b>{accountUsername}</b></h1>
             </div>
             <div>
                 <div className="relative">
@@ -130,7 +133,7 @@ export default function TradingStockReplaceOrder({ rowCopyTradingOrder, onClose 
                 <button
                     type="button"
                     className="inline-block rounded bg-teal-300 px-7 pt-3 pb-2.5 text-sm font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-teal-300-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-teal-300-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-teal-300-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
-                    onClick={handleReplaceOrder}>
+                    onClick={handleReplaceOrderIndividual}>
                     Replace order
                 </button>
             </div>

@@ -2,28 +2,33 @@ import axios from "axios";
 import {useContext } from 'react';
 import { CopyTradingOrderContext } from '../context/CopyTradingOrderContext';
 
-export default function TradingStockDeleteOrder({rowCopyTradingOrder, onClose}) {
+export default function TradingStockDeleteOrderIndividual({rowCopyTradingOrderIndividual, onClose}) {
     
   
-    const { isOpenOrderDelete, setIsOpenOrderDelete} = useContext(CopyTradingOrderContext);
+    const { isOpenOrderDeleteIndividual, setIsOpenOrderDeleteIndividual} = useContext(CopyTradingOrderContext);
     
-    let optionChainDescription = rowCopyTradingOrder.cell.row.original.optionChainDescription;
-    let agentTradingSessionID = rowCopyTradingOrder.cell.row.original.agentTradingSessionID;
+    //let optionChainDescription = rowCopyTradingOrderIndividual.cell.row.original.account;
+    let accountId = rowCopyTradingOrderIndividual.cell.row.original.accountId;
+    let accountUsername = rowCopyTradingOrderIndividual.cell.row.original.accountUsername;
+    let optionChainOrderId = rowCopyTradingOrderIndividual.cell.row.original.optionChainOrderId;
+    let optionChainDescription = rowCopyTradingOrderIndividual.cell.row.original.optionChainDescription;
+    let agentTradingSessionID = rowCopyTradingOrderIndividual.cell.row.original.agentTradingSessionID;
     
-    async function handleDeleteOrder() {
+    async function handleDeleteOrderIndividual() {
       // delete order 
       try {
   
-        const response = await axios.delete("/copy_trading_account/cancel_order/", { data: { agentTradingSessionID: agentTradingSessionID }});
+        const response = await axios.delete("/copy_trading_account/cancel_order_individual/", { data: { agentTradingSessionID, accountId, accountUsername, optionChainOrderId }});
         if (response.data == "success") {
           alert("Order deleted successful");
         } else {
           alert("Order deleted failed")
         }
-        setIsOpenOrderDelete(!isOpenOrderDelete); 
+        setIsOpenOrderDeleteIndividual(!isOpenOrderDeleteIndividual); 
 
       } catch(error) {
           alert("Order deleted failed")
+          setIsOpenOrderDeleteIndividual(!isOpenOrderDeleteIndividual); 
           console.log(error.message);
       }
     }
@@ -31,9 +36,9 @@ export default function TradingStockDeleteOrder({rowCopyTradingOrder, onClose}) 
     return ( 
         <form>
             <div className="mb-4">
-                <h1 className="block text-gray-700 text-lm font-bold mb-2">Option Delete Order</h1>
+                <h1 className="block text-gray-700 text-lm font-bold mb-2">Option Delete Order (Individual) - <b>{accountUsername}</b></h1>
             </div>
-            <div className="mb-4">Are you sure to delete this order <b>{optionChainDescription}</b> ?</div>
+            <div className="mb-4">Are you sure to delete this order <b>{optionChainDescription}</b>?</div>
             <div className="flex justify-end gap-5">
               <button
                 type="button"
@@ -45,7 +50,7 @@ export default function TradingStockDeleteOrder({rowCopyTradingOrder, onClose}) 
               <button
                 type="button"
                 className="inline-block rounded bg-teal-300 px-7 pt-3 pb-2.5 text-sm font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-teal-300-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-teal-300-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-teal-300-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
-                onClick={handleDeleteOrder}
+                onClick={handleDeleteOrderIndividual}
                 >
                 DELETE ORDER
               </button>

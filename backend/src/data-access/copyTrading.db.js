@@ -50,6 +50,32 @@ function copyTradingAccountDBOperation(trading_management_db) {
     }
   };
 
+  // search searchCopyTradingAccount based on agentID, agentTradingSessionID, accountId
+  this.searchCopyTradingAccountBasedTradingSessionIDAndAccountId = async function (
+    agentID,
+    agentTradingSessionID,
+    accountId,
+  ) {
+
+    try {
+      const sqlCommand = `SELECT * FROM copyTradingAccount WHERE agentID=? and agentTradingSessionID=? and accountId=?`;
+
+      const queryResult = await new Promise((resolve, reject) => {
+        this.trading_management_db.all(sqlCommand, [agentID, agentTradingSessionID, accountId], (err, row) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(row);
+          }
+        });
+      });
+
+      return { success: true, data: queryResult };
+    } catch (error) {
+      return { success: false, error: error };
+    }
+  };
+
   // search searchCopyTradingAccount
   this.searchCopyTradingAccount = async function (agentID) {
     try {
