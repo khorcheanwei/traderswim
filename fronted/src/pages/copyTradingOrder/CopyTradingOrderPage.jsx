@@ -3,7 +3,7 @@ import React from 'react'
 import { useContext, useState, useEffect, useRef  } from 'react';
 
 import { CopyTradingOrderContext } from '../context/CopyTradingOrderContext';
-import CopyTradingOrderTable, { ChangeOrderPanel, viewAllOrderPanel } from './CopyTradingOrderTable'
+import CopyTradingOrderTable, { ChangeOrderPanel, ViewAllOrderPanel, OptionChainStatusColorPanel } from './CopyTradingOrderTable'
 
 export default function CopyTradingOrderPage() {
   const {copyTradingOrderMainData, setCopyTradingOrderMainData} = useContext(CopyTradingOrderContext);
@@ -20,7 +20,7 @@ export default function CopyTradingOrderPage() {
     {
       Header: 'View',
       accessor: 'viewAllOrder',
-      Cell: viewAllOrderPanel,
+      Cell: ViewAllOrderPanel,
     },
     {
       Header: 'Change order',
@@ -66,6 +66,11 @@ export default function CopyTradingOrderPage() {
     {
       Header: 'Time',
       accessor: 'optionChainEnteredTime',
+    },
+    {
+      Header: 'Status', 
+      accessor: 'optionChainStatusColor',
+      Cell: OptionChainStatusColorPanel,
     },
     {
       Header: 'Name',

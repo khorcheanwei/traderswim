@@ -4,7 +4,9 @@ import { useContext, useState, useEffect, useRef  } from 'react';
 
 import { CopyTradingOrderContext } from '../context/CopyTradingOrderContext';
 import CopyTradingAllAccountOrderTable from './CopyTradingAllAccountOrderTable'
-import { ChangeOrderIndividualPanel} from './CopyTradingAllAccountOrderTable'
+import { TextOptionChainDescriptionColorPanel, TextOptionChainFilledQuantityColorPanel, TextOptionChainPriceColorPanel, TextOptionChainQuantityColorPanel,
+  TextOptionChainInstructionColorPanel, TextOptionChainStatusColorPanel, TextOptionChainOrderTypeColorPanel, TextOptionChainEnteredTimeColorPanel,
+  TextAccountNameColorPanel,TextAccountUsernameColorPanel, ChangeOrderIndividualPanel} from './CopyTradingAllAccountOrderTable'
 
 export default function CopyTradingAllAccountOrderPage({ rowCopyTradingOrder, onClose }) {
 
@@ -29,6 +31,7 @@ export default function CopyTradingAllAccountOrderPage({ rowCopyTradingOrder, on
     {
       Header: 'Symbol description',
       accessor: 'optionChainDescription',
+      Cell: TextOptionChainDescriptionColorPanel,
     },
     {
       Header: 'Option chain order Id',
@@ -37,38 +40,51 @@ export default function CopyTradingAllAccountOrderPage({ rowCopyTradingOrder, on
     {
       Header: 'Filled Qty',
       accessor: 'optionChainFilledQuantity',
+      Cell: TextOptionChainFilledQuantityColorPanel,
     },
     {
       Header: 'Price',
       accessor: 'optionChainPrice',
+      Cell: TextOptionChainPriceColorPanel,
     },
     {
       Header: 'Qty',
       accessor: 'optionChainQuantity',
+      Cell: TextOptionChainQuantityColorPanel,
     },
     {
       Header: 'Side Pos Effect',
       accessor: 'optionChainInstruction',
+      Cell: TextOptionChainInstructionColorPanel,
     },
     {
       Header: 'Status',
       accessor: 'optionChainStatus',
+      Cell: TextOptionChainStatusColorPanel,
     },
     {
       Header: 'Order type',
       accessor: 'optionChainOrderType',
+      Cell: TextOptionChainOrderTypeColorPanel,
     },
     {
       Header: 'Time',
       accessor: 'optionChainEnteredTime',
+      Cell: TextOptionChainEnteredTimeColorPanel,
+    },
+    {
+      Header: 'Status', 
+      accessor: 'optionChainStatusColor',
     },
     {
       Header: 'Name',
       accessor: 'accountName',
+      Cell: TextAccountNameColorPanel,
     },
     {
       Header: 'Account Username',
       accessor: 'accountUsername',
+      Cell: TextAccountUsernameColorPanel,
     },
   ], [])
 
