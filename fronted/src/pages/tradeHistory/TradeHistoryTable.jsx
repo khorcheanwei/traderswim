@@ -50,7 +50,8 @@ function GlobalFilter({
 }
 
 function TradingActivityTable({ columns, data }) {
-  return CommonTable({ columns, data, GlobalFilter })
+  let hiddenColumns = [];
+  return CommonTable({ columns, data, GlobalFilter, hiddenColumns })
 }
 
 export default TradingActivityTable;

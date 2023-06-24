@@ -97,7 +97,8 @@ export function SettledQuantityColorChange(row) {
 }
 
 function CopyTradingPositionTable({ columns, data }) {
-  return CommonTable({ columns, data, GlobalFilter })
+  let hiddenColumns = ['accountId', 'optionChainSymbol', 'optionChainOrderId', 'agentTradingSessionID'];
+  return CommonTable({ columns, data, GlobalFilter, hiddenColumns })
 }
 
 export default CopyTradingPositionTable;

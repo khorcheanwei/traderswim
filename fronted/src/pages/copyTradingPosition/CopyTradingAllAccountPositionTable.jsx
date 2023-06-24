@@ -22,7 +22,8 @@ function GlobalFilter({
 }
 
 function CopyTradingAllAccountPositionTable({ columns, data }) {
-  return CommonTable({ columns, data, GlobalFilter })
+  let hiddenColumns = ['accountId', 'optionChainSymbol', 'optionChainOrderId', 'agentTradingSessionID'];
+  return CommonTable({ columns, data, GlobalFilter, hiddenColumns })
 }
 
 export default CopyTradingAllAccountPositionTable;

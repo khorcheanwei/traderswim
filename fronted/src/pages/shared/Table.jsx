@@ -6,8 +6,8 @@ import { SortIcon, SortUpIcon, SortDownIcon } from '../shared/Icons'
 
 
 
-function CommonTable({ columns, data, GlobalFilter }) {
-  const initialState = { hiddenColumns: ['accountId', 'optionChainSymbol', 'optionChainOrderId', 'agentTradingSessionID'] };
+function CommonTable({ columns, data, GlobalFilter, hiddenColumns }) {
+  const initialState = { hiddenColumns: hiddenColumns };
   
   // Use the state and functions returned from useTable to build your UI
   const {

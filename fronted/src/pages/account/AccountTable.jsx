@@ -155,7 +155,8 @@ export function SettingsPanel(row) {
 };
 
 function AccountsTable({ columns, data }) {
-  return CommonTable({ columns, data, GlobalFilter })
+  let hiddenColumns = [];
+  return CommonTable({ columns, data, GlobalFilter, hiddenColumns })
 }
 
 export default AccountsTable;

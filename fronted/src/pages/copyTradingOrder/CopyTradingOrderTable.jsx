@@ -35,7 +35,7 @@ function GlobalFilter({
   )
 }
 
-export function viewAllOrderPanel(row) {
+export function ViewAllOrderPanel(row) {
   const { isOpenViewAllOrder, setIsOpenViewAllOrder } = useContext(CopyTradingOrderContext);
   const { rowCopyTradingOrder, setRowCopyTradingOrder } = useContext(CopyTradingOrderContext);
 
@@ -99,8 +99,24 @@ export function ChangeOrderPanel(row) {
   );
 };
 
+export function OptionChainStatusColorPanel(row) {
+  <span className="font-medium text-white dark:text-white">R</span>
+
+  let optionChainStatusColor = row.cell.row.original.optionChainStatusColor;
+
+  return (
+    <div>
+      {optionChainStatusColor
+        ? <span className='bg-green-500 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300'></span>
+        : <span className='bg-red-500 text-red-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300'></span>
+      }
+    </div>
+  );
+}
+
 function CopyTradingOrderTable({ columns, data }) {
-  return CommonTable({ columns, data, GlobalFilter })
+  let hiddenColumns = ['accountId', 'optionChainSymbol', 'optionChainOrderId', 'agentTradingSessionID'];
+  return CommonTable({ columns, data, GlobalFilter, hiddenColumns })
 }
 
 export default CopyTradingOrderTable;
