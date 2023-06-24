@@ -73,10 +73,6 @@ export default function CopyTradingAllAccountOrderPage({ rowCopyTradingOrder, on
       Cell: TextOptionChainEnteredTimeColorPanel,
     },
     {
-      Header: 'Status', 
-      accessor: 'optionChainStatusColor',
-    },
-    {
       Header: 'Name',
       accessor: 'accountName',
       Cell: TextAccountNameColorPanel,
@@ -92,7 +88,6 @@ export default function CopyTradingAllAccountOrderPage({ rowCopyTradingOrder, on
   
   const {copyTradingOrderDataDict, setCopyTradingOrderDataDict} = useContext(CopyTradingOrderContext);
   const copyTradingAllAccountData = copyTradingOrderDataDict[agentTradingSessionID];
-
   var data = React.useMemo(() => copyTradingAllAccountData, [copyTradingAllAccountData])
 
   return (

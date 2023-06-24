@@ -115,7 +115,8 @@ export function OptionChainStatusColorPanel(row) {
 }
 
 function CopyTradingOrderTable({ columns, data }) {
-  return CommonTable({ columns, data, GlobalFilter })
+  let hiddenColumns = ['accountId', 'optionChainSymbol', 'optionChainOrderId', 'agentTradingSessionID'];
+  return CommonTable({ columns, data, GlobalFilter, hiddenColumns })
 }
 
 export default CopyTradingOrderTable;

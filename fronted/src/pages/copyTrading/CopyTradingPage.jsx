@@ -27,13 +27,14 @@ export default function CopyTradingPage() {
         let copyTradingMainAccountDataList = [];
         for (const [key, value] of Object.entries(copyTradingAccountDataDictResponse).reverse()) {
           let copyTradingMainAccountDataRow = value[0];
+          let copyTradingOptionChainStatusColor = true;
           for (let index=0; index < value.length; index++) {
-            if (value[index].optionChainStatus == "CANCELED" || value[index].optionChainStatus == "FILLED") {
-              copyTradingMainAccountDataRow["optionChainStatusColor"] = false;
-            } else {
-              copyTradingMainAccountDataRow["optionChainStatusColor"] = true;
+            if (value[index].optionChainStatus != "CANCELED" && value[index].optionChainStatus != "FILLED") {
+              copyTradingOptionChainStatusColor = false;
+              break
             }
           }
+          copyTradingMainAccountDataRow["optionChainStatusColor"] = copyTradingOptionChainStatusColor;
           copyTradingMainAccountDataList.push(copyTradingMainAccountDataRow);
         }
         setCopyTradingOrderMainData(copyTradingMainAccountDataList)
