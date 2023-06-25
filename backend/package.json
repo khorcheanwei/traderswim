@@ -12,6 +12,7 @@
     "memcached-promise": "^1.0.1",
     "node-cache": "^5.1.2",
     "node-cron": "^3.0.2",
+    "nodemon": "^2.0.22",
     "puppeteer": "^20.1.1",
     "puppeteer-cluster": "^0.23.0",
     "socket.io": "^4.6.1",
