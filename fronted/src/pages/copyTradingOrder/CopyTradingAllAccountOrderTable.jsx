@@ -30,7 +30,8 @@ function GlobalFilter({
 
 function getOptionChainStatusColor(optionChainStatus) {
   let optionChainStatusColor = true;
-  if ( optionChainStatus != "CANCELED" && optionChainStatus != "FILLED" ) {
+  let optionChainStatusInactiveList = ["REJECTED", "CANCELED", "FILLED", "EXPIRED"];
+  if (!optionChainStatusInactiveList.includes(optionChainStatus)) {
     optionChainStatusColor = false;
   }
   return optionChainStatusColor
@@ -178,6 +179,15 @@ export function TextAccountUsernameColorPanel(row) {
         ? <div>{accountUsername}</div>
         : <div className="text-yellow-700">{accountUsername}</div>
       }
+    </div>
+  )
+}
+
+export function MakeSelectedOrderPanel(row) {
+  console.log(row.cell.row.original)
+  return (
+    <div className="">
+      <input id="selected-order-checkbox" type="checkbox" value="" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
     </div>
   )
 }

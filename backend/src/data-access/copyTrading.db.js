@@ -203,6 +203,28 @@ function copyTradingAccountDBOperation(trading_management_db) {
     }
   }
 
+  // get all agentTradingSessionID for all trading accounts where optionChainStatus is not equal to REJECTED, CANCELED, FILLED, EXPIRED
+  this.getAllAgentTradingSessionIDBasedOptionChainStatus = async function (agentID) {
+    try {
+
+        const sqlCommand = `SELECT DISTINCT agentTradingSessionID FROM copyTradingAccount WHERE agentID=? AND optionChainStatus!='REJECTED' AND optionChainStatus!='CANCELED' AND optionChainStatus!='FILLED' AND optionChainStatus!='EXPIRED';`;
+
+        const queryResult = await new Promise((resolve, reject) => {
+          this.trading_management_db.all(sqlCommand, [agentID], (err, row) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(row);
+            }
+          });
+        });
+
+        return { success: true, data: queryResult };
+    } catch (error) {
+      return { success: false, error: error };
+    }
+  }
+
   // get all optionChainSymbol for all trading accounts
   this.getAllOptionChainSymbolList = async function () {
     try {

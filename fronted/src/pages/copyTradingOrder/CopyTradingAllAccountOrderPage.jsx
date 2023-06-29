@@ -6,7 +6,7 @@ import { CopyTradingOrderContext } from '../context/CopyTradingOrderContext';
 import CopyTradingAllAccountOrderTable from './CopyTradingAllAccountOrderTable'
 import { TextOptionChainDescriptionColorPanel, TextOptionChainFilledQuantityColorPanel, TextOptionChainPriceColorPanel, TextOptionChainQuantityColorPanel,
   TextOptionChainInstructionColorPanel, TextOptionChainStatusColorPanel, TextOptionChainOrderTypeColorPanel, TextOptionChainEnteredTimeColorPanel,
-  TextAccountNameColorPanel,TextAccountUsernameColorPanel, ChangeOrderIndividualPanel} from './CopyTradingAllAccountOrderTable'
+  TextAccountNameColorPanel,TextAccountUsernameColorPanel, ChangeOrderIndividualPanel, MakeSelectedOrderPanel} from './CopyTradingAllAccountOrderTable'
 
 export default function CopyTradingAllAccountOrderPage({ rowCopyTradingOrder, onClose }) {
 
@@ -82,6 +82,11 @@ export default function CopyTradingAllAccountOrderPage({ rowCopyTradingOrder, on
       accessor: 'accountUsername',
       Cell: TextAccountUsernameColorPanel,
     },
+    /*{
+      Header: 'SELECTED ORDER',
+      accessor: 'makeSelectedOrder',
+      Cell: MakeSelectedOrderPanel,
+    }, */
   ], [])
 
   const agentTradingSessionID = rowCopyTradingOrder.row.original.agentTradingSessionID;

@@ -213,40 +213,33 @@ async function get_latest_order_id_all_accounts(all_trading_accounts_list, resul
 }
 
 // get latest order list information
-async function get_latest_order_information(config, accountUsername, orderId) {
+async function get_latest_order_information(config, accountUsername) {
 
   try {
     const response = await axios.request(config);
-    const order_list = response.data;
+    const current_order = response.data;
 
-    for (let index = 0; index < order_list.length; index++) {
-      let current_order = order_list[index];
-      let current_orderId = current_order["orderId"];
-      if (orderId == current_orderId) {
-        let current_accountId = current_order["accountId"];
-        let current_symbol = current_order["orderLegCollection"][0]["instrument"]["symbol"];
-        let current_description = current_order["orderLegCollection"][0]["instrument"]["description"];
-        let current_orderId = current_order["orderId"];
-        let current_orderType = current_order["orderType"];
-        let current_instruction = current_order["orderLegCollection"][0]["instruction"];
-        let current_price = current_order["price"];
-        let current_quantity = current_order["quantity"];
-        let current_optionChainFilledQuantity = current_order["filledQuantity"]
-        let current_status = current_order["status"];
-        let current_enteredTime = current_order["enteredTime"];
-        if (current_order["closeTime"] != undefined) {
-          current_enteredTime = current_order["closeTime"];
-        }
-        
-        return {accountId: current_accountId, optionChainSymbol: current_symbol, optionChainDescription: current_description,
-          optionChainOrderId: current_orderId, optionChainOrderType: current_orderType, optionChainInstruction: current_instruction,
-          optionChainPrice: current_price, optionChainQuantity: current_quantity, optionChainFilledQuantity: current_optionChainFilledQuantity,
-          optionChainStatus: current_status, optionChainEnteredTime: current_enteredTime}
-      }
+    let current_accountId = current_order["accountId"];
+    let current_symbol = current_order["orderLegCollection"][0]["instrument"]["symbol"];
+    let current_description = current_order["orderLegCollection"][0]["instrument"]["description"];
+    let current_orderId = current_order["orderId"];
+    let current_orderType = current_order["orderType"];
+    let current_instruction = current_order["orderLegCollection"][0]["instruction"];
+    let current_price = current_order["price"];
+    let current_quantity = current_order["quantity"];
+    let current_optionChainFilledQuantity = current_order["filledQuantity"]
+    let current_status = current_order["status"];
+    let current_enteredTime = current_order["enteredTime"];
+    if (current_order["closeTime"] != undefined) {
+      current_enteredTime = current_order["closeTime"];
     }
     console.log(`Successful get latest order information - accountUsername: ${accountUsername} with ${JSON.stringify(config)}. Status: ${response.status}`)
-    return {accountId: null, optionChainSymbol: null, optionChainDescription: null, optionChainOrderId: null, optionChainOrderType: null, optionChainInstruction: null, optionChainPrice: null, optionChainQuantity: null, optionChainFilledQuantity: null, optionChainStatus: null, optionChainEnteredTime: null};
 
+    return {accountId: current_accountId, optionChainSymbol: current_symbol, optionChainDescription: current_description,
+      optionChainOrderId: current_orderId, optionChainOrderType: current_orderType, optionChainInstruction: current_instruction,
+      optionChainPrice: current_price, optionChainQuantity: current_quantity, optionChainFilledQuantity: current_optionChainFilledQuantity,
+      optionChainStatus: current_status, optionChainEnteredTime: current_enteredTime}
+      
   } catch (error) {
     console.log(`Failed get latest order information - accountUsername: ${accountUsername} with ${JSON.stringify(config)}. Error: ${error.message}`);
     return {accountId: null, optionChainSymbol: null, optionChainDescription: null, optionChainOrderId: null, optionChainOrderType: null, optionChainInstruction: null, optionChainPrice: null, optionChainQuantity: null, optionChainFilledQuantity: null, optionChainStatus: null, optionChainEnteredTime: null};
@@ -263,20 +256,19 @@ async function get_latest_order_information_all_accounts(all_trading_accounts_li
     }
 
     const { accountId, accountUsername, authToken } = api_data;
+    const orderId = orderId_list[index];
+    const url = `https://api.tdameritrade.com/v1/accounts/${accountId}/orders/${orderId}`;
+    let data = '';
     const config = {
       method: 'get',
       maxBodyLength: Infinity,
-      url: `https://api.tdameritrade.com/v1/orders`,
+      url: url,
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${authToken}`
       },
-      params: {
-        'accountId': accountId
-      }
+      data : data
     }
-
-    const orderId = orderId_list[index];
     const result = await get_latest_order_information(config, accountUsername, orderId);
     return result;
   });
@@ -473,11 +465,14 @@ async function copy_trading_database_by_agent(agentID) {
       return { success: false, data: result.error };
     }
     agentDocument = result.data;
-    const agentTradingSessionID = agentDocument.agentTradingSessionID;
+    let agentTradingSessionIDList =  await copyTradingAccountDBBOperation.getAllAgentTradingSessionIDBasedOptionChainStatus(agentID)
 
-    // sync order and save to copy trading table for all trading accounts
-    await sync_order_and_save_to_copy_trading_database(agentID, agentTradingSessionID)
-
+    for (let index = 0; index < agentTradingSessionIDList.data.length; index++) {
+      let currAgentTradingSessionID = agentTradingSessionIDList.data[index]["agentTradingSessionID"];
+      // sync order and save to copy trading table for all trading accounts
+      await sync_order_and_save_to_copy_trading_database(agentID, currAgentTradingSessionID);
+    }
+    
     // get CopyTradingAccount based on agentID and agentTradingSessionID
     result =
       await copyTradingAccountDBBOperation.searchCopyTradingAccountBasedAgentID(
