@@ -18,6 +18,10 @@ export function CopyTradingOrderContextProvider({children}) {
     const [isOpenOrderReplaceIndividual, setIsOpenOrderReplaceIndividual] = useState(false);
     const [isOpenOrderDeleteIndividual, setIsOpenOrderDeleteIndividual] = useState(false); 
     const [rowCopyTradingOrderIndividual, setRowCopyTradingOrderIndividual] = useState([]);
+
+    const [isOpenOrderReplaceSelected, setIsOpenOrderReplaceSelected] = useState(false);
+    const [isOpenOrderDeleteSelected, setIsOpenOrderDeleteSelected] = useState(false); 
+    const [rowCopyTradingOrderSelected, setRowCopyTradingOrderSelected] = useState([]);
     
     return (
         <CopyTradingOrderContext.Provider value={{ copyTradingOrderDataDict, setCopyTradingOrderDataDict, 
@@ -26,7 +30,10 @@ export function CopyTradingOrderContextProvider({children}) {
             isOpenOrderReplace, setIsOpenOrderReplace, isOpenOrderDelete, setIsOpenOrderDelete, 
             isOpenOrderReplaceIndividual, setIsOpenOrderReplaceIndividual,
             isOpenOrderDeleteIndividual, setIsOpenOrderDeleteIndividual,
-            rowCopyTradingOrderIndividual, setRowCopyTradingOrderIndividual
+            rowCopyTradingOrderIndividual, setRowCopyTradingOrderIndividual,
+            isOpenOrderReplaceSelected, setIsOpenOrderReplaceSelected,
+            isOpenOrderDeleteSelected, setIsOpenOrderDeleteSelected,
+            rowCopyTradingOrderSelected, setRowCopyTradingOrderSelected
         }}>
             {children}
         </CopyTradingOrderContext.Provider>
