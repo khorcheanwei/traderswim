@@ -91,7 +91,7 @@ async function agent_logout(httpRequest) {
       delete_agent_list_from_cache(agentDocument.id);
       return { success: true };
     } catch (error) {
-      return { success: false, data: error.message.message };
+      return { success: true, data: error.message.message };
     }
   }
 }
@@ -110,10 +110,10 @@ async function agent_profile(httpRequest) {
           data: { agentID: id, agentUsername: agentUsername },
         };
       } else {
-        return { success: false, data: dbQueryResult.error };
+        return { success: true, data: dbQueryResult.error };
       }
     } catch (error) {
-      return { success: false, data: error.message };
+      return { success: true, data: error.message };
     }
   } else {
     return { success: true, data: null };
