@@ -15,6 +15,7 @@ import { TextOptionChainDescriptionColorPanel, TextOptionChainFilledQuantityColo
 
 export default function CopyTradingAllAccountOrderPage({ rowCopyTradingOrder, onClose }) {
 
+  const [selectedOrderDict, setSelectedOrderDict] = useState({});
   const columns = React.useMemo(() => [
     {
       Header: 'ID',
@@ -90,8 +91,8 @@ export default function CopyTradingAllAccountOrderPage({ rowCopyTradingOrder, on
     {
       Header: 'SELECTED ORDER',
       accessor: 'makeSelectedOrder',
-      Cell: MakeSelectedOrderPanel,
-    },
+      Cell: (row) => <MakeSelectedOrderPanel row={row} setSelectedOrderDict={setSelectedOrderDict}/>,
+    }
   ], [])
 
   const agentTradingSessionID = rowCopyTradingOrder.row.original.agentTradingSessionID;
@@ -104,6 +105,8 @@ export default function CopyTradingAllAccountOrderPage({ rowCopyTradingOrder, on
   const { isOpenOrderReplaceSelected, setIsOpenOrderReplaceSelected, isOpenOrderDeleteSelected, setIsOpenOrderDeleteSelected } = useContext(CopyTradingOrderContext);
   
   const { rowCopyTradingOrderSelected, setRowCopyTradingOrderSelected } = useContext(CopyTradingOrderContext);
+
+  console.log(selectedOrderDict)
 
   const orderReplaceCloseSelected = async () => {
     console.log(copyTradingAllAccountData)

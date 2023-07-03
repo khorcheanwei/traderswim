@@ -61,6 +61,11 @@ export default function CopyTradingPage() {
     }
   }
 
+  useEffect(() => {
+    fetchCopyTradingAccountData();
+  }, [])
+
+  /*
   const ref = useRef(null)
   useEffect(() => {
     ref.current = setInterval(fetchCopyTradingAccountData, 1 * 500);
@@ -70,6 +75,7 @@ export default function CopyTradingPage() {
       }
     }
   }, [])
+  */
 
   const { isOpenTradingStock, setIsOpenTradingStock } = useContext(CopyTradingOrderContext);
 
