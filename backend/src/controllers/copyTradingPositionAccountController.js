@@ -15,7 +15,7 @@ const {
 const { get_access_token_from_cache, fetch_trading_account_info_api } = require("./tradingAccountPuppeteer.js")
 
 // get position information
-async function get_position_information(config, accountName, accountUsername, optionChainSymbolList) {
+async function get_position_information(config, accountId, accountName, accountUsername) {
   let copyTradingPositionAccountData = [];
 
   try {
@@ -37,7 +37,7 @@ async function get_position_information(config, accountName, accountUsername, op
             let current_settledLongQuantity = current_position["longQuantity"];
             let current_settledShortQuantity = current_position["shortQuantity"];
             
-            copyTradingPositionAccountData.push({accountName: accountName, accountUsername: accountUsername, optionChainSymbol: current_symbol, optionChainDescription: current_description, optionChainAveragePrice: current_averagePrice,
+            copyTradingPositionAccountData.push({accountId: accountId, accountName: accountName, accountUsername: accountUsername, optionChainSymbol: current_symbol, optionChainDescription: current_description, optionChainAveragePrice: current_averagePrice,
                optionChainSettledLongQuantity: current_settledLongQuantity, optionChainSettledShortQuantity: current_settledShortQuantity})
         }
     }
@@ -67,7 +67,7 @@ async function get_position_information_all_accounts(all_trading_accounts_list) 
         }
     }
 
-    const result = await get_position_information(config, accountName, accountUsername);
+    const result = await get_position_information(config, accountId, accountName, accountUsername);
     return result;
   });
 
@@ -124,6 +124,7 @@ async function copy_trading_position_by_agent(agentID) {
       }
 
       const currCopyTradingPositionAccountData = {
+        accountId: current_copyTradingAccount["accountId"],
         accountName: current_copyTradingAccount["accountName"],
         accountUsername: current_copyTradingAccount["accountUsername"],
         optionChainAveragePrice: current_copyTradingAccount["optionChainAveragePrice"],

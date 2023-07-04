@@ -100,14 +100,13 @@ function copyTradingAccountDBOperation(trading_management_db) {
   // create new copyTradingAccount
   this.createCopyTradingAccountItem = async function (
     agentTradingSessionID,
-    accountDocumentPart,
     order_information,
   ) {
       try {
-        const agentID = accountDocumentPart['agentID'];
-        const accountId = accountDocumentPart['accountId'];
-        const accountName = accountDocumentPart['accountName'];
-        const accountUsername = accountDocumentPart['accountUsername'];
+        const agentID = order_information['agentID'];
+        const accountId = order_information['accountId'];
+        const accountName = order_information['accountName'];
+        const accountUsername = order_information['accountUsername'];
         const optionChainSymbol = order_information['optionChainSymbol'];
         const optionChainDescription = order_information['optionChainDescription'];
         const optionChainOrderId = order_information['optionChainOrderId'];

@@ -104,27 +104,17 @@ export default function CopyTradingAllAccountOrderPage({ rowCopyTradingOrder, on
   // replace and cancel selected orders
   const { isOpenOrderReplaceSelected, setIsOpenOrderReplaceSelected, isOpenOrderDeleteSelected, setIsOpenOrderDeleteSelected } = useContext(CopyTradingOrderContext);
   
-  const { rowCopyTradingOrderSelected, setRowCopyTradingOrderSelected } = useContext(CopyTradingOrderContext);
+  //const { rowCopyTradingOrderSelected, setRowCopyTradingOrderSelected } = useContext(CopyTradingOrderContext);
 
   console.log(selectedOrderDict)
 
   const orderReplaceCloseSelected = async () => {
     console.log(copyTradingAllAccountData)
-    /*
-    if (isOpenOrderReplaceSelected == false) {
-      setRowCopyTradingOrderSelected(row)
-    }
     setIsOpenOrderReplaceSelected(!isOpenOrderReplaceSelected)
-    */
   }
 
   const orderDeleteCloseSelected = async () => {
-    /*
-    if (isOpenOrderDeleteSelected == false) {
-      setRowCopyTradingOrderSelected(row)
-    }
     setIsOpenOrderDeleteSelected(!isOpenOrderDeleteSelected)
-    */
   }
 
   return (
@@ -145,10 +135,10 @@ export default function CopyTradingAllAccountOrderPage({ rowCopyTradingOrder, on
             </div>
           </div>
           <Overlay isOpen={isOpenOrderReplaceSelected} >
-            <TradingStockReplaceOrderSelected rowCopyTradingOrderSelected={rowCopyTradingOrderSelected} onClose={orderReplaceCloseSelected}></TradingStockReplaceOrderSelected>
+            <TradingStockReplaceOrderSelected selectedOrderDict={selectedOrderDict} onClose={orderReplaceCloseSelected}></TradingStockReplaceOrderSelected>
           </Overlay>
           <Overlay isOpen={isOpenOrderDeleteSelected} >
-            <TradingStockDeleteOrderSelected rowCopyTradingOrderSelected={rowCopyTradingOrderSelected} onClose={orderDeleteCloseSelected}></TradingStockDeleteOrderSelected>
+            <TradingStockDeleteOrderSelected selectedOrderDict={selectedOrderDict} onClose={orderDeleteCloseSelected}></TradingStockDeleteOrderSelected>
           </Overlay>
         </div>
         <CopyTradingAllAccountOrderTable columns={columns} data={data} />

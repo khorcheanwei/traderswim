@@ -10,11 +10,22 @@ export default function TradingStockDeleteOrder({rowCopyTradingOrder, onClose}) 
     let optionChainDescription = rowCopyTradingOrder.cell.row.original.optionChainDescription;
     let agentTradingSessionID = rowCopyTradingOrder.cell.row.original.agentTradingSessionID;
     
+    const {copyTradingOrderDataDict, setCopyTradingOrderDataDict} = useContext(CopyTradingOrderContext);
+
     async function handleDeleteOrder() {
       // delete order 
       try {
+
+        const copyTradingAllAccountData = copyTradingOrderDataDict[agentTradingSessionID];
+
+        const allTradingAccountsOrderList = copyTradingAllAccountData.map(item => ({
+            accountId: item.accountId,
+            accountName: item.accountName,
+            accountUsername: item.accountUsername,
+            optionChainOrderId: item.optionChainOrderId
+          }));
   
-        const response = await axios.delete("/copy_trading_account/cancel_order/", { data: { agentTradingSessionID: agentTradingSessionID }});
+        const response = await axios.delete("/copy_trading_account/cancel_order/", { data: { agentTradingSessionID: agentTradingSessionID, allTradingAccountsOrderList: allTradingAccountsOrderList }});
         if (response.data == "success") {
           alert("Order deleted successful");
         } else {

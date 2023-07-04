@@ -12,10 +12,6 @@ export default function TradingStockExitOrder({ rowCopyTradingPosition, onClose 
 
     let optionChainDescription = rowCopyTradingPosition.cell.row.original.optionChainDescription;
     const copyTradingPositionAllAccountData = copyTradingPositionDataDict[optionChainDescription];
-    const accountUsernameList = [];
-    for (let index = 0; index < copyTradingPositionAllAccountData.length; index++) {
-        accountUsernameList.push(copyTradingPositionAllAccountData[index]["accountUsername"])
-    }
 
     let rowOptionChainSymbol = rowCopyTradingPosition.cell.row.original.optionChainSymbol;
     //let rowOptionChainInstruction =rowCopyTradingPosition.cell.row.original.optionChainInstruction;
@@ -35,7 +31,14 @@ export default function TradingStockExitOrder({ rowCopyTradingPosition, onClose 
   
     async function handleExitOrder() {
         try {
-            const { data } = await axios.post("/copy_trading_account/exit_order/", { accountUsernameList, optionChainSymbol, optionChainInstruction, optionChainOrderType, optionChainQuantity, optionChainPrice })
+
+            const allTradingAccountsOrderList = copyTradingPositionAllAccountData.map(item => ({
+                accountId: item.accountId,
+                accountName: item.accountName,
+                accountUsername: item.accountUsername
+              }));
+
+            const { data } = await axios.post("/copy_trading_account/exit_order/", { allTradingAccountsOrderList, optionChainSymbol, optionChainInstruction, optionChainOrderType, optionChainQuantity, optionChainPrice })
 
             if (data != "success") {
                 alert("Exit order failed");

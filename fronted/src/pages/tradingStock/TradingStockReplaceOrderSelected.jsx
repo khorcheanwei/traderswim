@@ -2,7 +2,7 @@ import axios from 'axios';
 import { useContext, useState, useEffect } from 'react';
 import { CopyTradingOrderContext } from '../context/CopyTradingOrderContext';
 
-export default function TradingStockReplaceOrderSelected({ rowCopyTradingOrderSelected, onClose }) {
+export default function TradingStockReplaceOrderSelected({ selectedOrderDict,onClose }) {
 
     const {isOpenOrderReplaceSelected, setIsOpenOrderReplaceSelected} = useContext(CopyTradingOrderContext);
 
@@ -28,7 +28,12 @@ export default function TradingStockReplaceOrderSelected({ rowCopyTradingOrderSe
   
     async function handleReplaceOrderSelected() {
         try {
-            const { data } = await axios.put("/copy_trading_account/replace_order_Selected/", { agentTradingSessionID, accountId, accountUsername, optionChainOrderId, optionChainSymbol, optionChainInstruction, optionChainOrderType, optionChainQuantity, optionChainPrice })
+            const { data } = await axios.put("/copy_trading_account/replace_order_Selected/", 
+            
+            
+            { agentTradingSessionID, accountId, accountUsername, optionChainOrderId, optionChainSymbol, optionChainInstruction, optionChainOrderType, optionChainQuantity, optionChainPrice 
+            })
+            agentTradingSessionID, accountDocument, optionChainSymbol, optionChainInstruction, optionChainOrderType, optionChainQuantity, optionChainPrice
 
             if (data != "success") {
                 alert("Replace order failed");

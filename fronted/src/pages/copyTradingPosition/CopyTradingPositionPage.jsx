@@ -38,6 +38,10 @@ export default function CopyTradingPositionPage() {
       accessor: 'optionChainAveragePrice',
     },
     {
+      Header: 'Account Id',
+      accessor: 'accountId',
+    },
+    {
       Header: 'Name',
       accessor: 'accountName',
     },
