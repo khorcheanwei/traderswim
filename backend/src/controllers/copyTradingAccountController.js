@@ -117,8 +117,8 @@ async function place_order(config, accountUsername) {
 // Post place order for all trading accounts
 async function post_place_order_all_accounts(all_trading_accounts_list, payload) {
   const post_place_order_api_requests = all_trading_accounts_list.map(async (api_data) => {
-    const { accountId, accountUsername, authToken } = api_data;
-    
+    const { agentID, accountId, accountName, accountUsername, optionChainOrderId, authToken } = api_data;
+        
     const config = {
       method: 'post',
       maxBodyLength: Infinity,
@@ -185,7 +185,8 @@ async function get_latest_order_id_all_accounts(all_trading_accounts_list, resul
       return null;
     }
 
-    const { accountId, accountUsername, authToken } = api_data;
+    const { agentID, accountId, accountName, accountUsername, optionChainOrderId, authToken } = api_data;
+
     const config = {
       method: 'get',
       maxBodyLength: Infinity,
@@ -291,12 +292,12 @@ async function get_latest_order_information_all_accounts(all_trading_accounts_li
 }
 
 // Save orders for all trading accounts to copyTradingAccount table
-async function createCopyTradingAccountItem_all_accounts(agentTradingSessionID, result_promise_order_information, result_promise_place_order) {
+async function createCopyTradingAccountItem_all_accounts(agentTradingSessionID, result_promise_order_information, result_promise_make_order_status) {
   const createCopyTradingAccountItem_requests = result_promise_order_information.map(async (order_information, index) => {
 
-    const promise_place_order = result_promise_place_order[index];
+    const make_order_status = result_promise_make_order_status[index];
 
-    if (promise_place_order == false) {
+    if (make_order_status == false) {
       return { success: false, data: null };
     }
 
@@ -353,13 +354,11 @@ async function copy_trading_place_order(httpRequest) {
 
       for (let index = 0; index < accountDocument.length; index++) {
         let accountId = accountDocument[index].accountId;
+        let accountName = accountDocument[index].accountName;
         let accountUsername = accountDocument[index].accountUsername;
         let authToken = await get_access_token_from_cache(agentID, accountUsername);
-        if (authToken == null) {
-          continue;
-        }
-
-        all_trading_accounts_list.push({ accountId: accountId, accountUsername: accountUsername, authToken: authToken });
+                                       
+        all_trading_accounts_list.push({ agentID: agentID, accountId: accountId, accountName: accountName, accountUsername: accountUsername, optionChainOrderId: null, authToken: authToken });
       }
 
       // place order with all accounts of particular agent
@@ -383,16 +382,16 @@ async function copy_trading_place_order(httpRequest) {
       }
 
       // Post place order for all trading accounts
-      const result_promise_place_order = await post_place_order_all_accounts(all_trading_accounts_list, payload);
+      const result_promise_make_order_status = await post_place_order_all_accounts(all_trading_accounts_list, payload);
 
       // Get latest order id for all trading accounts
-      const orderId_list = await get_latest_order_id_all_accounts(all_trading_accounts_list, result_promise_place_order);
+      const orderId_list = await get_latest_order_id_all_accounts(all_trading_accounts_list, result_promise_make_order_status);
 
       // Get latest order information for all trading accounts 
-      const result_promise_order_information = await get_latest_order_information_all_accounts(all_trading_accounts_list, result_promise_place_order, orderId_list)
+      const result_promise_order_information = await get_latest_order_information_all_accounts(all_trading_accounts_list, result_promise_make_order_status, orderId_list)
 
       // save orders for all trading accounts to copyTradingAccount table
-      await createCopyTradingAccountItem_all_accounts(agentTradingSessionID, result_promise_order_information, result_promise_place_order)
+      await createCopyTradingAccountItem_all_accounts(agentTradingSessionID, result_promise_order_information, result_promise_make_order_status)
      
       result = await agentDBOperation.updateAgentTradingSessionID(
         agentID,
@@ -430,15 +429,12 @@ async function sync_order_and_save_to_copy_trading_database(agentID, agentTradin
     let copy_trading_table_id_list = [];
     for (let index = 0; index < all_trading_accounts_order_list.length; index++) {
       let accountId = all_trading_accounts_order_list[index]["accountId"];
+      let accountName = all_trading_accounts_order_list[index]["accountName"];
       let accountUsername = all_trading_accounts_order_list[index]["accountUsername"];
       let optionChainOrderId = all_trading_accounts_order_list[index]["optionChainOrderId"];
       let authToken = await get_access_token_from_cache(agentID, accountUsername);
-
-      if (authToken == null) {
-        continue;
-      }
-
-      all_trading_accounts_list.push({accountId: accountId,  accountUsername:accountUsername, authToken:authToken});
+                                    
+      all_trading_accounts_list.push({ agentID: agentID,  accountId: accountId, accountName: accountName, accountUsername: accountUsername, optionChainOrderId: optionChainOrderId, authToken: authToken });
 
       // it can be confusing with this term `result_promise_place_order` in sync_order_and_save_to_copy_trading_database function
       result_promise_place_order.push(true);

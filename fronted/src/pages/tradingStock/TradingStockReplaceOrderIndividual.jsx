@@ -10,6 +10,7 @@ export default function TradingStockReplaceOrderIndividual({ rowCopyTradingOrder
     var optionChainOrderTypeList = ["LIMIT", "MARKET", "MARKET_ON_CLOSE", "STOP", "STOP_LIMIT", "TRAILING_STOP"];
 
     let accountId = rowCopyTradingOrderIndividual.cell.row.original.accountId;
+    let accountName = rowCopyTradingOrderIndividual.cell.row.original.accountName;
     let accountUsername = rowCopyTradingOrderIndividual.cell.row.original.accountUsername;
     let agentTradingSessionID = rowCopyTradingOrderIndividual.cell.row.original.agentTradingSessionID;
     let optionChainOrderId = rowCopyTradingOrderIndividual.cell.row.original.optionChainOrderId;
@@ -28,7 +29,7 @@ export default function TradingStockReplaceOrderIndividual({ rowCopyTradingOrder
   
     async function handleReplaceOrderIndividual() {
         try {
-            const { data } = await axios.put("/copy_trading_account/replace_order_individual/", { agentTradingSessionID, accountId, accountUsername, optionChainOrderId, optionChainSymbol, optionChainInstruction, optionChainOrderType, optionChainQuantity, optionChainPrice })
+            const { data } = await axios.put("/copy_trading_account/replace_order_individual/", { agentTradingSessionID, accountId, accountName, accountUsername, optionChainOrderId, optionChainSymbol, optionChainInstruction, optionChainOrderType, optionChainQuantity, optionChainPrice })
 
             if (data != "success") {
                 alert("Replace order failed");

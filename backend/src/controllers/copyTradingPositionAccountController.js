@@ -53,7 +53,8 @@ async function get_position_information(config, accountId, accountName, accountU
 // get position information for all accounts
 async function get_position_information_all_accounts(all_trading_accounts_list) {
   const get_position_information_requests = all_trading_accounts_list.map(async (api_data, index) => {
-    let { accountId, accountName, accountUsername, authToken } = api_data;
+    let { agentID, accountId, accountName, accountUsername, optionChainOrderId, authToken } = api_data;
+
     let config = {
         method: 'get',
         maxBodyLength: Infinity,
@@ -99,11 +100,8 @@ async function copy_trading_position_by_agent(agentID) {
       let accountUsername = accountDocument[index]["accountUsername"];
 
       let authToken = await get_access_token_from_cache(agentID, accountUsername);
-      if (authToken == null) {
-        continue;
-      }
 
-      all_trading_accounts_list.push({ accountId: accountId, accountName: accountName, accountUsername: accountUsername, authToken: authToken })
+      all_trading_accounts_list.push({ agentID: agentID,  accountId: accountId, accountName: accountName, accountUsername: accountUsername, optionChainOrderId: null, authToken: authToken })
     }
 
     const copyTradingPositionAccountDocument = await get_position_information_all_accounts(all_trading_accounts_list);

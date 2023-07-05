@@ -39,8 +39,8 @@ async function exit_order(config, accountUsername) {
 // POST exit order for all trading accounts
 async function post_exit_order_all_accounts(all_trading_accounts_list, payload) {
   const post_exit_order_api_requests = all_trading_accounts_list.map(async (api_data, index) => {
-    const { accountId, accountUsername, authToken } = api_data;
-
+    const { agentID, accountId, accountName, accountUsername, optionChainOrderId, authToken } = api_data;
+    
     const config = {
       method: 'post',
       maxBodyLength: Infinity,
@@ -98,7 +98,7 @@ async function copy_trading_exit_order(httpRequest) {
           accountId: accountId, 
           accountName: accountName,
           accountUsername: accountUsername, 
-          optionChainOrderId:optionChainOrderId, 
+          optionChainOrderId: optionChainOrderId, 
           authToken: authToken 
         });
       }
@@ -124,21 +124,21 @@ async function copy_trading_exit_order(httpRequest) {
       }
 
       // POST exit order for all trading accounts
-      const result_promise_exit_order = await post_exit_order_all_accounts(all_trading_accounts_list, payload);
+      const result_promise_make_order_status = await post_exit_order_all_accounts(all_trading_accounts_list, payload);
 
       // Get latest order id for all trading accounts
-      const orderId_list = await get_latest_order_id_all_accounts(all_trading_accounts_list, result_promise_exit_order);
+      const orderId_list = await get_latest_order_id_all_accounts(all_trading_accounts_list, result_promise_make_order_status);
 
       // Get latest order information for all trading accounts 
-      const result_promise_order_information = await get_latest_order_information_all_accounts(all_trading_accounts_list, result_promise_exit_order, orderId_list)
+      const result_promise_order_information = await get_latest_order_information_all_accounts(all_trading_accounts_list, result_promise_make_order_status, orderId_list)
 
       // exit order will create new orderId, thus agentTradingSessionID increases by 1
       result = await agentDBOperation.searchAgentTradingSessionID(agentID);
-
+  
       agentDocument = result.data;
       let agentTradingSessionID = agentDocument.agentTradingSessionID + 1;
       // save orders for all trading accounts to copyTradingAccount table
-      await createCopyTradingAccountItem_all_accounts(agentTradingSessionID, result_promise_order_information , result_promise_exit_order)
+      await createCopyTradingAccountItem_all_accounts(agentTradingSessionID, result_promise_order_information, result_promise_make_order_status)
       
       result = await agentDBOperation.updateAgentTradingSessionID(
         agentID,
@@ -177,7 +177,7 @@ async function replace_order(config, accountUsername) {
 // Put replace order for individual trading account
 async function copy_trading_put_replace_order_individual(httpRequest) {
 
-  let { agentTradingSessionID, accountId, accountUsername, optionChainOrderId, optionChainSymbol, optionChainInstruction, optionChainOrderType, optionChainQuantity, optionChainPrice } = httpRequest.body;
+  let { agentTradingSessionID, accountId, accountName, accountUsername, optionChainOrderId, optionChainSymbol, optionChainInstruction, optionChainOrderType, optionChainQuantity, optionChainPrice } = httpRequest.body;
 
   try {
     const { token } = httpRequest.cookies;
@@ -226,17 +226,16 @@ async function copy_trading_put_replace_order_individual(httpRequest) {
 
         if (response.status == 200 || response.status == 201) {
           console.log(`PUT replace order individual API for accountUsername: ${accountUsername} completed.`);
-
-
+             
           let all_trading_accounts_list = [];
-          all_trading_accounts_list.push({ accountId: accountId, accountUsername: accountUsername, authToken: authToken });
-
+          all_trading_accounts_list.push({ agentID: agentID,  accountId: accountId, accountName: accountName, accountUsername: accountUsername, optionChainOrderId: optionChainOrderId, authToken: authToken });
+                                  
           // Get latest order id for all trading accounts
-          let result_promise_replace_order_status = [true];
-          const orderId_list = await get_latest_order_id_all_accounts(all_trading_accounts_list, result_promise_replace_order_status);
+          let result_promise_make_order_status = [true];
+          const orderId_list = await get_latest_order_id_all_accounts(all_trading_accounts_list, result_promise_make_order_status);
 
           // Get latest order information for all trading accounts 
-          const result_promise_order_information = await get_latest_order_information_all_accounts(all_trading_accounts_list, result_promise_replace_order_status, orderId_list)
+          const result_promise_order_information = await get_latest_order_information_all_accounts(all_trading_accounts_list, result_promise_make_order_status, orderId_list)
 
           // get all accountName of particular agentID
           let result = await copyTradingAccountDBBOperation.searchCopyTradingAccountBasedTradingSessionIDAndAccountId(agentID, agentTradingSessionID, accountId);
@@ -250,9 +249,9 @@ async function copy_trading_put_replace_order_individual(httpRequest) {
 
           agentDocument = result.data;
           agentTradingSessionID = agentDocument.agentTradingSessionID + 1;
-
+          
           // save orders for all trading accounts to copyTradingAccount table
-          await createCopyTradingAccountItem_all_accounts(agentTradingSessionID, accountDocument, result_promise_order_information, result_promise_replace_order_status)
+          await createCopyTradingAccountItem_all_accounts(agentTradingSessionID, result_promise_order_information, result_promise_make_order_status)
           
           result = await agentDBOperation.updateAgentTradingSessionID(
             agentID,
@@ -281,7 +280,7 @@ async function copy_trading_put_replace_order_individual(httpRequest) {
 // Put replace order for all trading accounts
 async function put_replace_order_all_accounts(all_trading_accounts_list, payload) {
   const put_replace_order_api_requests = all_trading_accounts_list.map(async (api_data, index) => {
-    const { accountId, accountUsername, optionChainOrderId, authToken } = api_data;
+    const { agentID, accountId, accountName, accountUsername, optionChainOrderId, authToken } = api_data;
     
     const config = {
       method: 'put',
@@ -340,7 +339,7 @@ async function copy_trading_replace_order(httpRequest) {
           accountId: accountId, 
           accountName: accountName,
           accountUsername: accountUsername, 
-          optionChainOrderId:optionChainOrderId, 
+          optionChainOrderId: optionChainOrderId, 
           authToken: authToken 
         });
       }
@@ -371,21 +370,21 @@ async function copy_trading_replace_order(httpRequest) {
       // sync order and save to copy trading table for all trading accounts
       await sync_order_and_save_to_copy_trading_database(agentID, agentTradingSessionID)
       
-      let result_promise_replace_order_status = [];
+      let result_promise_make_order_status = [];
       for (let index = 0; index < result_promise_replace_order.length; index++) {
         const replace_order_success = result_promise_replace_order[index];
         if (replace_order_success == true) {
-          result_promise_replace_order_status.push(true);
+          result_promise_make_order_status.push(true);
         } else {
-          result_promise_replace_order_status.push(false);
+          result_promise_make_order_status.push(false);
         }
       }
 
       // Get latest order id for all trading accounts
-      const orderId_list = await get_latest_order_id_all_accounts(all_trading_accounts_list, result_promise_replace_order_status);
+      const orderId_list = await get_latest_order_id_all_accounts(all_trading_accounts_list, result_promise_make_order_status);
       
       // Get latest order information for all trading accounts 
-      const result_promise_order_information = await get_latest_order_information_all_accounts(all_trading_accounts_list, result_promise_replace_order_status, orderId_list)
+      const result_promise_order_information = await get_latest_order_information_all_accounts(all_trading_accounts_list, result_promise_make_order_status, orderId_list)
 
       // replace order will create new orderId, thus agentTradingSessionID increases by 1
       result = await agentDBOperation.searchAgentTradingSessionID(agentID);
@@ -394,7 +393,7 @@ async function copy_trading_replace_order(httpRequest) {
       agentTradingSessionID = agentDocument.agentTradingSessionID + 1;
 
       // save orders for all trading accounts to copyTradingAccount table
-      await createCopyTradingAccountItem_all_accounts(agentTradingSessionID, result_promise_order_information, result_promise_replace_order_status)
+      await createCopyTradingAccountItem_all_accounts(agentTradingSessionID, result_promise_order_information, result_promise_make_order_status)
       
       result = await agentDBOperation.updateAgentTradingSessionID(
         agentID,
@@ -481,8 +480,8 @@ async function copy_trading_delete_cancel_order_individual(httpRequest) {
 // Delete cancel order for all trading accounts
 async function delete_cancel_order_all_accounts(all_trading_accounts_list) {
   const delete_cancel_order_api_requests = all_trading_accounts_list.map(async (api_data, index) => {
-    const { accountId, accountUsername, optionChainOrderId, authToken } = api_data;
-
+    const { agentID, accountId, accountName, accountUsername, optionChainOrderId, authToken } = api_data;
+    
     const config = {
       method: 'delete',
       maxBodyLength: Infinity,
@@ -517,13 +516,6 @@ async function copy_trading_cancel_order(httpRequest) {
       const agentID = agentDocument.id;
 
       // get all accountName of particular agentID
-      let result = await copyTradingAccountDBBOperation.searchCopyTradingAccountBasedTradingSessionID(agentID, agentTradingSessionID);
-      if (result.success != true) {
-        return { success: false, data: result.error };
-      }
-      const accountDocument = result.data;
-      
-      // get all accountName of particular agentID
       let all_trading_accounts_list = [];
 
       for (let index = 0; index < allTradingAccountsOrderList.length; index++) {
@@ -532,13 +524,13 @@ async function copy_trading_cancel_order(httpRequest) {
         let accountUsername = allTradingAccountsOrderList[index]["accountUsername"];
         let optionChainOrderId = allTradingAccountsOrderList[index]["optionChainOrderId"];
         let authToken = await get_access_token_from_cache(agentID, accountUsername);
-
+        
         all_trading_accounts_list.push({ 
           agentID: agentID,
           accountId: accountId, 
           accountName: accountName,
           accountUsername: accountUsername, 
-          optionChainOrderId:optionChainOrderId, 
+          optionChainOrderId: optionChainOrderId, 
           authToken: authToken 
         });
       }
