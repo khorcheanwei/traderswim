@@ -93,6 +93,8 @@ async function agent_logout(httpRequest) {
     } catch (error) {
       return { success: true, data: error.message.message };
     }
+  } else {
+    return { success: true, data: "Token is not existed"};
   }
 }
 
