@@ -2,7 +2,7 @@ import axios from "axios";
 import {useContext } from 'react';
 import { CopyTradingOrderContext } from '../context/CopyTradingOrderContext';
 
-export default function TradingStockDeleteOrderSelected({selectedOrderDict, onClose}) {
+export default function TradingStockDeleteOrderSelected({rowCopyTradingOrderSelected, selectedOrderDict, onClose}) {
     
   
     const { isOpenOrderDeleteSelected, setIsOpenOrderDeleteSelected} = useContext(CopyTradingOrderContext);
@@ -17,8 +17,20 @@ export default function TradingStockDeleteOrderSelected({selectedOrderDict, onCl
     async function handleDeleteOrderSelected() {
       // delete order 
       try {
-  
-        const response = await axios.delete("/copy_trading_account/cancel_order_Selected/", { data: { agentTradingSessionID, accountId, accountUsername, optionChainOrderId }});
+
+        const allTradingAccountsOrderList = [];
+
+        for (const [key, value] of Object.entries(selectedOrderDict)) {
+          // Add the key-value pair as an item to the list
+          allTradingAccountsOrderList.push({
+              accountId: value["accountId"],
+              accountName: value["accountName"],
+              accountUsername: value["accountUsername"],
+              optionChainOrderId: value["optionChainOrderId"]
+          })
+        }
+            
+        const response = await axios.delete("/copy_trading_account/cancel_order/", { data: { agentTradingSessionID: agentTradingSessionID, allTradingAccountsOrderList: allTradingAccountsOrderList }});
         if (response.data == "success") {
           alert("Order deleted successful");
         } else {

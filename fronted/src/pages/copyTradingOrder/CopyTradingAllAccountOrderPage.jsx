@@ -13,9 +13,19 @@ import { TextOptionChainDescriptionColorPanel, TextOptionChainFilledQuantityColo
   TextOptionChainInstructionColorPanel, TextOptionChainStatusColorPanel, TextOptionChainOrderTypeColorPanel, TextOptionChainEnteredTimeColorPanel,
   TextAccountNameColorPanel,TextAccountUsernameColorPanel, ChangeOrderIndividualPanel, MakeSelectedOrderPanel} from './CopyTradingAllAccountOrderTable'
 
+function usePrevious(value) {
+  const ref = useRef();
+  useEffect(() => {
+    ref.current = value; //assign the value of ref to the argument
+  },[value]); //this code will run when the value of 'value' changes
+  return ref.current; //in the end, return the current ref value.
+}
+
 export default function CopyTradingAllAccountOrderPage({ rowCopyTradingOrder, onClose }) {
 
   const [selectedOrderDict, setSelectedOrderDict] = useState({});
+  const prevSelectedOrderDict = usePrevious(selectedOrderDict);
+
   const columns = React.useMemo(() => [
     {
       Header: 'ID',
@@ -99,22 +109,17 @@ export default function CopyTradingAllAccountOrderPage({ rowCopyTradingOrder, on
   
   const {copyTradingOrderDataDict, setCopyTradingOrderDataDict} = useContext(CopyTradingOrderContext);
   const copyTradingAllAccountData = copyTradingOrderDataDict[agentTradingSessionID];
-  var data = React.useMemo(() => copyTradingAllAccountData, [copyTradingAllAccountData])
+  var data = React.useMemo(() => copyTradingAllAccountData, [copyTradingAllAccountData]);
 
   // replace and cancel selected orders
   const { isOpenOrderReplaceSelected, setIsOpenOrderReplaceSelected, isOpenOrderDeleteSelected, setIsOpenOrderDeleteSelected } = useContext(CopyTradingOrderContext);
   
-  //const { rowCopyTradingOrderSelected, setRowCopyTradingOrderSelected } = useContext(CopyTradingOrderContext);
-
-  console.log(selectedOrderDict)
-
   const orderReplaceCloseSelected = async () => {
-    console.log(copyTradingAllAccountData)
-    setIsOpenOrderReplaceSelected(!isOpenOrderReplaceSelected)
+    setIsOpenOrderReplaceSelected(!isOpenOrderReplaceSelected);
   }
 
   const orderDeleteCloseSelected = async () => {
-    setIsOpenOrderDeleteSelected(!isOpenOrderDeleteSelected)
+    setIsOpenOrderDeleteSelected(!isOpenOrderDeleteSelected);
   }
 
   return (
@@ -135,10 +140,10 @@ export default function CopyTradingAllAccountOrderPage({ rowCopyTradingOrder, on
             </div>
           </div>
           <Overlay isOpen={isOpenOrderReplaceSelected} >
-            <TradingStockReplaceOrderSelected selectedOrderDict={selectedOrderDict} onClose={orderReplaceCloseSelected}></TradingStockReplaceOrderSelected>
+            <TradingStockReplaceOrderSelected rowCopyTradingOrderSelected={rowCopyTradingOrder} selectedOrderDict={prevSelectedOrderDict} onClose={orderReplaceCloseSelected}></TradingStockReplaceOrderSelected>
           </Overlay>
           <Overlay isOpen={isOpenOrderDeleteSelected} >
-            <TradingStockDeleteOrderSelected selectedOrderDict={selectedOrderDict} onClose={orderDeleteCloseSelected}></TradingStockDeleteOrderSelected>
+            <TradingStockDeleteOrderSelected rowCopyTradingOrderSelected={rowCopyTradingOrder} selectedOrderDict={prevSelectedOrderDict} onClose={orderDeleteCloseSelected}></TradingStockDeleteOrderSelected>
           </Overlay>
         </div>
         <CopyTradingAllAccountOrderTable columns={columns} data={data} />

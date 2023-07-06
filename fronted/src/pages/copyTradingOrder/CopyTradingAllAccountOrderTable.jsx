@@ -192,10 +192,17 @@ export function MakeSelectedOrderPanel({row, setSelectedOrderDict}) {
       const newSelectedOrderDict = { ...prevSelectedOrderDict };
       const accountUsername = row.cell.row.original.accountUsername;
 
+      const newSelectedOrder = {
+        accountId: row.cell.row.original.accountId,
+        accountName: row.cell.row.original.accountName,
+        accountUsername: row.cell.row.original.accountUsername,
+        optionChainOrderId: row.cell.row.original.optionChainOrderId
+      }
+
       if (newSelectedOrderDict.hasOwnProperty(row.cell.row.original.accountUsername) && !event.target.checked) {
         delete newSelectedOrderDict[accountUsername];
       } else {
-        newSelectedOrderDict[accountUsername] = row;
+        newSelectedOrderDict[accountUsername] = newSelectedOrder;
       }
       return newSelectedOrderDict;
     });

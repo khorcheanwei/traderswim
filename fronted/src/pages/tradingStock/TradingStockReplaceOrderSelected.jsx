@@ -2,12 +2,13 @@ import axios from 'axios';
 import { useContext, useState, useEffect } from 'react';
 import { CopyTradingOrderContext } from '../context/CopyTradingOrderContext';
 
-export default function TradingStockReplaceOrderSelected({ selectedOrderDict,onClose }) {
+export default function TradingStockReplaceOrderSelected({ rowCopyTradingOrderSelected, selectedOrderDict, onClose }) {
 
     const {isOpenOrderReplaceSelected, setIsOpenOrderReplaceSelected} = useContext(CopyTradingOrderContext);
 
     var optionChainInstructionList = ["BUY_TO_OPEN", "SELL_TO_CLOSE"];
     var optionChainOrderTypeList = ["LIMIT", "MARKET", "MARKET_ON_CLOSE", "STOP", "STOP_LIMIT", "TRAILING_STOP"];
+
 
     let accountId = rowCopyTradingOrderSelected.cell.row.original.accountId;
     let accountUsername = rowCopyTradingOrderSelected.cell.row.original.accountUsername;
@@ -25,15 +26,23 @@ export default function TradingStockReplaceOrderSelected({ selectedOrderDict,onC
     const [optionChainOrderType, setOptionChainOrderType] = useState(rowOptionChainOrderType);
     const [optionChainQuantity, setOptionChainQuantity] = useState(rowOptionChainQuantity)
     const [optionChainPrice, setOptionChainPrice] = useState(rowOptionChainPrice)
+
   
     async function handleReplaceOrderSelected() {
         try {
-            const { data } = await axios.put("/copy_trading_account/replace_order_Selected/", 
+            const allTradingAccountsOrderList = [];
+
+            for (const [key, value] of Object.entries(selectedOrderDict)) {
+                // Add the key-value pair as an item to the list
+                allTradingAccountsOrderList.push({
+                    accountId: value["accountId"],
+                    accountName: value["accountName"],
+                    accountUsername: value["accountUsername"],
+                    optionChainOrderId: value["optionChainOrderId"]
+                })
+            }
             
-            
-            { agentTradingSessionID, accountId, accountUsername, optionChainOrderId, optionChainSymbol, optionChainInstruction, optionChainOrderType, optionChainQuantity, optionChainPrice 
-            })
-            agentTradingSessionID, accountDocument, optionChainSymbol, optionChainInstruction, optionChainOrderType, optionChainQuantity, optionChainPrice
+            const { data } = await axios.put("/copy_trading_account/replace_order/", { agentTradingSessionID, allTradingAccountsOrderList, optionChainSymbol, optionChainInstruction, optionChainOrderType, optionChainQuantity, optionChainPrice })
 
             if (data != "success") {
                 alert("Replace order failed");
