@@ -53,7 +53,7 @@ async function get_position_information(config, accountName, accountUsername, op
 // get position information for all accounts
 async function get_position_information_all_accounts(all_trading_accounts_list) {
   const get_position_information_requests = all_trading_accounts_list.map(async (api_data, index) => {
-    let { accountId, accountName, accountUsername, authToken } = api_data;
+    const { agentID, accountId, accountName, accountUsername, optionChainOrderId, authToken } = api_data;
     let config = {
         method: 'get',
         maxBodyLength: Infinity,

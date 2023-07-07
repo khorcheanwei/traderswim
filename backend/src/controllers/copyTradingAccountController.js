@@ -117,7 +117,7 @@ async function place_order(config, accountUsername) {
 // Post place order for all trading accounts
 async function post_place_order_all_accounts(all_trading_accounts_list, payload) {
   const post_place_order_api_requests = all_trading_accounts_list.map(async (api_data) => {
-    const { accountId, accountUsername, authToken } = api_data;
+    const { agentID, accountId, accountName, accountUsername, optionChainOrderId, authToken } = api_data;
     
     const config = {
       method: 'post',
@@ -185,7 +185,7 @@ async function get_latest_order_id_all_accounts(all_trading_accounts_list, resul
       return null;
     }
 
-    const { accountId, accountUsername, authToken } = api_data;
+    const { agentID, accountId, accountName, accountUsername, optionChainOrderId, authToken } = api_data;
     const config = {
       method: 'get',
       maxBodyLength: Infinity,
@@ -213,16 +213,19 @@ async function get_latest_order_id_all_accounts(all_trading_accounts_list, resul
 }
 
 // get latest order list information
-async function get_latest_order_information(config, accountUsername) {
+async function get_latest_order_information(config, agentID, accountId, accountName, accountUsername, orderId) {
 
   try {
     const response = await axios.request(config);
     const current_order = response.data;
 
-    let current_accountId = current_order["accountId"];
+    let current_agentID = agentID;
+    let current_accountId = accountId;
+    let current_accountName = accountName;
+    let current_accountUsername = accountUsername;
     let current_symbol = current_order["orderLegCollection"][0]["instrument"]["symbol"];
     let current_description = current_order["orderLegCollection"][0]["instrument"]["description"];
-    let current_orderId = current_order["orderId"];
+    let current_orderId = orderId;
     let current_orderType = current_order["orderType"];
     let current_instruction = current_order["orderLegCollection"][0]["instruction"];
     let current_price = current_order["price"];
@@ -235,14 +238,17 @@ async function get_latest_order_information(config, accountUsername) {
     }
     console.log(`Successful get latest order information - accountUsername: ${accountUsername} with ${JSON.stringify(config)}. Status: ${response.status}`)
 
-    return {accountId: current_accountId, optionChainSymbol: current_symbol, optionChainDescription: current_description,
-      optionChainOrderId: current_orderId, optionChainOrderType: current_orderType, optionChainInstruction: current_instruction,
-      optionChainPrice: current_price, optionChainQuantity: current_quantity, optionChainFilledQuantity: current_optionChainFilledQuantity,
-      optionChainStatus: current_status, optionChainEnteredTime: current_enteredTime}
+    return {agentID: current_agentID, accountId: current_accountId, accountName: current_accountName, accountUsername: current_accountUsername,
+      optionChainSymbol: current_symbol, optionChainDescription: current_description, optionChainOrderId: current_orderId, optionChainOrderType: current_orderType, 
+      optionChainInstruction: current_instruction, optionChainPrice: current_price, optionChainQuantity: current_quantity, 
+      optionChainFilledQuantity: current_optionChainFilledQuantity, optionChainStatus: current_status, optionChainEnteredTime: current_enteredTime}
       
   } catch (error) {
     console.log(`Failed get latest order information - accountUsername: ${accountUsername} with ${JSON.stringify(config)}. Error: ${error.message}`);
-    return {accountId: null, optionChainSymbol: null, optionChainDescription: null, optionChainOrderId: null, optionChainOrderType: null, optionChainInstruction: null, optionChainPrice: null, optionChainQuantity: null, optionChainFilledQuantity: null, optionChainStatus: null, optionChainEnteredTime: null};
+    return {agentID: null, accountId: null, accountName: null, accountUsername: null,
+      optionChainSymbol: null, optionChainDescription: null, optionChainOrderId: null, optionChainOrderType: null, 
+      optionChainInstruction: null, optionChainPrice: null, optionChainQuantity: null, 
+      optionChainFilledQuantity: null, optionChainStatus: null, optionChainEnteredTime: null};
   }
 }
 
@@ -255,7 +261,7 @@ async function get_latest_order_information_all_accounts(all_trading_accounts_li
       return null;
     }
 
-    const { accountId, accountUsername, authToken } = api_data;
+    const { agentID, accountId, accountName, accountUsername, optionChainOrderId, authToken } = api_data;
     const orderId = orderId_list[index];
     const url = `https://api.tdameritrade.com/v1/accounts/${accountId}/orders/${orderId}`;
     let data = '';
@@ -269,7 +275,7 @@ async function get_latest_order_information_all_accounts(all_trading_accounts_li
       },
       data : data
     }
-    const result = await get_latest_order_information(config, accountUsername, orderId);
+    const result = await get_latest_order_information(config, agentID, accountId, accountName, accountUsername, orderId);
     return result;
   });
 
