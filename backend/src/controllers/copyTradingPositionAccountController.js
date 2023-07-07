@@ -53,9 +53,9 @@ async function get_position_information(config, accountId, accountName, accountU
 // get position information for all accounts
 async function get_position_information_all_accounts(all_trading_accounts_list) {
   const get_position_information_requests = all_trading_accounts_list.map(async (api_data, index) => {
-    let { agentID, accountId, accountName, accountUsername, optionChainOrderId, authToken } = api_data;
+    const { agentID, accountId, accountName, accountUsername, optionChainOrderId, authToken } = api_data;
 
-    let config = {
+    const config = {
         method: 'get',
         maxBodyLength: Infinity,
         url: `https://api.tdameritrade.com/v1/accounts/${accountId}`,
