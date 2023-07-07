@@ -99,10 +99,6 @@ async function copy_trading_exit_order(httpRequest) {
         let accountUsername = accountDocument[index].accountUsername;
         let authToken = await get_access_token_from_cache(agentID, accountUsername);
 
-        if (authToken == null) {
-          continue;
-        }
-
         if (accountUsernameList.includes(accountUsername)) {
           newAccountDocument.push(accountDocument[index]);
           all_trading_accounts_list.push({ accountId: accountId, accountUsername: accountUsername, authToken: authToken });
@@ -345,10 +341,6 @@ async function copy_trading_replace_order(httpRequest) {
         let accountUsername = accountDocument[index].accountUsername;
         let authToken = await get_access_token_from_cache(agentID, accountUsername);
 
-        if (authToken == null) {
-          continue;
-        }
-
         all_trading_accounts_list.push({ accountId: accountId, accountUsername: accountUsername, authToken: authToken })
       }
 
@@ -545,10 +537,6 @@ async function copy_trading_cancel_order(httpRequest) {
         let accountId = accountDocument[index].accountId;
         let accountUsername = accountDocument[index].accountUsername;
         let authToken = await get_access_token_from_cache(agentID, accountUsername);
-
-        if (authToken == null) {
-          continue;
-        }
 
         all_trading_accounts_list.push({ accountId: accountId, accountUsername: accountUsername, authToken: authToken })
       }
