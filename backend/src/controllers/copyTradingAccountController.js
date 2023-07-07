@@ -177,11 +177,11 @@ async function get_latest_order_id(config, accountUsername) {
 }
 
 // Get latest orderID  for all trading accounts
-async function get_latest_order_id_all_accounts(all_trading_accounts_list, result_promise_place_order) {
+async function get_latest_order_id_all_accounts(all_trading_accounts_list, result_promise_make_order_status) {
   const get_latest_order_id_requests = all_trading_accounts_list.map(async (api_data, index) => {
-    const promise_place_order = result_promise_place_order[index];
+    const promise_make_order = result_promise_make_order_status[index];
 
-    if (promise_place_order == false) {
+    if (promise_make_order == false) {
       return null;
     }
 
@@ -247,11 +247,11 @@ async function get_latest_order_information(config, accountUsername) {
 }
 
 // get latest order list information
-async function get_latest_order_information_all_accounts(all_trading_accounts_list, result_promise_place_order, orderId_list) {
+async function get_latest_order_information_all_accounts(all_trading_accounts_list, result_promise_make_order_status, orderId_list) {
   const get_latest_order_id_requests = all_trading_accounts_list.map(async (api_data, index) => {
-    const promise_place_order = result_promise_place_order[index];
+    const promise_make_order = result_promise_make_order_status[index];
 
-    if (promise_place_order == false) {
+    if (promise_make_order == false) {
       return null;
     }
 
@@ -418,7 +418,7 @@ async function sync_order_and_save_to_copy_trading_database(agentID, agentTradin
     let all_trading_accounts_order_list = result.data;
 
     let all_trading_accounts_list = [];
-    let result_promise_place_order = [];
+    let result_promise_make_order_status = [];
     let orderId_list = [];
 
     let copy_trading_table_id_list = [];
@@ -430,8 +430,8 @@ async function sync_order_and_save_to_copy_trading_database(agentID, agentTradin
 
       all_trading_accounts_list.push({accountId: accountId,  accountUsername:accountUsername, authToken:authToken});
 
-      // it can be confusing with this term `result_promise_place_order` in sync_order_and_save_to_copy_trading_database function
-      result_promise_place_order.push(true);
+      // it can be confusing with this term `result_promise_make_order_status` in sync_order_and_save_to_copy_trading_database function
+      result_promise_make_order_status.push(true);
       orderId_list.push(optionChainOrderId);
 
       const id = all_trading_accounts_order_list[index]["id"];
@@ -439,7 +439,7 @@ async function sync_order_and_save_to_copy_trading_database(agentID, agentTradin
     }
 
     // Get latest order information for all trading accounts 
-    const result_promise_order_information = await get_latest_order_information_all_accounts(all_trading_accounts_list, result_promise_place_order, orderId_list);
+    const result_promise_order_information = await get_latest_order_information_all_accounts(all_trading_accounts_list, result_promise_make_order_status, orderId_list);
 
     // Update latest order information for all trading accounts to copy trading table
     copyTradingAccountDBBOperation.updateAllOrderInformation(copy_trading_table_id_list, result_promise_order_information)
