@@ -126,13 +126,13 @@ async function copy_trading_exit_order(httpRequest) {
       }
 
       // POST exit order for all trading accounts
-      const result_promise_exit_order = await post_exit_order_all_accounts(all_trading_accounts_list, payload);
+      const result_promise_make_order_status = await post_exit_order_all_accounts(all_trading_accounts_list, payload);
 
       // Get latest order id for all trading accounts
-      const orderId_list = await get_latest_order_id_all_accounts(all_trading_accounts_list, result_promise_exit_order);
+      const orderId_list = await get_latest_order_id_all_accounts(all_trading_accounts_list, result_promise_make_order_status);
 
       // Get latest order information for all trading accounts 
-      const result_promise_order_information = await get_latest_order_information_all_accounts(all_trading_accounts_list, result_promise_exit_order, orderId_list)
+      const result_promise_order_information = await get_latest_order_information_all_accounts(all_trading_accounts_list, result_promise_make_order_status, orderId_list)
 
       // exit order will create new orderId, thus agentTradingSessionID increases by 1
       result = await agentDBOperation.searchAgentTradingSessionID(agentID);
@@ -140,7 +140,7 @@ async function copy_trading_exit_order(httpRequest) {
       agentDocument = result.data;
       let agentTradingSessionID = agentDocument.agentTradingSessionID + 1;
       // save orders for all trading accounts to copyTradingAccount table
-      await createCopyTradingAccountItem_all_accounts(agentTradingSessionID, newAccountDocument, result_promise_order_information, result_promise_exit_order)
+      await createCopyTradingAccountItem_all_accounts(agentTradingSessionID, newAccountDocument, result_promise_order_information, result_promise_make_order_status)
       
       result = await agentDBOperation.updateAgentTradingSessionID(
         agentID,
