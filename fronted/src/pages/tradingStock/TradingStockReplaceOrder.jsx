@@ -20,12 +20,23 @@ export default function TradingStockReplaceOrder({ rowCopyTradingOrder, onClose 
     const [optionChainSymbol, setOptionChainSymbol] = useState(rowOptionChainSymbol);
     const [optionChainInstruction, setOptionChainInstruction] = useState(rowOptionChainInstruction);
     const [optionChainOrderType, setOptionChainOrderType] = useState(rowOptionChainOrderType);
-    const [optionChainQuantity, setOptionChainQuantity] = useState(rowOptionChainQuantity)
-    const [optionChainPrice, setOptionChainPrice] = useState(rowOptionChainPrice)
+    const [optionChainQuantity, setOptionChainQuantity] = useState(rowOptionChainQuantity);
+    const [optionChainPrice, setOptionChainPrice] = useState(rowOptionChainPrice);
+
+    const {copyTradingOrderDataDict, setCopyTradingOrderDataDict} = useContext(CopyTradingOrderContext);
   
     async function handleReplaceOrder() {
         try {
-            const { data } = await axios.put("/copy_trading_account/replace_order/", { agentTradingSessionID, optionChainSymbol, optionChainInstruction, optionChainOrderType, optionChainQuantity, optionChainPrice })
+            const copyTradingAllAccountData = copyTradingOrderDataDict[agentTradingSessionID];
+
+            const allTradingAccountsOrderList = copyTradingAllAccountData.map(item => ({
+                accountId: item.accountId,
+                accountName: item.accountName,
+                accountUsername: item.accountUsername,
+                optionChainOrderId: item.optionChainOrderId
+              }));
+             
+            const { data } = await axios.put("/copy_trading_account/replace_order/", { agentTradingSessionID, allTradingAccountsOrderList, optionChainSymbol, optionChainInstruction, optionChainOrderType, optionChainQuantity, optionChainPrice })
 
             if (data != "success") {
                 alert("Replace order failed");
