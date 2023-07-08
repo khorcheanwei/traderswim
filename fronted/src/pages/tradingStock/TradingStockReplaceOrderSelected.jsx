@@ -44,14 +44,14 @@ export default function TradingStockReplaceOrderSelected({ rowCopyTradingOrderSe
             
             const { data } = await axios.put("/copy_trading_account/replace_order/", { agentTradingSessionID, allTradingAccountsOrderList, optionChainSymbol, optionChainInstruction, optionChainOrderType, optionChainQuantity, optionChainPrice })
 
-            if (data != "success") {
-                alert("Replace order failed");
+            if (data == "success") {
+                alert("Replace selected order successful");
             } else {
-                alert("Replace order successful");
+                alert("Replace selected order failed");
             }
             setIsOpenOrderReplaceSelected(!isOpenOrderReplaceSelected); 
         } catch (error) {
-            alert("Replace order failed")
+            alert("Replace selected order failed")
             console.log(error.message);
         }
     }
@@ -59,7 +59,7 @@ export default function TradingStockReplaceOrderSelected({ rowCopyTradingOrderSe
     return (
         <div>
             <div className="mb-4">
-                <h1 className="block text-gray-700 text-lm font-bold mb-2">Option Replace Order (Selected) - <b>{accountUsername}</b></h1>
+                <h1 className="block text-gray-700 text-lm font-bold mb-2">Option Replace Order (Selected)</h1>
             </div>
             <div>
                 <div className="relative">

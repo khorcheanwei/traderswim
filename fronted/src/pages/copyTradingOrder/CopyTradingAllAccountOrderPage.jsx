@@ -9,6 +9,8 @@ import CopyTradingAllAccountOrderTable from './CopyTradingAllAccountOrderTable'
 import TradingStockReplaceOrderSelected from '../tradingStock/TradingStockReplaceOrderSelected';
 import TradingStockDeleteOrderSelected from '../tradingStock/TradingStockDeleteOrderSelected';
 
+import TradingStockWarningMessage from '../tradingStock/TradingStockWarningMessage';
+
 import { TextOptionChainDescriptionColorPanel, TextOptionChainFilledQuantityColorPanel, TextOptionChainPriceColorPanel, TextOptionChainQuantityColorPanel,
   TextOptionChainInstructionColorPanel, TextOptionChainStatusColorPanel, TextOptionChainOrderTypeColorPanel, TextOptionChainEnteredTimeColorPanel,
   TextAccountNameColorPanel,TextAccountUsernameColorPanel, ChangeOrderIndividualPanel, MakeSelectedOrderPanel} from './CopyTradingAllAccountOrderTable'
@@ -112,14 +114,26 @@ export default function CopyTradingAllAccountOrderPage({ rowCopyTradingOrder, on
   var data = React.useMemo(() => copyTradingAllAccountData, [copyTradingAllAccountData]);
 
   // replace and cancel selected orders
-  const { isOpenOrderReplaceSelected, setIsOpenOrderReplaceSelected, isOpenOrderDeleteSelected, setIsOpenOrderDeleteSelected } = useContext(CopyTradingOrderContext);
+  const { isOpenOrderReplaceSelected, setIsOpenOrderReplaceSelected, isOpenOrderDeleteSelected, setIsOpenOrderDeleteSelected, isOpenWarningMessageOrderSelected, setIsOpenWarningMessageOrderSelected } = useContext(CopyTradingOrderContext);
   
-  const orderReplaceCloseSelected = async () => {
-    setIsOpenOrderReplaceSelected(!isOpenOrderReplaceSelected);
+  const warningMessageOrderSelectedClose = async () => {
+    setIsOpenWarningMessageOrderSelected(!isOpenWarningMessageOrderSelected);
   }
 
-  const orderDeleteCloseSelected = async () => {
-    setIsOpenOrderDeleteSelected(!isOpenOrderDeleteSelected);
+  const orderReplaceSelectedClose = async () => {
+    if (Object.keys(selectedOrderDict).length == 0) {
+      warningMessageOrderSelectedClose();
+    } else {
+      setIsOpenOrderReplaceSelected(!isOpenOrderReplaceSelected);
+    }
+  }
+
+  const orderDeleteSelectedClose = async () => {
+    if (Object.keys(selectedOrderDict).length == 0) {
+      warningMessageOrderSelectedClose();
+    } else {
+      setIsOpenOrderDeleteSelected(!isOpenOrderDeleteSelected);
+    }
   }
 
   return (
@@ -132,18 +146,23 @@ export default function CopyTradingAllAccountOrderPage({ rowCopyTradingOrder, on
               CANCEL
           </button>
           <div className="flex space-x-2 mr-10">
-            <div onClick={orderReplaceCloseSelected} className="cursor-pointer relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-yellow-300 rounded-full dark:bg-yellow-300">
+            <div onClick={orderReplaceSelectedClose} className="cursor-pointer relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-yellow-300 rounded-full dark:bg-yellow-300">
               <span className="font-medium text-white dark:text-white">R</span>
             </div>
-            <div onClick={orderDeleteCloseSelected} className="cursor-pointer relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-middleGreen rounded-full dark:bg-middleGreen">
+            <div onClick={orderDeleteSelectedClose} className="cursor-pointer relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-middleGreen rounded-full dark:bg-middleGreen">
               <span className="font-medium text-white dark:text-white">C</span>
             </div>
           </div>
+        </div>
+        <div>
+          <Overlay isOpen={isOpenWarningMessageOrderSelected} >
+            <TradingStockWarningMessage warningMessage={"Please select at least one order!"} onClose={warningMessageOrderSelectedClose}></TradingStockWarningMessage>
+          </Overlay>
           <Overlay isOpen={isOpenOrderReplaceSelected} >
-            <TradingStockReplaceOrderSelected rowCopyTradingOrderSelected={rowCopyTradingOrder} selectedOrderDict={prevSelectedOrderDict} onClose={orderReplaceCloseSelected}></TradingStockReplaceOrderSelected>
+            <TradingStockReplaceOrderSelected rowCopyTradingOrderSelected={rowCopyTradingOrder} selectedOrderDict={prevSelectedOrderDict} onClose={orderReplaceSelectedClose}></TradingStockReplaceOrderSelected>
           </Overlay>
           <Overlay isOpen={isOpenOrderDeleteSelected} >
-            <TradingStockDeleteOrderSelected rowCopyTradingOrderSelected={rowCopyTradingOrder} selectedOrderDict={prevSelectedOrderDict} onClose={orderDeleteCloseSelected}></TradingStockDeleteOrderSelected>
+            <TradingStockDeleteOrderSelected rowCopyTradingOrderSelected={rowCopyTradingOrder} selectedOrderDict={prevSelectedOrderDict} onClose={orderDeleteSelectedClose}></TradingStockDeleteOrderSelected>
           </Overlay>
         </div>
         <CopyTradingAllAccountOrderTable columns={columns} data={data} />

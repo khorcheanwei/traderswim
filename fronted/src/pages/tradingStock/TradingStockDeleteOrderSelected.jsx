@@ -32,14 +32,14 @@ export default function TradingStockDeleteOrderSelected({rowCopyTradingOrderSele
             
         const response = await axios.delete("/copy_trading_account/cancel_order/", { data: { agentTradingSessionID: agentTradingSessionID, allTradingAccountsOrderList: allTradingAccountsOrderList }});
         if (response.data == "success") {
-          alert("Order deleted successful");
+          alert("Selected order deleted successful");
         } else {
-          alert("Order deleted failed")
+          alert("Selected order deleted failed")
         }
         setIsOpenOrderDeleteSelected(!isOpenOrderDeleteSelected); 
 
       } catch(error) {
-          alert("Order deleted failed")
+          alert("Selected order deleted failed")
           setIsOpenOrderDeleteSelected(!isOpenOrderDeleteSelected); 
           console.log(error.message);
       }
@@ -48,7 +48,7 @@ export default function TradingStockDeleteOrderSelected({rowCopyTradingOrderSele
     return ( 
         <form>
             <div className="mb-4">
-                <h1 className="block text-gray-700 text-lm font-bold mb-2">Option Delete Order (Selected) - <b>{accountUsername}</b></h1>
+                <h1 className="block text-gray-700 text-lm font-bold mb-2">Option Delete Order (Selected)</h1>
             </div>
             <div className="mb-4">Are you sure to delete this order <b>{optionChainDescription}</b>?</div>
             <div className="flex justify-end gap-5">
