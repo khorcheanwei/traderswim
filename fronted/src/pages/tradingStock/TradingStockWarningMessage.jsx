@@ -1,4 +1,4 @@
-export default function TradingStockWarning({warningMessage, onClose}) {
+export default function TradingStockWarningMessage({warningMessage, onClose}) {
     return ( 
         <form>
             <div className="mb-4">
