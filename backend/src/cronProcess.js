@@ -36,7 +36,6 @@ cron.schedule('*/2 * * * * *', async () => {
   try {
     for (let index = 0; index < agent_list.length; index++) {
       const agentID = agent_list[index];
-      
       // account database by agent
       waitForResult(async () => await account_database_by_agent(agentID), 2000)
         .then((result) => {

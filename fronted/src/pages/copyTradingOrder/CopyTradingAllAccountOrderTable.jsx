@@ -183,11 +183,39 @@ export function TextAccountUsernameColorPanel(row) {
   )
 }
 
-export function MakeSelectedOrderPanel(row) {
-  console.log(row.cell.row.original)
+
+export function MakeSelectedOrderPanel({row, setSelectedOrderDict}) {
+  
+  const handleSelectedOrderChange = (event) => {
+
+    setSelectedOrderDict((prevSelectedOrderDict) => {
+      const newSelectedOrderDict = { ...prevSelectedOrderDict };
+      const accountUsername = row.cell.row.original.accountUsername;
+
+      const newSelectedOrder = {
+        accountId: row.cell.row.original.accountId,
+        accountName: row.cell.row.original.accountName,
+        accountUsername: row.cell.row.original.accountUsername,
+        optionChainOrderId: row.cell.row.original.optionChainOrderId
+      }
+
+      if (newSelectedOrderDict.hasOwnProperty(row.cell.row.original.accountUsername) && !event.target.checked) {
+        delete newSelectedOrderDict[accountUsername];
+      } else {
+        newSelectedOrderDict[accountUsername] = newSelectedOrder;
+      }
+      return newSelectedOrderDict;
+    });
+  };
   return (
     <div className="">
-      <input id="selected-order-checkbox" type="checkbox" value="" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
+      <input 
+        id="selected-order-checkbox" 
+        type="checkbox" 
+        value="" 
+        className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+        onChange={handleSelectedOrderChange}
+      />
     </div>
   )
 }
