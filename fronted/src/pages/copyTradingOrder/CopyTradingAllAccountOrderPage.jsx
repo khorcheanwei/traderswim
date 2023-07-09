@@ -15,18 +15,11 @@ import { TextOptionChainDescriptionColorPanel, TextOptionChainFilledQuantityColo
   TextOptionChainInstructionColorPanel, TextOptionChainStatusColorPanel, TextOptionChainOrderTypeColorPanel, TextOptionChainEnteredTimeColorPanel,
   TextAccountNameColorPanel,TextAccountUsernameColorPanel, ChangeOrderIndividualPanel, MakeSelectedOrderPanel} from './CopyTradingAllAccountOrderTable'
 
-function usePrevious(value) {
-  const ref = useRef();
-  useEffect(() => {
-    ref.current = value; //assign the value of ref to the argument
-  },[value]); //this code will run when the value of 'value' changes
-  return ref.current; //in the end, return the current ref value.
-}
+
 
 export default function CopyTradingAllAccountOrderPage({ rowCopyTradingOrder, onClose }) {
 
   const [selectedOrderDict, setSelectedOrderDict] = useState({});
-  const prevSelectedOrderDict = usePrevious(selectedOrderDict);
 
   const columns = React.useMemo(() => [
     {
@@ -159,10 +152,10 @@ export default function CopyTradingAllAccountOrderPage({ rowCopyTradingOrder, on
             <TradingStockWarningMessage warningMessage={"Please select at least one order!"} onClose={warningMessageOrderSelectedClose}></TradingStockWarningMessage>
           </Overlay>
           <Overlay isOpen={isOpenOrderReplaceSelected} >
-            <TradingStockReplaceOrderSelected rowCopyTradingOrderSelected={rowCopyTradingOrder} selectedOrderDict={prevSelectedOrderDict} onClose={orderReplaceSelectedClose}></TradingStockReplaceOrderSelected>
+            <TradingStockReplaceOrderSelected rowCopyTradingOrderSelected={rowCopyTradingOrder} selectedOrderDict={selectedOrderDict} onClose={orderReplaceSelectedClose}></TradingStockReplaceOrderSelected>
           </Overlay>
           <Overlay isOpen={isOpenOrderDeleteSelected} >
-            <TradingStockDeleteOrderSelected rowCopyTradingOrderSelected={rowCopyTradingOrder} selectedOrderDict={prevSelectedOrderDict} onClose={orderDeleteSelectedClose}></TradingStockDeleteOrderSelected>
+            <TradingStockDeleteOrderSelected rowCopyTradingOrderSelected={rowCopyTradingOrder} selectedOrderDict={selectedOrderDict} onClose={orderDeleteSelectedClose}></TradingStockDeleteOrderSelected>
           </Overlay>
         </div>
         <CopyTradingAllAccountOrderTable columns={columns} data={data} />
