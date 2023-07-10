@@ -10,7 +10,7 @@ export default function AccountInfo({rowAccount, onClose}) {
 
     let accountUsername = rowAccount.cell.row.original.accountUsername;
 
-    async function account_fetch() {""
+    async function account_fetch() {
       try {
         const response = await axios.post("/trading_account/account_fetch", {accountUsername}); 
         const result = response.data;
