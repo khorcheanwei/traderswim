@@ -4,7 +4,7 @@ const { copyTradingAccountDBBOperation, tradeHistoryDBOperation } = require("./d
 
 async function updateTradeHistory() {
     try {
-        const orderChainDayForBackup = 3;
+        const orderChainDayForBackup = 2;
         let result = await copyTradingAccountDBBOperation.getAllCopyTradingAccount();
         if (result.success == true) {
             const currentDate = new Date();
