@@ -37,18 +37,31 @@ trading_management_db.run(CopyTradingAccountSchemaSql), (err) => {
   console.log('Copy trading table created (if it did not already exist).');
 };
 
+// new TradeHistory table
+const TradeHistorySchemaSql = require("../models/TradeHistory");
+trading_management_db.run(TradeHistorySchemaSql), (err) => {
+  if (err) {
+    console.log(err.message);
+  }
+  console.log('Trade history table created (if it did not already exist).');
+};
+
+
 const agentDB = require("./agent.db.js");
 const accountDB = require("./account.db.js");
 const copyTradingAccountDB = require("./copyTrading.db.js");
+const tradeHistoryDB = require("./tradeHistory.db.js");
 
 const agentDBOperation = new agentDB(trading_management_db);
 const accountDBOperation = new accountDB(trading_management_db);
 const copyTradingAccountDBBOperation = new copyTradingAccountDB(trading_management_db);
+const tradeHistoryDBOperation = new tradeHistoryDB(trading_management_db);
 
 console.log('Backend service start');
 
 module.exports = {
   agentDBOperation,
   accountDBOperation,
-  copyTradingAccountDBBOperation
+  copyTradingAccountDBBOperation,
+  tradeHistoryDBOperation
 };

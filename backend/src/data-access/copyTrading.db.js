@@ -1,6 +1,52 @@
 function copyTradingAccountDBOperation(trading_management_db) {
   this.trading_management_db = trading_management_db;
 
+  // get all copyTradingAccount
+  this.getAllCopyTradingAccount = async function (
+  ) {
+
+    try {
+      const sqlCommand = `SELECT * FROM copyTradingAccount`;
+
+      const queryResult = await new Promise((resolve, reject) => {
+        this.trading_management_db.all(sqlCommand, [], (err, row) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(row);
+          }
+        });
+      });
+
+      return { success: true, data: queryResult };
+    } catch (error) {
+      return { success: false, error: error };
+    }
+  };
+
+  // delete all copyTradingAccount
+  this.deleteAllCopyTradingAccount = async function (
+    ) {
+  
+      try {
+        const sqlCommand = `DELETE FROM copyTradingAccount`;
+  
+        const queryResult = await new Promise((resolve, reject) => {
+          this.trading_management_db.all(sqlCommand, [], (err, row) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(row);
+            }
+          });
+        });
+  
+        return { success: true, data: queryResult };
+      } catch (error) {
+        return { success: false, error: error };
+      }
+    };
+
   // search searchCopyTradingAccount based on agentID
   this.searchCopyTradingAccountBasedAgentID = async function (
     agentID

@@ -22,12 +22,13 @@ app.use(router);
 let port = process.env.PORT || 4000;
 
 const http = require('http').Server(app);
-const io = require('socket.io')(http);
 
-
+// cronjob
 const { fork } = require("child_process");
-
 fork("./src/cronProcess.js");
+
+// trade history
+require("./backupTradeHistory.js");
 
 app.listen(port, "localhost");
 
