@@ -2,7 +2,7 @@ import axios from 'axios';
 import React from 'react'
 import { useContext, useState, useEffect, useRef  } from 'react';
 
-import TradingStockPlaceOrder from '../tradingStock/TradingStockPlaceOrder';
+import TradingStockAllActivePlaceOrder from '../tradingStock/TradingStockAllActivePlaceOrder';
 import { CopyTradingOrderContext } from '../context/CopyTradingOrderContext';
 import { CopyTradingPositionContext } from '../context/CopyTradingPositionContext';
 import CopyTradingOrderPage from '../copyTradingOrder/CopyTradingOrderPage.jsx'
@@ -73,7 +73,7 @@ export default function CopyTradingPage() {
 
   const { isOpenTradingStock, setIsOpenTradingStock } = useContext(CopyTradingOrderContext);
 
-  const placeOrderClose = async () => {
+  const allActivePlaceOrderClose = async () => {
     setIsOpenTradingStock(!isOpenTradingStock)
   }
 
@@ -96,12 +96,12 @@ export default function CopyTradingPage() {
             />*/}
             </label> 
           <div className="flex gap-6 h-12">
-            <Button className="text-gray-700 " onClick={placeOrderClose}>BUY/SELL</Button>
+            <Button className="text-gray-700 " onClick={allActivePlaceOrderClose}>BUY/SELL</Button>
           </div>
         </div>
         <div>
           <Overlay isOpen={isOpenTradingStock} >
-            <TradingStockPlaceOrder onClose={placeOrderClose}></TradingStockPlaceOrder>
+            <TradingStockAllActivePlaceOrder onClose={allActivePlaceOrderClose}></TradingStockAllActivePlaceOrder>
           </Overlay>
         </div>
       </div>
