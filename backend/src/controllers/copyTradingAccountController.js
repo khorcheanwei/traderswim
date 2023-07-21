@@ -323,6 +323,7 @@ async function createCopyTradingAccountItem_all_accounts(agentTradingSessionID, 
 // Copy trading place order
 async function copy_trading_place_order(httpRequest) {
   const {
+    allTradingAccountsOrderList,
     optionChainSymbol,
     optionChainInstruction,
     optionChainOrderType,
@@ -345,21 +346,42 @@ async function copy_trading_place_order(httpRequest) {
       const agentTradingSessionID = agentDocument.agentTradingSessionID + 1;
 
       // get all accountName of particular agentID
-      result = await accountDBOperation.searchAccountByAgentIDAndAccountTradingActive(agentID);
-      if (result.success != true) {
-        return { success: false, data: result.error };
-      }
-      const accountDocument = result.data;
-
       let all_trading_accounts_list = [];
 
-      for (let index = 0; index < accountDocument.length; index++) {
-        let accountId = accountDocument[index].accountId;
-        let accountName = accountDocument[index].accountName;
-        let accountUsername = accountDocument[index].accountUsername;
-        let authToken = await get_access_token_from_cache(agentID, accountUsername);
-                                       
-        all_trading_accounts_list.push({ agentID: agentID, accountId: accountId, accountName: accountName, accountUsername: accountUsername, optionChainOrderId: null, authToken: authToken });
+      // Place order all all active accounts
+      if (allTradingAccountsOrderList.length == 0) {
+        // get all accountName of particular agentID
+        result = await accountDBOperation.searchAccountByAgentIDAndAccountTradingActive(agentID);
+        if (result.success != true) {
+          return { success: false, data: result.error };
+        }
+        const accountDocument = result.data;
+
+        for (let index = 0; index < accountDocument.length; index++) {
+          let accountId = accountDocument[index].accountId;
+          let accountName = accountDocument[index].accountName;
+          let accountUsername = accountDocument[index].accountUsername;
+          let authToken = await get_access_token_from_cache(agentID, accountUsername);
+                                        
+          all_trading_accounts_list.push({ agentID: agentID, accountId: accountId, accountName: accountName, accountUsername: accountUsername, optionChainOrderId: null, authToken: authToken });
+        }
+      } else {
+        for (let index = 0; index < allTradingAccountsOrderList.length; index++) {
+          let accountId = allTradingAccountsOrderList[index]["accountId"];
+          let accountName = allTradingAccountsOrderList[index]["accountName"];
+          let accountUsername = allTradingAccountsOrderList[index]["accountUsername"];
+          let optionChainOrderId = allTradingAccountsOrderList[index]["optionChainOrderId"];
+          let authToken = await get_access_token_from_cache(agentID, accountUsername);
+  
+          all_trading_accounts_list.push({ 
+            agentID: agentID,
+            accountId: accountId, 
+            accountName: accountName,
+            accountUsername: accountUsername, 
+            optionChainOrderId: optionChainOrderId, 
+            authToken: authToken 
+          });
+        }
       }
 
       // place order with all accounts of particular agent

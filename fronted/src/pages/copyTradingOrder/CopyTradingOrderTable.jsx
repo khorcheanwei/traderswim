@@ -3,7 +3,10 @@ import { useAsyncDebounce } from 'react-table'
 import { Button, PageButton } from './../shared/Button'
 import { useContext, useState, useEffect } from 'react';
 
+import { AccountContext } from '../context/AccountContext';
 import { CopyTradingOrderContext } from '../context/CopyTradingOrderContext';
+
+import TradingStockPlaceOrder from '../tradingStock/TradingStockPlaceOrder';
 import TradingStockDeleteOrder from '../tradingStock/TradingStockDeleteOrder';
 import TradingStockReplaceOrder from '../tradingStock/TradingStockReplaceOrder';
 import CopyTradingAllAccountOrderPage from '../copyTradingOrder/CopyTradingAllAccountOrderPage';
@@ -61,9 +64,15 @@ export function ViewAllOrderPanel(row) {
 }
 
 export function ChangeOrderPanel(row) {
-  const { isOpenOrderReplace, setIsOpenOrderReplace, isOpenOrderDelete, setIsOpenOrderDelete } = useContext(CopyTradingOrderContext);
-  
+  const { isOpenOrderPlace, setIsOpenOrderPlace, isOpenOrderReplace, setIsOpenOrderReplace, isOpenOrderDelete, setIsOpenOrderDelete } = useContext(CopyTradingOrderContext);
   const { rowCopyTradingOrder, setRowCopyTradingOrder } = useContext(CopyTradingOrderContext);
+
+  const orderPlaceClose = async () => {
+    if (isOpenOrderPlace == false) {
+      setRowCopyTradingOrder(row)
+    }
+    setIsOpenOrderPlace(!isOpenOrderPlace)
+  }
 
   const orderReplaceClose = async () => {
     if (isOpenOrderReplace == false) {
@@ -82,13 +91,19 @@ export function ChangeOrderPanel(row) {
   return (
     <div className="flex">
       <div className="flex space-x-2">
-        <div onClick={orderReplaceClose} className="cursor-pointer relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-yellow-300 rounded-full dark:bg-yellow-300">
+        <div onClick={orderPlaceClose} className="cursor-pointer relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-violet-700 rounded-full">
+          <span className="font-medium text-white dark:text-white">P</span>
+        </div>
+        <div onClick={orderReplaceClose} className="cursor-pointer relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-yellow-300 rounded-full">
         <span className="font-medium text-white dark:text-white">R</span>
         </div>
-        <div onClick={orderDeleteClose} className="cursor-pointer relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-middleGreen rounded-full dark:bg-middleGreen">
+        <div onClick={orderDeleteClose} className="cursor-pointer relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-middleGreen rounded-full">
           <span className="font-medium text-white dark:text-white">C</span>
         </div>
       </div>
+      <Overlay isOpen={isOpenOrderPlace} >
+        <TradingStockPlaceOrder rowCopyTradingOrder={rowCopyTradingOrder} onClose={orderPlaceClose}></TradingStockPlaceOrder>
+      </Overlay>
       <Overlay isOpen={isOpenOrderReplace} >
         <TradingStockReplaceOrder rowCopyTradingOrder={rowCopyTradingOrder} onClose={orderReplaceClose}></TradingStockReplaceOrder>
       </Overlay>

@@ -24,11 +24,11 @@ export default function TradingStockReplaceOrder({ rowCopyTradingOrder, onClose 
     const [optionChainPrice, setOptionChainPrice] = useState(rowOptionChainPrice);
 
     const {copyTradingOrderDataDict, setCopyTradingOrderDataDict} = useContext(CopyTradingOrderContext);
+
+    const copyTradingAllAccountData = copyTradingOrderDataDict[agentTradingSessionID];
   
     async function handleReplaceOrder() {
         try {
-            const copyTradingAllAccountData = copyTradingOrderDataDict[agentTradingSessionID];
-
             const allTradingAccountsOrderList = copyTradingAllAccountData.map(item => ({
                 accountId: item.accountId,
                 accountName: item.accountName,
@@ -53,7 +53,7 @@ export default function TradingStockReplaceOrder({ rowCopyTradingOrder, onClose 
     return (
         <div>
             <div className="mb-4">
-                <h1 className="block text-gray-700 text-lm font-bold mb-2">Option Replace Order</h1>
+                <h1 className="block text-gray-700 text-lm font-bold mb-2">Option Replace Order ( {copyTradingAllAccountData.length} accounts )</h1>
             </div>
             <div>
                 <div className="relative">

@@ -12,11 +12,11 @@ export default function TradingStockDeleteOrder({rowCopyTradingOrder, onClose}) 
 
     const {copyTradingOrderDataDict, setCopyTradingOrderDataDict} = useContext(CopyTradingOrderContext);
 
+    const copyTradingAllAccountData = copyTradingOrderDataDict[agentTradingSessionID];
+
     async function handleDeleteOrder() {
       // delete order 
       try {
-        const copyTradingAllAccountData = copyTradingOrderDataDict[agentTradingSessionID];
-
         const allTradingAccountsOrderList = copyTradingAllAccountData.map(item => ({
             accountId: item.accountId,
             accountName: item.accountName,
@@ -42,7 +42,7 @@ export default function TradingStockDeleteOrder({rowCopyTradingOrder, onClose}) 
     return ( 
         <form>
             <div className="mb-4">
-                <h1 className="block text-gray-700 text-lm font-bold mb-2">Option Delete Order</h1>
+                <h1 className="block text-gray-700 text-lm font-bold mb-2">Option Delete Order ( {copyTradingAllAccountData.length} accounts )</h1>
             </div>
             <div className="mb-4">Are you sure to delete this order <b>{optionChainDescription}</b> ?</div>
             <div className="flex justify-end gap-5">
