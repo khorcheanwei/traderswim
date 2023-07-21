@@ -348,7 +348,7 @@ async function copy_trading_place_order(httpRequest) {
       // get all accountName of particular agentID
       let all_trading_accounts_list = [];
 
-      // Place order all all active accounts
+      // Place order on all active accounts
       if (allTradingAccountsOrderList.length == 0) {
         // get all accountName of particular agentID
         result = await accountDBOperation.searchAccountByAgentIDAndAccountTradingActive(agentID);
