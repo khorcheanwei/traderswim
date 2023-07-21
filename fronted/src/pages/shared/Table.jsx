@@ -68,7 +68,7 @@ function CommonTable({ columns, data, GlobalFilter, hiddenColumns }) {
           <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
             <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
               <table {...getTableProps()} className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
+                <thead className="bg-black">
                   {headerGroups.map(headerGroup => (
                     <tr {...headerGroup.getHeaderGroupProps()}>
                       {headerGroup.headers.map(column => (
@@ -76,7 +76,7 @@ function CommonTable({ columns, data, GlobalFilter, hiddenColumns }) {
                         // we can add them into the header props
                         <th
                           scope="col"
-                          className="group px-1 py-1 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                          className="group px-1 py-1 text-left text-xs font-medium text-white uppercase tracking-wider"
                           {...column.getHeaderProps(column.getSortByToggleProps())}
                         >
                           <div className="flex items-center justify-between">
@@ -99,7 +99,7 @@ function CommonTable({ columns, data, GlobalFilter, hiddenColumns }) {
                 </thead>
                 <tbody
                   {...getTableBodyProps()}
-                  className="bg-white divide-y divide-gray-200"
+                  className="bg-black text-white divide-y divide-gray-200"
                 >
                   {page.map((row, i) => {  // new
                     prepareRow(row)
@@ -136,7 +136,7 @@ function CommonTable({ columns, data, GlobalFilter, hiddenColumns }) {
         </div>
         <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
           <div className="flex gap-x-2 items-baseline">
-            <span className="text-sm text-gray-700">
+            <span className="text-sm text-white">
               Page <span className="font-medium">{state.pageIndex + 1}</span> of <span className="font-medium">{pageOptions.length}</span>
             </span>
             <label>

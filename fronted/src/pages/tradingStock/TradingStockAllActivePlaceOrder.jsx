@@ -183,16 +183,16 @@ export default function TradingStockAllActivePlaceOrder({ onClose }) {
     return (
         <div>
             {isLoading ? (
-                <ClipLoader color="#123abc" loading={true} size={50} />
+                <ClipLoader color="#ffffff" loading={true} size={50} />
             ) : (
                 <div>
                     <div className="mb-4">
-                        <h1 className="block text-gray-700 text-lm font-bold mb-2">Option Place Order On All Active Accounts</h1>
+                        <h1 className="block text-white text-lm font-bold mb-2">Option Place Order On All Active Accounts</h1>
                     </div>
                     <div>
                         <div className="relative w-full lg:max-w-sm mb-6">
                             {/*<select
-                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                                className="shadow appearance-none border rounded w-full py-2 px-3 text-white mb-3 leading-tight focus:outline-none focus:shadow-outline"
                                 onChange={event => setStockName(event.target.value)}>
                                 {
                                     stockNameList.map((stock_name, index) => (
@@ -203,7 +203,7 @@ export default function TradingStockAllActivePlaceOrder({ onClose }) {
                             <div className="grid items-end gap-6 mb-6 grid-cols-2">
                                 <div className="relative">
                                     <input
-                                        className="block px-2.5 pb-1.5 pt-3 w-full text-sm text-gray-900 bg-transparent border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                        className="block px-2.5 pb-1.5 pt-3 w-full text-sm text-white bg-transparent border-1 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                                         type="text"
                                         onChange={event => setStockName(event.target.value)}
                                         value={stockName}
@@ -217,7 +217,7 @@ export default function TradingStockAllActivePlaceOrder({ onClose }) {
                                 </div>
                                 <div className="relative">
                                 <div className="flex justify-start gap-5">
-                                    <label>
+                                    <label className="text-white">
                                         CALL
                                         <br />
                                         <input
@@ -227,7 +227,7 @@ export default function TradingStockAllActivePlaceOrder({ onClose }) {
                                             onChange={handleIsOptionChainCall}
                                         />
                                     </label>
-                                    <label>
+                                    <label className="text-white">
                                         PUT
                                         <br />
                                         <input
@@ -239,7 +239,7 @@ export default function TradingStockAllActivePlaceOrder({ onClose }) {
                                     </label>
                                     </div>
                                     {/*<select
-                                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                                        className="shadow appearance-none border rounded w-full py-2 px-3 text-white mb-3 leading-tight focus:outline-none focus:shadow-outline"
                                         value={optionChainCallPut}
                                         onChange={event => setOptionChainCallPut(event.target.value)}>
                                         {
@@ -265,7 +265,7 @@ export default function TradingStockAllActivePlaceOrder({ onClose }) {
                         </div>
                         <div className="relative">
                             <select
-                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                                className="shadow appearance-none bg-black border rounded w-full py-2 px-3 text-white mb-3 leading-tight focus:outline-none focus:shadow-outline"
                                 value={getOptionChainRealDate(optionChainDate)}
                                 onChange={event => { getOptionChainStrikeList(getRevertOptionChainRealDate(event.target.value))}}
                                 >
@@ -276,7 +276,7 @@ export default function TradingStockAllActivePlaceOrder({ onClose }) {
                                 }
                             </select>
                             <label
-                                className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
+                                className="absolute text-sm bg-black text-white  duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
                                 htmlFor="small_outlined">
                                 Option Chain date list:
                             </label>
@@ -284,17 +284,17 @@ export default function TradingStockAllActivePlaceOrder({ onClose }) {
                         <div className="relative">
                             <AutocompleteList key={refreshOptionChainStrikeListKey} list={optionChainStrikeList} onData={getOptionChainBidPrice}></AutocompleteList>
                             <label
-                                className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
+                                className="absolute text-sm bg-black text-white  duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0]px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
                                 htmlFor="small_outlined">
                                 Option Chain strike price:
                             </label>
                         </div>
                         <div className="relative">
-                            <div className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline">
+                            <div className="shadow appearance-none border rounded w-full py-2 px-3 text-white mb-3 leading-tight focus:outline-none focus:shadow-outline">
                             {optionChainDescription}
                             </div>
                             <label
-                                className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
+                                className="absolute text-sm bg-black text-white text-whitduration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
                                 htmlFor="small_outlined">
                                 Option Chain Description:
                             </label>
@@ -302,7 +302,7 @@ export default function TradingStockAllActivePlaceOrder({ onClose }) {
                         <div className="grid items-end gap-6 mb-6 md:grid-cols-2">
                             <div className="relative">
                                 <select
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                                    className="shadow appearance-none bg-black border rounded w-full py-2 px-3 text-white mb-3 leading-tight focus:outline-none focus:shadow-outline"
                                     value={optionChainInstruction}
                                     onChange={event => setOptionChainInstruction(event.target.value)}>
                                     {
@@ -312,14 +312,14 @@ export default function TradingStockAllActivePlaceOrder({ onClose }) {
                                     }
                                 </select>
                                 <label
-                                    className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
+                                    className="absolute text-sm bg-black text-white duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
                                     htmlFor="small_outlined">
                                     Option Chain instruction:
                                 </label>
                             </div>
                             <div className="relative">
                                 <select
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                                    className="shadow appearance-none bg-black border rounded w-full py-2 px-3 text-white mb-3 leading-tight focus:outline-none focus:shadow-outline"
                                     value={optionChainOrderType}
                                     onChange={event => setOptionChainOrderType(event.target.value)}>
                                     {
@@ -329,7 +329,7 @@ export default function TradingStockAllActivePlaceOrder({ onClose }) {
                                     }
                                 </select>
                                 <label
-                                    className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
+                                    className="absolute text-sm bg-black text-white duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
                                     htmlFor="small_outlined">
                                     Option Chain order type:
                                 </label>
@@ -338,25 +338,25 @@ export default function TradingStockAllActivePlaceOrder({ onClose }) {
                         <div className="grid items-end gap-6 mb-6 grid-cols-2">
                             <div className="relative">
                                 <input
-                                    className="block px-2.5 pb-1.5 pt-3 w-full text-sm text-gray-900 bg-transparent  border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                    className="block px-2.5 pb-1.5 pt-3 w-full text-sm text-white bg-transparent  border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                                     type="text"
                                     onChange={event => setOptionChainQuantity(event.target.value)}
                                     value={optionChainQuantity}
                                     placeholder=" " />
                                 <label
-                                    className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
+                                    className="absolute text-sm bg-black text-white duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
                                     htmlFor="small_outlined">
                                     Option Contract Total:
                                 </label>
                             </div>
                             <div className="relative">
-                                <input className="block px-2.5 pb-1.5 pt-3 w-full text-sm text-gray-900 bg-transparent  border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                <input className="block px-2.5 pb-1.5 pt-3 w-full text-sm text-white bg-transparent  border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                                     type="text"
                                     onChange={event => setOptionChainPrice(event.target.value)}
                                     value={optionChainPrice}
                                     placeholder=" " />
                                 <label
-                                    className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
+                                    className="absolute text-sm bg-black text-white duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
                                     htmlFor="small_outlined">
                                     Price:
                                 </label>

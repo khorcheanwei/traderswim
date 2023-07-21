@@ -35,7 +35,7 @@ export default function AgentRegisterPage() {
     return (
         <div className="mt-4 grow flex items-center justify-around">
             <div className="mb-32">
-                <h1 className="text-4xl text-center mb-4">Register</h1>
+                <h1 className="text-4xl text-white text-center mb-4">Register</h1>
                 <form className="max-w-md mx-auto" onSubmit={registerUser}>
                     <input type="text"
                         placeholder="John Doe"
@@ -46,8 +46,8 @@ export default function AgentRegisterPage() {
                         value={agentPassword}
                         onChange={event => setAgentPassword(event.target.value)} />
                     <button className="primary">Register</button>
-                    <div className="text-center py-2 text-gray-500">
-                        Already a member? <Link className="underline text-black" to={'/login'}>Login</Link>
+                    <div className="text-white text-center py-2">
+                        Already a member? <Link className="underline" to={'/login'}>Login</Link>
                     </div>
                 </form>
             </div>
