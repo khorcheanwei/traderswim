@@ -61,7 +61,7 @@ export default function TradingStockReplaceOrder({ rowCopyTradingOrder, onClose 
                        {optionChainDescription}
                     </div>
                     <label
-                        className="absolute text-sm bg-black text-white text-whitduration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
+                        className="absolute text-sm bg-black text-white px-2 left-1"
                         htmlFor="small_outlined">
                         Option Chain Description:
                     </label>
@@ -69,7 +69,7 @@ export default function TradingStockReplaceOrder({ rowCopyTradingOrder, onClose 
                 <div className="grid items-end gap-6 mb-6 md:grid-cols-2">
                     <div className="relative">
                         <select
-                            className="shadow appearance-none bg-black border rounded w-full py-2 px-3 text-white mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                            className="bg-black border w-full py-2 px-2 text-white mb-4 leading-tight"
                             value={optionChainInstruction}
                             onChange={event => setOptionChainInstruction(event.target.value)}
                             >
@@ -80,14 +80,14 @@ export default function TradingStockReplaceOrder({ rowCopyTradingOrder, onClose 
                             }
                         </select>
                         <label
-                            className="absolute text-sm bg-black text-white text-whitduration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
+                            className="absolute text-sm bg-black text-white px-2 left-1"
                             htmlFor="small_outlined">
                             Option Chain instruction:
                         </label>
                     </div>
                     <div className="relative">
                         <select
-                            className="shadow appearance-none bg-black border rounded w-full py-2 px-3 text-white mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                            className="bg-black border w-full py-2 px-2 text-white mb-4 leading-tight"
                             value={optionChainOrderType}
                             onChange={event => setOptionChainOrderType(event.target.value)}>
                             {
@@ -97,7 +97,7 @@ export default function TradingStockReplaceOrder({ rowCopyTradingOrder, onClose 
                             }
                         </select>
                         <label
-                            className="absolute text-sm bg-black text-white text-whitduration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
+                            className="absolute text-sm bg-black text-white px-2 left-1"
                             htmlFor="small_outlined">
                             Option Chain order type:
                         </label>
@@ -112,7 +112,7 @@ export default function TradingStockReplaceOrder({ rowCopyTradingOrder, onClose 
                             value={optionChainQuantity}
                             placeholder=" " />
                         <label
-                            className="absolute text-sm bg-black text-white text-whitduration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
+                            className="absolute text-sm bg-black text-white px-2 left-1"
                             htmlFor="small_outlined">
                             Option Contract Total:
                         </label>
@@ -124,7 +124,7 @@ export default function TradingStockReplaceOrder({ rowCopyTradingOrder, onClose 
                             value={optionChainPrice}
                             placeholder=" " />
                         <label
-                            className="absolute text-sm bg-black text-white text-whitduration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
+                            className="absolute text-sm bg-black text-white px-2 left-1"
                             htmlFor="small_outlined">
                             Price:
                         </label>
