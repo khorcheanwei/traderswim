@@ -25,8 +25,9 @@ export default function CopyTradingPage() {
       if (copyTradingAccountDataDictResponse != null && copyTradingAccountDataDictResponse.length != 0) {
 
         let copyTradingMainAccountDataList = [];
-        let copyTradingMainAccountDataSet = new Set();
         for (const [key, value] of Object.entries(copyTradingAccountDataDictResponse).reverse()) {
+          let copyTradingMainAccountDataSet = new Set();
+
           let copyTradingMainAccountDataRow = value[0];
           let copyTradingOptionChainStatusColor = true;
           let optionChainStatusInactiveList = ["REJECTED", "CANCELED", "FILLED", "EXPIRED"];

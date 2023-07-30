@@ -32,7 +32,7 @@ export default function TradingStockAllActivePlaceOrder({ onClose }) {
 
     const [optionChainInstruction, setOptionChainInstruction] = useState(optionChainInstructionList[0]);
     const [optionChainOrderType, setOptionChainOrderType] = useState("LIMIT");
-    const [optionChainQuantity, setOptionChainQuantity] = useState(0)
+    const [optionChainQuantity, setOptionChainQuantity] = useState(1)
     const [optionChainPrice, setOptionChainPrice] = useState(0)
     const [disabledButton, setDisabledButton] = useState(false)
 
