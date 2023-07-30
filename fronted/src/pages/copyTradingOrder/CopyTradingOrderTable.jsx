@@ -119,12 +119,19 @@ export function OptionChainStatusColorPanel(row) {
 
   let optionChainStatusColor = row.cell.row.original.optionChainStatusColor;
 
+  let optionChainStatusColorCss = " text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full";
+
+  if (optionChainStatusColor == "green") {
+    optionChainStatusColorCss = "bg-green-500 " + optionChainStatusColorCss;
+  } else if(optionChainStatusColor == "red") {
+    optionChainStatusColorCss = "bg-red-500 " + optionChainStatusColorCss;
+  } else {
+    optionChainStatusColorCss = "bg-purple-500 " + optionChainStatusColorCss;
+  }
+
   return (
     <div>
-      {optionChainStatusColor
-        ? <span className='bg-green-500 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300'></span>
-        : <span className='bg-red-500 text-red-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300'></span>
-      }
+        <span className={optionChainStatusColorCss}></span>
     </div>
   );
 }

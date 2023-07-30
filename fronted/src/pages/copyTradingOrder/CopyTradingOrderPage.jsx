@@ -1,6 +1,5 @@
-import axios from 'axios';
 import React from 'react'
-import { useContext, useState, useEffect, useRef  } from 'react';
+import { useContext } from 'react';
 
 import { CopyTradingOrderContext } from '../context/CopyTradingOrderContext';
 import CopyTradingOrderTable, { ChangeOrderPanel, ViewAllOrderPanel, OptionChainStatusColorPanel } from './CopyTradingOrderTable'

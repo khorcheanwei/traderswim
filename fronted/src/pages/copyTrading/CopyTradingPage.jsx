@@ -25,18 +25,30 @@ export default function CopyTradingPage() {
       if (copyTradingAccountDataDictResponse != null && copyTradingAccountDataDictResponse.length != 0) {
 
         let copyTradingMainAccountDataList = [];
+        let copyTradingMainAccountDataSet = new Set();
         for (const [key, value] of Object.entries(copyTradingAccountDataDictResponse).reverse()) {
           let copyTradingMainAccountDataRow = value[0];
           let copyTradingOptionChainStatusColor = true;
           let optionChainStatusInactiveList = ["REJECTED", "CANCELED", "FILLED", "EXPIRED"];
           for (let index=0; index < value.length; index++) {
-            
-            if (!optionChainStatusInactiveList.includes(value[index].optionChainStatus)) {
+            let currentOptionChainStatus = value[index].optionChainStatus;
+
+            copyTradingMainAccountDataSet.add(currentOptionChainStatus);
+            if (copyTradingOptionChainStatusColor && !optionChainStatusInactiveList.includes(currentOptionChainStatus)) {
               copyTradingOptionChainStatusColor = false;
-              break
             }
           }
-          copyTradingMainAccountDataRow["optionChainStatusColor"] = copyTradingOptionChainStatusColor;
+          
+          if (copyTradingMainAccountDataSet.size > 1) {
+            copyTradingMainAccountDataRow["optionChainStatusColor"] = "purple"
+          } else {
+            if (copyTradingOptionChainStatusColor) {
+              copyTradingMainAccountDataRow["optionChainStatusColor"] = "green";  
+            } else {
+              copyTradingMainAccountDataRow["optionChainStatusColor"] = "red";
+            }
+            
+          }
           copyTradingMainAccountDataList.push(copyTradingMainAccountDataRow);
         }
         setCopyTradingOrderMainData(copyTradingMainAccountDataList)
