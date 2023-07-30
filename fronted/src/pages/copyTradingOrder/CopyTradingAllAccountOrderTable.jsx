@@ -29,21 +29,21 @@ function GlobalFilter({
 }
 
 function getOptionChainStatusColor(optionChainStatus) {
-  let optionChainStatusColor = true;
+  let optionChainOwnStatusColor = true;
   let optionChainStatusInactiveList = ["REJECTED", "CANCELED", "FILLED", "EXPIRED"];
   if (!optionChainStatusInactiveList.includes(optionChainStatus)) {
-    optionChainStatusColor = false;
+    optionChainOwnStatusColor = false;
   }
-  return optionChainStatusColor
+  return optionChainOwnStatusColor
 }
 
 export function TextOptionChainDescriptionColorPanel(row) {
   let optionChainStatus = row.cell.row.original.optionChainStatus;
-  let optionChainStatusColor = getOptionChainStatusColor(optionChainStatus);
+  let optionChainOwnStatusColor = getOptionChainStatusColor(optionChainStatus);
   let optionChainDescription = row.cell.row.original.optionChainDescription;
   return (
     <div>
-      {optionChainStatusColor
+      {optionChainOwnStatusColor
         ? <div>{optionChainDescription}</div>
         : <div className="text-yellow-700">{optionChainDescription}</div>
       }
@@ -53,11 +53,11 @@ export function TextOptionChainDescriptionColorPanel(row) {
 
 export function TextOptionChainFilledQuantityColorPanel(row) {
   let optionChainStatus = row.cell.row.original.optionChainStatus;
-  let optionChainStatusColor = getOptionChainStatusColor(optionChainStatus);
+  let optionChainOwnStatusColor = getOptionChainStatusColor(optionChainStatus);
   let optionChainFilledQuantity = row.cell.row.original.optionChainFilledQuantity;
   return (
     <div>
-      {optionChainStatusColor
+      {optionChainOwnStatusColor
         ? <div>{optionChainFilledQuantity}</div>
         : <div className="text-yellow-700">{optionChainFilledQuantity}</div>
       }
@@ -68,11 +68,11 @@ export function TextOptionChainFilledQuantityColorPanel(row) {
 
 export function TextOptionChainPriceColorPanel(row) {
   let optionChainStatus = row.cell.row.original.optionChainStatus;
-  let optionChainStatusColor = getOptionChainStatusColor(optionChainStatus);
+  let optionChainOwnStatusColor = getOptionChainStatusColor(optionChainStatus);
   let optionChainPrice = row.cell.row.original.optionChainPrice;
   return (
     <div>
-      {optionChainStatusColor
+      {optionChainOwnStatusColor
         ? <div>{optionChainPrice}</div>
         : <div className="text-yellow-700">{optionChainPrice}</div>
       }
@@ -83,11 +83,11 @@ export function TextOptionChainPriceColorPanel(row) {
 
 export function TextOptionChainQuantityColorPanel(row) {
   let optionChainStatus = row.cell.row.original.optionChainStatus;
-  let optionChainStatusColor = getOptionChainStatusColor(optionChainStatus);
+  let optionChainOwnStatusColor = getOptionChainStatusColor(optionChainStatus);
   let optionChainQuantity = row.cell.row.original.optionChainQuantity;
   return (
     <div>
-      {optionChainStatusColor
+      {optionChainOwnStatusColor
         ? <div>{optionChainQuantity}</div>
         : <div className="text-yellow-700">{optionChainQuantity}</div>
       }
@@ -98,11 +98,11 @@ export function TextOptionChainQuantityColorPanel(row) {
 
 export function TextOptionChainInstructionColorPanel(row) {
   let optionChainStatus = row.cell.row.original.optionChainStatus;
-  let optionChainStatusColor = getOptionChainStatusColor(optionChainStatus);
+  let optionChainOwnStatusColor = getOptionChainStatusColor(optionChainStatus);
   let optionChainInstruction = row.cell.row.original.optionChainInstruction;
   return (
     <div>
-      {optionChainStatusColor
+      {optionChainOwnStatusColor
         ? <div>{optionChainInstruction}</div>
         : <div className="text-yellow-700">{optionChainInstruction}</div>
       }
@@ -113,10 +113,10 @@ export function TextOptionChainInstructionColorPanel(row) {
 
 export function TextOptionChainStatusColorPanel(row) {
   let optionChainStatus = row.cell.row.original.optionChainStatus;
-  let optionChainStatusColor = getOptionChainStatusColor(optionChainStatus);
+  let optionChainOwnStatusColor = getOptionChainStatusColor(optionChainStatus);
   return (
     <div>
-      {optionChainStatusColor
+      {optionChainOwnStatusColor
         ? <div>{optionChainStatus}</div>
         : <div className="text-yellow-700">{optionChainStatus}</div>
       }
@@ -127,11 +127,11 @@ export function TextOptionChainStatusColorPanel(row) {
 
 export function TextOptionChainOrderTypeColorPanel(row) {
   let optionChainStatus = row.cell.row.original.optionChainStatus;
-  let optionChainStatusColor = getOptionChainStatusColor(optionChainStatus);
+  let optionChainOwnStatusColor = getOptionChainStatusColor(optionChainStatus);
   let optionChainOrderType = row.cell.row.original.optionChainOrderType;
   return (
     <div>
-      {optionChainStatusColor
+      {optionChainOwnStatusColor
         ? <div>{optionChainOrderType}</div>
         : <div className="text-yellow-700">{optionChainOrderType}</div>
       }
@@ -142,11 +142,11 @@ export function TextOptionChainOrderTypeColorPanel(row) {
 
 export function TextOptionChainEnteredTimeColorPanel(row) {
   let optionChainStatus = row.cell.row.original.optionChainStatus;
-  let optionChainStatusColor = getOptionChainStatusColor(optionChainStatus);
+  let optionChainOwnStatusColor = getOptionChainStatusColor(optionChainStatus);
   let optionChainEnteredTime = row.cell.row.original.optionChainEnteredTime;
   return (
     <div>
-      {optionChainStatusColor
+      {optionChainOwnStatusColor
         ? <div>{optionChainEnteredTime}</div>
         : <div className="text-yellow-700">{optionChainEnteredTime}</div>
       }
@@ -157,11 +157,11 @@ export function TextOptionChainEnteredTimeColorPanel(row) {
 
 export function TextAccountNameColorPanel(row) {
   let optionChainStatus = row.cell.row.original.optionChainStatus;
-  let optionChainStatusColor = getOptionChainStatusColor(optionChainStatus);
+  let optionChainOwnStatusColor = getOptionChainStatusColor(optionChainStatus);
   let accountName = row.cell.row.original.accountName;
   return (
     <div>
-      {optionChainStatusColor
+      {optionChainOwnStatusColor
         ? <div>{accountName}</div>
         : <div className="text-yellow-700">{accountName}</div>
       }
@@ -171,11 +171,11 @@ export function TextAccountNameColorPanel(row) {
 
 export function TextAccountUsernameColorPanel(row) {
   let optionChainStatus = row.cell.row.original.optionChainStatus;
-  let optionChainStatusColor = getOptionChainStatusColor(optionChainStatus);
+  let optionChainOwnStatusColor = getOptionChainStatusColor(optionChainStatus);
   let accountUsername = row.cell.row.original.accountUsername;
   return (
     <div>
-      {optionChainStatusColor
+      {optionChainOwnStatusColor
         ? <div>{accountUsername}</div>
         : <div className="text-yellow-700">{accountUsername}</div>
       }
@@ -260,7 +260,7 @@ export function ChangeOrderIndividualPanel(row) {
 };
 
 function CopyTradingAllAccountOrderTable({ columns, data }) {
-  let hiddenColumns = ['accountId', 'optionChainSymbol', 'optionChainOrderId', 'agentTradingSessionID', 'optionChainStatusColor'];
+  let hiddenColumns = ['accountId', 'optionChainSymbol', 'optionChainOrderId', 'agentTradingSessionID', 'optionChainOwnStatusColor'];
   return CommonTable({ columns, data, GlobalFilter, hiddenColumns })
 }
 
