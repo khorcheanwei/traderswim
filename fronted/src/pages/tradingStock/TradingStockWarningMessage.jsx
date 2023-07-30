@@ -2,7 +2,7 @@ export default function TradingStockWarningMessage({warningMessage, onClose}) {
     return ( 
         <form>
             <div className="mb-4">
-                <h1 className="block text-gray-700 text-lm font-bold mb-2">{warningMessage}</h1>
+                <h1 className="block text-white text-lm font-bold mb-2">{warningMessage}</h1>
             </div>
             <div className="flex justify-end gap-5">
               <button

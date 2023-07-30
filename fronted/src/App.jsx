@@ -18,25 +18,27 @@ axios.defaults.withCredentials = true;
 function App() {
 
   return (
-    <UserContextProvider>
-      <AccountContextProvider>
-        <CopyTradingOrderContextProvider>
-          <CopyTradingPositionContextProvider>
-            <TradeHistoryContextProvider>
-              <TradeStockContextProvider>
-                <Routes>
-                  <Route path="/" element={<Layout />}>
-                    <Route path="/login" element={<AgentLoginPage />} />
-                    <Route path="/register" element={<AgentRegisterPage />} />
-                    <Route path="/trading/:subpage?" element={<TradingPage />} />
-                  </Route>
-                </Routes>
-              </TradeStockContextProvider>
-            </TradeHistoryContextProvider>
-          </CopyTradingPositionContextProvider>
-          </CopyTradingOrderContextProvider>
-      </AccountContextProvider>
-    </UserContextProvider>
+    <div className="bg-black">
+      <UserContextProvider>
+        <AccountContextProvider>
+          <CopyTradingOrderContextProvider>
+            <CopyTradingPositionContextProvider>
+              <TradeHistoryContextProvider>
+                <TradeStockContextProvider>
+                  <Routes>
+                    <Route path="/" element={<Layout />}>
+                      <Route path="/login" element={<AgentLoginPage />} />
+                      <Route path="/register" element={<AgentRegisterPage />} />
+                      <Route path="/trading/:subpage?" element={<TradingPage />} />
+                    </Route>
+                  </Routes>
+                </TradeStockContextProvider>
+              </TradeHistoryContextProvider>
+            </CopyTradingPositionContextProvider>
+            </CopyTradingOrderContextProvider>
+        </AccountContextProvider>
+      </UserContextProvider>
+    </div>
   )
 }
 

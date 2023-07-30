@@ -32,7 +32,7 @@ export default function AgentLoginPage() {
     return (
             <div className="mt-4 grow flex items-center justify-around">
                 <div className="mb-32">
-                    <h1 className="text-4xl text-center mb-4">Login</h1>
+                    <h1 className="text-white text-4xl text-center mb-4">Login</h1>
                     <form className="max-w-md mx-auto" onSubmit={handleLoginSubmit}>
                         <input type="text"
                             placeholder="John Doe"
@@ -43,8 +43,8 @@ export default function AgentLoginPage() {
                             value={agentPassword}
                             onChange={event => setAgentPassword(event.target.value)} />
                         <button className="primary">Login</button>
-                        <div className="text-center py-2 text-gray-500">
-                            Don't have an account yet? <Link className="underline text-black" to={'/register'}>Register now</Link>
+                        <div className="text-white text-center py-2">
+                            Don't have an account yet? <Link className="underline text-white" to={'/register'}>Register now</Link>
                         </div>
                     </form>
                 </div>

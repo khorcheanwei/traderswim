@@ -39,17 +39,17 @@ export default function AccountAdd({ onClose }) {
 
     return (
 
-        <form>
+        <form className="bg-black">
             {isLoading ? (
                 <ClipLoader color="#123abc" loading={true} size={50} />
             ) : (
                 <div>
                     <div className="mb-4">
-                        <h1 className="block text-gray-700 text-lm font-bold mb-2">Add new Trading Account</h1>
+                        <h1 className="block text-white text-lm font-bold mb-2">Add new Trading Account</h1>
                     </div>
                     <div className="mb-4">
-                        <label className="block text-gray-700 text-sm mb-2">Name</label>
-                        <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        <label className="block text-white text-sm mb-2">Name</label>
+                        <input className="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline"
                             type="text"
                             value={accountName}
                             onChange={event => setAccountName(event.target.value)}
@@ -57,8 +57,8 @@ export default function AccountAdd({ onClose }) {
                         </input>
                     </div>
                     <div className="mb-4">
-                        <label className="block text-gray-700 text-sm mb-2">Account Username</label>
-                        <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        <label className="block text-white text-sm mb-2">Account Username</label>
+                        <input className="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline"
                             type="text"
                             value={accountUsername}
                             onChange={event => setAccountUsername(event.target.value)}
@@ -66,8 +66,8 @@ export default function AccountAdd({ onClose }) {
                         </input>
                     </div>
                     <div className="mb-6">
-                        <label className="block text-gray-700 text-sm mb-2" >Account Password</label>
-                        <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                        <label className="block text-white text-sm mb-2" >Account Password</label>
+                        <input className="shadow appearance-none border rounded w-full py-2 px-3 mb-3 leading-tight focus:outline-none focus:shadow-outline"
                             type="password"
                             value={accountPassword}
                             onChange={event => setAccountPassword(event.target.value)}

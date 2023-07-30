@@ -77,7 +77,7 @@ export default function TradeActivityPage() {
 
 
   return (
-    <div className="min-h-screen bg-gray-100 text-black">
+    <div className="min-h-screen bg-black text-black">
       <main className="mx-auto px-4 sm:px-6 lg:px-8 pt-4">
         <div className="mt-6">
           <TradingActivityTable columns={columns} data={data} />

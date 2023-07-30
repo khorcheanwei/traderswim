@@ -25,7 +25,7 @@ export default function LogoutConfirmation({ onClose }) {
     return (
         <form>
             <div className="mb-4">
-                <h1 className="block text-gray-700 text-lm mb-2">Are you sure you want to log out?</h1>
+                <h1 className="block text-white text-lm mb-2">Are you sure you want to log out?</h1>
             </div>
             <div className="flex justify-end gap-5">
                 <button

@@ -79,11 +79,11 @@ export default function CopyTradingPage() {
 
  
   return (
-    <div>
+    <div className="bg-black">
       <div className="w-full">
         <div className="flex justify-between items-center">
           <label className="flex gap-x-2 items-baseline">
-            {/*<span className="text-gray-700">Search: </span>
+            {/*<span className="text-white">Search: </span>
             <input
               type="text"
               className="rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
@@ -105,7 +105,7 @@ export default function CopyTradingPage() {
           </Overlay>
         </div>
       </div>
-      <div className="h-screen">
+      <div className="h-screen bg-black">
         <div className="h-[40%] overflow-y-auto">
           <CopyTradingOrderPage />
         </div>

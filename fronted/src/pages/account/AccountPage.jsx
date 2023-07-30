@@ -70,7 +70,7 @@ export default function AccountsPage() {
   var data = React.useMemo(() => accountTableData, [accountTableData])
 
   return (
-    <div className='min-h-screen bg-gray-100 text-black'>
+    <div className='min-h-screen text-black'>
       <main className='mx-auto px-4 sm:px-6 lg:px-8 pt-4'>
         <div className='mt-6'>
           <AccountsTable columns={columns} data={data} />
