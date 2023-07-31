@@ -1,8 +1,6 @@
-import axios from 'axios';
 import React from 'react'
-import { useContext, useState, useEffect } from 'react';
+import { useContext } from 'react';
 import { CopyTradingPositionContext } from '../context/CopyTradingPositionContext';
-import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { viewAllPositionPanel, ChangePositionPanel, SettledQuantityColorChange } from './CopyTradingPositionTable'
 import CopyTradingAllAccountPositionTable from './CopyTradingAllAccountPositionTable'
 

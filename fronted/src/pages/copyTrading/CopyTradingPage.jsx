@@ -7,6 +7,7 @@ import { CopyTradingOrderContext } from '../context/CopyTradingOrderContext';
 import { CopyTradingPositionContext } from '../context/CopyTradingPositionContext';
 import CopyTradingOrderPage from '../copyTradingOrder/CopyTradingOrderPage.jsx'
 import CopyTradingPositionPage from '../copyTradingPosition/CopyTradingPositionPage'
+import OptionPlaceOrderPanelPage from '../optionPlaceOrderPanel/OptionPlaceOrderPanelPage';
 import { Button, PageButton } from './../shared/Button';
 import Overlay from "./../Overlay";
 
@@ -123,7 +124,14 @@ export default function CopyTradingPage() {
           <CopyTradingOrderPage />
         </div>
         <div className="h-[40%] overflow-y-auto">
-          <CopyTradingPositionPage />
+          <div className="w-screen flex justify-between">
+            <div className="w-[70%]">
+              <CopyTradingPositionPage />
+            </div> 
+            <div className="w-[30%]">
+              <OptionPlaceOrderPanelPage/>
+            </div>
+          </div>
         </div>
       </div>
     </div>

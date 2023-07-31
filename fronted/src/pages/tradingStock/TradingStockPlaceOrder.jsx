@@ -32,12 +32,7 @@ export default function TradingStockPlaceOrder({ rowCopyTradingOrder, onClose })
   
     async function handlePlaceOrder() {
         try {
-            const allTradingAccountsOrderList = copyTradingAllAccountData.map(item => ({
-                accountId: item.accountId,
-                accountName: item.accountName,
-                accountUsername: item.accountUsername,
-                optionChainOrderId: item.optionChainOrderId
-              }));
+            const allTradingAccountsOrderList = [];
              
             const { data } = await axios.post("/copy_trading_account/place_order/", { allTradingAccountsOrderList, optionChainSymbol, optionChainInstruction, optionChainOrderType, optionChainQuantity, optionChainPrice })
             if (data != "success") {
@@ -55,7 +50,7 @@ export default function TradingStockPlaceOrder({ rowCopyTradingOrder, onClose })
     return (
         <div>
             <div className="mb-4">
-                <h1 className="block text-gray-700 text-lm font-bold mb-2">Option Place Order ( {copyTradingAllAccountData.length} accounts )</h1>
+                <h1 className="block text-gray-700 text-lm font-bold mb-2">Option Place Order On All Active Accounts</h1>
             </div>
             <div>
                 <div className="relative">
