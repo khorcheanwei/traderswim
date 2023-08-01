@@ -179,204 +179,265 @@ export default function TradingStockAllActivePlaceOrder({ onClose }) {
     useEffect( () => {
         getOptionChainList();
     }, [optionChainCallPut]);
+
+    const [optionContractList, setOptionContractList] = useState([{ optionContract: "" }]);
+
+    const handleOptionContractListChange = (e, index) => {
+        const { name, value } = e.target;
+        const list = [...optionContractList];
+        list[index][name] = value;
+        setOptionContractList(list);
+    };
+
+    const handleOptionContractListRemove = (index) => {
+        const list = [...optionContractList];
+        list.splice(index, 1);
+        setOptionContractList(list);
+    };
+
+    const handleOptionContractAdd = () => {
+        setOptionContractList([...optionContractList, { optionContract: "" }]);
+    };
     
     return (
         <div>
             {isLoading ? (
                 <ClipLoader color="#123abc" loading={true} size={50} />
             ) : (
-                <div>
-                    <div className="mb-4">
-                        <h1 className="block text-gray-700 text-lm font-bold mb-2">Option Place Order On All Active Accounts</h1>
-                    </div>
-                    <div>
-                        <div className="relative w-full lg:max-w-sm mb-6">
-                            {/*<select
-                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                                onChange={event => setStockName(event.target.value)}>
-                                {
-                                    stockNameList.map((stock_name, index) => (
-                                        <FixedSizeList key={index}>{stock_name}</FixedSizeList>
-                                    ))
-                                }
-                            </select>*/}
-                            <div className="grid items-end gap-6 mb-6 grid-cols-2">
-                                <div className="relative">
+                <div className="flex">
+                    <form className="App" autoComplete="off">
+                        <div className="form-field">
+                            <label htmlFor="optionContract">Option Contract</label>
+                            {optionContractList.map((singleOptionContract, index) => (
+                                <div key={index} className="option contracts">
+                                    <div className="first-division">
                                     <input
-                                        className="block px-2.5 pb-1.5 pt-3 w-full text-sm text-gray-900 bg-transparent border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                        name="optionContract"
                                         type="text"
-                                        onChange={event => setStockName(event.target.value)}
-                                        value={stockName}
+                                        id="optionContract"
+                                        value={singleOptionContract.optionContract}
+                                        onChange={(e) => handleOptionContractListChange(e, index)}
                                         onInput={(event) => event.target.value = (event.target.value).toUpperCase()}
-                                        placeholder=" " />
-                                    <label
-                                        className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
-                                        htmlFor="small_outlined">
-                                        Stock Pair:
-                                    </label>
-                                </div>
-                                <div className="relative">
-                                <div className="flex justify-start gap-5">
-                                    <label>
-                                        CALL
-                                        <br />
-                                        <input
-                                            className="w-7 h-7 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                                            type="checkbox"
-                                            checked={isOptionChainCall}
-                                            onChange={handleIsOptionChainCall}
-                                        />
-                                    </label>
-                                    <label>
-                                        PUT
-                                        <br />
-                                        <input
-                                            className="w-7 h-7 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                                            type="checkbox"
-                                            checked={isOptionChainPut}
-                                            onChange={handleIsOptionChainPut}
-                                        />
-                                    </label>
+                                        required
+                                    />
+                                    {optionContractList.length - 1 === index && (
+                                        <button
+                                        type="button"
+                                        onClick={handleOptionContractAdd}
+                                        className="add-btn"
+                                        >
+                                        <span>Add</span>
+                                        </button>
+                                    )}
                                     </div>
-                                    {/*<select
+                                    <div className="second-division">
+                                    {optionContractList.length !== 1 && (
+                                        <button
+                                        type="button"
+                                        onClick={() => handleOptionContractListRemove(index)}
+                                        className="remove-btn"
+                                        >
+                                        <span>Remove</span>
+                                        </button>
+                                    )}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </form>
+                    <div>
+                        <div className="mb-4">
+                            <h1 className="block text-gray-700 text-lm font-bold mb-2">Option Place Order On All Active Accounts</h1>
+                        </div>
+                        <div>
+                            <div className="relative w-full lg:max-w-sm mb-6">
+                                {/*<select
+                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                                    onChange={event => setStockName(event.target.value)}>
+                                    {
+                                        stockNameList.map((stock_name, index) => (
+                                            <FixedSizeList key={index}>{stock_name}</FixedSizeList>
+                                        ))
+                                    }
+                                </select>*/}
+                                <div className="grid items-end gap-6 mb-6 grid-cols-2">
+                                    <div className="relative">
+                                        <input
+                                            className="block px-2.5 pb-1.5 pt-3 w-full text-sm text-gray-900 bg-transparent border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                            type="text"
+                                            onChange={event => setStockName(event.target.value)}
+                                            value={stockName}
+                                            onInput={(event) => event.target.value = (event.target.value).toUpperCase()}
+                                            placeholder=" " />
+                                        <label
+                                            className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
+                                            htmlFor="small_outlined">
+                                            Stock Pair:
+                                        </label>
+                                    </div>
+                                    <div className="relative">
+                                    <div className="flex justify-start gap-5">
+                                        <label>
+                                            CALL
+                                            <br />
+                                            <input
+                                                className="w-7 h-7 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                                                type="checkbox"
+                                                checked={isOptionChainCall}
+                                                onChange={handleIsOptionChainCall}
+                                            />
+                                        </label>
+                                        <label>
+                                            PUT
+                                            <br />
+                                            <input
+                                                className="w-7 h-7 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                                                type="checkbox"
+                                                checked={isOptionChainPut}
+                                                onChange={handleIsOptionChainPut}
+                                            />
+                                        </label>
+                                        </div>
+                                        {/*<select
+                                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                                            value={optionChainCallPut}
+                                            onChange={event => setOptionChainCallPut(event.target.value)}>
+                                            {
+                                                optionChainCallPutList.map((option_chain_call_put, index) => (
+                                                    <option key={index}>{option_chain_call_put}</option>
+                                                ))
+                                            }
+                                        </select>
+                                        <label
+                                            className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
+                                            htmlFor="small_outlined">
+                                            CALL/PUT:
+                                        </label> */}
+                                    </div>
+                                </div>
+                                {/*<button
+                                    type="button"
+                                    className="inline-block rounded bg-teal-300 px-7 pt-3 pb-2.5 text-sm font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-teal-300-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-teal-300-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-teal-300-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
+                                    onClick={getOptionChainList}
+                                    disabled={disabledButton}>
+                                    Get option list
+                                    </button> */}
+                            </div>
+                            <div className="relative">
+                                <select
+                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                                    value={getOptionChainRealDate(optionChainDate)}
+                                    onChange={event => { getOptionChainStrikeList(getRevertOptionChainRealDate(event.target.value))}}
+                                    >
+                                    {
+                                        optionChainDateList.map((option_chain_date, index) => (
+                                            <option key={index}>{getOptionChainRealDate(option_chain_date)}</option>
+                                        ))
+                                    }
+                                </select>
+                                <label
+                                    className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
+                                    htmlFor="small_outlined">
+                                    Option Chain date list:
+                                </label>
+                            </div>
+                            <div className="relative">
+                                <AutocompleteList key={refreshOptionChainStrikeListKey} list={optionChainStrikeList} onData={getOptionChainBidPrice}></AutocompleteList>
+                                <label
+                                    className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
+                                    htmlFor="small_outlined">
+                                    Option Chain strike price:
+                                </label>
+                            </div>
+                            <div className="relative">
+                                <div className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline">
+                                {optionChainDescription}
+                                </div>
+                                <label
+                                    className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
+                                    htmlFor="small_outlined">
+                                    Option Chain Description:
+                                </label>
+                            </div>
+                            <div className="grid items-end gap-6 mb-6 md:grid-cols-2">
+                                <div className="relative">
+                                    <select
                                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                                        value={optionChainCallPut}
-                                        onChange={event => setOptionChainCallPut(event.target.value)}>
+                                        value={optionChainInstruction}
+                                        onChange={event => setOptionChainInstruction(event.target.value)}>
                                         {
-                                            optionChainCallPutList.map((option_chain_call_put, index) => (
-                                                <option key={index}>{option_chain_call_put}</option>
+                                            optionChainInstructionList.map((option_chain_instruction, index) => (
+                                                <option key={index}>{option_chain_instruction}</option>
                                             ))
                                         }
                                     </select>
                                     <label
                                         className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
                                         htmlFor="small_outlined">
-                                        CALL/PUT:
-                                    </label> */}
+                                        Option Chain instruction:
+                                    </label>
+                                </div>
+                                <div className="relative">
+                                    <select
+                                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                                        value={optionChainOrderType}
+                                        onChange={event => setOptionChainOrderType(event.target.value)}>
+                                        {
+                                            optionChainOrderTypeList.map((option_chain_order_type, index) => (
+                                                <option key={index}>{option_chain_order_type}</option>
+                                            ))
+                                        }
+                                    </select>
+                                    <label
+                                        className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
+                                        htmlFor="small_outlined">
+                                        Option Chain order type:
+                                    </label>
                                 </div>
                             </div>
-                            {/*<button
+                            <div className="grid items-end gap-6 mb-6 grid-cols-2">
+                                <div className="relative">
+                                    <input
+                                        className="block px-2.5 pb-1.5 pt-3 w-full text-sm text-gray-900 bg-transparent  border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                        type="text"
+                                        onChange={event => setOptionChainQuantity(event.target.value)}
+                                        value={optionChainQuantity}
+                                        placeholder=" " />
+                                    <label
+                                        className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
+                                        htmlFor="small_outlined">
+                                        Option Contract Total:
+                                    </label>
+                                </div>
+                                <div className="relative">
+                                    <input className="block px-2.5 pb-1.5 pt-3 w-full text-sm text-gray-900 bg-transparent  border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                        type="text"
+                                        onChange={event => setOptionChainPrice(event.target.value)}
+                                        value={optionChainPrice}
+                                        placeholder=" " />
+                                    <label
+                                        className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
+                                        htmlFor="small_outlined">
+                                        Price:
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="flex justify-end gap-5">
+                            <button
+                                type="button"
+                                className="inline-block rounded bg-white px-7 pt-3 pb-2.5 text-sm font-medium uppercase leading-normal text-black shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-teal-300-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-teal-300-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-teal-300-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
+                                onClick={onClose}>
+                                CANCEL
+                            </button>
+                            <button
                                 type="button"
                                 className="inline-block rounded bg-teal-300 px-7 pt-3 pb-2.5 text-sm font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-teal-300-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-teal-300-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-teal-300-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
-                                onClick={getOptionChainList}
+                                onClick={handlePlaceOrder}
                                 disabled={disabledButton}>
-                                Get option list
-                                </button> */}
+                                Place order
+                            </button>
                         </div>
-                        <div className="relative">
-                            <select
-                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                                value={getOptionChainRealDate(optionChainDate)}
-                                onChange={event => { getOptionChainStrikeList(getRevertOptionChainRealDate(event.target.value))}}
-                                >
-                                {
-                                    optionChainDateList.map((option_chain_date, index) => (
-                                        <option key={index}>{getOptionChainRealDate(option_chain_date)}</option>
-                                    ))
-                                }
-                            </select>
-                            <label
-                                className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
-                                htmlFor="small_outlined">
-                                Option Chain date list:
-                            </label>
-                        </div>
-                        <div className="relative">
-                            <AutocompleteList key={refreshOptionChainStrikeListKey} list={optionChainStrikeList} onData={getOptionChainBidPrice}></AutocompleteList>
-                            <label
-                                className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
-                                htmlFor="small_outlined">
-                                Option Chain strike price:
-                            </label>
-                        </div>
-                        <div className="relative">
-                            <div className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline">
-                            {optionChainDescription}
-                            </div>
-                            <label
-                                className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
-                                htmlFor="small_outlined">
-                                Option Chain Description:
-                            </label>
-                        </div>
-                        <div className="grid items-end gap-6 mb-6 md:grid-cols-2">
-                            <div className="relative">
-                                <select
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                                    value={optionChainInstruction}
-                                    onChange={event => setOptionChainInstruction(event.target.value)}>
-                                    {
-                                        optionChainInstructionList.map((option_chain_instruction, index) => (
-                                            <option key={index}>{option_chain_instruction}</option>
-                                        ))
-                                    }
-                                </select>
-                                <label
-                                    className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
-                                    htmlFor="small_outlined">
-                                    Option Chain instruction:
-                                </label>
-                            </div>
-                            <div className="relative">
-                                <select
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                                    value={optionChainOrderType}
-                                    onChange={event => setOptionChainOrderType(event.target.value)}>
-                                    {
-                                        optionChainOrderTypeList.map((option_chain_order_type, index) => (
-                                            <option key={index}>{option_chain_order_type}</option>
-                                        ))
-                                    }
-                                </select>
-                                <label
-                                    className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
-                                    htmlFor="small_outlined">
-                                    Option Chain order type:
-                                </label>
-                            </div>
-                        </div>
-                        <div className="grid items-end gap-6 mb-6 grid-cols-2">
-                            <div className="relative">
-                                <input
-                                    className="block px-2.5 pb-1.5 pt-3 w-full text-sm text-gray-900 bg-transparent  border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                    type="text"
-                                    onChange={event => setOptionChainQuantity(event.target.value)}
-                                    value={optionChainQuantity}
-                                    placeholder=" " />
-                                <label
-                                    className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
-                                    htmlFor="small_outlined">
-                                    Option Contract Total:
-                                </label>
-                            </div>
-                            <div className="relative">
-                                <input className="block px-2.5 pb-1.5 pt-3 w-full text-sm text-gray-900 bg-transparent  border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                    type="text"
-                                    onChange={event => setOptionChainPrice(event.target.value)}
-                                    value={optionChainPrice}
-                                    placeholder=" " />
-                                <label
-                                    className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
-                                    htmlFor="small_outlined">
-                                    Price:
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="flex justify-end gap-5">
-                        <button
-                            type="button"
-                            className="inline-block rounded bg-white px-7 pt-3 pb-2.5 text-sm font-medium uppercase leading-normal text-black shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-teal-300-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-teal-300-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-teal-300-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
-                            onClick={onClose}>
-                            CANCEL
-                        </button>
-                        <button
-                            type="button"
-                            className="inline-block rounded bg-teal-300 px-7 pt-3 pb-2.5 text-sm font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-teal-300-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-teal-300-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-teal-300-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
-                            onClick={handlePlaceOrder}
-                            disabled={disabledButton}>
-                            Place order
-                        </button>
                     </div>
                 </div>
             )

@@ -82,7 +82,7 @@ function CommonTable({ columns, data, GlobalFilter, hiddenColumns }) {
                           <div className="flex items-center justify-between">
                             {column.render('Header')}
                             {/* Add a sort direction indicator */}
-                            <span>
+                            {/*<span>
                               {column.isSorted
                                 ? column.isSortedDesc
                                   ? <SortDownIcon className="w-4 h-4 text-gray-400" />
@@ -90,7 +90,7 @@ function CommonTable({ columns, data, GlobalFilter, hiddenColumns }) {
                                 : (
                                   <SortIcon className="w-4 h-4 text-gray-400 opacity-0 group-hover:opacity-100" />
                                 )}
-                            </span>
+                                </span> */}
                           </div>
                         </th>
                       ))}
