@@ -13,10 +13,6 @@ export default function OptionPlaceOrderPanelPage() {
       Cell: PlaceOrderPanel,
     },
     {
-      Header: 'Symbol',
-      accessor: 'optionChainSymbol',
-    },
-    {
       Header: 'Symbol description',
       accessor: 'optionChainDescription',
     },
@@ -31,9 +27,11 @@ export default function OptionPlaceOrderPanelPage() {
 
     if (!optionChainSymbolSet.has(optionChainSymbol) && optionChainInstruction == "BUY_TO_OPEN"){
       optionPlaceOrderPanelData.push(copyTradingOrderMainData[index]);
+      optionChainSymbolSet.add(optionChainSymbol);
     }
-    optionChainSymbolSet.add(optionChainSymbol);
   }
+
+  optionPlaceOrderPanelData.sort((a, b) => a.optionChainSymbol.localeCompare(b.optionChainSymbol));
   var data = React.useMemo(() => optionPlaceOrderPanelData, [optionPlaceOrderPanelData])
 
   return (
