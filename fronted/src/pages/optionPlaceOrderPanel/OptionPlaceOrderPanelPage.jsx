@@ -27,9 +27,9 @@ export default function OptionPlaceOrderPanelPage() {
 
   for (let index = 0; index < copyTradingOrderMainData.length; index++) {
     let optionChainSymbol = copyTradingOrderMainData[index]["optionChainSymbol"];
-    
+    let optionChainInstruction = copyTradingOrderMainData[index]["optionChainInstruction"];
 
-    if (!optionChainSymbolSet.has(optionChainSymbol)){
+    if (!optionChainSymbolSet.has(optionChainSymbol) && optionChainInstruction == "BUY_TO_OPEN"){
       optionPlaceOrderPanelData.push(copyTradingOrderMainData[index]);
     }
     optionChainSymbolSet.add(optionChainSymbol);
