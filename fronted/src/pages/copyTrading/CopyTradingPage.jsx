@@ -123,15 +123,13 @@ export default function CopyTradingPage() {
         <div className="h-[40%] overflow-y-auto">
           <CopyTradingOrderPage />
         </div>
-        <div className="h-[40%] overflow-y-auto">
-          <div className="w-screen flex justify-between">
-            <div className="w-[70%]">
+        <div className="h-[40%] flex">
+            <div className="w-[70%] overflow-scroll">
               <CopyTradingPositionPage />
             </div> 
-            <div className="w-[30%]">
+            <div className="w-[30%] overflow-scroll">
               <OptionPlaceOrderPanelPage/>
             </div>
-          </div>
         </div>
       </div>
     </div>
