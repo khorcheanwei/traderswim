@@ -1,11 +1,8 @@
 const { accountDBOperation } = require("../data-access/index.js");
 const { get_auth_connection_time, puppeteer_login_account, check_need_login_account, get_access_token_from_cache, fetch_trading_account_info_api } = require("./tradingAccountPuppeteer.js")
-const common = require("../common.js");
 
-const puppeteer = require('puppeteer');
 const axios = require('axios');
 const jwt = require("jsonwebtoken");
-const { Cluster } = require('puppeteer-cluster');
 const jwtSecret = "traderswim";
 
 var Memcached = require('memcached-promise');
@@ -148,6 +145,31 @@ async function fetch_trading_account_info(httpRequest, httpResponse) {
   }
 }
 
+// update trading active of account username to accountTableArray cache
+async function account_update_trading_active_cache(agentID, accountUsername, accountTradingActive) {
+  try {
+    let accountTableArray = await account_database_websocket(agentID);
+    let newAccountTableArray = [];
+    for(let index = 0; index < accountTableArray.length; index++) {
+      if(accountTableArray[index]["accountUsername"] == accountUsername) {
+        if (accountTradingActive) {
+          accountTableArray[index]["accountTradingActive"] = 1;
+        } else {
+          accountTableArray[index]["accountTradingActive"] = 0;
+        }
+      }
+      newAccountTableArray.push(accountTableArray[index])
+    }
+
+    // save accountTableArray to cache
+    let accountTableArray_key = agentID + "." + "accountTableArray";
+  
+    await account_cache.set(accountTableArray_key, newAccountTableArray, 3600);
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 // update trading active for account
 async function account_update_trading_active(httpRequest, httpResponse) {
   const { token } = httpRequest.cookies;
@@ -163,6 +185,8 @@ async function account_update_trading_active(httpRequest, httpResponse) {
         accountUsername,
         accountTradingActive
       );
+
+      await account_update_trading_active_cache(agentID, accountUsername, accountTradingActive);
 
       if (result.success) {
         return {
@@ -293,13 +317,32 @@ async function account_database_by_agent(agentID) {
   
       await account_cache.set(accountTableArray_key, accountTableArray, 3600)
       
-
       return accountTableArray;
     }
   } catch(error) {
-    return null;
+    console.log(error)
+    return [];
   }
 } 
+
+async function account_database_websocket(agentID) {
+  try {
+    // get accountTableArray from cache
+    let accountTableArray_key = agentID + "." + "accountTableArray";
+    let accountTableArray = await account_cache.get(accountTableArray_key);
+
+    if(accountTableArray != undefined) {
+      return accountTableArray;
+    }     
+
+    accountTableArray = await account_database_by_agent(agentID);
+    return accountTableArray
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
 
 
 // To get all accounts of particular agent
@@ -329,10 +372,31 @@ async function account_database(httpRequest) {
 }
 
 
+// delete account username and save to accountTableArray cache
+async function account_delete_cache(agentID, accountUsername) {
+  try {
+    let accountTableArray = await account_database_websocket(agentID);
+    let newAccountTableArray = [];
+    for(let index = 0; index < accountTableArray.length; index++) {
+      if(!accountTableArray[index]["accountUsername"] == accountUsername) {
+        newAccountTableArray.push(accountTableArray[index]);
+      }
+    }
+
+    // save accountTableArray to cache
+    let accountTableArray_key = agentID + "." + "accountTableArray";
+  
+    await account_cache.set(accountTableArray_key, newAccountTableArray, 3600);
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+
 // To delete account
 async function account_delete(httpRequest) {
   const { token } = httpRequest.cookies;
-  const { accountName } = httpRequest.body;
+  const { accountUsername } = httpRequest.body;
 
   if (token) {
     try {
@@ -342,9 +406,11 @@ async function account_delete(httpRequest) {
 
       const result = await accountDBOperation.deleteAccount(
         agentID,
-        accountName
+        accountUsername
       );
 
+      await account_delete_cache(agentID, accountUsername);
+      
       if (result) {
         return { success: true, data: "success" };
       } else {
@@ -362,6 +428,7 @@ module.exports = {
   account_login,
   account_update_trading_active,
   fetch_trading_account_info,
+  account_database_websocket,
   account_database,
   account_delete,
   account_database_by_agent,

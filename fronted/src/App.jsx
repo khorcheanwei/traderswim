@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { Route, Routes } from 'react-router';
-import './App.css';
 import Layout from './Layout';
 import AgentLoginPage from './pages/agent/AgentLoginPage';
 import AgentRegisterPage from './pages/agent/AgentRegisterPage';

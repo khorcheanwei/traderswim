@@ -21,14 +21,14 @@ app.use(router);
 
 let port = process.env.PORT || 4000;
 
-const http = require('http').Server(app);
-
 // cronjob
 const { fork } = require("child_process");
 fork("./src/cronProcess.js");
 
-// trade history
+// backup trade history
 require("./backupTradeHistory.js");
+
+console.log('WebSocket server running on port 8080');
 
 app.listen(port, "localhost");
 

@@ -92,6 +92,7 @@ export function TradingActiveToggle(row) {
       if (response.data != null) {
         setAccountTableData(response.data)
       }
+      console.log("wee")
 
     } catch (error) {
       console.error(error);

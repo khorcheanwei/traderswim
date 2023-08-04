@@ -56,7 +56,7 @@ export default function AccountsPage() {
       console.log(error.message);
     }
   }
-
+  /*
   const ref = useRef(null)
   useEffect(() => {
     ref.current = setInterval(fetchAccountData, 1 * 1000);
@@ -66,6 +66,31 @@ export default function AccountsPage() {
       }
     }
   }, [])
+  */
+  
+
+  useEffect(() => {
+    const socket = new WebSocket('ws://localhost:8080');
+
+    socket.onopen = () => {
+      console.log('WebSocket connection established');
+    };
+
+    socket.onmessage = (event) => {
+      const receivedMessage = JSON.parse(event.data);
+      console.log(receivedMessage)
+      setAccountTableData(receivedMessage)
+    };
+
+    socket.onclose = () => {
+      console.log('WebSocket connection closed');
+    };
+
+    // Clean up the WebSocket connection when the component unmounts
+    return () => {
+      socket.close();
+    };
+  }, []);
 
   var data = React.useMemo(() => accountTableData, [accountTableData])
 
