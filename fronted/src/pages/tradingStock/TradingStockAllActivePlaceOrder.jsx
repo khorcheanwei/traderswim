@@ -180,14 +180,31 @@ export default function TradingStockAllActivePlaceOrder({ onClose }) {
         getOptionChainList();
     }, [optionChainCallPut]);
 
-    const [optionContractList, setOptionContractList] = useState([{ optionContract: "" }]);
 
-    const handleOptionContractListChange = (e, index) => {
-        const { name, value } = e.target;
-        const list = [...optionContractList];
-        list[index][name] = value;
-        setOptionContractList(list);
-    };
+    const [optionContract, setOptionContract] = useState("");
+    const [optionContractList, setOptionContractList] = useState([]);
+
+    const handleSetStockName = (currentOptionContract) => {
+        setStockName(currentOptionContract)
+
+        //setOptionChainCallPut("");
+        setIsOptionChainCall(false);
+        setIsOptionChainPut(false);
+        
+        /*
+        setOptionChainSymbol("");
+        setOptionChainData([]);
+        setOptionChainDateList([]);
+        setOptionChainDate("None");
+        setOptionChainStrikeList([]);
+        setOptionChainDescription("None");
+        
+        setOptionChainInstruction(optionChainInstructionList[0]);
+        setOptionChainOrderType("LIMIT");
+        setOptionChainQuantity(1);
+        setOptionChainPrice(0);
+        */
+    }
 
     const handleOptionContractListRemove = (index) => {
         const list = [...optionContractList];
@@ -196,55 +213,48 @@ export default function TradingStockAllActivePlaceOrder({ onClose }) {
     };
 
     const handleOptionContractAdd = () => {
-        setOptionContractList([...optionContractList, { optionContract: "" }]);
+        setOptionContractList(optionContractList.some(currentOptionContract => currentOptionContract === optionContract) ? optionContractList : [...optionContractList, optionContract]);
     };
-    
+
     return (
         <div>
             {isLoading ? (
-                <ClipLoader color="#123abc" loading={true} size={50} />
+                <ClipLoader loading={true} size={50} />
             ) : (
                 <div className="flex">
-                    <form className="App" autoComplete="off">
-                        <div className="form-field">
-                            <label htmlFor="optionContract">Option Contract</label>
-                            {optionContractList.map((singleOptionContract, index) => (
+                    <div>
+                        <label htmlFor="optionContract">Option Contract</label>
+                        <div className="flex">
+                            <input
+                                type="text"
+                                id="optionContract"
+                                value={optionContract}
+                                onInput={(event) => setOptionContract((event.target.value).toUpperCase())}
+                            />
+                            <button type="button" onClick={handleOptionContractAdd}>
+                                <span>Add</span>
+                            </button>
+                        </div>
+                        <div className="overflow-scroll">
+                            {optionContractList.map((currentOptionContract, index) => (
                                 <div key={index} className="option contracts">
-                                    <div className="first-division">
-                                    <input
-                                        name="optionContract"
-                                        type="text"
-                                        id="optionContract"
-                                        value={singleOptionContract.optionContract}
-                                        onChange={(e) => handleOptionContractListChange(e, index)}
-                                        onInput={(event) => event.target.value = (event.target.value).toUpperCase()}
-                                        required
-                                    />
-                                    {optionContractList.length - 1 === index && (
+                                    <div className="flex justify-between">
                                         <button
-                                        type="button"
-                                        onClick={handleOptionContractAdd}
-                                        className="add-btn"
+                                            onClick={() => handleSetStockName(currentOptionContract)}
                                         >
-                                        <span>Add</span>
+                                            {currentOptionContract}
                                         </button>
-                                    )}
-                                    </div>
-                                    <div className="second-division">
-                                    {optionContractList.length !== 1 && (
                                         <button
-                                        type="button"
-                                        onClick={() => handleOptionContractListRemove(index)}
-                                        className="remove-btn"
-                                        >
-                                        <span>Remove</span>
+                                            onClick={() => handleOptionContractListRemove(index)}
+                                            className=""
+                                            >
+                                            <span>Remove</span>
                                         </button>
-                                    )}
                                     </div>
                                 </div>
                             ))}
                         </div>
-                    </form>
+                    </div>
                     <div>
                         <div className="mb-4">
                             <h1 className="block text-gray-700 text-lm font-bold mb-2">Option Place Order On All Active Accounts</h1>
