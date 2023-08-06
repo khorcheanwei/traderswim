@@ -16,11 +16,9 @@ export default function TradingStockAllActivePlaceOrder({ onClose }) {
     const { isOpenTradingStock, setIsOpenTradingStock } = useContext(CopyTradingOrderContext);
 
     const [stockName, setStockName] = useState("");
-    const [optionChainCallPut, setOptionChainCallPut] = useState("");
     const [isOptionChainCall, setIsOptionChainCall] = useState(false);
     const [isOptionChainPut, setIsOptionChainPut] = useState(false);
-
-    const [optionChainSymbol, setOptionChainSymbol]= useState("");
+    const [optionChainCallPut, setOptionChainCallPut] = useState("");
 
     const [optionChainData, setOptionChainData] = useState([]);
     const [optionChainDateList, setOptionChainDateList] = useState([]);
@@ -30,11 +28,16 @@ export default function TradingStockAllActivePlaceOrder({ onClose }) {
 
     const [refreshOptionChainStrikeListKey, setRefreshOptionChainStrikeListKey] = useState(0);
 
+    const [optionChainSymbol, setOptionChainSymbol]= useState("");
     const [optionChainInstruction, setOptionChainInstruction] = useState(optionChainInstructionList[0]);
     const [optionChainOrderType, setOptionChainOrderType] = useState("LIMIT");
     const [optionChainQuantity, setOptionChainQuantity] = useState(1)
     const [optionChainPrice, setOptionChainPrice] = useState(0)
+
     const [disabledButton, setDisabledButton] = useState(false)
+
+    const [optionContract, setOptionContract] = useState("");
+    const [optionContractList, setOptionContractList] = useState([]);
 
     async function handlePlaceOrder() {
         try {
@@ -163,6 +166,46 @@ export default function TradingStockAllActivePlaceOrder({ onClose }) {
         }
     }
 
+    async function option_contract_list_fetch() {
+        try {
+          const response = await axios.get("/option_contract/get_option_contract_list"); 
+          const data = response.data;
+          setOptionContractList(data);
+  
+        } catch(error) {
+            console.log(error.message);
+        }
+      }
+  
+    async function handleOptionContractAdd() {
+        const isOptionContractExist = optionContractList.some(currentOptionContract => currentOptionContract === optionContract);
+        if (!isOptionContractExist) {
+            const { response } = await axios.post("/option_contract/add_option_contract/", { "optionChainSymbol": optionContract })
+
+            if (response.success != "success") {
+                alert("Add option contract failed");
+            } else {
+                alert("Add option contract successful");
+            }
+
+            setOptionContractList( isOptionContractExist ? optionContractList : [...optionContractList, optionContract]);
+        }
+    };
+
+    async function handleOptionContractRemove(currentOptionContract) {
+        const { response } = await axios.delete("/option_contract/remove_option_contract/", { data:{ "optionChainSymbol": currentOptionContract }})
+
+        if (response.success != "success") {
+            alert("Remove option contract failed");
+        } else {
+            alert("Remove option contract successful");
+        }
+
+        const list = [...optionContractList];
+        list.splice(index, 1);
+        setOptionContractList(list);
+    }
+
     const handleIsOptionChainCall = async () => {
         setIsOptionChainCall(true);
         setIsOptionChainPut(false);
@@ -175,46 +218,36 @@ export default function TradingStockAllActivePlaceOrder({ onClose }) {
         setOptionChainCallPut("PUT");
     };
 
-
     useEffect( () => {
-        getOptionChainList();
+        if ((!isOptionChainCall && isOptionChainPut) || (isOptionChainCall && !isOptionChainPut)) {
+            getOptionChainList();
+        }
     }, [optionChainCallPut]);
 
+    useEffect( () => {
+        option_contract_list_fetch();
+    }, [optionContractList]);
 
-    const [optionContract, setOptionContract] = useState("");
-    const [optionContractList, setOptionContractList] = useState([]);
-
+    
     const handleSetStockName = (currentOptionContract) => {
         setStockName(currentOptionContract)
 
-        //setOptionChainCallPut("");
         setIsOptionChainCall(false);
         setIsOptionChainPut(false);
-        
-        /*
-        setOptionChainSymbol("");
+        setOptionChainCallPut("");
+
         setOptionChainData([]);
         setOptionChainDateList([]);
         setOptionChainDate("None");
         setOptionChainStrikeList([]);
         setOptionChainDescription("None");
-        
+
+        setOptionChainSymbol("");
         setOptionChainInstruction(optionChainInstructionList[0]);
         setOptionChainOrderType("LIMIT");
         setOptionChainQuantity(1);
         setOptionChainPrice(0);
-        */
     }
-
-    const handleOptionContractListRemove = (index) => {
-        const list = [...optionContractList];
-        list.splice(index, 1);
-        setOptionContractList(list);
-    };
-
-    const handleOptionContractAdd = () => {
-        setOptionContractList(optionContractList.some(currentOptionContract => currentOptionContract === optionContract) ? optionContractList : [...optionContractList, optionContract]);
-    };
 
     return (
         <div>
@@ -245,10 +278,9 @@ export default function TradingStockAllActivePlaceOrder({ onClose }) {
                                             {currentOptionContract}
                                         </button>
                                         <button
-                                            onClick={() => handleOptionContractListRemove(index)}
-                                            className=""
+                                            onClick={() => handleOptionContractRemove(currentOptionContract)}
                                             >
-                                            <span>Remove</span>
+                                            Remove
                                         </button>
                                     </div>
                                 </div>

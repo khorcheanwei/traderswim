@@ -212,4 +212,4 @@ function accountDBOperation(trading_management_db) {
 }
 
 
-module.exports = accountDBOperation;
+module.exports =  accountDBOperation;
