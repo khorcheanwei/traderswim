@@ -27,21 +27,25 @@ export default function CopyTradingPage() {
 
         let copyTradingMainAccountDataList = [];
         for (const [key, value] of Object.entries(copyTradingAccountDataDictResponse).reverse()) {
-          let copyTradingMainAccountDataSet = new Set();
+          let optionChainStatusSet = new Set();
+          let optionChainFilledQuantitySet = new Set();
 
           let copyTradingMainAccountDataRow = value[0];
           let copyTradingOptionChainStatusColor = true;
           let optionChainStatusInactiveList = ["REJECTED", "CANCELED", "FILLED", "EXPIRED"];
           for (let index=0; index < value.length; index++) {
-            let currentOptionChainStatus = value[index].optionChainStatus;
+            let currentOptionChainStatus = value[index]["optionChainStatus"];
+            let currentOptionChainFilledQuantity = value[index]["optionChainFilledQuantity"];
 
-            copyTradingMainAccountDataSet.add(currentOptionChainStatus);
+            optionChainStatusSet.add(currentOptionChainStatus);
+            optionChainFilledQuantitySet.add(currentOptionChainFilledQuantity);
+
             if (copyTradingOptionChainStatusColor && !optionChainStatusInactiveList.includes(currentOptionChainStatus)) {
               copyTradingOptionChainStatusColor = false;
             }
           }
           
-          if (copyTradingMainAccountDataSet.size > 1) {
+          if (optionChainStatusSet.size > 1 || optionChainFilledQuantitySet.size > 1) {
             copyTradingMainAccountDataRow["optionChainStatusColor"] = "purple"
           } else {
             if (copyTradingOptionChainStatusColor) {
