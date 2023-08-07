@@ -65,7 +65,7 @@ async function remove_option_contract(httpRequest) {
       return { success: false };
     }
   } else {
-    return { success: true, data: option_contract_list };
+    return { success: true };
   }
 }
 

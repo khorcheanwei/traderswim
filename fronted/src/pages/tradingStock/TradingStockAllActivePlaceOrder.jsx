@@ -36,8 +36,8 @@ export default function TradingStockAllActivePlaceOrder({ onClose }) {
 
     const [disabledButton, setDisabledButton] = useState(false)
 
-    const [optionContract, setOptionContract] = useState("");
-    const [optionContractList, setOptionContractList] = useState([]);
+    const [optionContractTicker, setOptionContractTicker] = useState("");
+    const [optionContractTickerList, setOptionContractTickerList] = useState([]);
 
     async function handlePlaceOrder() {
         try {
@@ -170,7 +170,7 @@ export default function TradingStockAllActivePlaceOrder({ onClose }) {
         try {
           const response = await axios.get("/option_contract/get_option_contract_list"); 
           const data = response.data;
-          setOptionContractList(data);
+          setOptionContractTickerList(data);
   
         } catch(error) {
             console.log(error.message);
@@ -178,9 +178,9 @@ export default function TradingStockAllActivePlaceOrder({ onClose }) {
       }
   
     async function handleOptionContractAdd() {
-        const isOptionContractExist = optionContractList.some(currentOptionContract => currentOptionContract === optionContract);
+        const isOptionContractExist = optionContractTickerList.some(currentOptionContractTicker => currentOptionContractTicker === optionContractTicker);
         if (!isOptionContractExist) {
-            const { response } = await axios.post("/option_contract/add_option_contract/", { "optionChainSymbol": optionContract })
+            const { response } = await axios.post("/option_contract/add_option_contract/", { "optionChainSymbol": optionContractTicker })
 
             if (response.success != "success") {
                 alert("Add option contract failed");
@@ -188,12 +188,12 @@ export default function TradingStockAllActivePlaceOrder({ onClose }) {
                 alert("Add option contract successful");
             }
 
-            setOptionContractList( isOptionContractExist ? optionContractList : [...optionContractList, optionContract]);
+            setOptionContractTickerList( isOptionContractExist ? optionContractTickerList : [...optionContractTickerList, optionContractTicker]);
         }
     };
 
-    async function handleOptionContractRemove(currentOptionContract) {
-        const { response } = await axios.delete("/option_contract/remove_option_contract/", { data:{ "optionChainSymbol": currentOptionContract }})
+    async function handleOptionContractRemove(currentOptionContractTicker) {
+        const { response } = await axios.delete("/option_contract/remove_option_contract/", { data:{ "optionChainSymbol": currentOptionContractTicker }})
 
         if (response.success != "success") {
             alert("Remove option contract failed");
@@ -201,9 +201,9 @@ export default function TradingStockAllActivePlaceOrder({ onClose }) {
             alert("Remove option contract successful");
         }
 
-        const list = [...optionContractList];
+        const list = [...optionContractTickerList];
         list.splice(index, 1);
-        setOptionContractList(list);
+        setOptionContractTickerList(list);
     }
 
     const handleIsOptionChainCall = async () => {
@@ -226,11 +226,11 @@ export default function TradingStockAllActivePlaceOrder({ onClose }) {
 
     useEffect( () => {
         option_contract_list_fetch();
-    }, [optionContractList]);
+    }, [optionContractTickerList]);
 
     
-    const handleSetStockName = (currentOptionContract) => {
-        setStockName(currentOptionContract)
+    const handleSetStockName = (currentOptionContractTicker) => {
+        setStockName(currentOptionContractTicker)
 
         setIsOptionChainCall(false);
         setIsOptionChainPut(false);
@@ -257,13 +257,13 @@ export default function TradingStockAllActivePlaceOrder({ onClose }) {
                 <div className="flex gap-10">
                     <div>
                         <div className="mb-4">
-                            <label className="block text-gray-700 font-bold mb-2" htmlFor="optionContract">Option Contract</label>
+                            <label className="block text-gray-700 font-bold mb-2" htmlFor="optionContractTicker">Option Contract</label>
                             <div className="flex gap-5">
                                 <input
                                     type="text"
-                                    id="optionContract"
-                                    value={optionContract}
-                                    onInput={(event) => setOptionContract((event.target.value).toUpperCase())}
+                                    id="optionContractTicker"
+                                    value={optionContractTicker}
+                                    onInput={(event) => setOptionContractTicker((event.target.value).toUpperCase())}
                                 />
                                 <button className="inline-block rounded bg-teal-300 px-2 py-1 text-sm font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-teal-300-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-teal-300-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-teal-300-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]" type="button" onClick={handleOptionContractAdd}>
                                     <span>Add</span>
@@ -271,17 +271,18 @@ export default function TradingStockAllActivePlaceOrder({ onClose }) {
                             </div>
                         </div>
                         <div className="overflow-scroll">
-                            {optionContractList.map((currentOptionContract, index) => (
+                            {optionContractTickerList.map((currentOptionContractTicker, index) => (
                                 <div key={index} className="option contracts">
                                     <div className="flex justify-between gap-5">
                                         <button
-                                            onClick={() => handleSetStockName(currentOptionContract)}
+                                            className="inline-block rounded bg-grey-300 px-2 py-1 text-sm font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-teal-300-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-teal-300-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-teal-300-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
+                                            onClick={() => handleSetStockName(currentOptionContractTicker)}
                                         >
-                                            {currentOptionContract}
+                                            {currentOptionContractTicker}
                                         </button>
                                         <button
-                                            onClick={() => handleOptionContractRemove(currentOptionContract)}
-                                            className="inline-block rounded bg-teal-300 px-2 py-1 text-sm font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-teal-300-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-teal-300-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-teal-300-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
+                                            className="inline-block rounded bg-red-300 px-2 py-1 text-sm font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-teal-300-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-teal-300-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-teal-300-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
+                                            onClick={() => handleOptionContractRemove(currentOptionContractTicker)} 
                                             >
                                             Remove
                                         </button>
