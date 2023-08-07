@@ -254,24 +254,26 @@ export default function TradingStockAllActivePlaceOrder({ onClose }) {
             {isLoading ? (
                 <ClipLoader loading={true} size={50} />
             ) : (
-                <div className="flex">
+                <div className="flex gap-10">
                     <div>
-                        <label htmlFor="optionContract">Option Contract</label>
-                        <div className="flex">
-                            <input
-                                type="text"
-                                id="optionContract"
-                                value={optionContract}
-                                onInput={(event) => setOptionContract((event.target.value).toUpperCase())}
-                            />
-                            <button type="button" onClick={handleOptionContractAdd}>
-                                <span>Add</span>
-                            </button>
+                        <div className="mb-4">
+                            <label className="block text-gray-700 font-bold mb-2" htmlFor="optionContract">Option Contract</label>
+                            <div className="flex gap-5">
+                                <input
+                                    type="text"
+                                    id="optionContract"
+                                    value={optionContract}
+                                    onInput={(event) => setOptionContract((event.target.value).toUpperCase())}
+                                />
+                                <button className="inline-block rounded bg-teal-300 px-2 py-1 text-sm font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-teal-300-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-teal-300-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-teal-300-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]" type="button" onClick={handleOptionContractAdd}>
+                                    <span>Add</span>
+                                </button>
+                            </div>
                         </div>
                         <div className="overflow-scroll">
                             {optionContractList.map((currentOptionContract, index) => (
                                 <div key={index} className="option contracts">
-                                    <div className="flex justify-between">
+                                    <div className="flex justify-between gap-5">
                                         <button
                                             onClick={() => handleSetStockName(currentOptionContract)}
                                         >
@@ -279,6 +281,7 @@ export default function TradingStockAllActivePlaceOrder({ onClose }) {
                                         </button>
                                         <button
                                             onClick={() => handleOptionContractRemove(currentOptionContract)}
+                                            className="inline-block rounded bg-teal-300 px-2 py-1 text-sm font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-teal-300-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-teal-300-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-teal-300-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
                                             >
                                             Remove
                                         </button>
