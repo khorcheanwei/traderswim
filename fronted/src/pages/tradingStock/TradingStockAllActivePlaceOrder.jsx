@@ -59,6 +59,24 @@ export default function TradingStockAllActivePlaceOrder({ onClose }) {
         setDisabledButton(false)
     }
 
+    async function saveOrder() {
+        try {
+            setDisabledButton(true)
+            const { data } = await axios.post("/copy_trading_account/save_order/", { optionChainSymbol, optionChainInstruction, optionChainOrderType, optionChainQuantity, optionChainPrice })
+
+            if (data != "success") {
+                alert("Save order failed");
+            } else {
+                alert("Save order successful");
+            }
+            setDisabledButton(false)
+        } catch (error) {
+            alert("Save order failed")
+            console.log(error.message);
+        }
+        setDisabledButton(false)
+    }
+
     function getRevertOptionChainRealDate(currentRevertOptionChainDate) {
         if (currentRevertOptionChainDate == "None") {
             return "None"
@@ -255,40 +273,51 @@ export default function TradingStockAllActivePlaceOrder({ onClose }) {
                 <ClipLoader loading={true} size={50} />
             ) : (
                 <div className="flex gap-10">
-                    <div>
-                        <div className="mb-4">
-                            <label className="block text-gray-700 font-bold mb-2" htmlFor="optionContractTicker">Option Contract</label>
-                            <div className="flex gap-5">
-                                <input
-                                    type="text"
-                                    id="optionContractTicker"
-                                    value={optionContractTicker}
-                                    onInput={(event) => setOptionContractTicker((event.target.value).toUpperCase())}
-                                />
-                                <button className="inline-block rounded bg-teal-300 px-2 py-1 text-sm font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-teal-300-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-teal-300-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-teal-300-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]" type="button" onClick={handleOptionContractAdd}>
-                                    <span>Add</span>
-                                </button>
+                    <div className="flex flex-col justify-between">
+                        <div>
+                            <div className="mb-4">
+                                <label className="block text-gray-700 font-bold mb-2" htmlFor="optionContractTicker">Option Contract</label>
+                                <div className="flex gap-5">
+                                    <input
+                                        type="text"
+                                        id="optionContractTicker"
+                                        value={optionContractTicker}
+                                        onInput={(event) => setOptionContractTicker((event.target.value).toUpperCase())}
+                                    />
+                                    <button className="inline-block rounded bg-teal-300 px-2 py-1 text-sm font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-teal-300-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-teal-300-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-teal-300-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]" type="button" onClick={handleOptionContractAdd}>
+                                        <span>Add</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div className="overflow-scroll">
+                                {optionContractTickerList.map((currentOptionContractTicker, index) => (
+                                    <div key={index} className="option contracts">
+                                        <div className="flex justify-between gap-5">
+                                            <button
+                                                className="inline-block rounded bg-grey-300 px-2 py-1 text-sm font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-teal-300-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-teal-300-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-teal-300-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
+                                                onClick={() => handleSetStockName(currentOptionContractTicker)}
+                                            >
+                                                {currentOptionContractTicker}
+                                            </button>
+                                            <button
+                                                className="inline-block rounded bg-red-300 px-2 py-1 text-sm font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-teal-300-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-teal-300-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-teal-300-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
+                                                onClick={() => handleOptionContractRemove(currentOptionContractTicker)} 
+                                                >
+                                                Remove
+                                            </button>
+                                        </div>
+                                    </div>
+                                ))}
                             </div>
                         </div>
-                        <div className="overflow-scroll">
-                            {optionContractTickerList.map((currentOptionContractTicker, index) => (
-                                <div key={index} className="option contracts">
-                                    <div className="flex justify-between gap-5">
-                                        <button
-                                            className="inline-block rounded bg-grey-300 px-2 py-1 text-sm font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-teal-300-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-teal-300-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-teal-300-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
-                                            onClick={() => handleSetStockName(currentOptionContractTicker)}
-                                        >
-                                            {currentOptionContractTicker}
-                                        </button>
-                                        <button
-                                            className="inline-block rounded bg-red-300 px-2 py-1 text-sm font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-teal-300-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-teal-300-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-teal-300-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
-                                            onClick={() => handleOptionContractRemove(currentOptionContractTicker)} 
-                                            >
-                                            Remove
-                                        </button>
-                                    </div>
-                                </div>
-                            ))}
+                        <div>
+                            <button
+                                type="button"
+                                className="inline-block rounded bg-teal-300 px-7 pt-3 pb-2.5 text-sm font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-teal-300-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-teal-300-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-teal-300-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
+                                onClick={saveOrder}
+                                disabled={disabledButton}>
+                                Save order
+                            </button>
                         </div>
                     </div>
                     <div>
