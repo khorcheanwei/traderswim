@@ -43,14 +43,12 @@ export default function OptionPlaceOrderPanelPage({callOption}) {
     let optionChainInstruction = copyTradingOrderMainData[index]["optionChainInstruction"];
     let optionChainDescription = copyTradingOrderMainData[index]["optionChainDescription"];
 
-    if (callOption && optionChainDescription.includes("Call")) {
-      if (!optionChainSymbolSet.has(optionChainSymbol) && optionChainInstruction == "BUY_TO_OPEN"){
+    if (!optionChainSymbolSet.has(optionChainSymbol) && optionChainInstruction == "BUY_TO_OPEN"){
+      if (callOption && optionChainDescription.includes("Call")) {
         optionPlaceOrderPanelData.push(copyTradingOrderMainData[index]);
         optionChainSymbolSet.add(optionChainSymbol);
-      }
-    } 
-    if(!callOption && optionChainDescription.includes("Put")){
-      if (!optionChainSymbolSet.has(optionChainSymbol) && optionChainInstruction == "BUY_TO_OPEN"){
+      } 
+      if(!callOption && optionChainDescription.includes("Put")){
         optionPlaceOrderPanelData.push(copyTradingOrderMainData[index]);
         optionChainSymbolSet.add(optionChainSymbol);
       }
