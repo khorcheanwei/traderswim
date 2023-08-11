@@ -15,7 +15,15 @@ async function get_option_contract_save_order_list(httpRequest) {
       
       let dbQueryResult = await optionContractSaveOrderDBOperation.getOptionContractSaveOrderList(agentID);
       for(let index = 0; index < dbQueryResult.length; index++){
-        option_contract_save_order_list.push(dbQueryResult[index]["optionChainSymbol"]);
+        let option_contract_save_order = {
+          "optionChainSymbol": dbQueryResult[index]["optionChainSymbol"],
+          "optionChainDescription": dbQueryResult[index]["optionChainDescription"],
+          "optionChainOrderType": dbQueryResult[index]["optionChainOrderType"],
+          "optionChainInstruction": dbQueryResult[index]["optionChainInstruction"],
+          "optionChainPrice": dbQueryResult[index]["optionChainPrice"],
+          "optionChainQuantity": dbQueryResult[index]["optionChainQuantity"]
+        }
+        option_contract_save_order_list.push(option_contract_save_order);
       }
       
       return { success: true, data: option_contract_save_order_list };
@@ -30,14 +38,14 @@ async function get_option_contract_save_order_list(httpRequest) {
 // To add option contract save order
 async function add_option_contract_save_order(httpRequest) {
   const { token } = httpRequest.cookies;
-  const { optionChainSymbol } = httpRequest.body;
+  const { optionChainSymbol, optionChainDescription, optionChainInstruction, optionChainOrderType, optionChainQuantity, optionChainPrice } = httpRequest.body;
 
   if (token) {
     try {
       let agentDocument = jwt.verify(token, jwtSecret, {});
       const agentID = agentDocument.id;
       
-      await optionContractSaveOrderDBOperation.addOptionContractSaveOrder(agentID, optionChainSymbol);
+      await optionContractSaveOrderDBOperation.addOptionContractSaveOrder(agentID, optionChainSymbol, optionChainDescription, optionChainInstruction, optionChainOrderType, optionChainQuantity, optionChainPrice);
       
       return { success: true };
     } catch (error) {

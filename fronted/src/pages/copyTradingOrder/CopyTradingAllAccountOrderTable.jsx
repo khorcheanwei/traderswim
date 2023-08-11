@@ -242,10 +242,10 @@ export function ChangeOrderIndividualPanel(row) {
   return (
     <div className="flex">
       <div className="flex space-x-2">
-        <div onClick={orderReplaceCloseIndividual} className="cursor-pointer relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-yellow-300 rounded-full dark:bg-yellow-300">
+        <div onClick={orderReplaceCloseIndividual} className="cursor-pointer relative inline-flex items-center justify-center w-10 h-10 overflow-hidden rounded-full bg-yellow-300">
         <span className="font-medium text-white dark:text-white">R</span>
         </div>
-        <div onClick={orderDeleteCloseIndividual} className="cursor-pointer relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-middleGreen rounded-full dark:bg-middleGreen">
+        <div onClick={orderDeleteCloseIndividual} className="cursor-pointer relative inline-flex items-center justify-center w-10 h-10 overflow-hidden rounded-full bg-middleGreen">
           <span className="font-medium text-white dark:text-white">C</span>
         </div>
       </div>

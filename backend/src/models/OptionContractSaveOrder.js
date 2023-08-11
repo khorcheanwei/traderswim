@@ -3,6 +3,7 @@ const OptionContractSaveOrderSchemaSql = `
     id INTEGER PRIMARY KEY,
     agentID INTEGER NOT NULL,
     optionChainSymbol TEXT NOT NULL,
+    optionChainDescription TEXT NOT NULL,
     optionChainOrderType TEXT NOT NULL,
     optionChainInstruction TEXT NOT NULL,
     optionChainPrice REAL NOT NULL,

@@ -38,7 +38,7 @@ export function viewAllPositionPanel(row) {
   return (
     <div className="flex">
       <div className="flex space-x-2">
-        <div onClick={viewAllPositionClose} className="cursor-pointer relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-black rounded-full dark:bg-black">
+        <div onClick={viewAllPositionClose} className="cursor-pointer relative inline-flex items-center justify-center w-10 h-10 overflow-hidden rounded-full bg-black">
           <span className="font-medium text-white dark:text-white">V</span>
         </div>
       </div>
@@ -63,7 +63,7 @@ export function ChangePositionPanel(row) {
   return (
     <div className="flex">
       <div className="flex space-x-2">
-        <div onClick={orderExitClose} className="cursor-pointer relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-red-600 rounded-full dark:bg-red-600">
+        <div onClick={orderExitClose} className="cursor-pointer relative inline-flex items-center justify-center w-10 h-10 overflow-hidden rounded-full bg-red-600">
           <span className="font-medium text-white dark:text-white">S</span>
         </div>
       </div>

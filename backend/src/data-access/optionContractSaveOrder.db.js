@@ -27,14 +27,19 @@ function optionContractSaveOrderDBOperation(trading_management_db) {
 
     // add option contract save order
     this.addOptionContractSaveOrder = async function (
-      agentID,
-      optionChainSymbol,
+      agentID, 
+      optionChainSymbol, 
+      optionChainDescription, 
+      optionChainInstruction, 
+      optionChainOrderType, 
+      optionChainQuantity, 
+      optionChainPrice
     ) {
         try {
-          const sqlCommand = `INSERT INTO optionContractSaveOrder (agentID, optionChainSymbol) VALUES (?, ?)`;
+          const sqlCommand = `INSERT OR REPLACE INTO optionContractSaveOrder (agentID, optionChainSymbol, optionChainDescription, optionChainInstruction, optionChainOrderType, optionChainQuantity, optionChainPrice) VALUES (?, ?, ?, ?, ?, ?, ?)`;
 
           await new Promise((resolve, reject) => {
-            this.trading_management_db.get(sqlCommand, [agentID, optionChainSymbol], (err, row) => {
+            this.trading_management_db.get(sqlCommand, [agentID, optionChainSymbol, optionChainDescription, optionChainInstruction, optionChainOrderType, optionChainQuantity, optionChainPrice], (err, row) => {
               if (err) {
                 reject(err);
               } else {

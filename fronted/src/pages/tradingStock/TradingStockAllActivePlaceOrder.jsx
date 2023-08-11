@@ -13,7 +13,7 @@ export default function TradingStockAllActivePlaceOrder({ onClose }) {
     //var optionChainCallPutList = ["CALL", "PUT"];
     var optionChainOrderTypeList = ["LIMIT", "MARKET", "MARKET_ON_CLOSE", "STOP", "STOP_LIMIT", "TRAILING_STOP"];
 
-    const { isOpenTradingStock, setIsOpenTradingStock } = useContext(CopyTradingOrderContext);
+    const { isOpenTradingStock, setIsOpenTradingStock, optionContractSaveOrderList, setOptionContractSaveOrderList } = useContext(CopyTradingOrderContext);
 
     const [stockName, setStockName] = useState("");
     const [isOptionChainCall, setIsOptionChainCall] = useState(false);
@@ -61,13 +61,17 @@ export default function TradingStockAllActivePlaceOrder({ onClose }) {
 
     async function saveOrder() {
         try {
+            if (!optionChainSymbol || !optionChainDescription || !optionChainInstruction || !optionChainOrderType || !optionChainQuantity || !optionChainPrice) {
+                alert("Please ensure option contract information is completed");
+                return;
+            }
             setDisabledButton(true)
-            const { data } = await axios.post("/copy_trading_account/save_order/", { optionChainSymbol, optionChainInstruction, optionChainOrderType, optionChainQuantity, optionChainPrice })
-
-            if (data != "success") {
+            const response = await axios.post("/option_contract_save_order/add_option_contract_save_order/", { optionChainSymbol, optionChainDescription, optionChainInstruction, optionChainOrderType, optionChainQuantity, optionChainPrice });
+            if (response.data.success != true) {
                 alert("Save order failed");
             } else {
                 alert("Save order successful");
+                setIsOpenTradingStock(!isOpenTradingStock);
             }
             setDisabledButton(false)
         } catch (error) {
@@ -193,35 +197,40 @@ export default function TradingStockAllActivePlaceOrder({ onClose }) {
         } catch(error) {
             console.log(error.message);
         }
-      }
-  
+    }
+
     async function handleOptionContractAdd() {
+        if (!optionContractTicker) {
+            alert("Please ensure option contract symbol is completed");
+            return;
+        }
         const isOptionContractExist = optionContractTickerList.some(currentOptionContractTicker => currentOptionContractTicker === optionContractTicker);
         if (!isOptionContractExist) {
-            const { response } = await axios.post("/option_contract/add_option_contract/", { "optionChainSymbol": optionContractTicker })
-
-            if (response.success != "success") {
+            const response = await axios.post("/option_contract/add_option_contract/", { "optionChainSymbol": optionContractTicker })
+            if (response.data.success != true) {
                 alert("Add option contract failed");
             } else {
                 alert("Add option contract successful");
             }
 
             setOptionContractTickerList( isOptionContractExist ? optionContractTickerList : [...optionContractTickerList, optionContractTicker]);
+        } else {
+            alert("Option contract is already existed");
         }
     };
 
     async function handleOptionContractRemove(currentOptionContractTicker) {
-        const { response } = await axios.delete("/option_contract/remove_option_contract/", { data:{ "optionChainSymbol": currentOptionContractTicker }})
+        const response = await axios.delete("/option_contract/remove_option_contract/", { data:{ "optionChainSymbol": currentOptionContractTicker }})
 
-        if (response.success != "success") {
+        if (response.data.success != true) {
             alert("Remove option contract failed");
         } else {
             alert("Remove option contract successful");
         }
 
-        const list = [...optionContractTickerList];
-        list.splice(index, 1);
-        setOptionContractTickerList(list);
+        //const list = [...optionContractTickerList];
+        //list.splice(index, 1);
+        //setOptionContractTickerList(list);
     }
 
     const handleIsOptionChainCall = async () => {
@@ -246,7 +255,6 @@ export default function TradingStockAllActivePlaceOrder({ onClose }) {
         option_contract_list_fetch();
     }, [optionContractTickerList]);
 
-    
     const handleSetStockName = (currentOptionContractTicker) => {
         setStockName(currentOptionContractTicker)
 

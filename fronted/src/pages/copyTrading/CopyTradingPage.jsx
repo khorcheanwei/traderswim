@@ -8,6 +8,7 @@ import { CopyTradingPositionContext } from '../context/CopyTradingPositionContex
 import CopyTradingOrderPage from '../copyTradingOrder/CopyTradingOrderPage.jsx'
 import CopyTradingPositionPage from '../copyTradingPosition/CopyTradingPositionPage'
 import OptionPlaceOrderPanelPage from '../optionPlaceOrderPanel/OptionPlaceOrderPanelPage';
+import OptionPlaceSaveOrderPanelPage from '../optionPlaceSaveOrderPanel/OptionPlaceSaveOrderPanelPage';
 import { Button, PageButton } from './../shared/Button';
 import Overlay from "./../Overlay";
 
@@ -131,16 +132,23 @@ export default function CopyTradingPage() {
             <div className="w-[50%] overflow-scroll">
               <CopyTradingPositionPage />
             </div> 
-            <div className="w-[50%]  flex">
-              <div className="w-[50%] overflow-scroll">
-                <OptionPlaceOrderPanelPage callOption={true}/>
+            <div className="w-[60%] flex">
+              <div className="w-[50%] flex flex-col">
+                <div className="h-[50%] overflow-scroll">
+                  <OptionPlaceOrderPanelPage callOption={true}/>
+                </div>
+                <div className="h-[50%] overflow-scroll">
+                  <OptionPlaceSaveOrderPanelPage callOption={true}/>
+                </div>
               </div>
-              <div className="w-[50%] overflow-scroll">
-                <OptionPlaceOrderPanelPage callOption={false}/>
+              <div className="w-[50%] flex flex-col">
+                <div className="h-[50%] overflow-scroll">
+                  <OptionPlaceOrderPanelPage callOption={false}/>
+                </div>
+                <div className="h-[50%] overflow-scroll">
+                  <OptionPlaceSaveOrderPanelPage callOption={false}/>
+                </div>
               </div>
-            </div>
-            <div >
-              
             </div>
         </div>
       </div>
