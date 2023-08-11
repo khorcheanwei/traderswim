@@ -95,12 +95,12 @@ function accountDBOperation(trading_management_db) {
   };
 
   // search a Account based on agentID and accountName
-  this.deleteAccount = async function (agentID, accountName) {
+  this.deleteAccount = async function (agentID, accountUsername) {
     try {
-      const sqlCommand = `DELETE FROM account WHERE agentID=? AND accountName=?`;
+      const sqlCommand = `DELETE FROM account WHERE agentID=? AND accountUsername=?`;
 
       const queryResult = await new Promise((resolve, reject) => {
-        this.trading_management_db.all(sqlCommand, [agentID, accountName], (err, row) => {
+        this.trading_management_db.all(sqlCommand, [agentID, accountUsername], (err, row) => {
           if (err) {
             reject(err);
           } else {

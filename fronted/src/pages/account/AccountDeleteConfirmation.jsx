@@ -7,12 +7,12 @@ export default function AccountDeleteConfirmation({rowAccount, onClose}) {
     const { accountTableData, setAccountTableData} = useContext(AccountContext);
     const { isOpenAccountDelete, setIsOpenAccountDelete} = useContext(AccountContext);
 
-    let accountName = rowAccount.cell.row.original.accountName;
+    let accountUsername = rowAccount.cell.row.original.accountUsername;
 
     async function deleteAccountDelete() {
-      // delete account based on accountName
+      // delete account based on accountUsername
       try {
-        await axios.post("/trading_account/delete_account", {accountName});
+        await axios.post("/trading_account/delete_account", {accountUsername});
         alert("Account deleted successful")
         var response = await axios.get("/trading_account/database")
         
@@ -33,7 +33,7 @@ export default function AccountDeleteConfirmation({rowAccount, onClose}) {
             <div className="mb-4">
                 <h1 className="block text-gray-700 text-lm font-bold mb-2">Delete Account</h1>
             </div>
-            <div className="mb-4">Are you sure to delete this account <b>{accountName}</b> ?</div>
+            <div className="mb-4">Are you sure to delete this account <b>{accountUsername}</b> ?</div>
             <div className="flex justify-end gap-5">
               <button
                 type="button"
