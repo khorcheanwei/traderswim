@@ -2,7 +2,8 @@ import React from 'react'
 import axios from 'axios';
 import { useContext, useEffect } from 'react';
 import { CopyTradingOrderContext } from '../context/CopyTradingOrderContext';
-import OptionPlaceSaveOrderPanelTable, {PlaceOrderPanel, SettingsPanel} from './OptionPlaceSaveOrderPanelTable';
+import OptionPlaceSaveOrderPanelTable, {SettingsPanel} from './OptionPlaceSaveOrderPanelTable';
+import {PlaceOrderPanel} from './PlaceOrderPanel';
 
 export default function OptionPlaceSaveOrderPanelPage({callOption}) {
   const {optionContractSaveOrderList, setOptionContractSaveOrderList} = useContext(CopyTradingOrderContext);

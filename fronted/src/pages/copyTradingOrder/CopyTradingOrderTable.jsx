@@ -4,7 +4,6 @@ import { useContext } from 'react';
 
 import { CopyTradingOrderContext } from '../context/CopyTradingOrderContext';
 
-import TradingStockPlaceOrder from '../tradingStock/TradingStockPlaceOrder';
 import TradingStockDeleteOrder from '../tradingStock/TradingStockDeleteOrder';
 import TradingStockReplaceOrder from '../tradingStock/TradingStockReplaceOrder';
 import CopyTradingAllAccountOrderPage from '../copyTradingOrder/CopyTradingAllAccountOrderPage';

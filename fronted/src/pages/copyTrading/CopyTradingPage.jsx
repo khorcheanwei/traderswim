@@ -8,7 +8,7 @@ import { CopyTradingPositionContext } from '../context/CopyTradingPositionContex
 import CopyTradingOrderPage from '../copyTradingOrder/CopyTradingOrderPage.jsx'
 import CopyTradingPositionPage from '../copyTradingPosition/CopyTradingPositionPage'
 import OptionPlaceOrderPanelPage from '../optionPlaceOrderPanel/OptionPlaceOrderPanelPage';
-import OptionPlaceSaveOrderPanelPage from '../optionPlaceSaveOrderPanel/OptionPlaceSaveOrderPanelPage';
+import OptionPlaceSaveOrderPanelPage from '../optionPlaceOrderPanel/OptionPlaceSaveOrderPanelPage';
 import { Button, PageButton } from './../shared/Button';
 import Overlay from "./../Overlay";
 
