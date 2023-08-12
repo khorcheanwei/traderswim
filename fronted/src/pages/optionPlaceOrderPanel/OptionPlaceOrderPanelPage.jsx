@@ -33,9 +33,7 @@ export default function OptionPlaceOrderPanelPage({callOption}) {
       }
     ]
   } 
-
-  console.log("kcw");
-
+  
   const columns = React.useMemo(() => columns_list, [])
   
   let optionPlaceOrderPanelData = [];

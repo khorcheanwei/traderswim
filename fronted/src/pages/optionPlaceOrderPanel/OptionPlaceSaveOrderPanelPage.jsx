@@ -1,12 +1,12 @@
 import React from 'react'
 import axios from 'axios';
-import { useContext, useEffect } from 'react';
-import { CopyTradingOrderContext } from '../context/CopyTradingOrderContext';
+import { useState, useContext, useEffect } from 'react';
+import { OptionPlaceOrderPanelContext } from '../context/OptionPlaceOrderPanelContext';
 import OptionPlaceSaveOrderPanelTable, {SettingsPanel} from './OptionPlaceSaveOrderPanelTable';
 import {PlaceOrderPanel} from './PlaceOrderPanel';
 
 export default function OptionPlaceSaveOrderPanelPage({callOption}) {
-  const {optionContractSaveOrderList, setOptionContractSaveOrderList} = useContext(CopyTradingOrderContext);
+  const { optionContractSaveOrderList, setOptionContractSaveOrderList } = useContext(OptionPlaceOrderPanelContext);
 
   let columns_list;
   if (callOption){
@@ -23,7 +23,7 @@ export default function OptionPlaceSaveOrderPanelPage({callOption}) {
       {
         Header: 'Settings',
         accessor: 'name',
-        Cell: SettingsPanel,
+        Cell: (row) => <SettingsPanel row={row} setOptionContractSaveOrderList={setOptionContractSaveOrderList}/>,
       },
     ]
   } else{
@@ -31,7 +31,7 @@ export default function OptionPlaceSaveOrderPanelPage({callOption}) {
       {
         Header: 'Settings',
         accessor: 'name',
-        Cell: SettingsPanel,
+        Cell: (row) => <SettingsPanel row={row} setOptionContractSaveOrderList={setOptionContractSaveOrderList}/>,
       },
       {
         Header: 'Symbol description',
@@ -72,8 +72,7 @@ export default function OptionPlaceSaveOrderPanelPage({callOption}) {
 
   async function option_contract_save_order_list_fetch() {
     try {
-        const response = await axios.get("/option_contract_save_order/get_option_contract_save_order_list"); 
-        const data = response.data;
+        const {data} = await axios.get("/option_contract_save_order/get_option_contract_save_order_list"); 
         setOptionContractSaveOrderList(data);
 
     } catch(error) {
@@ -83,7 +82,7 @@ export default function OptionPlaceSaveOrderPanelPage({callOption}) {
 
   useEffect( () => {
       option_contract_save_order_list_fetch();
-  }, [optionContractSaveOrderList]);
+  }, []);
 
   return (
     <OptionPlaceSaveOrderPanelTable columns={columns} data={data} />

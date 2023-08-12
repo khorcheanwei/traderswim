@@ -24,8 +24,6 @@ export function CopyTradingOrderContextProvider({children}) {
     const [isOpenOrderDeleteSelected, setIsOpenOrderDeleteSelected] = useState(false); 
     const [isOpenWarningMessageOrderSelected, setIsOpenWarningMessageOrderSelected] = useState(false); 
     const [rowCopyTradingOrderSelected, setRowCopyTradingOrderSelected] = useState([]);
-
-    const [optionContractSaveOrderList, setOptionContractSaveOrderList] = useState([]);
     
     return (
         <CopyTradingOrderContext.Provider value={{ copyTradingOrderDataDict, setCopyTradingOrderDataDict, 
@@ -38,8 +36,7 @@ export function CopyTradingOrderContextProvider({children}) {
             isOpenOrderReplaceSelected, setIsOpenOrderReplaceSelected,
             isOpenOrderDeleteSelected, setIsOpenOrderDeleteSelected,
             isOpenWarningMessageOrderSelected, setIsOpenWarningMessageOrderSelected,
-            rowCopyTradingOrderSelected, setRowCopyTradingOrderSelected,
-            optionContractSaveOrderList, setOptionContractSaveOrderList
+            rowCopyTradingOrderSelected, setRowCopyTradingOrderSelected
         }}>
             {children}
         </CopyTradingOrderContext.Provider>
