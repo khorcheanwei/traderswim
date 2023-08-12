@@ -48,10 +48,12 @@ function optionContractSaveOrderDBOperation(trading_management_db) {
             });
           });
           console.log(`Successful add option contract save order for agent ID ${agentID}`)
-          return true;
+
+          const queryResult = this.getOptionContractSaveOrderList(agentID);
+          return queryResult;
         } catch (error) {
           console.log(`Failed add option contract save order for agent ID ${agentID}`);
-          return false;
+          return [];
         }
     }
 
@@ -73,10 +75,11 @@ function optionContractSaveOrderDBOperation(trading_management_db) {
             });
           });
           console.log(`Successful remove option contract save order for agent ID ${agentID}`)
-          return true;
+          const queryResult = this.getOptionContractSaveOrderList(agentID);
+          return queryResult;
         } catch (error) {
           console.log(`Failed remove option contract save order for agent ID ${agentID}`);
-          return false;
+          return [];
         }
     }
 }

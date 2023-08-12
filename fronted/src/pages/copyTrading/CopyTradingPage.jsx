@@ -7,12 +7,11 @@ import { CopyTradingOrderContext } from '../context/CopyTradingOrderContext';
 import { CopyTradingPositionContext } from '../context/CopyTradingPositionContext';
 import CopyTradingOrderPage from '../copyTradingOrder/CopyTradingOrderPage.jsx'
 import CopyTradingPositionPage from '../copyTradingPosition/CopyTradingPositionPage'
-import OptionPlaceOrderPanelPage from '../optionPlaceOrderPanel/OptionPlaceOrderPanelPage';
-import OptionPlaceSaveOrderPanelPage from '../optionPlaceOrderPanel/OptionPlaceSaveOrderPanelPage';
+
 import { Button, PageButton } from './../shared/Button';
 import Overlay from "./../Overlay";
 
-export default function CopyTradingPage() {
+export default function CopyTradingPage({children}) {
 
   const {copyTradingOrderDataDict, setCopyTradingOrderDataDict, copyTradingOrderMainData, setCopyTradingOrderMainData} = useContext(CopyTradingOrderContext);
   const {copyTradingPositionDataDict, setCopyTradingPositionDataDict,copyTradingPositionMainData, setCopyTradingPositionMainData} = useContext(CopyTradingPositionContext);
@@ -133,22 +132,7 @@ export default function CopyTradingPage() {
               <CopyTradingPositionPage />
             </div> 
             <div className="w-[60%] flex">
-              <div className="w-[50%] flex flex-col">
-                <div className="h-[50%] overflow-scroll">
-                  <OptionPlaceOrderPanelPage callOption={true}/>
-                </div>
-                <div className="h-[50%] overflow-scroll">
-                  <OptionPlaceSaveOrderPanelPage callOption={true}/>
-                </div>
-              </div>
-              <div className="w-[50%] flex flex-col">
-                <div className="h-[50%] overflow-scroll">
-                  <OptionPlaceOrderPanelPage callOption={false}/>
-                </div>
-                <div className="h-[50%] overflow-scroll">
-                  <OptionPlaceSaveOrderPanelPage callOption={false}/>
-                </div>
-              </div>
+              {children}
             </div>
         </div>
       </div>

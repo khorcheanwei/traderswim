@@ -13,9 +13,9 @@ optionContractSaveOrderRouter.get("/get_option_contract_save_order_list", async 
   const result = await get_option_contract_save_order_list(httpRequest);
 
   if (result.success == true) {
-    httpResponse.status(200).json(result.data);
+    httpResponse.status(200).json(result);
   } else {
-    httpResponse.status(400).json(result.data);
+    httpResponse.status(400).json(result);
   }
 });
 

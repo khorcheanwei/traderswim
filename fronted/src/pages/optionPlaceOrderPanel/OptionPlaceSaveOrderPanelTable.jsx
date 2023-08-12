@@ -18,15 +18,16 @@ function GlobalFilter({
   )
 }
 
-export function SettingsPanel(row) {
+export function SettingsPanel({row, setOptionContractSaveOrderList}) {
   let optionChainSymbol = row.cell.row.original.optionChainSymbol;
 
   const optionContractSaveOrderDeleteClose = async () => {
-    const response = await axios.delete("/option_contract_save_order/remove_option_contract_save_order/", { data:{ "optionChainSymbol": optionChainSymbol }});
-    if (response.data.success != true) {
+    const {data} = await axios.delete("/option_contract_save_order/remove_option_contract_save_order/", { data:{ "optionChainSymbol": optionChainSymbol }});
+    if (data.success != true) {
         alert("Remove option contract save order failed");
     } else {
         alert("Remove option contract save order successful");
+        setOptionContractSaveOrderList(data.list);
     }
 
     /*

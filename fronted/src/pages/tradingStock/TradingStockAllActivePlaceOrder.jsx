@@ -1,8 +1,10 @@
 import axios from 'axios';
 import { useContext, useState, useEffect } from 'react';
+import { OptionPlaceOrderPanelContext } from '../context/OptionPlaceOrderPanelContext';
 import { CopyTradingOrderContext } from '../context/CopyTradingOrderContext';
 import AutocompleteList from './AutocompleteList';
 import { ClipLoader } from 'react-spinners';
+
 
 
 export default function TradingStockAllActivePlaceOrder({ onClose }) {
@@ -13,7 +15,8 @@ export default function TradingStockAllActivePlaceOrder({ onClose }) {
     //var optionChainCallPutList = ["CALL", "PUT"];
     var optionChainOrderTypeList = ["LIMIT", "MARKET", "MARKET_ON_CLOSE", "STOP", "STOP_LIMIT", "TRAILING_STOP"];
 
-    const { isOpenTradingStock, setIsOpenTradingStock, optionContractSaveOrderList, setOptionContractSaveOrderList } = useContext(CopyTradingOrderContext);
+    const { isOpenTradingStock, setIsOpenTradingStock } = useContext(CopyTradingOrderContext);
+    const {optionContractSaveOrderList, setOptionContractSaveOrderList } = useContext(OptionPlaceOrderPanelContext);
 
     const [stockName, setStockName] = useState("");
     const [isOptionChainCall, setIsOptionChainCall] = useState(false);
@@ -66,11 +69,12 @@ export default function TradingStockAllActivePlaceOrder({ onClose }) {
                 return;
             }
             setDisabledButton(true)
-            const response = await axios.post("/option_contract_save_order/add_option_contract_save_order/", { optionChainSymbol, optionChainDescription, optionChainInstruction, optionChainOrderType, optionChainQuantity, optionChainPrice });
-            if (response.data.success != true) {
+            const {data} = await axios.post("/option_contract_save_order/add_option_contract_save_order/", { optionChainSymbol, optionChainDescription, optionChainInstruction, optionChainOrderType, optionChainQuantity, optionChainPrice });
+            if (data.success != true) {
                 alert("Save order failed");
             } else {
                 alert("Save order successful");
+                setOptionContractSaveOrderList(data.list)
                 setIsOpenTradingStock(!isOpenTradingStock);
             }
             setDisabledButton(false)
