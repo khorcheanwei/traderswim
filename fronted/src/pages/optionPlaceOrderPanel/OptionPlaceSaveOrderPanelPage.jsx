@@ -73,7 +73,7 @@ export default function OptionPlaceSaveOrderPanelPage({callOption}) {
   async function option_contract_save_order_list_fetch() {
     try {
         const {data} = await axios.get("/option_contract_save_order/get_option_contract_save_order_list"); 
-        setOptionContractSaveOrderList(data);
+        setOptionContractSaveOrderList(data.list);
 
     } catch(error) {
           console.log(error.message);
