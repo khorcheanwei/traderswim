@@ -55,17 +55,28 @@ trading_management_db.run(OptionContractSchemaSql), (err) => {
   console.log('Option contract table created (if it did not already exist).');
 };
 
+// new option contract save order table
+const OptionContractSaveOrderSchemaSql = require("../models/OptionContractSaveOrder");
+trading_management_db.run(OptionContractSaveOrderSchemaSql), (err) => {
+  if (err) {
+    console.log(err.message);
+  }
+  console.log('Option contract save order table created (if it did not already exist).');
+};
+
 const agentDB = require("./agent.db.js");
 const accountDB = require("./account.db.js");
 const copyTradingAccountDB = require("./copyTrading.db.js");
 const tradeHistoryDB = require("./tradeHistory.db.js");
-const optionContractDB = require("./optionContract.db.js");       
+const optionContractDB = require("./optionContract.db.js");  
+const optionContractSaveOrderDB = require("./optionContractSaveOrder.db.js");       
 
 const agentDBOperation = new agentDB(trading_management_db);
 const accountDBOperation = new accountDB(trading_management_db);
 const copyTradingAccountDBBOperation = new copyTradingAccountDB(trading_management_db);
 const tradeHistoryDBOperation = new tradeHistoryDB(trading_management_db);
-const optionContractDBOperation = new optionContractDB(trading_management_db)
+const optionContractDBOperation = new optionContractDB(trading_management_db);
+const optionContractSaveOrderDBOperation = new optionContractSaveOrderDB(trading_management_db);
 
 console.log('Backend service start');
 
@@ -74,5 +85,6 @@ module.exports = {
   accountDBOperation,
   copyTradingAccountDBBOperation,
   tradeHistoryDBOperation,
-  optionContractDBOperation
+  optionContractDBOperation,
+  optionContractSaveOrderDBOperation
 };

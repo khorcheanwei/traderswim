@@ -4,7 +4,6 @@ import { useContext } from 'react';
 
 import { CopyTradingOrderContext } from '../context/CopyTradingOrderContext';
 
-import TradingStockPlaceOrder from '../tradingStock/TradingStockPlaceOrder';
 import TradingStockDeleteOrder from '../tradingStock/TradingStockDeleteOrder';
 import TradingStockReplaceOrder from '../tradingStock/TradingStockReplaceOrder';
 import CopyTradingAllAccountOrderPage from '../copyTradingOrder/CopyTradingAllAccountOrderPage';
@@ -50,7 +49,7 @@ export function ViewAllOrderPanel(row) {
   return (
     <div className="flex">
       <div className="flex space-x-2">
-        <div onClick={viewAllOrderClose} className="cursor-pointer relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-black rounded-full dark:bg-black">
+        <div onClick={viewAllOrderClose} className="cursor-pointer relative inline-flex items-center justify-center w-10 h-10 overflow-hidden rounded-full bg-black">
           <span className="font-medium text-white dark:text-white">V</span>
         </div>
       </div>
@@ -82,10 +81,10 @@ export function ChangeOrderPanel(row) {
   return (
     <div className="flex">
       <div className="flex space-x-2">
-        <div onClick={orderReplaceClose} className="cursor-pointer relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-yellow-300 rounded-full">
+        <div onClick={orderReplaceClose} className="cursor-pointer relative inline-flex items-center justify-center w-10 h-10 overflow-hidden rounded-full bg-yellow-300">
         <span className="font-medium text-white dark:text-white">R</span>
         </div>
-        <div onClick={orderDeleteClose} className="cursor-pointer relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-middleGreen rounded-full">
+        <div onClick={orderDeleteClose} className="cursor-pointer relative inline-flex items-center justify-center w-10 h-10 overflow-hidden rounded-full bg-middleGreen">
           <span className="font-medium text-white dark:text-white">C</span>
         </div>
       </div>

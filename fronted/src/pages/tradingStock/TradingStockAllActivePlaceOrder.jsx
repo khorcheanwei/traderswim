@@ -13,7 +13,7 @@ export default function TradingStockAllActivePlaceOrder({ onClose }) {
     //var optionChainCallPutList = ["CALL", "PUT"];
     var optionChainOrderTypeList = ["LIMIT", "MARKET", "MARKET_ON_CLOSE", "STOP", "STOP_LIMIT", "TRAILING_STOP"];
 
-    const { isOpenTradingStock, setIsOpenTradingStock } = useContext(CopyTradingOrderContext);
+    const { isOpenTradingStock, setIsOpenTradingStock, optionContractSaveOrderList, setOptionContractSaveOrderList } = useContext(CopyTradingOrderContext);
 
     const [stockName, setStockName] = useState("");
     const [isOptionChainCall, setIsOptionChainCall] = useState(false);
@@ -54,6 +54,28 @@ export default function TradingStockAllActivePlaceOrder({ onClose }) {
             setDisabledButton(false)
         } catch (error) {
             alert("Copy trading failed")
+            console.log(error.message);
+        }
+        setDisabledButton(false)
+    }
+
+    async function saveOrder() {
+        try {
+            if (!optionChainSymbol || !optionChainDescription || !optionChainInstruction || !optionChainOrderType || !optionChainQuantity || !optionChainPrice) {
+                alert("Please ensure option contract information is completed");
+                return;
+            }
+            setDisabledButton(true)
+            const response = await axios.post("/option_contract_save_order/add_option_contract_save_order/", { optionChainSymbol, optionChainDescription, optionChainInstruction, optionChainOrderType, optionChainQuantity, optionChainPrice });
+            if (response.data.success != true) {
+                alert("Save order failed");
+            } else {
+                alert("Save order successful");
+                setIsOpenTradingStock(!isOpenTradingStock);
+            }
+            setDisabledButton(false)
+        } catch (error) {
+            alert("Save order failed")
             console.log(error.message);
         }
         setDisabledButton(false)
@@ -175,35 +197,40 @@ export default function TradingStockAllActivePlaceOrder({ onClose }) {
         } catch(error) {
             console.log(error.message);
         }
-      }
-  
+    }
+
     async function handleOptionContractAdd() {
+        if (!optionContractTicker) {
+            alert("Please ensure option contract symbol is completed");
+            return;
+        }
         const isOptionContractExist = optionContractTickerList.some(currentOptionContractTicker => currentOptionContractTicker === optionContractTicker);
         if (!isOptionContractExist) {
-            const { response } = await axios.post("/option_contract/add_option_contract/", { "optionChainSymbol": optionContractTicker })
-
-            if (response.success != "success") {
+            const response = await axios.post("/option_contract/add_option_contract/", { "optionChainSymbol": optionContractTicker })
+            if (response.data.success != true) {
                 alert("Add option contract failed");
             } else {
                 alert("Add option contract successful");
             }
 
             setOptionContractTickerList( isOptionContractExist ? optionContractTickerList : [...optionContractTickerList, optionContractTicker]);
+        } else {
+            alert("Option contract is already existed");
         }
     };
 
     async function handleOptionContractRemove(currentOptionContractTicker) {
-        const { response } = await axios.delete("/option_contract/remove_option_contract/", { data:{ "optionChainSymbol": currentOptionContractTicker }})
+        const response = await axios.delete("/option_contract/remove_option_contract/", { data:{ "optionChainSymbol": currentOptionContractTicker }})
 
-        if (response.success != "success") {
+        if (response.data.success != true) {
             alert("Remove option contract failed");
         } else {
             alert("Remove option contract successful");
         }
 
-        const list = [...optionContractTickerList];
-        list.splice(index, 1);
-        setOptionContractTickerList(list);
+        //const list = [...optionContractTickerList];
+        //list.splice(index, 1);
+        //setOptionContractTickerList(list);
     }
 
     const handleIsOptionChainCall = async () => {
@@ -228,7 +255,6 @@ export default function TradingStockAllActivePlaceOrder({ onClose }) {
         option_contract_list_fetch();
     }, [optionContractTickerList]);
 
-    
     const handleSetStockName = (currentOptionContractTicker) => {
         setStockName(currentOptionContractTicker)
 
@@ -255,40 +281,51 @@ export default function TradingStockAllActivePlaceOrder({ onClose }) {
                 <ClipLoader loading={true} size={50} />
             ) : (
                 <div className="flex gap-10">
-                    <div>
-                        <div className="mb-4">
-                            <label className="block text-gray-700 font-bold mb-2" htmlFor="optionContractTicker">Option Contract</label>
-                            <div className="flex gap-5">
-                                <input
-                                    type="text"
-                                    id="optionContractTicker"
-                                    value={optionContractTicker}
-                                    onInput={(event) => setOptionContractTicker((event.target.value).toUpperCase())}
-                                />
-                                <button className="inline-block rounded bg-teal-300 px-2 py-1 text-sm font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-teal-300-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-teal-300-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-teal-300-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]" type="button" onClick={handleOptionContractAdd}>
-                                    <span>Add</span>
-                                </button>
+                    <div className="flex flex-col justify-between">
+                        <div>
+                            <div className="mb-4">
+                                <label className="block text-gray-700 font-bold mb-2" htmlFor="optionContractTicker">Option Contract</label>
+                                <div className="flex gap-5">
+                                    <input
+                                        type="text"
+                                        id="optionContractTicker"
+                                        value={optionContractTicker}
+                                        onInput={(event) => setOptionContractTicker((event.target.value).toUpperCase())}
+                                    />
+                                    <button className="inline-block rounded bg-teal-300 px-2 py-1 text-sm font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-teal-300-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-teal-300-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-teal-300-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]" type="button" onClick={handleOptionContractAdd}>
+                                        <span>Add</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div className="overflow-scroll">
+                                {optionContractTickerList.map((currentOptionContractTicker, index) => (
+                                    <div key={index} className="option contracts">
+                                        <div className="flex justify-between gap-5">
+                                            <button
+                                                className="inline-block rounded bg-grey-300 px-2 py-1 text-sm font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-teal-300-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-teal-300-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-teal-300-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
+                                                onClick={() => handleSetStockName(currentOptionContractTicker)}
+                                            >
+                                                {currentOptionContractTicker}
+                                            </button>
+                                            <button
+                                                className="inline-block rounded bg-red-300 px-2 py-1 text-sm font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-teal-300-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-teal-300-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-teal-300-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
+                                                onClick={() => handleOptionContractRemove(currentOptionContractTicker)} 
+                                                >
+                                                Remove
+                                            </button>
+                                        </div>
+                                    </div>
+                                ))}
                             </div>
                         </div>
-                        <div className="overflow-scroll">
-                            {optionContractTickerList.map((currentOptionContractTicker, index) => (
-                                <div key={index} className="option contracts">
-                                    <div className="flex justify-between gap-5">
-                                        <button
-                                            className="inline-block rounded bg-grey-300 px-2 py-1 text-sm font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-teal-300-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-teal-300-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-teal-300-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
-                                            onClick={() => handleSetStockName(currentOptionContractTicker)}
-                                        >
-                                            {currentOptionContractTicker}
-                                        </button>
-                                        <button
-                                            className="inline-block rounded bg-red-300 px-2 py-1 text-sm font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-teal-300-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-teal-300-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-teal-300-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
-                                            onClick={() => handleOptionContractRemove(currentOptionContractTicker)} 
-                                            >
-                                            Remove
-                                        </button>
-                                    </div>
-                                </div>
-                            ))}
+                        <div>
+                            <button
+                                type="button"
+                                className="inline-block rounded bg-teal-300 px-7 pt-3 pb-2.5 text-sm font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-teal-300-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-teal-300-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-teal-300-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
+                                onClick={saveOrder}
+                                disabled={disabledButton}>
+                                Save order
+                            </button>
                         </div>
                     </div>
                     <div>
