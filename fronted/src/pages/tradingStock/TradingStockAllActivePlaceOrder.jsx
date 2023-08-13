@@ -1,21 +1,20 @@
 import axios from 'axios';
 import { useContext, useState, useEffect } from 'react';
+import { OptionContractPlaceOrderContext } from '../context/OptionContractPlaceOrderContext';
 import { OptionPlaceOrderPanelContext } from '../context/OptionPlaceOrderPanelContext';
-import { CopyTradingOrderContext } from '../context/CopyTradingOrderContext';
 import AutocompleteList from './AutocompleteList';
 import { ClipLoader } from 'react-spinners';
 
 
 
 export default function TradingStockAllActivePlaceOrder({ onClose }) {
-
     const [isLoading, setIsLoading] = useState(false);
 
     var optionChainInstructionList = ["BUY_TO_OPEN", "SELL_TO_CLOSE"];
     //var optionChainCallPutList = ["CALL", "PUT"];
     var optionChainOrderTypeList = ["LIMIT", "MARKET", "MARKET_ON_CLOSE", "STOP", "STOP_LIMIT", "TRAILING_STOP"];
 
-    const { isOpenTradingStock, setIsOpenTradingStock } = useContext(CopyTradingOrderContext);
+    const { isOpenTradingStock, setIsOpenTradingStock } = useContext(OptionContractPlaceOrderContext);
     const {optionContractSaveOrderList, setOptionContractSaveOrderList } = useContext(OptionPlaceOrderPanelContext);
 
     const [stockName, setStockName] = useState("");
@@ -42,9 +41,11 @@ export default function TradingStockAllActivePlaceOrder({ onClose }) {
     const [optionContractTicker, setOptionContractTicker] = useState("");
     const [optionContractTickerList, setOptionContractTickerList] = useState([]);
 
+    const optionContractTickerListLength = optionContractTickerList.length;
+
     async function handlePlaceOrder() {
+        setDisabledButton(true);
         try {
-            setDisabledButton(true)
             const allTradingAccountsOrderList = [];
             const { data } = await axios.post("/copy_trading_account/place_order/", { allTradingAccountsOrderList, optionChainSymbol, optionChainInstruction, optionChainOrderType, optionChainQuantity, optionChainPrice })
 
@@ -54,21 +55,20 @@ export default function TradingStockAllActivePlaceOrder({ onClose }) {
                 alert("Copy trading successful");
                 setIsOpenTradingStock(!isOpenTradingStock)
             }
-            setDisabledButton(false)
         } catch (error) {
             alert("Copy trading failed")
             console.log(error.message);
         }
-        setDisabledButton(false)
+        setDisabledButton(false);
     }
 
     async function saveOrder() {
+        setDisabledButton(true);
         try {
             if (!optionChainSymbol || !optionChainDescription || !optionChainInstruction || !optionChainOrderType || !optionChainQuantity || !optionChainPrice) {
                 alert("Please ensure option contract information is completed");
                 return;
             }
-            setDisabledButton(true)
             const {data} = await axios.post("/option_contract_save_order/add_option_contract_save_order/", { optionChainSymbol, optionChainDescription, optionChainInstruction, optionChainOrderType, optionChainQuantity, optionChainPrice });
             if (data.success != true) {
                 alert("Save order failed");
@@ -77,12 +77,11 @@ export default function TradingStockAllActivePlaceOrder({ onClose }) {
                 setOptionContractSaveOrderList(data.list)
                 setIsOpenTradingStock(!isOpenTradingStock);
             }
-            setDisabledButton(false)
         } catch (error) {
             alert("Save order failed")
             console.log(error.message);
         }
-        setDisabledButton(false)
+        setDisabledButton(false);
     }
 
     function getRevertOptionChainRealDate(currentRevertOptionChainDate) {
@@ -256,7 +255,7 @@ export default function TradingStockAllActivePlaceOrder({ onClose }) {
 
     useEffect( () => {
         option_contract_list_fetch();
-    }, [optionContractTickerList]);
+    }, [optionContractTickerListLength]);
 
     const handleSetStockName = (currentOptionContractTicker) => {
         setStockName(currentOptionContractTicker)
