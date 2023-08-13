@@ -191,9 +191,8 @@ const TradingStockAllActivePlaceOrder = memo(({ onClose }) => {
 
     async function option_contract_list_fetch() {
         try {
-          const response = await axios.get("/option_contract/get_option_contract_list"); 
-          const data = response.data;
-          setOptionContractTickerList(data);
+          const {data} = await axios.get("/option_contract/get_option_contract_list"); 
+          setOptionContractTickerList(data.list);
   
         } catch(error) {
             console.log(error.message);
