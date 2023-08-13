@@ -17,7 +17,7 @@ export default function TradingStockAllActivePlaceOrder({ onClose }) {
     const { isOpenTradingStock, setIsOpenTradingStock } = useContext(OptionContractPlaceOrderContext);
     const {optionContractSaveOrderList, setOptionContractSaveOrderList } = useContext(OptionPlaceOrderPanelContext);
 
-    const [stockName, setStockName] = useState("");
+    const [optionContractTickerName, setOptionContractTickerName] = useState("");
     const [isOptionChainCall, setIsOptionChainCall] = useState(false);
     const [isOptionChainPut, setIsOptionChainPut] = useState(false);
     const [optionChainCallPut, setOptionChainCallPut] = useState("");
@@ -128,7 +128,7 @@ export default function TradingStockAllActivePlaceOrder({ onClose }) {
             setOptionChainStrikeList([]);
             setOptionChainDescription("None");
             setOptionChainPrice(0);
-            const { data } = await axios.get("/copy_trading_account/get_option_chain_list/", { params: { stockName, optionChainCallPut }, timeout: 5000})
+            const { data } = await axios.get("/copy_trading_account/get_option_chain_list/", { params: { optionContractTickerName, optionChainCallPut }, timeout: 5000})
             if (data != null) {
                 setOptionChainData(data);
 
@@ -258,7 +258,7 @@ export default function TradingStockAllActivePlaceOrder({ onClose }) {
     }, [optionContractTickerListLength]);
 
     const handleSetStockName = (currentOptionContractTicker) => {
-        setStockName(currentOptionContractTicker)
+        setOptionContractTickerName(currentOptionContractTicker)
 
         setIsOptionChainCall(false);
         setIsOptionChainPut(false);
@@ -338,7 +338,7 @@ export default function TradingStockAllActivePlaceOrder({ onClose }) {
                             <div className="relative w-full lg:max-w-sm mb-6">
                                 {/*<select
                                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                                    onChange={event => setStockName(event.target.value)}>
+                                    onChange={event => setOptionContractTickerName(event.target.value)}>
                                     {
                                         stockNameList.map((stock_name, index) => (
                                             <FixedSizeList key={index}>{stock_name}</FixedSizeList>
@@ -350,8 +350,8 @@ export default function TradingStockAllActivePlaceOrder({ onClose }) {
                                         <input
                                             className="block px-2.5 pb-1.5 pt-3 w-full text-sm text-gray-900 bg-transparent border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                                             type="text"
-                                            onChange={event => setStockName(event.target.value)}
-                                            value={stockName}
+                                            onChange={event => setOptionContractTickerName(event.target.value)}
+                                            value={optionContractTickerName}
                                             onInput={(event) => event.target.value = (event.target.value).toUpperCase()}
                                             placeholder=" " />
                                         <label
