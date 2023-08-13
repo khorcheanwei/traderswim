@@ -54,7 +54,7 @@ async function add_option_contract_save_order(httpRequest) {
       const agentID = agentDocument.id;
       
       const queryResult = await optionContractSaveOrderDBOperation.addOptionContractSaveOrder(agentID, optionChainSymbol, optionChainDescription, optionChainInstruction, optionChainOrderType, optionChainQuantity, optionChainPrice);
-      let option_contract_save_order_list = obtain_option_contract_save_order_list(queryResult);
+      option_contract_save_order_list = obtain_option_contract_save_order_list(queryResult);
 
       return { success: true, list: option_contract_save_order_list };
     } catch (error) {
@@ -77,7 +77,7 @@ async function remove_option_contract_save_order(httpRequest) {
       const agentID = agentDocument.id;
       
       let queryResult = await optionContractSaveOrderDBOperation.removeOptionContractSaveOrder(agentID, optionChainSymbol);
-      let option_contract_save_order_list = obtain_option_contract_save_order_list(queryResult);
+      option_contract_save_order_list = obtain_option_contract_save_order_list(queryResult);
       
       return { success: true, list: option_contract_save_order_list };
     } catch (error) {

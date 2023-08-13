@@ -1,14 +1,11 @@
 import axios from 'axios';
-import { useContext, useState, useEffect } from 'react';
-import { OptionPlaceOrderPanelContext } from '../context/OptionPlaceOrderPanelContext';
-import { CopyTradingOrderContext } from '../context/CopyTradingOrderContext';
-import AutocompleteList from './AutocompleteList';
+import { useContext, useState, useEffect, memo } from 'react';
+import { OptionPlaceOrderPanelContext } from '../../context/OptionPlaceOrderPanelContext';
+import { CopyTradingOrderContext } from '../../context/CopyTradingOrderContext';
+import AutocompleteList from './../AutocompleteList';
 import { ClipLoader } from 'react-spinners';
 
-
-
-export default function TradingStockAllActivePlaceOrder({ onClose }) {
-
+const TradingStockAllActivePlaceOrder = memo(({ onClose }) => {
     const [isLoading, setIsLoading] = useState(false);
 
     var optionChainInstructionList = ["BUY_TO_OPEN", "SELL_TO_CLOSE"];
@@ -231,10 +228,6 @@ export default function TradingStockAllActivePlaceOrder({ onClose }) {
         } else {
             alert("Remove option contract successful");
         }
-
-        //const list = [...optionContractTickerList];
-        //list.splice(index, 1);
-        //setOptionContractTickerList(list);
     }
 
     const handleIsOptionChainCall = async () => {
@@ -288,7 +281,7 @@ export default function TradingStockAllActivePlaceOrder({ onClose }) {
                     <div className="flex flex-col justify-between">
                         <div>
                             <div className="mb-4">
-                                <label className="block text-gray-700 font-bold mb-2" htmlFor="optionContractTicker">Option Contract</label>
+                                <label className="block text-gray-700 font-bold mb-2" htmlFor="optionContractTicker">Option Contract List</label>
                                 <div className="flex gap-5">
                                     <input
                                         type="text"
@@ -531,4 +524,7 @@ export default function TradingStockAllActivePlaceOrder({ onClose }) {
         }
         </div>
     )
-}
+    
+});
+
+export default TradingStockAllActivePlaceOrder;

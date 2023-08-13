@@ -24,12 +24,6 @@ function GlobalFilter({
     setGlobalFilter(value || undefined)
   }, 200)
 
-  const { isOpenTradingStock, setIsOpenTradingStock } = useContext(CopyTradingOrderContext);
-
-  const placeOrderClose = async () => {
-    setIsOpenTradingStock(!isOpenTradingStock)
-  }
-
   return (
     <div></div>
   )
