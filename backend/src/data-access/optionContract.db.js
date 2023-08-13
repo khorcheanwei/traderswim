@@ -1,79 +1,81 @@
 function optionContractDBOperation(trading_management_db) {
-    this.trading_management_db = trading_management_db;
-  
-    // get option contract list
-    this.getOptionContractList = async function (
-        agentID,
-    ) {
-        try {
-          const sqlCommand = `SELECT * FROM optionContract WHERE agentID=?`
-  
-          const queryResult = await new Promise((resolve, reject) => {
-            this.trading_management_db.all(sqlCommand, [agentID], (err, row) => {
-              if (err) {
-                reject(err);
-              } else {
-                resolve(row);
-              }
-            });
-          });
-          console.log(`Successful get option contract list for agent ID ${agentID}`)
-          return queryResult;
-        } catch (error) {
-          console.log(`Failed get option contract list for agent ID ${agentID}`);
-          return [];
-        }
-    }
+  this.trading_management_db = trading_management_db;
 
-    // add option contract 
-    this.addOptionContract = async function (
+  // get option contract list
+  this.getOptionContractList = async function (
       agentID,
-      optionChainSymbol,
-    ) {
-        try {
-          const sqlCommand = `INSERT INTO optionContract (agentID, optionChainSymbol) VALUES (?, ?)`;
+  ) {
+      try {
+        const sqlCommand = `SELECT * FROM optionContract WHERE agentID=?`
 
-          await new Promise((resolve, reject) => {
-            this.trading_management_db.get(sqlCommand, [agentID, optionChainSymbol], (err, row) => {
-              if (err) {
-                reject(err);
-              } else {
-                resolve(row);
-              }
-            });
+        const queryResult = await new Promise((resolve, reject) => {
+          this.trading_management_db.all(sqlCommand, [agentID], (err, row) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(row);
+            }
           });
-          console.log(`Successful add option contract for agent ID ${agentID}`)
-          return true;
-        } catch (error) {
-          console.log(`Failed add option contract for agent ID ${agentID}`);
-          return false;
-        }
-    }
+        });
+        console.log(`Successful get option contract list for agent ID ${agentID}`)
+        return queryResult;
+      } catch (error) {
+        console.log(`Failed get option contract list for agent ID ${agentID}`);
+        return [];
+      }
+  }
 
-    // remove option contract
-    this.removeOptionContract = async function (
-      agentID,
-      optionChainSymbol,
-    ) {
-        try {
-          const sqlCommand = `DELETE FROM optionContract WHERE agentID=? AND optionChainSymbol=?`;
-          
-          await new Promise((resolve, reject) => {
-            this.trading_management_db.get(sqlCommand, [agentID, optionChainSymbol], (err, row) => {
-              if (err) {
-                reject(err);
-              } else {
-                resolve(row);
-              }
-            });
+  // add option contract 
+  this.addOptionContract = async function (
+    agentID,
+    optionChainSymbol,
+  ) {
+      try {
+        const sqlCommand = `INSERT INTO optionContract (agentID, optionChainSymbol) VALUES (?, ?)`;
+
+        await new Promise((resolve, reject) => {
+          this.trading_management_db.get(sqlCommand, [agentID, optionChainSymbol], (err, row) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(row);
+            }
           });
-          console.log(`Successful remove option contract for agent ID ${agentID}`)
-          return true;
-        } catch (error) {
-          console.log(`Failed remove option contract for agent ID ${agentID}`);
-          return false;
-        }
-    }
+        });
+        console.log(`Successful add option contract for agent ID ${agentID}`)
+        const queryResult = this.getOptionContractList(agentID);
+        return queryResult;
+      } catch (error) {
+        console.log(`Failed add option contract for agent ID ${agentID}`);
+        return [];
+      }
+  }
+
+  // remove option contract
+  this.removeOptionContract = async function (
+    agentID,
+    optionChainSymbol,
+  ) {
+      try {
+        const sqlCommand = `DELETE FROM optionContract WHERE agentID=? AND optionChainSymbol=?`;
+        
+        await new Promise((resolve, reject) => {
+          this.trading_management_db.get(sqlCommand, [agentID, optionChainSymbol], (err, row) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(row);
+            }
+          });
+        });
+        console.log(`Successful remove option contract for agent ID ${agentID}`)
+        const queryResult = this.getOptionContractList(agentID);
+        return queryResult;
+      } catch (error) {
+        console.log(`Failed remove option contract for agent ID ${agentID}`);
+        return [];
+      }
+  }
 }
-    
+  
 module.exports = optionContractDBOperation;
