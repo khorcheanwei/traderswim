@@ -45,10 +45,10 @@ async function copy_trading_stock_pair_list() {
 
 // get option chain list
 async function copy_trading_get_option_chain_list(httpRequest) {
-  const { stockName, optionChainCallPut } = httpRequest.query;
+  const { optionContractTickerName, optionChainCallPut } = httpRequest.query;
 
   // when stock name is undefined
-  if (stockName == undefined || stockName == '') {
+  if (optionContractTickerName == undefined || optionContractTickerName == '') {
     return { success: true, data: null };
   }
 
@@ -77,7 +77,7 @@ async function copy_trading_get_option_chain_list(httpRequest) {
           }
         }
 
-        const response = await axios.get(`https://api.tdameritrade.com/v1/marketdata/chains?symbol=${stockName}&contractType=${optionChainCallPut}`, headers = config)
+        const response = await axios.get(`https://api.tdameritrade.com/v1/marketdata/chains?symbol=${optionContractTickerName}&contractType=${optionChainCallPut}`, headers = config)
         console.log(`Successful in get option chain list`);
         if (optionChainCallPut == "CALL") {
           return { success: true, data: response.data.callExpDateMap };
