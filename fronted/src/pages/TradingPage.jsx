@@ -28,9 +28,9 @@ export default function Trading() {
                     <OptionContractPlaceOrderContextProvider>
                         <TopCopyTradingPage></TopCopyTradingPage>
                     </OptionContractPlaceOrderContextProvider>
-                        <CopyTradingPage>
-                            <OptionPlaceOrderPanelAllPage></OptionPlaceOrderPanelAllPage>
-                        </CopyTradingPage>
+                    <CopyTradingPage>
+                        <OptionPlaceOrderPanelAllPage></OptionPlaceOrderPanelAllPage>
+                    </CopyTradingPage>
                 </OptionPlaceOrderPanelContextProvider>
             )}
             {subpage === 'tradehistory' && (
