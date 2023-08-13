@@ -43,10 +43,11 @@ function optionContractDBOperation(trading_management_db) {
             });
           });
           console.log(`Successful add option contract for agent ID ${agentID}`)
-          return true;
+          const queryResult = this.getOptionContractList(agentID);
+          return queryResult;
         } catch (error) {
           console.log(`Failed add option contract for agent ID ${agentID}`);
-          return false;
+          return [];
         }
     }
 
@@ -68,10 +69,11 @@ function optionContractDBOperation(trading_management_db) {
             });
           });
           console.log(`Successful remove option contract for agent ID ${agentID}`)
-          return true;
+          const queryResult = this.getOptionContractList(agentID);
+          return queryResult;
         } catch (error) {
           console.log(`Failed remove option contract for agent ID ${agentID}`);
-          return false;
+          return [];
         }
     }
 }

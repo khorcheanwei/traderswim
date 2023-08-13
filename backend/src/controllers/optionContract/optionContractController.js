@@ -3,6 +3,15 @@ const { optionContractDBOperation } = require("../../data-access/index.js");
 const jwt = require("jsonwebtoken");
 const jwtSecret = "traderswim";
 
+function obtain_option_contract_list(queryResult) {
+  let option_contract_list = []
+  for(let index = 0; index < queryResult.length; index++){
+    option_contract_list.push(queryResult[index]["optionChainSymbol"]);
+  }
+  return option_contract_list;
+}
+
+
 // To get option contract list
 async function get_option_contract_list(httpRequest) {
   const { token } = httpRequest.cookies;
@@ -13,17 +22,15 @@ async function get_option_contract_list(httpRequest) {
       let agentDocument = jwt.verify(token, jwtSecret, {});
       const agentID = agentDocument.id;
       
-      let dbQueryResult = await optionContractDBOperation.getOptionContractList(agentID);
-      for(let index = 0; index < dbQueryResult.length; index++){
-        option_contract_list.push(dbQueryResult[index]["optionChainSymbol"]);
-      }
-      
-      return { success: true, data: option_contract_list };
+      let queryResult = await optionContractDBOperation.getOptionContractList(agentID);
+      option_contract_list = obtain_option_contract_list(queryResult);
+  
+      return { success: true, list: option_contract_list };
     } catch (error) {
-      return { success: false, data: option_contract_list };
+      return { success: false, list: option_contract_list };
     }
   } else {
-    return { success: true, data: option_contract_list };
+    return { success: true, list: option_contract_list };
   }
 }
 
@@ -32,19 +39,21 @@ async function add_option_contract(httpRequest) {
   const { token } = httpRequest.cookies;
   const { optionChainSymbol } = httpRequest.body;
 
+  let option_contract_list = [];
   if (token) {
     try {
       let agentDocument = jwt.verify(token, jwtSecret, {});
       const agentID = agentDocument.id;
       
-      await optionContractDBOperation.addOptionContract(agentID, optionChainSymbol);
+      let queryResult = await optionContractDBOperation.addOptionContract(agentID, optionChainSymbol);
+      option_contract_list = obtain_option_contract_list(queryResult);
       
-      return { success: true };
+      return { success: true, list: option_contract_list };
     } catch (error) {
-      return { success: false };
+      return { success: false, list: option_contract_list };
     }
   } else {
-    return { success: true };
+    return { success: true, list: option_contract_list };
   }
 }
 
@@ -53,19 +62,21 @@ async function remove_option_contract(httpRequest) {
   const { token } = httpRequest.cookies;
   const { optionChainSymbol } = httpRequest.body;
 
+  let option_contract_list = [];
   if (token) {
     try {
       let agentDocument = jwt.verify(token, jwtSecret, {});
       const agentID = agentDocument.id;
       
-      await optionContractDBOperation.removeOptionContract(agentID, optionChainSymbol);
+      let queryResult = await optionContractDBOperation.removeOptionContract(agentID, optionChainSymbol);
+      option_contract_list = obtain_option_contract_list(queryResult);
       
-      return { success: true };
+      return { success: true, list: option_contract_list };
     } catch (error) {
-      return { success: false };
+      return { success: false, list: option_contract_list };
     }
   } else {
-    return { success: true };
+    return { success: true, list: option_contract_list };
   }
 }
 

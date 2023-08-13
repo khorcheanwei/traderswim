@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 
 import AccountsPage from './account/AccountPage.jsx';
 import CopyTradingPage from './copyTrading/CopyTradingPage';
+import TopCopyTradingPage from './copyTrading/TopCopyTradingPage';
 import OptionPlaceOrderPanelAllPage from './copyTrading/OptionPlaceOrderPanelAllPage';
 import TradeHistoryPage from './tradeHistory/TradeHistoryPage';
 
@@ -22,11 +23,14 @@ export default function Trading() {
                 <AccountsPage></AccountsPage>
             )}
             {subpage === 'copytrading' && (
-                <OptionPlaceOrderPanelContextProvider>
-                    <CopyTradingPage>
-                        <OptionPlaceOrderPanelAllPage/>
-                    </CopyTradingPage>
-                </OptionPlaceOrderPanelContextProvider>
+                <div>
+                    <TopCopyTradingPage></TopCopyTradingPage>
+                    <OptionPlaceOrderPanelContextProvider>
+                        <CopyTradingPage>
+                            <OptionPlaceOrderPanelAllPage/>
+                        </CopyTradingPage>
+                    </OptionPlaceOrderPanelContextProvider>
+                </div>
             )}
             {subpage === 'tradehistory' && (
                <TradeHistoryPage></TradeHistoryPage>
