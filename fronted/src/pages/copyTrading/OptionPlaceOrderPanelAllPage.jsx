@@ -3,23 +3,13 @@ import OptionPlaceSaveOrderPanelPage from '../optionPlaceOrderPanel/OptionPlaceS
 
 export default function OptionPlaceOrderPanelAllPage() {
     return (
-        <>
-            <div className="w-[50%] flex flex-col">
-                <div className="h-[50%] overflow-scroll">
-                    <OptionPlaceOrderPanelPage callOption={true}/>
-                </div>
-                <div className="h-[50%] overflow-scroll">
-                    <OptionPlaceSaveOrderPanelPage callOption={true}/>
-                </div>
+        <div className="flex h-full">
+            <div className="overflow-scroll w-full">
+                <OptionPlaceSaveOrderPanelPage callOption={true}/>
             </div>
-            <div className="w-[50%] flex flex-col">
-                <div className="h-[50%] overflow-scroll">
-                    <OptionPlaceOrderPanelPage callOption={false}/>
-                </div>
-                <div className="h-[50%] overflow-scroll">
-                    <OptionPlaceSaveOrderPanelPage callOption={false}/>
-                </div>
+            <div className="overflow-scroll w-full">
+                <OptionPlaceSaveOrderPanelPage callOption={false}/>
             </div>
-        </>
+        </div>
     )
 }

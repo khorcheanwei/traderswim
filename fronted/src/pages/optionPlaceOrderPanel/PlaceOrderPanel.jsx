@@ -1,10 +1,10 @@
-import {useContext } from 'react';
+import { useState, useContext } from 'react';
 import TradingStockPlaceOrder from '../tradingStock/TradingStockPlaceOrder';
 import { CopyTradingOrderContext } from '../context/CopyTradingOrderContext';
 import Overlay from "./../Overlay"
 
 export function PlaceOrderPanel({row, callOption}) {
-    const { isOpenOrderPlace, setIsOpenOrderPlace } = useContext(CopyTradingOrderContext);
+    const [isOpenOrderPlace, setIsOpenOrderPlace] = useState(false);
     const { rowCopyTradingOrder, setRowCopyTradingOrder } = useContext(CopyTradingOrderContext);
   
     const orderPlaceClose = async () => {
@@ -28,7 +28,13 @@ export function PlaceOrderPanel({row, callOption}) {
           <span className="font-medium text-white dark:text-white">P</span>
         </div>
         <Overlay isOpen={isOpenOrderPlace} >
-          <TradingStockPlaceOrder rowCopyTradingOrder={rowCopyTradingOrder} onClose={orderPlaceClose}></TradingStockPlaceOrder>
+          <TradingStockPlaceOrder 
+            rowCopyTradingOrder={rowCopyTradingOrder} 
+            onClose={orderPlaceClose}
+            isOpenOrderPlace={isOpenOrderPlace}
+            setIsOpenOrderPlace={setIsOpenOrderPlace}
+            >
+          </TradingStockPlaceOrder>
         </Overlay>
       </div>
     );

@@ -1,13 +1,9 @@
 import axios from 'axios';
 import { useContext, useState, useEffect } from 'react';
 import { CopyTradingOrderContext } from '../context/CopyTradingOrderContext';
-import AutocompleteList from './AutocompleteList';
-import { ClipLoader } from 'react-spinners';
 
 
-export default function TradingStockPlaceOrder({ rowCopyTradingOrder, onClose }) {
-
-    const {isOpenOrderPlace, setIsOpenOrderPlace,} = useContext(CopyTradingOrderContext);
+export default function TradingStockPlaceOrder({ rowCopyTradingOrder, onClose, isOpenOrderPlace, setIsOpenOrderPlace }) {
 
     var optionChainInstructionList = ["BUY_TO_OPEN", "SELL_TO_CLOSE"];
     var optionChainOrderTypeList = ["LIMIT", "MARKET", "MARKET_ON_CLOSE", "STOP", "STOP_LIMIT", "TRAILING_STOP"];

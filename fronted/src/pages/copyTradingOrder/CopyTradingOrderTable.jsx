@@ -1,6 +1,6 @@
 import React from 'react'
 import { useAsyncDebounce } from 'react-table'
-import { useContext } from 'react';
+import { useState, useContext } from 'react';
 
 import { CopyTradingOrderContext } from '../context/CopyTradingOrderContext';
 
@@ -11,6 +11,7 @@ import CopyTradingAllAccountOrderPage from '../copyTradingOrder/CopyTradingAllAc
 import Overlay from "./../Overlay";
 import { async } from 'regenerator-runtime'
 import CommonTable from '../shared/Table';
+import TradingStockPlaceOrder from '../tradingStock/TradingStockPlaceOrder';
 
 // Define a default UI for filtering
 function GlobalFilter({
@@ -55,8 +56,17 @@ export function ViewAllOrderPanel(row) {
 }
 
 export function ChangeOrderPanel(row) {
-  const { isOpenOrderReplace, setIsOpenOrderReplace, isOpenOrderDelete, setIsOpenOrderDelete } = useContext(CopyTradingOrderContext);
   const { rowCopyTradingOrder, setRowCopyTradingOrder } = useContext(CopyTradingOrderContext);
+  const [isOpenOrderPlace, setIsOpenOrderPlace] = useState(false);
+  const [isOpenOrderReplace, setIsOpenOrderReplace] = useState(false);
+  const [isOpenOrderDelete, setIsOpenOrderDelete] = useState(false);
+
+  const orderPlaceClose = async () => {
+    if (isOpenOrderPlace == false) {
+      setRowCopyTradingOrder(row)
+    }
+    setIsOpenOrderPlace(!isOpenOrderPlace)
+  }
 
   const orderReplaceClose = async () => {
     if (isOpenOrderReplace == false) {
@@ -75,6 +85,9 @@ export function ChangeOrderPanel(row) {
   return (
     <div className="flex">
       <div className="flex space-x-2">
+        <div onClick={orderPlaceClose} className="cursor-pointer relative inline-flex items-center justify-center w-10 h-10 overflow-hidden rounded-full bg-purple-600">
+          <span className="font-medium text-white dark:text-white">P</span>
+        </div>
         <div onClick={orderReplaceClose} className="cursor-pointer relative inline-flex items-center justify-center w-10 h-10 overflow-hidden rounded-full bg-yellow-300">
         <span className="font-medium text-white dark:text-white">R</span>
         </div>
@@ -82,11 +95,23 @@ export function ChangeOrderPanel(row) {
           <span className="font-medium text-white dark:text-white">C</span>
         </div>
       </div>
+      <Overlay isOpen={isOpenOrderPlace} >
+        <TradingStockPlaceOrder 
+          rowCopyTradingOrder={rowCopyTradingOrder} onClose={orderPlaceClose} 
+          isOpenOrderPlace={isOpenOrderPlace} setIsOpenOrderPlace={setIsOpenOrderPlace}>  
+        </TradingStockPlaceOrder>
+      </Overlay>
       <Overlay isOpen={isOpenOrderReplace} >
-        <TradingStockReplaceOrder rowCopyTradingOrder={rowCopyTradingOrder} onClose={orderReplaceClose}></TradingStockReplaceOrder>
+        <TradingStockReplaceOrder 
+          rowCopyTradingOrder={rowCopyTradingOrder} onClose={orderReplaceClose}
+          isOpenOrderReplace={isOpenOrderReplace} setIsOpenOrderReplace={setIsOpenOrderReplace}>
+        </TradingStockReplaceOrder>
       </Overlay>
       <Overlay isOpen={isOpenOrderDelete} >
-        <TradingStockDeleteOrder rowCopyTradingOrder={rowCopyTradingOrder} onClose={orderDeleteClose}></TradingStockDeleteOrder>
+        <TradingStockDeleteOrder 
+          rowCopyTradingOrder={rowCopyTradingOrder} onClose={orderDeleteClose}
+          isOpenOrderDelete={isOpenOrderDelete} setIsOpenOrderDelete={setIsOpenOrderDelete}>
+        </TradingStockDeleteOrder>
       </Overlay>
     </div>
   );

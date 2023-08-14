@@ -90,10 +90,10 @@ export default function CopyTradingPage({children}) {
         <CopyTradingOrderPage />
       </div>
       <div className="h-[40%] flex">
-          <div className="w-[50%] overflow-scroll">
+          <div className="w-[40%] overflow-scroll">
             <CopyTradingPositionPage />
           </div> 
-          <div className="w-[60%] flex">
+          <div className="w-[60%]">
             {children}
           </div>
       </div>
