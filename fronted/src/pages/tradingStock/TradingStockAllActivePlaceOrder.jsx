@@ -6,7 +6,6 @@ import AutocompleteList from './AutocompleteList';
 import { ClipLoader } from 'react-spinners';
 
 
-
 export default function TradingStockAllActivePlaceOrder({ onClose }) {
     const [isLoading, setIsLoading] = useState(false);
 

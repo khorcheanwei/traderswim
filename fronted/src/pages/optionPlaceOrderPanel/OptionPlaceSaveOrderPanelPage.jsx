@@ -9,41 +9,22 @@ export default function OptionPlaceSaveOrderPanelPage({callOption}) {
   const { optionContractSaveOrderList, setOptionContractSaveOrderList } = useContext(OptionPlaceOrderPanelContext);
 
   let columns_list;
-  if (callOption){
-    columns_list = [
-      {
-        Header: 'Place order',
-        accessor: 'PlaceOrder',
-        Cell: (row) => <PlaceOrderPanel row={row} callOption={callOption}/>,
-      },
-      {
-        Header: 'Symbol description',
-        accessor: 'optionChainDescription',
-      },
-      {
-        Header: 'Settings',
-        accessor: 'name',
-        Cell: (row) => <SettingsPanel row={row} setOptionContractSaveOrderList={setOptionContractSaveOrderList}/>,
-      },
-    ]
-  } else{
-    columns_list = [
-      {
-        Header: 'Settings',
-        accessor: 'name',
-        Cell: (row) => <SettingsPanel row={row} setOptionContractSaveOrderList={setOptionContractSaveOrderList}/>,
-      },
-      {
-        Header: 'Symbol description',
-        accessor: 'optionChainDescription',
-      },
-      {
-        Header: 'Place order',
-        accessor: 'PlaceOrder',
-        Cell: (row) => <PlaceOrderPanel row={row} callOption={callOption}/>,
-      }
-    ]
-  } 
+  columns_list = [
+    {
+      Header: 'Place order',
+      accessor: 'PlaceOrder',
+      Cell: (row) => <PlaceOrderPanel row={row} callOption={callOption}/>,
+    },
+    {
+      Header: 'Symbol description',
+      accessor: 'optionChainDescription',
+    },
+    {
+      Header: 'Settings',
+      accessor: 'name',
+      Cell: (row) => <SettingsPanel row={row} setOptionContractSaveOrderList={setOptionContractSaveOrderList}/>,
+    },
+  ]
 
   const columns = React.useMemo(() => columns_list, [])
   

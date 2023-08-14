@@ -8,31 +8,18 @@ export default function OptionPlaceOrderPanelPage({callOption}) {
   const {copyTradingOrderMainData, setCopyTradingOrderMainData} = useContext(CopyTradingOrderContext);
 
   let columns_list;
-  if (callOption){
-    columns_list = [
-      {
-        Header: 'Place order',
-        accessor: 'PlaceOrder',
-        Cell: (row) => <PlaceOrderPanel row={row} callOption={callOption}/>,
-      },
-      {
-        Header: 'Symbol description',
-        accessor: 'optionChainDescription',
-      }
-    ]
-  } else{
-    columns_list = [
-      {
-        Header: 'Symbol description',
-        accessor: 'optionChainDescription',
-      },
-      {
-        Header: 'Place order',
-        accessor: 'PlaceOrder',
-        Cell: (row) => <PlaceOrderPanel row={row} callOption={callOption}/>,
-      }
-    ]
-  } 
+  
+  columns_list = [
+    {
+      Header: 'Place order',
+      accessor: 'PlaceOrder',
+      Cell: (row) => <PlaceOrderPanel row={row} callOption={callOption}/>,
+    },
+    {
+      Header: 'Symbol description',
+      accessor: 'optionChainDescription',
+    }
+  ]
   
   const columns = React.useMemo(() => columns_list, [])
   

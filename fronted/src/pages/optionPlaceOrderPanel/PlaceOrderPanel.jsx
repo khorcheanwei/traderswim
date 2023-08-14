@@ -18,7 +18,7 @@ export function PlaceOrderPanel({row, callOption}) {
     if (callOption) {
       place_order_class = place_order_class + "bg-green-700"
     } else {
-      place_order_button_class = place_order_button_class + "justify-end"
+      place_order_button_class = place_order_button_class
       place_order_class = place_order_class + "bg-red-700"
     }
   
