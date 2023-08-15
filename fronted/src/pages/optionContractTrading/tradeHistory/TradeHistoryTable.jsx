@@ -1,15 +1,9 @@
 import React from 'react'
 import { useTable, useFilters, useGlobalFilter, useAsyncDebounce, useSortBy, usePagination } from 'react-table'
 import { ChevronDoubleLeftIcon, ChevronLeftIcon, ChevronRightIcon, ChevronDoubleRightIcon } from '@heroicons/react/solid'
-import { Button, PageButton } from '../shared/Button'
-import { classNames } from '../shared/Utils'
-import { SortIcon, SortUpIcon, SortDownIcon } from '../shared/Icons'
 import { useContext, useState, useEffect } from 'react';
-import { AccountContext } from '../context/AccountContext';
-
-import axios from 'axios';
-import Overlay from "../Overlay";
-import CommonTable from '../shared/Table';
+import { AccountContext } from './../context/AccountContext';
+import CommonTable from './../shared/Table';
 
 // Define a default UI for filtering
 function GlobalFilter({

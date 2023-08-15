@@ -8,9 +8,9 @@ import TradingStockDeleteOrder from '../tradingStock/TradingStockDeleteOrder';
 import TradingStockReplaceOrder from '../tradingStock/TradingStockReplaceOrder';
 import CopyTradingAllAccountOrderPage from '../copyTradingOrder/CopyTradingAllAccountOrderPage';
 
-import Overlay from "./../Overlay";
+import Overlay from "./../../Overlay";
 import { async } from 'regenerator-runtime'
-import CommonTable from '../shared/Table';
+import CommonTable from './../../shared/Table';
 import TradingStockPlaceOrder from '../tradingStock/TradingStockPlaceOrder';
 
 // Define a default UI for filtering

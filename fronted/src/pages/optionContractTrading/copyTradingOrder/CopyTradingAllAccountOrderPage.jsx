@@ -1,4 +1,4 @@
-import Overlay from "../Overlay";
+import Overlay from "./../../Overlay";
 import React from 'react'
 import { useContext, useState, useEffect, useRef  } from 'react';
 
@@ -6,10 +6,10 @@ import { CopyTradingOrderContext } from '../context/CopyTradingOrderContext';
 import CopyTradingAllAccountOrderTable from './CopyTradingAllAccountOrderTable'
 
 
-import TradingStockReplaceOrderSelected from '../tradingStock/TradingStockReplaceOrderSelected';
-import TradingStockDeleteOrderSelected from '../tradingStock/TradingStockDeleteOrderSelected';
+import TradingStockReplaceOrderSelected from './../tradingStock/TradingStockReplaceOrderSelected';
+import TradingStockDeleteOrderSelected from './../tradingStock/TradingStockDeleteOrderSelected';
 
-import TradingStockWarningMessage from '../tradingStock/TradingStockWarningMessage';
+import TradingStockWarningMessage from './../tradingStock/TradingStockWarningMessage';
 
 import { TextOptionChainDescriptionColorPanel, TextOptionChainFilledQuantityColorPanel, TextOptionChainPriceColorPanel, TextOptionChainQuantityColorPanel,
   TextOptionChainInstructionColorPanel, TextOptionChainStatusColorPanel, TextOptionChainOrderTypeColorPanel, TextOptionChainEnteredTimeColorPanel,

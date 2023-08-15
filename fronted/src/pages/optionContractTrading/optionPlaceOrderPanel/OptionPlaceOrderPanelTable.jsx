@@ -1,11 +1,5 @@
 import React from 'react'
-import CommonTable from '../shared/Table';
-
-import { useContext } from 'react';
-import TradingStockPlaceOrder from '../tradingStock/TradingStockPlaceOrder';
-import { CopyTradingOrderContext } from '../context/CopyTradingOrderContext';
-
-import Overlay from "./../Overlay";
+import CommonTable from './../../shared/Table';
 
 // Define a default UI for filtering
 function GlobalFilter({

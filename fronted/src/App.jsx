@@ -7,10 +7,10 @@ import AgentRegisterPage from './pages/agent/AgentRegisterPage';
 import TradingPage from './pages/TradingPage';
 import { UserContextProvider } from './pages/context/UserContext';
 import { AccountContextProvider } from './pages/context/AccountContext';
-import {CopyTradingOrderContextProvider } from './pages/context/CopyTradingOrderContext';
-import { CopyTradingPositionContextProvider } from './pages/context/CopyTradingPositionContext';
-import { TradeHistoryContextProvider } from './pages/context/TradeHistoryContext';
-import {TradeStockContextProvider } from './pages/context/TradeStockContext';
+import { CopyTradingOrderContextProvider } from './pages/optionContractTrading/context/CopyTradingOrderContext';
+import { CopyTradingPositionContextProvider } from './pages/optionContractTrading/context/CopyTradingPositionContext';
+import { TradeHistoryContextProvider } from './pages/optionContractTrading/context/TradeHistoryContext';
+import { TradeStockContextProvider } from './pages/optionContractTrading/context/TradeStockContext';
  
 axios.defaults.baseURL = "http://localhost:4000";
 axios.defaults.withCredentials = true;

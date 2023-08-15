@@ -1,7 +1,7 @@
 import React from 'react'
 import { useAsyncDebounce } from 'react-table'
 
-import CommonTable from '../shared/Table';
+import CommonTable from './../../shared/Table';
 
 // Define a default UI for filtering
 function GlobalFilter({
