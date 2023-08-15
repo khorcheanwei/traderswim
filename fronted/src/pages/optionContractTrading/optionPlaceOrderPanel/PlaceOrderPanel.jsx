@@ -1,7 +1,7 @@
 import { useState, useContext } from 'react';
 import TradingStockPlaceOrder from '../tradingStock/TradingStockPlaceOrder';
 import { CopyTradingOrderContext } from '../context/CopyTradingOrderContext';
-import Overlay from "./../Overlay"
+import Overlay from "./../../Overlay"
 
 export function PlaceOrderPanel({row, callOption}) {
     const [isOpenOrderPlace, setIsOpenOrderPlace] = useState(false);

@@ -2,10 +2,10 @@ import axios from 'axios';
 import React from 'react'
 import { useContext, useEffect, useRef  } from 'react';
 
-import { CopyTradingOrderContext } from '../context/CopyTradingOrderContext';
-import { CopyTradingPositionContext } from '../context/CopyTradingPositionContext';
-import CopyTradingOrderPage from '../copyTradingOrder/CopyTradingOrderPage.jsx'
-import CopyTradingPositionPage from '../copyTradingPosition/CopyTradingPositionPage';
+import { CopyTradingOrderContext } from './../context/CopyTradingOrderContext';
+import { CopyTradingPositionContext } from './../context/CopyTradingPositionContext';
+import CopyTradingOrderPage from './../copyTradingOrder/CopyTradingOrderPage.jsx'
+import CopyTradingPositionPage from './../copyTradingPosition/CopyTradingPositionPage';
 
 export default function CopyTradingPage({children}) {
   const {copyTradingOrderDataDict, setCopyTradingOrderDataDict, copyTradingOrderMainData, setCopyTradingOrderMainData} = useContext(CopyTradingOrderContext);

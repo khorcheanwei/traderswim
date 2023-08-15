@@ -2,13 +2,13 @@ import React from 'react'
 import { useAsyncDebounce } from 'react-table'
 import { useContext  } from 'react';
 
-import TradingStockDeleteOrderIndividual from '../tradingStock/TradingStockDeleteOrderIndividual';
-import TradingStockReplaceOrderIndividual from '../tradingStock/TradingStockReplaceOrderIndividual';
+import TradingStockDeleteOrderIndividual from './../tradingStock/TradingStockDeleteOrderIndividual';
+import TradingStockReplaceOrderIndividual from './../tradingStock/TradingStockReplaceOrderIndividual';
 
 import { CopyTradingOrderContext } from '../context/CopyTradingOrderContext';
 
-import CommonTable from '../shared/Table';
-import Overlay from "./../Overlay";
+import CommonTable from './../../shared/Table';
+import Overlay from "./../../Overlay";
 
 // Define a default UI for filtering
 function GlobalFilter({
