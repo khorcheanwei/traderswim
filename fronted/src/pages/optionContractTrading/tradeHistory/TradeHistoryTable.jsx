@@ -1,9 +1,6 @@
 import React from 'react'
 import { useTable, useFilters, useGlobalFilter, useAsyncDebounce, useSortBy, usePagination } from 'react-table'
-import { ChevronDoubleLeftIcon, ChevronLeftIcon, ChevronRightIcon, ChevronDoubleRightIcon } from '@heroicons/react/solid'
-import { useContext, useState, useEffect } from 'react';
-import { AccountContext } from './../context/AccountContext';
-import CommonTable from './../shared/Table';
+import CommonTable from './../../shared/Table';
 
 // Define a default UI for filtering
 function GlobalFilter({
@@ -16,13 +13,6 @@ function GlobalFilter({
   const onChange = useAsyncDebounce(value => {
     setGlobalFilter(value || undefined)
   }, 200)
-
-  const { isOpenAccountLogin, setIsOpenAccountLogin } = useContext(AccountContext);
-
-
-  const toggleOverlay = () => {
-    setIsOpenAccountLogin(!isOpenAccountLogin);
-  };
 
   return (
     <div className="flex">

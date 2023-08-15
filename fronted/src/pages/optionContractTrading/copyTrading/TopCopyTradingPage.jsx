@@ -3,8 +3,8 @@ import { useContext } from 'react';
 
 import TradingStockAllActivePlaceOrder from './../tradingStock/TradingStockAllActivePlaceOrder';
 import { OptionContractPlaceOrderContext } from './../context/OptionContractPlaceOrderContext';
-import { Button } from './../shared/Button';
-import Overlay from "./../Overlay";
+import { Button } from './../../shared/Button';
+import Overlay from "./../../Overlay";
 
 export default function TopCopyTradingPage() {
 
