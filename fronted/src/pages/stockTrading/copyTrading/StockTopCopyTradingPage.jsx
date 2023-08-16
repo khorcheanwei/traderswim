@@ -16,7 +16,7 @@ export default function TopCopyTradingPage() {
   
   return (
         <div className="w-full">
-            <div className="flex justify-between items-center">
+            <div className="flex justify-end items-center">
                 <div className="flex gap-6 h-12">
                     <Button className="text-gray-700 " onClick={allActivePlaceOrderClose}>BUY/SELL</Button>
                 </div>
