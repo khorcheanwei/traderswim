@@ -1,11 +1,11 @@
 import React from 'react'
-import CommonTable from './../../shared/Table';
+import CommonTable from '../../shared/Table';
 import { useContext, useState, useEffect } from 'react';
 
-import { CopyTradingPositionContext } from './../context/CopyTradingPositionContext';
-import CopyTradingAllAccountPositionPage from './CopyTradingAllAccountPositionPage';
-import TradingStockExitOrder from '../tradingStock/TradingStockExitOrder';
-import Overlay from "./../../Overlay";
+import { StockCopyTradingPositionContext } from '../context/StockCopyTradingPositionContext';
+import StockCopyTradingAllAccountPositionPage from './StockCopyTradingAllAccountPositionPage';
+import StockExitOrder from '../tradingStock/StockExitOrder';
+import Overlay from "../../Overlay";
 
 // Define a default UI for filtering
 function GlobalFilter({
@@ -23,8 +23,7 @@ function GlobalFilter({
 
 export function viewAllPositionPanel(row) {
   
-  const { isOpenViewAllPosition, setIsOpenViewAllPosition } = useContext(CopyTradingPositionContext);
-  const { rowCopyTradingPosition, setRowCopyTradingPosition } = useContext(CopyTradingPositionContext);
+  const { isOpenViewAllPosition, setIsOpenViewAllPosition, rowCopyTradingPosition, setRowCopyTradingPosition } = useContext(StockCopyTradingPositionContext);
 
   const viewAllPositionClose = async () => {
     if (isOpenViewAllPosition == false) {
@@ -41,7 +40,7 @@ export function viewAllPositionPanel(row) {
         </div>
       </div>
       <Overlay isOpen={isOpenViewAllPosition} >
-        <CopyTradingAllAccountPositionPage rowCopyTradingPosition={rowCopyTradingPosition}  onClose={viewAllPositionClose}></CopyTradingAllAccountPositionPage>
+        <StockCopyTradingAllAccountPositionPage rowCopyTradingPosition={rowCopyTradingPosition}  onClose={viewAllPositionClose}></StockCopyTradingAllAccountPositionPage>
       </Overlay>
     </div>
   );
@@ -66,7 +65,7 @@ export function ChangePositionPanel(row) {
         </div>
       </div>
       <Overlay isOpen={isOpenOrderExit} >
-        <TradingStockExitOrder rowCopyTradingPosition={rowCopyTradingPosition} onClose={orderExitClose}></TradingStockExitOrder>
+        <StockExitOrder rowCopyTradingPosition={rowCopyTradingPosition} onClose={orderExitClose}></StockExitOrder>
       </Overlay>
     </div>
   );
@@ -94,9 +93,9 @@ export function SettledQuantityColorChange(row) {
   )
 }
 
-function CopyTradingPositionTable({ columns, data }) {
+function StockCopyTradingPositionTable({ columns, data }) {
   let hiddenColumns = ['accountId', 'optionChainSymbol', 'optionChainOrderId', 'agentTradingSessionID'];
   return CommonTable({ columns, data, GlobalFilter, hiddenColumns })
 }
 
-export default CopyTradingPositionTable;
+export default StockCopyTradingPositionTable;

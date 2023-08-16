@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React from 'react'
-import CommonTable from './../../shared/Table';
+import CommonTable from '../../shared/Table';
 
 // Define a default UI for filtering
 function GlobalFilter({
@@ -44,9 +44,9 @@ export function SettingsPanel({row, setOptionContractSaveOrderList}) {
   );
 }
 
-function OptionPlaceSaveOrderPanelTable({ columns, data }) {
+function StockOptionPlaceSaveOrderPanelTable({ columns, data }) {
   let hiddenColumns = [];
   return CommonTable({ columns, data, GlobalFilter, hiddenColumns })
 }
 
-export default OptionPlaceSaveOrderPanelTable;
+export default StockOptionPlaceSaveOrderPanelTable;

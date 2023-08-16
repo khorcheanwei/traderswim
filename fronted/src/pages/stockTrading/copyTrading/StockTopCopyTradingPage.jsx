@@ -1,14 +1,14 @@
 import React from 'react'
 import { useContext } from 'react';
-
-import TradingStockAllActivePlaceOrder from './../tradingStock/TradingStockAllActivePlaceOrder';
-import { OptionContractPlaceOrderContext } from './../context/OptionContractPlaceOrderContext';
 import { Button } from './../../shared/Button';
 import Overlay from "./../../Overlay";
 
+import StockAllActivePlaceOrder from './../tradingStock/StockAllActivePlaceOrder';
+import { StockPlaceOrderContext } from './../context/StockPlaceOrderContext';
+
 export default function TopCopyTradingPage() {
 
-  const { isOpenTradingStock, setIsOpenTradingStock } = useContext(OptionContractPlaceOrderContext);
+  const { isOpenTradingStock, setIsOpenTradingStock } = useContext(StockPlaceOrderContext);
 
   const allActivePlaceOrderClose = async () => {
     setIsOpenTradingStock(!isOpenTradingStock)
@@ -23,7 +23,7 @@ export default function TopCopyTradingPage() {
             </div>
             <div>
                 <Overlay isOpen={isOpenTradingStock} >
-                    <TradingStockAllActivePlaceOrder onClose={allActivePlaceOrderClose}></TradingStockAllActivePlaceOrder>
+                    <StockAllActivePlaceOrder onClose={allActivePlaceOrderClose}></StockAllActivePlaceOrder>
                 </Overlay>
             </div>
         </div>

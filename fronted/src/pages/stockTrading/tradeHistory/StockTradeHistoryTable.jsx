@@ -1,7 +1,6 @@
 import React from 'react'
 import { useTable, useFilters, useGlobalFilter, useAsyncDebounce, useSortBy, usePagination } from 'react-table'
-import CommonTable from './../../shared/Table';
-import 'regenerator-runtime/runtime';
+import CommonTable from '../../shared/Table';
 
 // Define a default UI for filtering
 function GlobalFilter({
@@ -17,7 +16,6 @@ function GlobalFilter({
 
   return (
     <div className="flex">
-      
       <label className="flex gap-x-2 items-baseline">
         <span className="text-gray-700">Search: </span>
         <input

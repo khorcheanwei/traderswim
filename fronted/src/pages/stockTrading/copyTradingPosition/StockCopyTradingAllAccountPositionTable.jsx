@@ -1,7 +1,7 @@
 import React from 'react'
 import { useAsyncDebounce } from 'react-table'
 
-import CommonTable from './../../shared/Table';
+import CommonTable from '../../shared/Table';
 
 // Define a default UI for filtering
 function GlobalFilter({
@@ -16,9 +16,9 @@ function GlobalFilter({
   )
 }
 
-function CopyTradingAllAccountPositionTable({ columns, data }) {
+function StockCopyTradingAllAccountPositionTable({ columns, data }) {
   let hiddenColumns = ['accountId', 'optionChainSymbol', 'optionChainOrderId', 'agentTradingSessionID'];
   return CommonTable({ columns, data, GlobalFilter, hiddenColumns })
 }
 
-export default CopyTradingAllAccountPositionTable;
+export default StockCopyTradingAllAccountPositionTable;
