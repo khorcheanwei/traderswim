@@ -1,5 +1,5 @@
 import React from 'react'
-import CommonTable from './../../shared/Table';
+import CommonTable from '../../shared/Table';
 
 // Define a default UI for filtering
 function GlobalFilter({
@@ -20,9 +20,9 @@ export function CallOptionPanel(row) {
 }
 
 
-function OptionPlaceOrderPanelTable({ columns, data }) {
+function StockOptionPlaceOrderPanelTable({ columns, data }) {
   let hiddenColumns = [];
   return CommonTable({ columns, data, GlobalFilter, hiddenColumns })
 }
 
-export default OptionPlaceOrderPanelTable;
+export default StockOptionPlaceOrderPanelTable;

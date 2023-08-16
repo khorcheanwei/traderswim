@@ -2,10 +2,10 @@ import React from 'react'
 import { useAsyncDebounce } from 'react-table'
 import { useContext  } from 'react';
 
-import TradingStockDeleteOrderIndividual from './../tradingStock/TradingStockDeleteOrderIndividual';
-import TradingStockReplaceOrderIndividual from './../tradingStock/TradingStockReplaceOrderIndividual';
+import StockDeleteOrderIndividual from './../tradingStock/StockDeleteOrderIndividual';
+import StockReplaceOrderIndividual from './../tradingStock/StockReplaceOrderIndividual';
 
-import { CopyTradingOrderContext } from '../context/CopyTradingOrderContext';
+import { StockCopyTradingOrderContext } from '../context/StockCopyTradingOrderContext';
 
 import CommonTable from './../../shared/Table';
 import Overlay from "./../../Overlay";
@@ -215,9 +215,9 @@ export function MakeSelectedOrderPanel({row, setSelectedOrderDict}) {
 }
 
 export function ChangeOrderIndividualPanel(row) {
-  const { isOpenOrderReplaceIndividual, setIsOpenOrderReplaceIndividual, isOpenOrderDeleteIndividual, setIsOpenOrderDeleteIndividual } = useContext(CopyTradingOrderContext);
+  const { isOpenOrderReplaceIndividual, setIsOpenOrderReplaceIndividual, isOpenOrderDeleteIndividual, setIsOpenOrderDeleteIndividual } = useContext(StockCopyTradingOrderContext);
   
-  const { rowCopyTradingOrderIndividual, setRowCopyTradingOrderIndividual } = useContext(CopyTradingOrderContext);
+  const { rowCopyTradingOrderIndividual, setRowCopyTradingOrderIndividual } = useContext(StockCopyTradingOrderContext);
 
   const orderReplaceCloseIndividual = async () => {
     if (isOpenOrderReplaceIndividual == false) {
@@ -244,18 +244,18 @@ export function ChangeOrderIndividualPanel(row) {
         </div>
       </div>
       <Overlay isOpen={isOpenOrderReplaceIndividual} >
-        <TradingStockReplaceOrderIndividual rowCopyTradingOrderIndividual={rowCopyTradingOrderIndividual} onClose={orderReplaceCloseIndividual}></TradingStockReplaceOrderIndividual>
+        <StockReplaceOrderIndividual rowCopyTradingOrderIndividual={rowCopyTradingOrderIndividual} onClose={orderReplaceCloseIndividual}></StockReplaceOrderIndividual>
       </Overlay>
       <Overlay isOpen={isOpenOrderDeleteIndividual} >
-        <TradingStockDeleteOrderIndividual rowCopyTradingOrderIndividual={rowCopyTradingOrderIndividual} onClose={orderDeleteCloseIndividual}></TradingStockDeleteOrderIndividual>
+        <StockDeleteOrderIndividual rowCopyTradingOrderIndividual={rowCopyTradingOrderIndividual} onClose={orderDeleteCloseIndividual}></StockDeleteOrderIndividual>
       </Overlay>
     </div>
   );
 };
 
-function CopyTradingAllAccountOrderTable({ columns, data }) {
+function StockCopyTradingAllAccountOrderTable({ columns, data }) {
   let hiddenColumns = ['accountId', 'optionChainSymbol', 'optionChainOrderId', 'agentTradingSessionID', 'optionChainOwnStatusColor'];
   return CommonTable({ columns, data, GlobalFilter, hiddenColumns })
 }
 
-export default CopyTradingAllAccountOrderTable;
+export default StockCopyTradingAllAccountOrderTable;

@@ -2,15 +2,15 @@ import React from 'react'
 import { useAsyncDebounce } from 'react-table'
 import { useState, useContext } from 'react';
 
-import { CopyTradingOrderContext } from '../context/CopyTradingOrderContext';
+import { StockCopyTradingOrderContext } from '../context/StockCopyTradingOrderContext';
 
-import TradingStockDeleteOrder from '../tradingStock/TradingStockDeleteOrder';
-import TradingStockReplaceOrder from '../tradingStock/TradingStockReplaceOrder';
-import CopyTradingAllAccountOrderPage from '../copyTradingOrder/CopyTradingAllAccountOrderPage';
+import StockDeleteOrder from '../tradingStock/StockDeleteOrder';
+import StockReplaceOrder from '../tradingStock/StockReplaceOrder';
+import StockCopyTradingAllAccountOrderPage from '../copyTradingOrder/StockCopyTradingAllAccountOrderPage';
 
 import Overlay from "./../../Overlay";
 import CommonTable from './../../shared/Table';
-import TradingStockPlaceOrder from '../tradingStock/TradingStockPlaceOrder';
+import StockPlaceOrder from '../tradingStock/StockPlaceOrder';
 
 // Define a default UI for filtering
 function GlobalFilter({
@@ -18,14 +18,14 @@ function GlobalFilter({
   globalFilter,
   setGlobalFilter,
 }) {
+
   return (
     <div></div>
   )
 }
 
 export function ViewAllOrderPanel(row) {
-  const { isOpenViewAllOrder, setIsOpenViewAllOrder } = useContext(CopyTradingOrderContext);
-  const { rowCopyTradingOrder, setRowCopyTradingOrder } = useContext(CopyTradingOrderContext);
+  const { isOpenViewAllOrder, setIsOpenViewAllOrder, rowCopyTradingOrder, setRowCopyTradingOrder } = useContext(StockCopyTradingOrderContext);
 
   const viewAllOrderClose = async () => {
     if (isOpenViewAllOrder == false) {
@@ -42,14 +42,14 @@ export function ViewAllOrderPanel(row) {
         </div>
       </div>
       <Overlay isOpen={isOpenViewAllOrder} >
-        <CopyTradingAllAccountOrderPage rowCopyTradingOrder={rowCopyTradingOrder}  onClose={viewAllOrderClose}></CopyTradingAllAccountOrderPage>
+        <StockCopyTradingAllAccountOrderPage rowCopyTradingOrder={rowCopyTradingOrder}  onClose={viewAllOrderClose}></StockCopyTradingAllAccountOrderPage>
       </Overlay>
     </div>
   );
 }
 
 export function ChangeOrderPanel(row) {
-  const { rowCopyTradingOrder, setRowCopyTradingOrder } = useContext(CopyTradingOrderContext);
+  const { rowCopyTradingOrder, setRowCopyTradingOrder } = useContext(StockCopyTradingOrderContext);
   const [isOpenOrderPlace, setIsOpenOrderPlace] = useState(false);
   const [isOpenOrderReplace, setIsOpenOrderReplace] = useState(false);
   const [isOpenOrderDelete, setIsOpenOrderDelete] = useState(false);
@@ -89,22 +89,22 @@ export function ChangeOrderPanel(row) {
         </div>
       </div>
       <Overlay isOpen={isOpenOrderPlace} >
-        <TradingStockPlaceOrder 
+        <StockPlaceOrder 
           rowCopyTradingOrder={rowCopyTradingOrder} onClose={orderPlaceClose} 
           isOpenOrderPlace={isOpenOrderPlace} setIsOpenOrderPlace={setIsOpenOrderPlace}>  
-        </TradingStockPlaceOrder>
+        </StockPlaceOrder>
       </Overlay>
       <Overlay isOpen={isOpenOrderReplace} >
-        <TradingStockReplaceOrder 
+        <StockReplaceOrder 
           rowCopyTradingOrder={rowCopyTradingOrder} onClose={orderReplaceClose}
           isOpenOrderReplace={isOpenOrderReplace} setIsOpenOrderReplace={setIsOpenOrderReplace}>
-        </TradingStockReplaceOrder>
+        </StockReplaceOrder>
       </Overlay>
       <Overlay isOpen={isOpenOrderDelete} >
-        <TradingStockDeleteOrder 
+        <StockDeleteOrder 
           rowCopyTradingOrder={rowCopyTradingOrder} onClose={orderDeleteClose}
           isOpenOrderDelete={isOpenOrderDelete} setIsOpenOrderDelete={setIsOpenOrderDelete}>
-        </TradingStockDeleteOrder>
+        </StockDeleteOrder>
       </Overlay>
     </div>
   );
@@ -132,9 +132,9 @@ export function OptionChainStatusColorPanel(row) {
   );
 }
 
-function CopyTradingOrderTable({ columns, data }) {
+function StockCopyTradingOrderTable({ columns, data }) {
   let hiddenColumns = ['accountId', 'optionChainSymbol', 'optionChainOrderId', 'agentTradingSessionID'];
   return CommonTable({ columns, data, GlobalFilter, hiddenColumns })
 }
 
-export default CopyTradingOrderTable;
+export default StockCopyTradingOrderTable;

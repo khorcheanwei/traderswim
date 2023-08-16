@@ -18,15 +18,7 @@ function GlobalFilter({
   globalFilter,
   setGlobalFilter,
 }) {
-  const count = preGlobalFilteredRows.length
-  const [value, setValue] = React.useState(globalFilter)
-  const onChange = useAsyncDebounce(value => {
-    setGlobalFilter(value || undefined)
-  }, 200)
-
   const { isOpenAccountLogin, setIsOpenAccountLogin } = useContext(AccountContext);
-
-
   const accountAddClose = () => {
     setIsOpenAccountLogin(!isOpenAccountLogin);
   };
@@ -35,7 +27,8 @@ function GlobalFilter({
 
   return (
     <div className="w-full">
-      <div className="flex justify-between">
+      <div className="flex justify-end">
+        {/*
         <label className="flex gap-x-2 items-baseline">
           <span className="text-gray-700">Search: </span>
           <input
@@ -49,6 +42,7 @@ function GlobalFilter({
             placeholder={`${count} records...`}
           />
         </label>
+          */}
         <Button className="text-gray-700 " onClick={accountAddClose}>ADD ACCOUNT</Button>
       </div>
       <div>

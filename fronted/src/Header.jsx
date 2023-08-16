@@ -37,8 +37,9 @@ export default function Header() {
                 </div>
                 {!(location.hash == "#/login") && !(location.hash == "#/register") && <nav className="w-full flex justify-center mt-8 gap-2 mb-8">
                     <Link className={linkClasses('account')} to={"/trading/account"}>Account</Link>
-                    <Link className={linkClasses('copytrading')} to={"/trading/copytrading"}>Copy Trading</Link>
-                    <Link className={linkClasses('tradehistory')} to={"/trading/tradehistory"}>Trade History</Link>
+                    <Link className={linkClasses('optionCopyTrading')} to={"/trading/optionCopyTrading"}>Option Trading</Link>
+                    <Link className={linkClasses('stockCopyTrading')} to={"/trading/stockCopyTrading"}>Stock Trading</Link>
+                    <Link className={linkClasses('optionTradeHistory')} to={"/trading/optionTradeHistory"}>Option History</Link>
                 </nav>}
                 <div className="flex items-center gap-3 py-1 px-5">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-10 h-10 mt-2">
