@@ -16,7 +16,7 @@ function GlobalFilter({
   )
 }
 
-export function SettingsPanel({row, setOptionContractSaveOrderList}) {
+export function SettingsPanel({row, setStockSaveOrderList}) {
   let optionChainSymbol = row.cell.row.original.optionChainSymbol;
 
   const optionContractSaveOrderDeleteClose = async () => {
@@ -25,7 +25,7 @@ export function SettingsPanel({row, setOptionContractSaveOrderList}) {
         alert("Remove option contract save order failed");
     } else {
         alert("Remove option contract save order successful");
-        setOptionContractSaveOrderList(data.list);
+        setStockSaveOrderList(data.list);
     }
 
     /*

@@ -6,7 +6,7 @@ import StockOptionPlaceSaveOrderPanelTable, {SettingsPanel} from './StockOptionP
 import {StockPlaceOrderPanel} from './StockPlaceOrderPanel';
 
 export default function StockOptionPlaceSaveOrderPanelPage({callOption}) {
-  const { optionContractSaveOrderList, setOptionContractSaveOrderList } = useContext(StockPlaceOrderPanelContext);
+  const { stockSaveOrderList, setStockSaveOrderList } = useContext(StockPlaceOrderPanelContext);
 
   let columns_list;
   columns_list = [
@@ -22,7 +22,7 @@ export default function StockOptionPlaceSaveOrderPanelPage({callOption}) {
     {
       Header: 'Settings',
       accessor: 'name',
-      Cell: (row) => <SettingsPanel row={row} setOptionContractSaveOrderList={setOptionContractSaveOrderList}/>,
+      Cell: (row) => <SettingsPanel row={row} setStockSaveOrderList={setStockSaveOrderList}/>,
     },
   ]
 
@@ -31,18 +31,18 @@ export default function StockOptionPlaceSaveOrderPanelPage({callOption}) {
   let optionPlaceSaveOrderPanelData = [];
   let optionChainSymbolSet = new Set();
 
-  for (let index = 0; index < optionContractSaveOrderList.length; index++) {
-    let optionChainSymbol = optionContractSaveOrderList[index]["optionChainSymbol"];
-    let optionChainInstruction = optionContractSaveOrderList[index]["optionChainInstruction"];
-    let optionChainDescription = optionContractSaveOrderList[index]["optionChainDescription"];
+  for (let index = 0; index < stockSaveOrderList.length; index++) {
+    let optionChainSymbol = stockSaveOrderList[index]["optionChainSymbol"];
+    let optionChainInstruction = stockSaveOrderList[index]["optionChainInstruction"];
+    let optionChainDescription = stockSaveOrderList[index]["optionChainDescription"];
 
     if (!optionChainSymbolSet.has(optionChainSymbol) && optionChainInstruction == "BUY_TO_OPEN"){
       if (callOption && optionChainDescription.includes("Call")) {
-        optionPlaceSaveOrderPanelData.push(optionContractSaveOrderList[index]);
+        optionPlaceSaveOrderPanelData.push(stockSaveOrderList[index]);
         optionChainSymbolSet.add(optionChainSymbol);
       } 
       if(!callOption && optionChainDescription.includes("Put")){
-        optionPlaceSaveOrderPanelData.push(optionContractSaveOrderList[index]);
+        optionPlaceSaveOrderPanelData.push(stockSaveOrderList[index]);
         optionChainSymbolSet.add(optionChainSymbol);
       }
     }
@@ -54,7 +54,7 @@ export default function StockOptionPlaceSaveOrderPanelPage({callOption}) {
   async function option_contract_save_order_list_fetch() {
     try {
         const {data} = await axios.get("/option_contract_save_order/get_option_contract_save_order_list"); 
-        setOptionContractSaveOrderList(data.list);
+        setStockSaveOrderList(data.list);
 
     } catch(error) {
           console.log(error.message);

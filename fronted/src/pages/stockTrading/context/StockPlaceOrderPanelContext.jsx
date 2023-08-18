@@ -4,10 +4,10 @@ import { useState} from 'react';
 export const StockPlaceOrderPanelContext = createContext({});
 
 export function StockPlaceOrderPanelContextProvider({children}) {
-    const [optionContractSaveOrderList, setOptionContractSaveOrderList] = useState([]);
+    const [stockSaveOrderList, setStockSaveOrderList] = useState([]);
     
     return (
-        <StockPlaceOrderPanelContext.Provider value={{ optionContractSaveOrderList, setOptionContractSaveOrderList}}>
+        <StockPlaceOrderPanelContext.Provider value={{ stockSaveOrderList, setStockSaveOrderList}}>
             {children}
         </StockPlaceOrderPanelContext.Provider>
     );

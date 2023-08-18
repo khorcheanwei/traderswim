@@ -219,19 +219,15 @@ export default function TradingStockAllActivePlaceOrder({ onClose }) {
             alert("Option contract is already existed");
         }
     };
-
     async function handleOptionContractRemove(currentOptionContractTicker) {
         const response = await axios.delete("/option_contract/remove_option_contract/", { data:{ "optionChainSymbol": currentOptionContractTicker }})
 
         if (response.data.success != true) {
             alert("Remove option contract failed");
         } else {
+            setOptionContractTickerList(response.data.list);
             alert("Remove option contract successful");
         }
-
-        //const list = [...optionContractTickerList];
-        //list.splice(index, 1);
-        //setOptionContractTickerList(list);
     }
 
     const handleIsOptionChainCall = async () => {
@@ -285,7 +281,7 @@ export default function TradingStockAllActivePlaceOrder({ onClose }) {
                     <div className="flex flex-col justify-between">
                         <div>
                             <div className="mb-4">
-                                <label className="block text-gray-700 font-bold mb-2" htmlFor="optionContractTicker">Option Contract</label>
+                                <label className="block text-gray-700 font-bold mb-2" htmlFor="optionContractTicker">Option Contract List</label>
                                 <div className="flex gap-5">
                                     <input
                                         type="text"
