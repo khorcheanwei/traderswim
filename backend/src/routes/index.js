@@ -5,6 +5,7 @@ const router = express.Router();
 const agentAccountRouter = require("./agent");
 
 const stockRouter = require("./stockTrading/stock");
+const stockCopyTradingRouter = require("./stockTrading/stockCopyTrading");
 
 const optionContractRouter = require("./optionContract");
 const optionContractSaveOrderRouter = require("./optionContractSaveOrder");
@@ -17,6 +18,7 @@ const tradingAccountRouter = require("./tradingAccount");
 router.use("/agent_account", agentAccountRouter);
 
 router.use("/stock", stockRouter);
+router.use("/stock_copy_trading", stockCopyTradingRouter);
 
 router.use("/option_contract", optionContractRouter);
 router.use("/option_contract_save_order", optionContractSaveOrderRouter);

@@ -16,15 +16,7 @@ export default function StockAllActivePlaceOrder({ onClose }) {
     const { stockSaveOrderList, setStockSaveOrderList } = useContext(StockPlaceOrderPanelContext);
 
     const [stockTickerName, setStockTickerName] = useState("");
-    const [stockBuySell, setStockBuySell] = useState("");
-
-    const [stockData, setStockData] = useState([]);
-    const [stockDateList, setStockDateList] = useState([]);
-    const [stockDate, setStockDate] = useState("None");
-    const [stockStrikeList, setStockStrikeList] = useState([]);
-    const [stockDescription, setStockDescription] = useState("None");
-
-    const [refreshStockStrikeListKey, setRefreshStockStrikeListKey] = useState(0);
+    const [stockBuySell, setStockBuySell] = useState(true);
 
     const [stockSymbol, setStockSymbol]= useState("");
     const [stockInstruction, setStockInstruction] = useState(stockInstructionList[0]);
@@ -61,11 +53,11 @@ export default function StockAllActivePlaceOrder({ onClose }) {
     async function saveOrder() {
         setDisabledButton(true);
         try {
-            if (!stockSymbol || !stockDescription || !stockInstruction || !stockOrderType || !stockQuantity || !stockPrice) {
+            if (!stockSymbol || !stockInstruction || !stockOrderType || !stockQuantity || !stockPrice) {
                 alert("Please ensure stock information is completed");
                 return;
             }
-            const {data} = await axios.post("/stock_save_order/add_stock_save_order/", { stockSymbol, stockDescription, stockInstruction, stockOrderType, stockQuantity, stockPrice });
+            const {data} = await axios.post("/stock_save_order/add_stock_save_order/", { stockSymbol, stockInstruction, stockOrderType, stockQuantity, stockPrice });
             if (data.success != true) {
                 alert("Save order failed");
             } else {
@@ -83,29 +75,11 @@ export default function StockAllActivePlaceOrder({ onClose }) {
     async function getStockList() {
         try {
             setIsLoading(true);
-            setRefreshStockStrikeListKey((prevKey) => prevKey + 1);
-
-            setStockDateList([]);
-            setStockStrikeList([]);
-            setStockDescription("None");
             setStockPrice(0);
-            const { data } = await axios.get("/copy_trading_account/get_stock_list/", { params: { stockTickerName, stockBuySell }, timeout: 5000})
+            const { data } = await axios.get("/stock_copy_trading/get_stock_quotes/", { params: { stockTickerName }, timeout: 5000})
             if (data != null) {
-                setStockData(data);
-
                 // set first stock data when user get new stock list
-                const firstStockDate = Object.keys(data)[0];
-                const firstStockStrikeList = Object.keys(data[firstStockDate]);
-                const firstStockDescription = data[firstStockDate][firstStockStrikeList[0]][0]["description"];
-                const firstStockSymbol = data[firstStockDate][firstStockStrikeList[0]][0]["symbol"];
-                const firstStockBid = data[firstStockDate][firstStockStrikeList[0]][0]["bid"];
-                
-                setStockDate(firstStockDate);
-                setStockDateList(Object.keys(data));
-                setStockStrikeList(firstStockStrikeList);
-                setStockDescription(firstStockDescription);
-
-                setStockSymbol(firstStockSymbol);
+                const firstStockBid = data["TSLA"]["bidPrice"];
                 setStockPrice(firstStockBid);
             } else {
                 alert("Failed to get stock");
@@ -159,14 +133,19 @@ export default function StockAllActivePlaceOrder({ onClose }) {
         }
     }
 
-    const handleIsStockCall = async () => {
-        setStockBuySell("BUY");
+    const handleIsStockBuy = async () => {
+        setStockBuySell(true);
     };
 
-    const handleIsStockPut = async () => {
-        setStockBuySell("SELL");
+    const handleIsStockSell = async () => {
+        setStockBuySell(false);
     };
 
+    useEffect( ()=> {
+        if (stockTickerName != "") {
+            getStockList();
+        }
+    }, [stockTickerName]);
 
     useEffect( () => {
         stock_list_fetch();
@@ -174,13 +153,7 @@ export default function StockAllActivePlaceOrder({ onClose }) {
 
     const handleSetStockName = (currentStockTicker) => {
         setStockTickerName(currentStockTicker)
-        setStockBuySell("");
-
-        setStockData([]);
-        setStockDateList([]);
-        setStockDate("None");
-        setStockStrikeList([]);
-        setStockDescription("None");
+        setStockBuySell(true);
 
         setStockSymbol("");
         setStockInstruction(stockInstructionList[0]);
@@ -260,6 +233,7 @@ export default function StockAllActivePlaceOrder({ onClose }) {
                                 <div className="grid items-end gap-6 mb-6 grid-cols-2">
                                     <div className="relative">
                                         <input
+                                            id="stock_pair"
                                             className="block px-2.5 pb-1.5 pt-3 w-full text-sm text-gray-900 bg-transparent border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                                             type="text"
                                             onChange={event => setStockTickerName(event.target.value)}
@@ -268,39 +242,16 @@ export default function StockAllActivePlaceOrder({ onClose }) {
                                             placeholder=" " />
                                         <label
                                             className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
-                                            htmlFor="small_outlined">
+                                            htmlFor="stock_pair">
                                             Stock Pair:
                                         </label>
-                                    </div>
-                                    <div className="relative">
-                                    <div className="flex justify-start gap-5">
-                                        <label>
-                                            BUY
-                                            <br />
-                                            <input
-                                                className="w-7 h-7 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                                                type="checkbox"
-                                                checked={stockBuySell}
-                                                onChange={handleIsStockCall}
-                                            />
-                                        </label>
-                                        <label>
-                                            SELL
-                                            <br />
-                                            <input
-                                                className="w-7 h-7 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                                                type="checkbox"
-                                                checked={stockBuySell}
-                                                onChange={handleIsStockPut}
-                                            />
-                                        </label>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
                             <div className="grid items-end gap-6 mb-6 md:grid-cols-2">
                                 <div className="relative">
                                     <select
+                                        id="stock_instruction"
                                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
                                         value={stockInstruction}
                                         onChange={event => setStockInstruction(event.target.value)}>
@@ -312,12 +263,13 @@ export default function StockAllActivePlaceOrder({ onClose }) {
                                     </select>
                                     <label
                                         className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
-                                        htmlFor="small_outlined">
+                                        htmlFor="stock_instruction">
                                         Stock instruction:
                                     </label>
                                 </div>
                                 <div className="relative">
                                     <select
+                                        id="stock_order_type"
                                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
                                         value={stockOrderType}
                                         onChange={event => setStockOrderType(event.target.value)}>
@@ -329,7 +281,7 @@ export default function StockAllActivePlaceOrder({ onClose }) {
                                     </select>
                                     <label
                                         className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
-                                        htmlFor="small_outlined">
+                                        htmlFor="stock_order_type">
                                         Stock order type:
                                     </label>
                                 </div>
@@ -337,6 +289,7 @@ export default function StockAllActivePlaceOrder({ onClose }) {
                             <div className="grid items-end gap-6 mb-6 grid-cols-2">
                                 <div className="relative">
                                     <input
+                                        id="stock_total"
                                         className="block px-2.5 pb-1.5 pt-3 w-full text-sm text-gray-900 bg-transparent  border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                                         type="text"
                                         onChange={event => setStockQuantity(event.target.value)}
@@ -344,19 +297,20 @@ export default function StockAllActivePlaceOrder({ onClose }) {
                                         placeholder=" " />
                                     <label
                                         className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
-                                        htmlFor="small_outlined">
+                                        htmlFor="stock_total">
                                         Stock Total:
                                     </label>
                                 </div>
                                 <div className="relative">
                                     <input className="block px-2.5 pb-1.5 pt-3 w-full text-sm text-gray-900 bg-transparent  border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                        id="stock_price"
                                         type="text"
                                         onChange={event => setStockPrice(event.target.value)}
                                         value={stockPrice}
                                         placeholder=" " />
                                     <label
                                         className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
-                                        htmlFor="small_outlined">
+                                        htmlFor="stock_price">
                                         Price:
                                     </label>
                                 </div>
