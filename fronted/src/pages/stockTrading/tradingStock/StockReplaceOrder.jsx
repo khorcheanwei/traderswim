@@ -20,9 +20,9 @@ export default function TradingStockReplaceOrder({ rowCopyTradingOrder, onClose,
     const [optionChainQuantity, setOptionChainQuantity] = useState(rowOptionChainQuantity);
     const [optionChainPrice, setOptionChainPrice] = useState(rowOptionChainPrice);
 
-    const {copyTradingOrderDataDict, setCopyTradingOrderDataDict} = useContext(StockCopyTradingOrderContext);
+    const {stockCopyTradingOrderDataDict, setStockCopyTradingOrderDataDict} = useContext(StockCopyTradingOrderContext);
 
-    const copyTradingAllAccountData = copyTradingOrderDataDict[agentTradingSessionID];
+    const copyTradingAllAccountData = stockCopyTradingOrderDataDict[agentTradingSessionID];
   
     async function handleReplaceOrder() {
         try {

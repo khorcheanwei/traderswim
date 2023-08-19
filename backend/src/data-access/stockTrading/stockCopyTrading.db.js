@@ -246,7 +246,6 @@ function stockCopyTradingDBOperation(trading_management_db) {
         return { success: false, error: error };
       }
     }
-  
     // get all agentTradingSessionID for all trading accounts where stockStatus is not equal to REJECTED, CANCELED, FILLED, EXPIRED
     this.getAllAgentTradingSessionIDBasedStockStatus = async function (agentID) {
       try {

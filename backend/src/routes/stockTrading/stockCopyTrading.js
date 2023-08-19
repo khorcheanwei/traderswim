@@ -4,7 +4,8 @@ const stockCopyTradingRouter = express.Router();
 
 const {
     stock_copy_trading_get_stock_quotes,
-    stock_copy_trading_place_order
+    stock_copy_trading_place_order,
+    stock_copy_trading_database,
 } = require("../../controllers/stockTrading/stockCopyTradingController.js");
 
 
@@ -117,23 +118,10 @@ stockCopyTradingRouter.delete(
       httpResponse.status(400).json(result.data);
     }
   }
-);
-
-stockCopyTradingRouter.get(
-  "/get_option_chain_list",
-  async (httpRequest, httpResponse) => {
-    const result = await copy_trading_get_option_chain_list(httpRequest);
-
-    if (result.success == true) {
-      httpResponse.status(200).json(result.data);
-    } else {
-      httpResponse.status(400).json(result.data);
-    }
-  }
-);
+); */
 
 stockCopyTradingRouter.get("/database", async (httpRequest, httpResponse) => {
-  const result = await copy_trading_database(httpRequest);
+  const result = await stock_copy_trading_database(httpRequest);
 
   if (result.success == true) {
     httpResponse.status(200).json(result.data);
@@ -142,6 +130,7 @@ stockCopyTradingRouter.get("/database", async (httpRequest, httpResponse) => {
   }
 });
 
+/*
 stockCopyTradingRouter.get(
   "/trade_history_database",
   async (httpRequest, httpResponse) => {

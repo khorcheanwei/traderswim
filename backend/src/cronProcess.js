@@ -4,6 +4,7 @@ const { agentDBOperation } = require("./data-access/index.js");
 const { account_database_by_agent } = require('./controllers/tradingAccountController.js');
 const { copy_trading_database_by_agent } = require('./controllers/copyTradingAccountController.js');
 const { copy_trading_position_by_agent } = require('./controllers/copyTradingPositionAccountController.js');
+const { stock_copy_trading_database_by_agent } = require('./controllers/stockTrading/stockCopyTradingController.js')
 
 function waitForResult(func, timeout) {
   return new Promise((resolve, reject) => {
@@ -56,6 +57,15 @@ cron.schedule('*/2 * * * * *', async () => {
 
       // copy trading position by agent
       waitForResult(async () => await copy_trading_position_by_agent(agentID), 2000)
+        .then((result) => {
+          console.log(result); 
+        })
+        .catch((error) => {
+          console.log(error); 
+        });
+      
+      // stock copy trading database by agent
+      waitForResult(async () => await stock_copy_trading_database_by_agent(agentID), 2000)
         .then((result) => {
           console.log(result); 
         })

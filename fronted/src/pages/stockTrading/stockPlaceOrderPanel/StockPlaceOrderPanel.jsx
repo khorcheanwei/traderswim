@@ -14,11 +14,11 @@ export function StockPlaceOrderPanel({row}) {
       setIsOpenOrderPlace(!isOpenOrderPlace)
     }
     let place_order_class = "cursor-pointer inline-flex items-center justify-center w-10 h-10 rounded-full "
-    place_order_class = place_order_class + "bg-purple-500"
+    place_order_class = place_order_class + "bg-purple-600"
    
     return (
       <div className="flex">
-          <div onClick={orderPlaceClose} className="cursor-pointer inline-flex items-center justify-center w-10 h-10 rounded-full bg-purple-500">
+          <div onClick={orderPlaceClose} className="cursor-pointer inline-flex items-center justify-center w-10 h-10 rounded-full bg-purple-600">
           <span className="font-medium text-white dark:text-white">P</span>
         </div>
         <Overlay isOpen={isOpenOrderPlace} >

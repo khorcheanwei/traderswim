@@ -110,30 +110,30 @@ export function ChangeOrderPanel(row) {
   );
 };
 
-export function OptionChainStatusColorPanel(row) {
+export function StockStatusColorPanel(row) {
   <span className="font-medium text-white dark:text-white">R</span>
 
-  let optionChainStatusColor = row.cell.row.original.optionChainStatusColor;
+  let stockStatusColor = row.cell.row.original.stockStatusColor;
 
-  let optionChainStatusColorCss = " text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full";
+  let stockStatusColorCss = " text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full";
 
-  if (optionChainStatusColor == "green") {
-    optionChainStatusColorCss = "bg-green-500 " + optionChainStatusColorCss;
-  } else if(optionChainStatusColor == "red") {
-    optionChainStatusColorCss = "bg-red-500 " + optionChainStatusColorCss;
+  if (stockStatusColor == "green") {
+    stockStatusColorCss = "bg-green-500 " + stockStatusColorCss;
+  } else if(stockStatusColor == "red") {
+    stockStatusColorCss = "bg-red-500 " + stockStatusColorCss;
   } else {
-    optionChainStatusColorCss = "bg-purple-500 " + optionChainStatusColorCss;
+    stockStatusColorCss = "bg-purple-500 " + stockStatusColorCss;
   }
 
   return (
     <div>
-        <span className={optionChainStatusColorCss}></span>
+        <span className={stockStatusColorCss}></span>
     </div>
   );
 }
 
 function StockCopyTradingOrderTable({ columns, data }) {
-  let hiddenColumns = ['accountId', 'optionChainSymbol', 'optionChainOrderId', 'agentTradingSessionID'];
+  let hiddenColumns = ['accountId', 'stockOrderId', 'agentTradingSessionID'];
   return CommonTable({ columns, data, GlobalFilter, hiddenColumns })
 }
 

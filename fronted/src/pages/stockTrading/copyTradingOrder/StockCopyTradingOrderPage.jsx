@@ -2,10 +2,10 @@ import React from 'react'
 import { useContext } from 'react';
 
 import { StockCopyTradingOrderContext } from '../context/StockCopyTradingOrderContext';
-import StockCopyTradingOrderTable, { ChangeOrderPanel, ViewAllOrderPanel, OptionChainStatusColorPanel } from './StockCopyTradingOrderTable'
+import StockCopyTradingOrderTable, { ChangeOrderPanel, ViewAllOrderPanel, StockStatusColorPanel } from './StockCopyTradingOrderTable'
 
 export default function StockCopyTradingOrderPage() {
-  const {copyTradingOrderMainData, setCopyTradingOrderMainData} = useContext(StockCopyTradingOrderContext);
+  const {stockCopyTradingOrderMainData, setStockCopyTradingOrderMainData} = useContext(StockCopyTradingOrderContext);
 
   const columns = React.useMemo(() => [
     {
@@ -28,48 +28,44 @@ export default function StockCopyTradingOrderPage() {
     },
     {
       Header: 'Symbol',
-      accessor: 'optionChainSymbol',
+      accessor: 'stockSymbol',
     },
     {
-      Header: 'Symbol description',
-      accessor: 'optionChainDescription',
-    },
-    {
-      Header: 'Option chain order Id',
-      accessor: 'optionChainOrderId',
+      Header: 'Stock chain order Id',
+      accessor: 'stockOrderId',
     },
     {
       Header: 'Filled Qty',
-      accessor: 'optionChainFilledQuantity',
+      accessor: 'stockFilledQuantity',
     },
     {
       Header: 'Price',
-      accessor: 'optionChainPrice',
+      accessor: 'stockPrice',
     },
     {
       Header: 'Qty',
-      accessor: 'optionChainQuantity',
+      accessor: 'stockQuantity',
     },
     {
       Header: 'Side Pos Effect',
-      accessor: 'optionChainInstruction',
+      accessor: 'stockInstruction',
     },
     {
       Header: 'Status',
-      accessor: 'optionChainStatus',
+      accessor: 'stockStatus',
     },
     {
       Header: 'Order type',
-      accessor: 'optionChainOrderType',
+      accessor: 'stockOrderType',
     },
     {
       Header: 'Time',
-      accessor: 'optionChainEnteredTime',
+      accessor: 'stockEnteredTime',
     },
     {
       Header: 'Status', 
-      accessor: 'optionChainStatusColor',
-      Cell: OptionChainStatusColorPanel,
+      accessor: 'stockStatusColor',
+      Cell: StockStatusColorPanel,
     },
     {
       Header: 'Name',
@@ -81,7 +77,7 @@ export default function StockCopyTradingOrderPage() {
     },
   ], [])
   
-  var data = React.useMemo(() => copyTradingOrderMainData, [copyTradingOrderMainData])
+  var data = React.useMemo(() => stockCopyTradingOrderMainData, [stockCopyTradingOrderMainData])
 
   return (
     <StockCopyTradingOrderTable columns={columns} data={data} />

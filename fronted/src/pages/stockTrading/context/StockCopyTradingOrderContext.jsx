@@ -4,8 +4,8 @@ import { useState} from 'react';
 export const StockCopyTradingOrderContext = createContext({});
 
 export function StockCopyTradingOrderContextProvider({children}) {
-    const [copyTradingOrderDataDict, setCopyTradingOrderDataDict] = useState({});
-    const [copyTradingOrderMainData, setCopyTradingOrderMainData] = useState([]);
+    const [stockCopyTradingOrderDataDict, setStockCopyTradingOrderDataDict] = useState({});
+    const [stockCopyTradingOrderMainData, setStockCopyTradingOrderMainData] = useState([]);
 
     const [rowCopyTradingOrder, setRowCopyTradingOrder] = useState([]);
 
@@ -21,8 +21,8 @@ export function StockCopyTradingOrderContextProvider({children}) {
     const [rowCopyTradingOrderSelected, setRowCopyTradingOrderSelected] = useState([]);
     
     return (
-        <StockCopyTradingOrderContext.Provider value={{ copyTradingOrderDataDict, setCopyTradingOrderDataDict, 
-            copyTradingOrderMainData, setCopyTradingOrderMainData, rowCopyTradingOrder, setRowCopyTradingOrder, 
+        <StockCopyTradingOrderContext.Provider value={{ stockCopyTradingOrderDataDict, setStockCopyTradingOrderDataDict, 
+            stockCopyTradingOrderMainData, setStockCopyTradingOrderMainData, rowCopyTradingOrder, setRowCopyTradingOrder, 
             isOpenViewAllOrder, setIsOpenViewAllOrder,
             isOpenOrderReplaceIndividual, setIsOpenOrderReplaceIndividual,
             isOpenOrderDeleteIndividual, setIsOpenOrderDeleteIndividual,

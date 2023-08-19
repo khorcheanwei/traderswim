@@ -101,8 +101,8 @@ export default function StockCopyTradingAllAccountOrderPage({ rowCopyTradingOrde
 
   const agentTradingSessionID = rowCopyTradingOrder.row.original.agentTradingSessionID;
   
-  const {copyTradingOrderDataDict, setCopyTradingOrderDataDict} = useContext(StockCopyTradingOrderContext);
-  const copyTradingAllAccountData = copyTradingOrderDataDict[agentTradingSessionID];
+  const {stockCopyTradingOrderDataDict, setStockCopyTradingOrderDataDict} = useContext(StockCopyTradingOrderContext);
+  const copyTradingAllAccountData = stockCopyTradingOrderDataDict[agentTradingSessionID];
   var data = React.useMemo(() => copyTradingAllAccountData, [copyTradingAllAccountData]);
 
   // replace and cancel selected orders

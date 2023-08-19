@@ -2,7 +2,7 @@ const axios = require('axios');
 const jwt = require("jsonwebtoken");
 
 var Memcached = require('memcached-promise');
-var copy_trading_account_cache = new Memcached('127.0.0.1:11211', {maxExpiration: 2592000});
+var stock_copy_trading_cache = new Memcached('127.0.0.1:11211', {maxExpiration: 2592000});
 
 const jwtSecret = "traderswim";
 
@@ -402,9 +402,8 @@ async function stock_copy_trading_place_order(httpRequest) {
   }
 }
 
-/*
 // sync order and save to copy trading table for all trading accounts
-async function sync_order_and_save_to_copy_trading_database(agentID, agentTradingSessionID) {
+async function sync_order_and_save_to_stock_copy_trading_database(agentID, agentTradingSessionID) {
   try {
     // get all orderID for all trading accounts
     let result = await stockCopyTradingDBOperation.getAllOrderID(agentID, agentTradingSessionID);
@@ -428,7 +427,7 @@ async function sync_order_and_save_to_copy_trading_database(agentID, agentTradin
                                     
       all_trading_accounts_list.push({ agentID: agentID,  accountId: accountId, accountName: accountName, accountUsername: accountUsername, stockOrderId: stockOrderId, authToken: authToken });
 
-      // it can be confusing with this term `result_promise_make_order_status` in sync_order_and_save_to_copy_trading_database function
+      // it can be confusing with this term `result_promise_make_order_status` in sync_order_and_save_to_stock_copy_trading_database function
       result_promise_make_order_status.push(true);
       orderId_list.push(stockOrderId);
 
@@ -445,10 +444,10 @@ async function sync_order_and_save_to_copy_trading_database(agentID, agentTradin
   } catch (error) {
     return { success: false, data: error.message };
   }
-}
+} 
 
 // Copy trading order database for cron job 
-async function copy_trading_database_by_agent(agentID) {
+async function stock_copy_trading_database_by_agent(agentID) {
   try {
     // get agent trading sessionID
     let result = await agentDBOperation.searchAgentTradingSessionID(agentID);
@@ -456,17 +455,17 @@ async function copy_trading_database_by_agent(agentID) {
       return { success: false, data: result.error };
     }
     agentDocument = result.data;
-    let agentTradingSessionIDList =  await stockCopyTradingDBOperation.getAllAgentTradingSessionIDBasedstockStatus(agentID)
+    let agentTradingSessionIDList =  await stockCopyTradingDBOperation.getAllAgentTradingSessionIDBasedStockStatus(agentID)
 
     for (let index = 0; index < agentTradingSessionIDList.data.length; index++) {
       let currAgentTradingSessionID = agentTradingSessionIDList.data[index]["agentTradingSessionID"];
       // sync order and save to copy trading table for all trading accounts
-      await sync_order_and_save_to_copy_trading_database(agentID, currAgentTradingSessionID);
+      await sync_order_and_save_to_stock_copy_trading_database(agentID, currAgentTradingSessionID);
     }
     
     // get CopyTradingAccount based on agentID and agentTradingSessionID
     result =
-      await stockCopyTradingDBOperation.searchCopyTradingAccountBasedAgentID(
+      await stockCopyTradingDBOperation.searchStockCopyTradingBasedAgentID(
         agentID
       );
 
@@ -475,7 +474,7 @@ async function copy_trading_database_by_agent(agentID) {
     }
     const copyTradingAccountDocument = result.data;
 
-    let copyTradingOrderDataDict = {};
+    let stockCopyTradingOrderDataDict = {};
     for (let index = 0; index < copyTradingAccountDocument.length; index++) {
       const currCopyTradingAccount = copyTradingAccountDocument[index];
       const stockEnteredTime = currCopyTradingAccount["stockEnteredTime"];
@@ -498,27 +497,27 @@ async function copy_trading_database_by_agent(agentID) {
         stockStatus: currCopyTradingAccount["stockStatus"],
       }
 
-      if (copyTradingOrderDataDict.hasOwnProperty(agentTradingSessionID) == false) {
-        copyTradingOrderDataDict[agentTradingSessionID] = [currCopyTradingAccountData]
+      if (stockCopyTradingOrderDataDict.hasOwnProperty(agentTradingSessionID) == false) {
+        stockCopyTradingOrderDataDict[agentTradingSessionID] = [currCopyTradingAccountData]
       } else {
-        copyTradingOrderDataDict[agentTradingSessionID].push(currCopyTradingAccountData);
+        stockCopyTradingOrderDataDict[agentTradingSessionID].push(currCopyTradingAccountData);
       }
     }
 
-    // save copyTradingOrderDataDict from cache
-    let copyTradingOrderDataDict_key = agentID + "." + "copyTradingOrderDataDict";
-    await copy_trading_account_cache.set(copyTradingOrderDataDict_key, copyTradingOrderDataDict, 3600)
+    // save stockCopyTradingOrderDataDict from cache
+    let stockCopyTradingOrderDataDict_key = agentID + "." + "stockCopyTradingOrderDataDict";
+    await stock_copy_trading_cache.set(stockCopyTradingOrderDataDict_key, stockCopyTradingOrderDataDict, 3600)
 
 
-    return copyTradingOrderDataDict;
+    return stockCopyTradingOrderDataDict;
   } catch (error) {
-    console.log(copyTradingOrderDataDict);
+    console.log(stockCopyTradingOrderDataDict);
     return null;
   }
 }
 
 // Copy trading database
-async function copy_trading_database(httpRequest) {
+async function stock_copy_trading_database(httpRequest) {
   const { token } = httpRequest.cookies;
 
   if (token) {
@@ -526,18 +525,18 @@ async function copy_trading_database(httpRequest) {
       let agentDocument = jwt.verify(token, jwtSecret, {});
       agentID = agentDocument.id;
 
-      // get copyTradingOrderDataDict from cache
-      let copyTradingOrderDataDict_key = agentID + "." + "copyTradingOrderDataDict";
-      let copyTradingOrderDataDict = await copy_trading_account_cache.get(copyTradingOrderDataDict_key);
+      // get stockCopyTradingOrderDataDict from cache
+      let stockCopyTradingOrderDataDict_key = agentID + "." + "stockCopyTradingOrderDataDict";
+      let stockCopyTradingOrderDataDict = await stock_copy_trading_cache.get(stockCopyTradingOrderDataDict_key);
   
-      if(copyTradingOrderDataDict != undefined) {
-        return { success: true, data: copyTradingOrderDataDict };
+      if(stockCopyTradingOrderDataDict != undefined) {
+        return { success: true, data: stockCopyTradingOrderDataDict };
       }     
        
-      copyTradingOrderDataDict = await copy_trading_database_by_agent(agentID);
+      stockCopyTradingOrderDataDict = await stock_copy_trading_database_by_agent(agentID);
 
       //await new Promise(resolve => setTimeout(resolve, 500)); 
-      return { success: true, data: copyTradingOrderDataDict };
+      return { success: true, data: stockCopyTradingOrderDataDict };
     } catch (error) {
       return { success: false, data: error.message };
     }
@@ -545,6 +544,8 @@ async function copy_trading_database(httpRequest) {
     return { success: true, data: null };
   }
 }
+
+/*
 
 // copy trading history database
 async function copy_trading_history_database(httpRequest) {
@@ -603,5 +604,7 @@ async function copy_trading_history_database(httpRequest) {
 */
 module.exports = {
     stock_copy_trading_get_stock_quotes,
-    stock_copy_trading_place_order
+    stock_copy_trading_place_order,
+    stock_copy_trading_database,
+    stock_copy_trading_database_by_agent
 };

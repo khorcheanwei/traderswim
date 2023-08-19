@@ -21,9 +21,9 @@ export default function StockPlaceOrder({ rowCopyTradingOrder, onClose, isOpenOr
     const [stockQuantity, setStockQuantity] = useState(rowStockQuantity);
     const [stockPrice, setStockPrice] = useState(rowStockPrice);
 
-    const {copyTradingOrderDataDict, setCopyTradingOrderDataDict} = useContext(StockCopyTradingOrderContext);
+    const {stockCopyTradingOrderDataDict, setStockCopyTradingOrderDataDict} = useContext(StockCopyTradingOrderContext);
 
-    const copyTradingAllAccountData = copyTradingOrderDataDict[agentTradingSessionID];
+    const copyTradingAllAccountData = stockCopyTradingOrderDataDict[agentTradingSessionID];
   
     async function handlePlaceOrder() {
         try {
