@@ -370,7 +370,7 @@ async function stock_copy_trading_place_order(httpRequest) {
                 }
             }
         ]
-    }
+      }
 
       // Post place order for all trading accounts
       const result_promise_make_order_status = await post_place_order_all_accounts(all_trading_accounts_list, payload);
@@ -604,6 +604,10 @@ async function copy_trading_history_database(httpRequest) {
 */
 module.exports = {
     stock_copy_trading_get_stock_quotes,
+    get_latest_order_id_all_accounts,
+    get_latest_order_information_all_accounts,
+    createStockCopyTradingAccountItem_all_accounts,
+    sync_order_and_save_to_stock_copy_trading_database,
     stock_copy_trading_place_order,
     stock_copy_trading_database,
     stock_copy_trading_database_by_agent
