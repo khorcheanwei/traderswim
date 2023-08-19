@@ -7,9 +7,9 @@ export default function StockDeleteOrder({rowCopyTradingOrder, onClose, isOpenOr
     let optionChainDescription = rowCopyTradingOrder.cell.row.original.optionChainDescription;
     let agentTradingSessionID = rowCopyTradingOrder.cell.row.original.agentTradingSessionID;
 
-    const {copyTradingOrderDataDict, setCopyTradingOrderDataDict} = useContext(StockCopyTradingOrderContext);
+    const {stockCopyTradingOrderDataDict, setStockCopyTradingOrderDataDict} = useContext(StockCopyTradingOrderContext);
 
-    const copyTradingAllAccountData = copyTradingOrderDataDict[agentTradingSessionID];
+    const copyTradingAllAccountData = stockCopyTradingOrderDataDict[agentTradingSessionID];
 
     async function handleDeleteOrder() {
       // delete order 

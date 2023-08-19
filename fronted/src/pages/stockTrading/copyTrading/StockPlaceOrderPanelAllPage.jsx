@@ -1,4 +1,4 @@
-import StockPlaceSaveOrderPanelPage from '../optionPlaceOrderPanel/StockPlaceSaveOrderPanelPage';
+import StockPlaceSaveOrderPanelPage from '../stockPlaceOrderPanel/StockPlaceSaveOrderPanelPage';
 
 export default function StockPlaceOrderPanelAllPage() {
     return (

@@ -5,7 +5,7 @@ import StockOptionPlaceOrderPanelTable from './StockOptionPlaceOrderPanelTable';
 import {StockPlaceOrderPanel} from './StockPlaceOrderPanel';
 
 export default function StockOptionPlaceOrderPanelPage({callOption}) {
-  const {copyTradingOrderMainData, setCopyTradingOrderMainData} = useContext(CopyTradingOrderContext);
+  const {stockCopyTradingOrderMainData, setStockCopyTradingOrderMainData} = useContext(CopyTradingOrderContext);
 
   let columns_list;
   
@@ -26,18 +26,18 @@ export default function StockOptionPlaceOrderPanelPage({callOption}) {
   let optionPlaceOrderPanelData = [];
   let optionChainSymbolSet = new Set();
 
-  for (let index = 0; index < copyTradingOrderMainData.length; index++) {
-    let optionChainSymbol = copyTradingOrderMainData[index]["optionChainSymbol"];
-    let optionChainInstruction = copyTradingOrderMainData[index]["optionChainInstruction"];
-    let optionChainDescription = copyTradingOrderMainData[index]["optionChainDescription"];
+  for (let index = 0; index < stockCopyTradingOrderMainData.length; index++) {
+    let optionChainSymbol = stockCopyTradingOrderMainData[index]["optionChainSymbol"];
+    let optionChainInstruction = stockCopyTradingOrderMainData[index]["optionChainInstruction"];
+    let optionChainDescription = stockCopyTradingOrderMainData[index]["optionChainDescription"];
 
     if (!optionChainSymbolSet.has(optionChainSymbol) && optionChainInstruction == "BUY_TO_OPEN"){
       if (callOption && optionChainDescription.includes("Call")) {
-        optionPlaceOrderPanelData.push(copyTradingOrderMainData[index]);
+        optionPlaceOrderPanelData.push(stockCopyTradingOrderMainData[index]);
         optionChainSymbolSet.add(optionChainSymbol);
       } 
       if(!callOption && optionChainDescription.includes("Put")){
-        optionPlaceOrderPanelData.push(copyTradingOrderMainData[index]);
+        optionPlaceOrderPanelData.push(stockCopyTradingOrderMainData[index]);
         optionChainSymbolSet.add(optionChainSymbol);
       }
     }

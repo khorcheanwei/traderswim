@@ -8,53 +8,54 @@ import StockCopyTradingOrderPage from './../copyTradingOrder/StockCopyTradingOrd
 import StockCopyTradingPositionPage from '../copyTradingPosition/StockCopyTradingPositionPage';
 
 export default function StockCopyTradingPage({children}) {
-  const {copyTradingOrderDataDict, setCopyTradingOrderDataDict, copyTradingOrderMainData, setCopyTradingOrderMainData} = useContext(StockCopyTradingOrderContext);
+  const {stockCopyTradingOrderDataDict, setStockCopyTradingOrderDataDict, stockCopyTradingOrderMainData, setStockCopyTradingOrderMainData} = useContext(StockCopyTradingOrderContext);
   const {copyTradingPositionDataDict, setCopyTradingPositionDataDict,copyTradingPositionMainData, setCopyTradingPositionMainData} = useContext(StockCopyTradingPositionContext);
   
-  async function fetchCopyTradingAccountData() {
+  async function fetchStockCopyTradingData() {
     try {
       // get order information
-      let response = await axios.get('/copy_trading_account/database');
+      let response = await axios.get('/stock_copy_trading/database');
       const copyTradingAccountDataDictResponse = response.data;
-      setCopyTradingOrderDataDict(copyTradingAccountDataDictResponse);
+      setStockCopyTradingOrderDataDict(copyTradingAccountDataDictResponse);
 
       if (copyTradingAccountDataDictResponse != null && copyTradingAccountDataDictResponse.length != 0) {
 
         let copyTradingMainAccountDataList = [];
         for (const [key, value] of Object.entries(copyTradingAccountDataDictResponse).reverse()) {
-          let optionChainStatusSet = new Set();
-          let optionChainFilledQuantitySet = new Set();
+          let stockStatusSet = new Set();
+          let stockFilledQuantitySet = new Set();
 
           let copyTradingMainAccountDataRow = value[0];
-          let copyTradingOptionChainStatusColor = true;
-          let optionChainStatusInactiveList = ["REJECTED", "CANCELED", "FILLED", "EXPIRED"];
+          let copyTradingStockStatusColor = true;
+          let stockStatusInactiveList = ["REJECTED", "CANCELED", "FILLED", "EXPIRED"];
           for (let index=0; index < value.length; index++) {
-            let currentOptionChainStatus = value[index]["optionChainStatus"];
-            let currentOptionChainFilledQuantity = value[index]["optionChainFilledQuantity"];
+            let currentStockStatus = value[index]["stockStatus"];
+            let currentStockFilledQuantity = value[index]["stockFilledQuantity"];
 
-            optionChainStatusSet.add(currentOptionChainStatus);
-            optionChainFilledQuantitySet.add(currentOptionChainFilledQuantity);
+            stockStatusSet.add(currentStockStatus);
+            stockFilledQuantitySet.add(currentStockFilledQuantity);
 
-            if (copyTradingOptionChainStatusColor && !optionChainStatusInactiveList.includes(currentOptionChainStatus)) {
-              copyTradingOptionChainStatusColor = false;
+            if (copyTradingStockStatusColor && !stockStatusInactiveList.includes(currentStockStatus)) {
+              copyTradingStockStatusColor = false;
             }
           }
           
-          if (optionChainStatusSet.size > 1 || optionChainFilledQuantitySet.size > 1) {
-            copyTradingMainAccountDataRow["optionChainStatusColor"] = "purple"
+          if (stockStatusSet.size > 1 || stockFilledQuantitySet.size > 1) {
+            copyTradingMainAccountDataRow["stockStatusColor"] = "purple"
           } else {
-            if (copyTradingOptionChainStatusColor) {
-              copyTradingMainAccountDataRow["optionChainStatusColor"] = "green";  
+            if (copyTradingStockStatusColor) {
+              copyTradingMainAccountDataRow["stockStatusColor"] = "green";  
             } else {
-              copyTradingMainAccountDataRow["optionChainStatusColor"] = "red";
+              copyTradingMainAccountDataRow["stockStatusColor"] = "red";
             }
             
           }
           copyTradingMainAccountDataList.push(copyTradingMainAccountDataRow);
         }
-        setCopyTradingOrderMainData(copyTradingMainAccountDataList)
+        setStockCopyTradingOrderMainData(copyTradingMainAccountDataList)
       }
 
+      /*
       // get position information
       response = await axios.get('/copy_trading_position_account/database');
       const copyTradingPositionDataDictResponse = response.data;
@@ -67,7 +68,7 @@ export default function StockCopyTradingPage({children}) {
           copyTradingMainPositionAccountDataList.push(value[0]);
         }
         setCopyTradingPositionMainData(copyTradingMainPositionAccountDataList)
-      }
+      } */
 
     } catch (error) {
       console.log(error.message);
@@ -76,7 +77,7 @@ export default function StockCopyTradingPage({children}) {
 
   const ref = useRef(null)
   useEffect(() => {
-    ref.current = setInterval(fetchCopyTradingAccountData, 1 * 500);
+    ref.current = setInterval(fetchStockCopyTradingData, 1 * 500);
     return () => {
       if(ref.current){
         clearInterval(ref.current);
