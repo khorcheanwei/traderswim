@@ -25,7 +25,10 @@ const http = require('http').Server(app);
 
 // cronjob
 const { fork } = require("child_process");
-fork("./src/cronProcess.js");
+fork("./src/cronAccountProcess.js");
+fork("./src/cronOptionCopyTradingProcess.js");
+fork("./src/cronStockCopyTradingProcess.js");
+
 
 // trade history
 require("./backupTradeHistory.js");

@@ -29,7 +29,7 @@ export default function StockPlaceOrder({ rowCopyTradingOrder, onClose, isOpenOr
         try {
             const allTradingAccountsOrderList = [];
              
-            const { data } = await axios.post("/copy_trading_account/place_order/", { allTradingAccountsOrderList, stockSymbol, stockInstruction, stockOrderType, stockQuantity, stockPrice })
+            const { data } = await axios.post("/stock_copy_trading/place_order/", { allTradingAccountsOrderList, stockSymbol, stockInstruction, stockOrderType, stockQuantity, stockPrice })
             if (data != "success") {
                 alert("Place order failed");
             } else {

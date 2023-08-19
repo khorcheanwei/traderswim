@@ -2,7 +2,7 @@ import React from 'react'
 import axios from 'axios';
 import { useState, useContext, useEffect } from 'react';
 import { StockPlaceOrderPanelContext } from '../context/StockPlaceOrderPanelContext';
-import StockOptionPlaceSaveOrderPanelTable, {SettingsPanel} from './StockOptionPlaceSaveOrderPanelTable';
+import StockPlaceSaveOrderPanelTable, {SettingsPanel} from './StockPlaceSaveOrderPanelTable';
 import {StockPlaceOrderPanel} from './StockPlaceOrderPanel';
 
 export default function StockPlaceSaveOrderPanelPage() {
@@ -52,6 +52,6 @@ export default function StockPlaceSaveOrderPanelPage() {
   }, []);
 
   return (
-    <StockOptionPlaceSaveOrderPanelTable columns={columns} data={data} />
+    <StockPlaceSaveOrderPanelTable columns={columns} data={data} />
   );
 }
