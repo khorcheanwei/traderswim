@@ -4,7 +4,7 @@ import { StockCopyTradingOrderContext } from '../context/StockCopyTradingOrderCo
 
 export default function StockDeleteOrder({rowCopyTradingOrder, onClose, isOpenOrderDelete, setIsOpenOrderDelete}) {
     
-    let optionChainDescription = rowCopyTradingOrder.cell.row.original.optionChainDescription;
+    let stockDescription = rowCopyTradingOrder.cell.row.original.stockDescription;
     let agentTradingSessionID = rowCopyTradingOrder.cell.row.original.agentTradingSessionID;
 
     const {stockCopyTradingOrderDataDict, setStockCopyTradingOrderDataDict} = useContext(StockCopyTradingOrderContext);
@@ -18,30 +18,29 @@ export default function StockDeleteOrder({rowCopyTradingOrder, onClose, isOpenOr
             accountId: item.accountId,
             accountName: item.accountName,
             accountUsername: item.accountUsername,
-            optionChainOrderId: item.optionChainOrderId
+            stockOrderId: item.stockOrderId
           }));
 
-        const response = await axios.delete("/copy_trading_account/cancel_order/", { data: { agentTradingSessionID: agentTradingSessionID, allTradingAccountsOrderList: allTradingAccountsOrderList }});
+        const response = await axios.delete("/stock_copy_trading/cancel_order/", { data: { agentTradingSessionID: agentTradingSessionID, allTradingAccountsOrderList: allTradingAccountsOrderList }});
         
         if (response.data == "success") {
           alert("Order deleted successful");
         } else {
           alert("Order deleted failed")
         }
-        setIsOpenOrderDelete(!isOpenOrderDelete); 
-
       } catch(error) {
           alert("Order deleted failed")
           console.log(error.message);
       }
+      setIsOpenOrderDelete(!isOpenOrderDelete); 
     }
       
     return ( 
         <form>
             <div className="mb-4">
-                <h1 className="block text-gray-700 text-lm font-bold mb-2">Option Delete Order ( {copyTradingAllAccountData.length} accounts )</h1>
+                <h1 className="block text-gray-700 text-lm font-bold mb-2">Stock Delete Order ( {copyTradingAllAccountData.length} accounts )</h1>
             </div>
-            <div className="mb-4">Are you sure to delete this order <b>{optionChainDescription}</b> ?</div>
+            <div className="mb-4">Are you sure to delete this order <b>{stockDescription}</b> ?</div>
             <div className="flex justify-end gap-5">
               <button
                 type="button"

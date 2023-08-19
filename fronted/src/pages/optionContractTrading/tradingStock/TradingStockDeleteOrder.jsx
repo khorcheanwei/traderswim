@@ -28,12 +28,11 @@ export default function TradingStockDeleteOrder({rowCopyTradingOrder, onClose, i
         } else {
           alert("Order deleted failed")
         }
-        setIsOpenOrderDelete(!isOpenOrderDelete); 
-
       } catch(error) {
           alert("Order deleted failed")
           console.log(error.message);
       }
+      setIsOpenOrderDelete(!isOpenOrderDelete); 
     }
       
     return ( 
