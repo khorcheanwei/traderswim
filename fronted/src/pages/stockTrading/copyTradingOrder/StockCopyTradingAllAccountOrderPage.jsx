@@ -10,8 +10,8 @@ import StockDeleteOrderSelected from '../tradingStock/StockDeleteOrderSelected';
 
 import StockWarningMessage from '../tradingStock/StockWarningMessage';
 
-import { TextOptionChainDescriptionColorPanel, TextOptionChainFilledQuantityColorPanel, TextOptionChainPriceColorPanel, TextOptionChainQuantityColorPanel,
-  TextOptionChainInstructionColorPanel, TextOptionChainStatusColorPanel, TextOptionChainOrderTypeColorPanel, TextOptionChainEnteredTimeColorPanel,
+import { TextStockFilledQuantityColorPanel, TextStockPriceColorPanel, TextStockQuantityColorPanel,
+  TextStockInstructionColorPanel, TextStockStatusColorPanel, TextStockOrderTypeColorPanel, TextStockEnteredTimeColorPanel,
   TextAccountNameColorPanel,TextAccountUsernameColorPanel, ChangeOrderIndividualPanel, MakeSelectedOrderPanel} from './StockCopyTradingAllAccountOrderTable'
 
 
@@ -30,57 +30,52 @@ export default function StockCopyTradingAllAccountOrderPage({ rowCopyTradingOrde
       accessor: 'accountId',
     },
     {
-      Header: 'Symbol',
-      accessor: 'optionChainSymbol',
-    },
-    {
       Header: 'Change order',
       accessor: 'ChangeOrder',
       Cell: ChangeOrderIndividualPanel,
     },
     {
-      Header: 'Symbol description',
-      accessor: 'optionChainDescription',
-      Cell: TextOptionChainDescriptionColorPanel,
+      Header: 'Symbol',
+      accessor: 'stockSymbol',
     },
     {
-      Header: 'Option chain order Id',
-      accessor: 'optionChainOrderId',
+      Header: 'Stock order Id',
+      accessor: 'stockOrderId',
     },
     {
       Header: 'Filled Qty',
-      accessor: 'optionChainFilledQuantity',
-      Cell: TextOptionChainFilledQuantityColorPanel,
+      accessor: 'stockFilledQuantity',
+      Cell: TextStockFilledQuantityColorPanel,
     },
     {
       Header: 'Price',
-      accessor: 'optionChainPrice',
-      Cell: TextOptionChainPriceColorPanel,
+      accessor: 'stockPrice',
+      Cell: TextStockPriceColorPanel,
     },
     {
       Header: 'Qty',
-      accessor: 'optionChainQuantity',
-      Cell: TextOptionChainQuantityColorPanel,
+      accessor: 'stockQuantity',
+      Cell: TextStockQuantityColorPanel,
     },
     {
       Header: 'Side Pos Effect',
-      accessor: 'optionChainInstruction',
-      Cell: TextOptionChainInstructionColorPanel,
+      accessor: 'stockInstruction',
+      Cell: TextStockInstructionColorPanel,
     },
     {
       Header: 'Status',
-      accessor: 'optionChainStatus',
-      Cell: TextOptionChainStatusColorPanel,
+      accessor: 'stockStatus',
+      Cell: TextStockStatusColorPanel,
     },
     {
       Header: 'Order type',
-      accessor: 'optionChainOrderType',
-      Cell: TextOptionChainOrderTypeColorPanel,
+      accessor: 'stockOrderType',
+      Cell: TextStockOrderTypeColorPanel,
     },
     {
       Header: 'Time',
-      accessor: 'optionChainEnteredTime',
-      Cell: TextOptionChainEnteredTimeColorPanel,
+      accessor: 'stockEnteredTime',
+      Cell: TextStockEnteredTimeColorPanel,
     },
     {
       Header: 'Name',

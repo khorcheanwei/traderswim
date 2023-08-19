@@ -22,127 +22,113 @@ function GlobalFilter({
   )
 }
 
-function getOptionChainStatusColor(optionChainStatus) {
-  let optionChainOwnStatusColor = true;
-  let optionChainStatusInactiveList = ["REJECTED", "CANCELED", "FILLED", "EXPIRED"];
-  if (!optionChainStatusInactiveList.includes(optionChainStatus)) {
-    optionChainOwnStatusColor = false;
+function getStockStatusColor(stockStatus) {
+  let stockOwnStatusColor = true;
+  let stockStatusInactiveList = ["REJECTED", "CANCELED", "FILLED", "EXPIRED"];
+  if (!stockStatusInactiveList.includes(stockStatus)) {
+    stockOwnStatusColor = false;
   }
-  return optionChainOwnStatusColor
+  return stockOwnStatusColor
 }
 
-export function TextOptionChainDescriptionColorPanel(row) {
-  let optionChainStatus = row.cell.row.original.optionChainStatus;
-  let optionChainOwnStatusColor = getOptionChainStatusColor(optionChainStatus);
-  let optionChainDescription = row.cell.row.original.optionChainDescription;
+export function TextStockFilledQuantityColorPanel(row) {
+  let stockStatus = row.cell.row.original.stockStatus;
+  let stockOwnStatusColor = getStockStatusColor(stockStatus);
+  let stockFilledQuantity = row.cell.row.original.stockFilledQuantity;
   return (
     <div>
-      {optionChainOwnStatusColor
-        ? <div>{optionChainDescription}</div>
-        : <div className="text-yellow-700">{optionChainDescription}</div>
-      }
-    </div>
-  )
-}
-
-export function TextOptionChainFilledQuantityColorPanel(row) {
-  let optionChainStatus = row.cell.row.original.optionChainStatus;
-  let optionChainOwnStatusColor = getOptionChainStatusColor(optionChainStatus);
-  let optionChainFilledQuantity = row.cell.row.original.optionChainFilledQuantity;
-  return (
-    <div>
-      {optionChainOwnStatusColor
-        ? <div>{optionChainFilledQuantity}</div>
-        : <div className="text-yellow-700">{optionChainFilledQuantity}</div>
+      {stockOwnStatusColor
+        ? <div>{stockFilledQuantity}</div>
+        : <div className="text-yellow-700">{stockFilledQuantity}</div>
       }
     </div>
   )
 }
 
 
-export function TextOptionChainPriceColorPanel(row) {
-  let optionChainStatus = row.cell.row.original.optionChainStatus;
-  let optionChainOwnStatusColor = getOptionChainStatusColor(optionChainStatus);
-  let optionChainPrice = row.cell.row.original.optionChainPrice;
+export function TextStockPriceColorPanel(row) {
+  let stockStatus = row.cell.row.original.stockStatus;
+  let stockOwnStatusColor = getStockStatusColor(stockStatus);
+  let stockPrice = row.cell.row.original.stockPrice;
   return (
     <div>
-      {optionChainOwnStatusColor
-        ? <div>{optionChainPrice}</div>
-        : <div className="text-yellow-700">{optionChainPrice}</div>
+      {stockOwnStatusColor
+        ? <div>{stockPrice}</div>
+        : <div className="text-yellow-700">{stockPrice}</div>
       }
     </div>
   )
 }
 
 
-export function TextOptionChainQuantityColorPanel(row) {
-  let optionChainStatus = row.cell.row.original.optionChainStatus;
-  let optionChainOwnStatusColor = getOptionChainStatusColor(optionChainStatus);
-  let optionChainQuantity = row.cell.row.original.optionChainQuantity;
+export function TextStockQuantityColorPanel(row) {
+  let stockStatus = row.cell.row.original.stockStatus;
+  let stockOwnStatusColor = getStockStatusColor(stockStatus);
+  let stockQuantity = row.cell.row.original.stockQuantity;
   return (
     <div>
-      {optionChainOwnStatusColor
-        ? <div>{optionChainQuantity}</div>
-        : <div className="text-yellow-700">{optionChainQuantity}</div>
+      {stockOwnStatusColor
+        ? <div>{stockQuantity}</div>
+        : <div className="text-yellow-700">{stockQuantity}</div>
       }
     </div>
   )
 }
 
 
-export function TextOptionChainInstructionColorPanel(row) {
-  let optionChainStatus = row.cell.row.original.optionChainStatus;
-  let optionChainOwnStatusColor = getOptionChainStatusColor(optionChainStatus);
-  let optionChainInstruction = row.cell.row.original.optionChainInstruction;
+export function TextStockInstructionColorPanel(row) {
+  let stockStatus = row.cell.row.original.stockStatus;
+  let stockOwnStatusColor = getStockStatusColor(stockStatus);
+  let stockInstruction = row.cell.row.original.stockInstruction;
   return (
     <div>
-      {optionChainOwnStatusColor
-        ? <div>{optionChainInstruction}</div>
-        : <div className="text-yellow-700">{optionChainInstruction}</div>
+      {stockOwnStatusColor
+        ? <div>{stockInstruction}</div>
+        : <div className="text-yellow-700">{stockInstruction}</div>
       }
     </div>
   )
 }
 
 
-export function TextOptionChainStatusColorPanel(row) {
-  let optionChainStatus = row.cell.row.original.optionChainStatus;
-  let optionChainOwnStatusColor = getOptionChainStatusColor(optionChainStatus);
+export function TextStockStatusColorPanel(row) {
+  let stockStatus = row.cell.row.original.stockStatus;
+  let stockOwnStatusColor = getStockStatusColor(stockStatus);
   return (
     <div>
-      {optionChainOwnStatusColor
-        ? <div>{optionChainStatus}</div>
-        : <div className="text-yellow-700">{optionChainStatus}</div>
+      {stockOwnStatusColor
+        ? <div>{stockStatus}</div>
+        : <div className="text-yellow-700">{stockStatus}</div>
       }
     </div>
   )
 }
 
 
-export function TextOptionChainOrderTypeColorPanel(row) {
-  let optionChainStatus = row.cell.row.original.optionChainStatus;
-  let optionChainOwnStatusColor = getOptionChainStatusColor(optionChainStatus);
-  let optionChainOrderType = row.cell.row.original.optionChainOrderType;
+export function TextStockOrderTypeColorPanel(row) {
+  let stockStatus = row.cell.row.original.stockStatus;
+  let stockOwnStatusColor = getStockStatusColor(stockStatus);
+  let stockOrderType = row.cell.row.original.stockOrderType;
   return (
     <div>
-      {optionChainOwnStatusColor
-        ? <div>{optionChainOrderType}</div>
-        : <div className="text-yellow-700">{optionChainOrderType}</div>
+      {stockOwnStatusColor
+        ? <div>{stockOrderType}</div>
+        : <div className="text-yellow-700">{stockOrderType}</div>
       }
     </div>
   )
 }
 
 
-export function TextOptionChainEnteredTimeColorPanel(row) {
-  let optionChainStatus = row.cell.row.original.optionChainStatus;
-  let optionChainOwnStatusColor = getOptionChainStatusColor(optionChainStatus);
-  let optionChainEnteredTime = row.cell.row.original.optionChainEnteredTime;
+export function TextStockEnteredTimeColorPanel(row) {
+  let stockStatus = row.cell.row.original.stockStatus;
+  let stockOwnStatusColor = getStockStatusColor(stockStatus);
+  let stockEnteredTime = row.cell.row.original.stockEnteredTime;
   return (
     <div>
-      {optionChainOwnStatusColor
-        ? <div>{optionChainEnteredTime}</div>
-        : <div className="text-yellow-700">{optionChainEnteredTime}</div>
+      {stockOwnStatusColor
+        ? <div>{stockEnteredTime}</div>
+        : <div className="text-yellow-700">{stockEnteredTime}</div>
       }
     </div>
   )
@@ -150,12 +136,12 @@ export function TextOptionChainEnteredTimeColorPanel(row) {
 
 
 export function TextAccountNameColorPanel(row) {
-  let optionChainStatus = row.cell.row.original.optionChainStatus;
-  let optionChainOwnStatusColor = getOptionChainStatusColor(optionChainStatus);
+  let stockStatus = row.cell.row.original.stockStatus;
+  let stockOwnStatusColor = getStockStatusColor(stockStatus);
   let accountName = row.cell.row.original.accountName;
   return (
     <div>
-      {optionChainOwnStatusColor
+      {stockOwnStatusColor
         ? <div>{accountName}</div>
         : <div className="text-yellow-700">{accountName}</div>
       }
@@ -164,12 +150,12 @@ export function TextAccountNameColorPanel(row) {
 }
 
 export function TextAccountUsernameColorPanel(row) {
-  let optionChainStatus = row.cell.row.original.optionChainStatus;
-  let optionChainOwnStatusColor = getOptionChainStatusColor(optionChainStatus);
+  let stockStatus = row.cell.row.original.stockStatus;
+  let stockOwnStatusColor = getStockStatusColor(stockStatus);
   let accountUsername = row.cell.row.original.accountUsername;
   return (
     <div>
-      {optionChainOwnStatusColor
+      {stockOwnStatusColor
         ? <div>{accountUsername}</div>
         : <div className="text-yellow-700">{accountUsername}</div>
       }
@@ -190,7 +176,7 @@ export function MakeSelectedOrderPanel({row, setSelectedOrderDict}) {
         accountId: row.cell.row.original.accountId,
         accountName: row.cell.row.original.accountName,
         accountUsername: row.cell.row.original.accountUsername,
-        optionChainOrderId: row.cell.row.original.optionChainOrderId
+        stockOrderId: row.cell.row.original.stockOrderId
       }
 
       if (newSelectedOrderDict.hasOwnProperty(row.cell.row.original.accountUsername) && !event.target.checked) {
@@ -254,7 +240,7 @@ export function ChangeOrderIndividualPanel(row) {
 };
 
 function StockCopyTradingAllAccountOrderTable({ columns, data }) {
-  let hiddenColumns = ['accountId', 'optionChainSymbol', 'optionChainOrderId', 'agentTradingSessionID', 'optionChainOwnStatusColor'];
+  let hiddenColumns = ['accountId', 'stockOrderId', 'agentTradingSessionID', 'stockOwnStatusColor'];
   return CommonTable({ columns, data, GlobalFilter, hiddenColumns })
 }
 
