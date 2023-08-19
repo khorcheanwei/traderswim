@@ -1,13 +1,10 @@
-import StockOptionPlaceSaveOrderPanelPage from '../optionPlaceOrderPanel/StockOptionPlaceSaveOrderPanelPage';
+import StockPlaceSaveOrderPanelPage from '../optionPlaceOrderPanel/StockPlaceSaveOrderPanelPage';
 
 export default function StockPlaceOrderPanelAllPage() {
     return (
         <div className="flex h-full">
             <div className="overflow-scroll w-full">
-                <StockOptionPlaceSaveOrderPanelPage callOption={true}/>
-            </div>
-            <div className="overflow-scroll w-full">
-                <StockOptionPlaceSaveOrderPanelPage callOption={false}/>
+                <StockPlaceSaveOrderPanelPage/>
             </div>
         </div>
     )

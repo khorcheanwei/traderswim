@@ -3,7 +3,7 @@ import StockPlaceOrder from '../tradingStock/StockPlaceOrder';
 import { StockCopyTradingOrderContext } from '../context/StockCopyTradingOrderContext';
 import Overlay from "../../Overlay"
 
-export function StockPlaceOrderPanel({row, callOption}) {
+export function StockPlaceOrderPanel({row}) {
     const [isOpenOrderPlace, setIsOpenOrderPlace] = useState(false);
     const { rowCopyTradingOrder, setRowCopyTradingOrder } = useContext(StockCopyTradingOrderContext);
   
@@ -13,18 +13,12 @@ export function StockPlaceOrderPanel({row, callOption}) {
       }
       setIsOpenOrderPlace(!isOpenOrderPlace)
     }
-    let place_order_button_class = "flex "
     let place_order_class = "cursor-pointer inline-flex items-center justify-center w-10 h-10 rounded-full "
-    if (callOption) {
-      place_order_class = place_order_class + "bg-green-700"
-    } else {
-      place_order_button_class = place_order_button_class
-      place_order_class = place_order_class + "bg-red-700"
-    }
-  
+    place_order_class = place_order_class + "bg-purple-500"
+   
     return (
-      <div className={place_order_button_class}>
-          <div onClick={orderPlaceClose} className={place_order_class}>
+      <div className="flex">
+          <div onClick={orderPlaceClose} className="cursor-pointer inline-flex items-center justify-center w-10 h-10 rounded-full bg-purple-500">
           <span className="font-medium text-white dark:text-white">P</span>
         </div>
         <Overlay isOpen={isOpenOrderPlace} >

@@ -3,7 +3,8 @@ const express = require("express");
 const stockCopyTradingRouter = express.Router();
 
 const {
-    stock_copy_trading_get_stock_quotes
+    stock_copy_trading_get_stock_quotes,
+    stock_copy_trading_place_order
 } = require("../../controllers/stockTrading/stockCopyTradingController.js");
 
 
@@ -39,11 +40,10 @@ stockCopyTradingRouter.get(
   }
 );
 
-/*
 stockCopyTradingRouter.post(
   "/place_order",
   async (httpRequest, httpResponse) => {
-    const result = await copy_trading_place_order(httpRequest);
+    const result = await stock_copy_trading_place_order(httpRequest);
 
     if (result.success == true) {
       httpResponse.status(200).json(result.data);
@@ -53,6 +53,7 @@ stockCopyTradingRouter.post(
   }
 );
 
+/*
 stockCopyTradingRouter.post(
   "/exit_order",
   async (httpRequest, httpResponse) => {
