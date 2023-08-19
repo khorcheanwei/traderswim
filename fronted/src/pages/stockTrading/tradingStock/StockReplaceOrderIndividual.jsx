@@ -6,8 +6,9 @@ export default function StockReplaceOrderIndividual({ rowCopyTradingOrderIndivid
 
     const {isOpenOrderReplaceIndividual, setIsOpenOrderReplaceIndividual} = useContext(StockCopyTradingOrderContext);
 
-    var stockInstructionList = ["BUY_TO_OPEN", "SELL_TO_CLOSE"];
-    var stockOrderTypeList = ["LIMIT", "MARKET", "MARKET_ON_CLOSE", "STOP", "STOP_LIMIT", "TRAILING_STOP"];
+    var stockInstructionList = ["BUY", "SELL"];
+    var stockOrderTypeList = ["MARKET", "LIMIT", "STOP", "STOP_LIMIT", "TRAILING_STOP"];
+    var stockSessionDurationList = ["DAY", "GTC", "EXT", "GTC_EXT"];
 
     let accountId = rowCopyTradingOrderIndividual.cell.row.original.accountId;
     let accountName = rowCopyTradingOrderIndividual.cell.row.original.accountName;

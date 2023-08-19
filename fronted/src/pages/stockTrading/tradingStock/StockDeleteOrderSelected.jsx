@@ -7,11 +7,11 @@ export default function StockDeleteOrderSelected({rowCopyTradingOrderSelected, s
   
     const { isOpenOrderDeleteSelected, setIsOpenOrderDeleteSelected} = useContext(StockCopyTradingOrderContext);
     
-    //let optionChainDescription = rowCopyTradingOrderSelected.cell.row.original.account;
+    //let stockDescription = rowCopyTradingOrderSelected.cell.row.original.account;
     let accountId = rowCopyTradingOrderSelected.cell.row.original.accountId;
     let accountUsername = rowCopyTradingOrderSelected.cell.row.original.accountUsername;
-    let optionChainOrderId = rowCopyTradingOrderSelected.cell.row.original.optionChainOrderId;
-    let optionChainDescription = rowCopyTradingOrderSelected.cell.row.original.optionChainDescription;
+    let stockOrderId = rowCopyTradingOrderSelected.cell.row.original.stockOrderId;
+    let stockDescription = rowCopyTradingOrderSelected.cell.row.original.stockDescription;
     let agentTradingSessionID = rowCopyTradingOrderSelected.cell.row.original.agentTradingSessionID;
     
     async function handleDeleteOrderSelected() {
@@ -26,11 +26,11 @@ export default function StockDeleteOrderSelected({rowCopyTradingOrderSelected, s
               accountId: value["accountId"],
               accountName: value["accountName"],
               accountUsername: value["accountUsername"],
-              optionChainOrderId: value["optionChainOrderId"]
+              stockOrderId: value["stockOrderId"]
           })
         }
             
-        const response = await axios.delete("/copy_trading_account/cancel_order/", { data: { agentTradingSessionID: agentTradingSessionID, allTradingAccountsOrderList: allTradingAccountsOrderList }});
+        const response = await axios.delete("/stock_copy_trading/cancel_order/", { data: { agentTradingSessionID: agentTradingSessionID, allTradingAccountsOrderList: allTradingAccountsOrderList }});
         if (response.data == "success") {
           alert("Selected order deleted successful");
         } else {
@@ -48,9 +48,9 @@ export default function StockDeleteOrderSelected({rowCopyTradingOrderSelected, s
     return ( 
         <form>
             <div className="mb-4">
-                <h1 className="block text-gray-700 text-lm font-bold mb-2">Option Delete Order (Selected)</h1>
+                <h1 className="block text-gray-700 text-lm font-bold mb-2">Stock Delete Order (Selected)</h1>
             </div>
-            <div className="mb-4">Are you sure to delete this order <b>{optionChainDescription}</b>?</div>
+            <div className="mb-4">Are you sure to delete this order <b>{stockDescription}</b>?</div>
             <div className="flex justify-end gap-5">
               <button
                 type="button"
