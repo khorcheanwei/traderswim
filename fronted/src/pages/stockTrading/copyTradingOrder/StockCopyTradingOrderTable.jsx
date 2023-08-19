@@ -1,5 +1,4 @@
 import React from 'react'
-import { useAsyncDebounce } from 'react-table'
 import { useState, useContext } from 'react';
 
 import { StockCopyTradingOrderContext } from '../context/StockCopyTradingOrderContext';

@@ -7,18 +7,18 @@ export default function StockDeleteOrderIndividual({rowCopyTradingOrderIndividua
   
     const { isOpenOrderDeleteIndividual, setIsOpenOrderDeleteIndividual} = useContext(StockCopyTradingOrderContext);
     
-    //let optionChainDescription = rowCopyTradingOrderIndividual.cell.row.original.account;
+    //let stockDescription = rowCopyTradingOrderIndividual.cell.row.original.account;
     let accountId = rowCopyTradingOrderIndividual.cell.row.original.accountId;
     let accountUsername = rowCopyTradingOrderIndividual.cell.row.original.accountUsername;
-    let optionChainOrderId = rowCopyTradingOrderIndividual.cell.row.original.optionChainOrderId;
-    let optionChainDescription = rowCopyTradingOrderIndividual.cell.row.original.optionChainDescription;
+    let stockOrderId = rowCopyTradingOrderIndividual.cell.row.original.stockOrderId;
+    let stockDescription = rowCopyTradingOrderIndividual.cell.row.original.stockDescription;
     let agentTradingSessionID = rowCopyTradingOrderIndividual.cell.row.original.agentTradingSessionID;
     
     async function handleDeleteOrderIndividual() {
       // delete order 
       try {
   
-        const response = await axios.delete("/copy_trading_account/cancel_order_individual/", { data: { agentTradingSessionID, accountId, accountUsername, optionChainOrderId }});
+        const response = await axios.delete("/stock_copy_trading/cancel_order_individual/", { data: { agentTradingSessionID, accountId, accountUsername, stockOrderId }});
         if (response.data == "success") {
           alert("Order deleted successful");
         } else {
@@ -36,9 +36,9 @@ export default function StockDeleteOrderIndividual({rowCopyTradingOrderIndividua
     return ( 
         <form>
             <div className="mb-4">
-                <h1 className="block text-gray-700 text-lm font-bold mb-2">Option Delete Order (Individual) - <b>{accountUsername}</b></h1>
+                <h1 className="block text-gray-700 text-lm font-bold mb-2">Stock Delete Order (Individual) - <b>{accountUsername}</b></h1>
             </div>
-            <div className="mb-4">Are you sure to delete this order <b>{optionChainDescription}</b>?</div>
+            <div className="mb-4">Are you sure to delete this order <b>{stockDescription}</b>?</div>
             <div className="flex justify-end gap-5">
               <button
                 type="button"
