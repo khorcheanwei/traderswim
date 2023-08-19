@@ -175,7 +175,7 @@ async function replace_order(config, accountUsername) {
 }
 
 // Put replace order for individual trading account
-async function copy_trading_put_replace_order_individual(httpRequest) {
+async function stock_copy_trading_put_replace_order_individual(httpRequest) {
 
   let { agentTradingSessionID, accountId, accountName, accountUsername, stockOrderId, stockSymbol, stockInstruction, stockOrderType, stockQuantity, stockPrice } = httpRequest.body;
 
@@ -189,21 +189,20 @@ async function copy_trading_put_replace_order_individual(httpRequest) {
 
         // replace order with all accounts of particular agent
         let payload = {
-          "complexOrderStrategyType": "NONE",
           "orderType": stockOrderType,
-          "session": "NORMAL",
-          "price": stockPrice,
+          "session": "SEAMLESS",
           "duration": "DAY",
           "orderStrategyType": "SINGLE",
+          "price": stockPrice,
           "orderLegCollection": [
-            {
-              "instruction": stockInstruction,
-              "quantity": stockQuantity,
-              "instrument": {
-                "symbol": stockSymbol,
-                "assetType": "EQUITY"
+              {
+                  "instruction": stockInstruction,
+                  "quantity": stockQuantity,
+                  "instrument": {
+                      "symbol": stockSymbol,
+                      "assetType": "EQUITY"
+                  }
               }
-            }
           ]
         }
 
@@ -431,7 +430,7 @@ async function cancel_order(config, accountUsername) {
 }
 
 // Delete cancel order for individual trading account
-async function copy_trading_delete_cancel_order_individual(httpRequest) {
+async function stock_copy_trading_delete_cancel_order_individual(httpRequest) {
 
   let { agentTradingSessionID, accountId, accountUsername, stockOrderId } = httpRequest.body;
 
@@ -553,7 +552,7 @@ async function stock_copy_trading_cancel_order(httpRequest) {
 module.exports = {
     //copy_trading_exit_order,
     stock_copy_trading_replace_order,
-    //copy_trading_put_replace_order_individual,
+    stock_copy_trading_put_replace_order_individual,
     stock_copy_trading_cancel_order,
-    //copy_trading_delete_cancel_order_individual
+    stock_copy_trading_delete_cancel_order_individual
 };

@@ -10,7 +10,7 @@ import StockDeleteOrderSelected from '../tradingStock/StockDeleteOrderSelected';
 
 import StockWarningMessage from '../tradingStock/StockWarningMessage';
 
-import { TextStockFilledQuantityColorPanel, TextStockPriceColorPanel, TextStockQuantityColorPanel,
+import { TextStockSymbolColorPanel, TextStockFilledQuantityColorPanel, TextStockPriceColorPanel, TextStockQuantityColorPanel,
   TextStockInstructionColorPanel, TextStockStatusColorPanel, TextStockOrderTypeColorPanel, TextStockEnteredTimeColorPanel,
   TextAccountNameColorPanel,TextAccountUsernameColorPanel, ChangeOrderIndividualPanel, MakeSelectedOrderPanel} from './StockCopyTradingAllAccountOrderTable'
 
@@ -37,6 +37,7 @@ export default function StockCopyTradingAllAccountOrderPage({ rowCopyTradingOrde
     {
       Header: 'Symbol',
       accessor: 'stockSymbol',
+      Cell: TextStockSymbolColorPanel,
     },
     {
       Header: 'Stock order Id',

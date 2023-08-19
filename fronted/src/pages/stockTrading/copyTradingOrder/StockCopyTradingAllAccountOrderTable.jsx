@@ -31,6 +31,20 @@ function getStockStatusColor(stockStatus) {
   return stockOwnStatusColor
 }
 
+export function TextStockSymbolColorPanel(row) {
+  let stockStatus = row.cell.row.original.stockStatus;
+  let stockOwnStatusColor = getStockStatusColor(stockStatus);
+  let stockSymbol = row.cell.row.original.stockSymbol;
+  return (
+    <div>
+      {stockOwnStatusColor
+        ? <div>{stockSymbol}</div>
+        : <div className="text-yellow-700">{stockSymbol}</div>
+      }
+    </div>
+  )
+}
+
 export function TextStockFilledQuantityColorPanel(row) {
   let stockStatus = row.cell.row.original.stockStatus;
   let stockOwnStatusColor = getStockStatusColor(stockStatus);
@@ -44,7 +58,6 @@ export function TextStockFilledQuantityColorPanel(row) {
     </div>
   )
 }
-
 
 export function TextStockPriceColorPanel(row) {
   let stockStatus = row.cell.row.original.stockStatus;

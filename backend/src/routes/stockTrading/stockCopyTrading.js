@@ -10,6 +10,8 @@ const {
 
 const {
   stock_copy_trading_replace_order,
+  stock_copy_trading_put_replace_order_individual,
+  stock_copy_trading_delete_cancel_order_individual,
   stock_copy_trading_cancel_order
 } = require("../../controllers/stockTrading/stockCopyTradingUpdateController.js");
 
@@ -87,11 +89,10 @@ stockCopyTradingRouter.put(
   }
 );
 
-/*
 stockCopyTradingRouter.put(
   "/replace_order_individual",
   async (httpRequest, httpResponse) => {
-    const result = await copy_trading_put_replace_order_individual(httpRequest);
+    const result = await stock_copy_trading_put_replace_order_individual(httpRequest);
 
     if (result.success == true) {
       httpResponse.status(200).json(result.data);
@@ -100,7 +101,7 @@ stockCopyTradingRouter.put(
     }
   }
 );
-*/
+
 stockCopyTradingRouter.delete(
   "/cancel_order",
   async (httpRequest, httpResponse) => {
@@ -114,11 +115,10 @@ stockCopyTradingRouter.delete(
   }
 );
 
-/*
 stockCopyTradingRouter.delete(
   "/cancel_order_individual",
   async (httpRequest, httpResponse) => {
-    const result = await copy_trading_delete_cancel_order_individual(httpRequest);
+    const result = await stock_copy_trading_delete_cancel_order_individual(httpRequest);
 
     if (result.success == true) {
       httpResponse.status(200).json(result.data);
@@ -126,7 +126,7 @@ stockCopyTradingRouter.delete(
       httpResponse.status(400).json(result.data);
     }
   }
-); */
+); 
 
 stockCopyTradingRouter.get("/database", async (httpRequest, httpResponse) => {
   const result = await stock_copy_trading_database(httpRequest);

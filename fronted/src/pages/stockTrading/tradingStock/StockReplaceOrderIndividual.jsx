@@ -6,30 +6,29 @@ export default function StockReplaceOrderIndividual({ rowCopyTradingOrderIndivid
 
     const {isOpenOrderReplaceIndividual, setIsOpenOrderReplaceIndividual} = useContext(StockCopyTradingOrderContext);
 
-    var optionChainInstructionList = ["BUY_TO_OPEN", "SELL_TO_CLOSE"];
-    var optionChainOrderTypeList = ["LIMIT", "MARKET", "MARKET_ON_CLOSE", "STOP", "STOP_LIMIT", "TRAILING_STOP"];
+    var stockInstructionList = ["BUY_TO_OPEN", "SELL_TO_CLOSE"];
+    var stockOrderTypeList = ["LIMIT", "MARKET", "MARKET_ON_CLOSE", "STOP", "STOP_LIMIT", "TRAILING_STOP"];
 
     let accountId = rowCopyTradingOrderIndividual.cell.row.original.accountId;
     let accountName = rowCopyTradingOrderIndividual.cell.row.original.accountName;
     let accountUsername = rowCopyTradingOrderIndividual.cell.row.original.accountUsername;
     let agentTradingSessionID = rowCopyTradingOrderIndividual.cell.row.original.agentTradingSessionID;
-    let optionChainOrderId = rowCopyTradingOrderIndividual.cell.row.original.optionChainOrderId;
-    let optionChainDescription = rowCopyTradingOrderIndividual.cell.row.original.optionChainDescription;
-    let rowOptionChainSymbol = rowCopyTradingOrderIndividual.cell.row.original.optionChainSymbol;
-    let rowOptionChainInstruction = rowCopyTradingOrderIndividual.cell.row.original.optionChainInstruction;
-    let rowOptionChainOrderType = rowCopyTradingOrderIndividual.cell.row.original.optionChainOrderType;
-    let rowOptionChainQuantity = rowCopyTradingOrderIndividual.cell.row.original.optionChainQuantity;
-    let rowOptionChainPrice = rowCopyTradingOrderIndividual.cell.row.original.optionChainPrice;
+    let stockOrderId = rowCopyTradingOrderIndividual.cell.row.original.stockOrderId;
+    let rowStockSymbol = rowCopyTradingOrderIndividual.cell.row.original.stockSymbol;
+    let rowStockInstruction = rowCopyTradingOrderIndividual.cell.row.original.stockInstruction;
+    let rowStockOrderType = rowCopyTradingOrderIndividual.cell.row.original.stockOrderType;
+    let rowStockQuantity = rowCopyTradingOrderIndividual.cell.row.original.stockQuantity;
+    let rowStockPrice = rowCopyTradingOrderIndividual.cell.row.original.stockPrice;
 
-    const [optionChainSymbol, setOptionChainSymbol] = useState(rowOptionChainSymbol);
-    const [optionChainInstruction, setOptionChainInstruction] = useState(rowOptionChainInstruction);
-    const [optionChainOrderType, setOptionChainOrderType] = useState(rowOptionChainOrderType);
-    const [optionChainQuantity, setOptionChainQuantity] = useState(rowOptionChainQuantity)
-    const [optionChainPrice, setOptionChainPrice] = useState(rowOptionChainPrice)
+    const [stockSymbol, setStockSymbol] = useState(rowStockSymbol);
+    const [stockInstruction, setStockInstruction] = useState(rowStockInstruction);
+    const [stockOrderType, setStockOrderType] = useState(rowStockOrderType);
+    const [stockQuantity, setStockQuantity] = useState(rowStockQuantity)
+    const [stockPrice, setStockPrice] = useState(rowStockPrice)
   
     async function handleReplaceOrderIndividual() {
         try {
-            const { data } = await axios.put("/copy_trading_account/replace_order_individual/", { agentTradingSessionID, accountId, accountName, accountUsername, optionChainOrderId, optionChainSymbol, optionChainInstruction, optionChainOrderType, optionChainQuantity, optionChainPrice })
+            const { data } = await axios.put("/stock_copy_trading/replace_order_individual/", { agentTradingSessionID, accountId, accountName, accountUsername, stockOrderId, stockSymbol, stockInstruction, stockOrderType, stockQuantity, stockPrice })
 
             if (data != "success") {
                 alert("Replace order failed");
@@ -46,53 +45,43 @@ export default function StockReplaceOrderIndividual({ rowCopyTradingOrderIndivid
     return (
         <div>
             <div className="mb-4">
-                <h1 className="block text-gray-700 text-lm font-bold mb-2">Option Replace Order (Individual) - <b>{accountUsername}</b></h1>
+                <h1 className="block text-gray-700 text-lm font-bold mb-2">Stock Replace Order (Individual) - <b>{accountUsername}</b></h1>
             </div>
             <div>
-                <div className="relative">
-                    <div className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline">
-                       {optionChainDescription}
-                    </div>
-                    <label
-                        className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
-                        htmlFor="small_outlined">
-                        Option Chain Description:
-                    </label>
-                </div>
                 <div className="grid items-end gap-6 mb-6 md:grid-cols-2">
                     <div className="relative">
                         <select
                             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                            value={optionChainInstruction}
-                            onChange={event => setOptionChainInstruction(event.target.value)}
+                            value={stockInstruction}
+                            onChange={event => setStockInstruction(event.target.value)}
                             >
                             {
-                                optionChainInstructionList.map((option_chain_instruction, index) => (
-                                    <option key={index}>{option_chain_instruction}</option>
+                                stockInstructionList.map((stock_instruction, index) => (
+                                    <option key={index}>{stock_instruction}</option>
                                 ))
                             }
                         </select>
                         <label
                             className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
                             htmlFor="small_outlined">
-                            Option Chain instruction:
+                            Stock instruction:
                         </label>
                     </div>
                     <div className="relative">
                         <select
                             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                            value={optionChainOrderType}
-                            onChange={event => setOptionChainOrderType(event.target.value)}>
+                            value={stockOrderType}
+                            onChange={event => setStockOrderType(event.target.value)}>
                             {
-                                optionChainOrderTypeList.map((option_chain_order_type, index) => (
-                                    <option key={index}>{option_chain_order_type}</option>
+                                stockOrderTypeList.map((stock_order_type, index) => (
+                                    <option key={index}>{stock_order_type}</option>
                                 ))
                             }
                         </select>
                         <label
                             className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
                             htmlFor="small_outlined">
-                            Option Chain order type:
+                            Stock order type:
                         </label>
                     </div>
                 </div>
@@ -101,20 +90,20 @@ export default function StockReplaceOrderIndividual({ rowCopyTradingOrderIndivid
                         <input
                             className="block px-2.5 pb-1.5 pt-3 w-full text-sm text-gray-900 bg-transparent  border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                             type="text"
-                            onChange={event => setOptionChainQuantity(event.target.value)}
-                            value={optionChainQuantity}
+                            onChange={event => setStockQuantity(event.target.value)}
+                            value={stockQuantity}
                             placeholder=" " />
                         <label
                             className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
                             htmlFor="small_outlined">
-                            Option Contract Total:
+                            Stock Total:
                         </label>
                     </div>
                     <div className="relative">
                         <input className="block px-2.5 pb-1.5 pt-3 w-full text-sm text-gray-900 bg-transparent  border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                             type="text"
-                            onChange={event => setOptionChainPrice(event.target.value)}
-                            value={optionChainPrice}
+                            onChange={event => setStockPrice(event.target.value)}
+                            value={stockPrice}
                             placeholder=" " />
                         <label
                             className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
