@@ -8,11 +8,15 @@ const {
     stock_copy_trading_database,
 } = require("../../controllers/stockTrading/stockCopyTradingController.js");
 
+const {
+  stock_copy_trading_cancel_order
+} = require("../../controllers/stockTrading/stockCopyTradingUpdateController.js");
+
 
 /*
 const {
   copy_trading_stock_pair_list,
-  copy_trading_get_option_chain_list,
+  copy_trading_get_stock_chain_list,
   copy_trading_place_order,
   copy_trading_database,
   copy_trading_history_database,
@@ -93,11 +97,11 @@ stockCopyTradingRouter.put(
     }
   }
 );
-
+*/
 stockCopyTradingRouter.delete(
   "/cancel_order",
   async (httpRequest, httpResponse) => {
-    const result = await copy_trading_cancel_order(httpRequest);
+    const result = await stock_copy_trading_cancel_order(httpRequest);
 
     if (result.success == true) {
       httpResponse.status(200).json(result.data);
@@ -107,6 +111,7 @@ stockCopyTradingRouter.delete(
   }
 );
 
+/*
 stockCopyTradingRouter.delete(
   "/cancel_order_individual",
   async (httpRequest, httpResponse) => {
