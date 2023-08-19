@@ -307,7 +307,7 @@ async function put_replace_order_all_accounts(all_trading_accounts_list, payload
 }
 
 // Copy trading replace order
-async function copy_trading_replace_order(httpRequest) {
+async function stock_copy_trading_replace_order(httpRequest) {
   let {
     agentTradingSessionID, 
     allTradingAccountsOrderList, 
@@ -346,21 +346,20 @@ async function copy_trading_replace_order(httpRequest) {
 
       // replace order with all accounts of particular agent
       let payload = {
-        "complexOrderStrategyType": "NONE",
         "orderType": stockOrderType,
-        "session": "NORMAL",
-        "price": stockPrice,
+        "session": "SEAMLESS",
         "duration": "DAY",
         "orderStrategyType": "SINGLE",
+        "price": stockPrice,
         "orderLegCollection": [
-          {
-            "instruction": stockInstruction,
-            "quantity": stockQuantity,
-            "instrument": {
-              "symbol": stockSymbol,
-              "assetType": "EQUITY"
+            {
+                "instruction": stockInstruction,
+                "quantity": stockQuantity,
+                "instrument": {
+                    "symbol": stockSymbol,
+                    "assetType": "EQUITY"
+                }
             }
-          }
         ]
       }
 
@@ -553,7 +552,7 @@ async function stock_copy_trading_cancel_order(httpRequest) {
 
 module.exports = {
     //copy_trading_exit_order,
-    //copy_trading_replace_order,
+    stock_copy_trading_replace_order,
     //copy_trading_put_replace_order_individual,
     stock_copy_trading_cancel_order,
     //copy_trading_delete_cancel_order_individual
