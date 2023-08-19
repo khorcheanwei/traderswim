@@ -37,6 +37,25 @@ trading_management_db.run(StockSchemaSql), (err) => {
 };
 
 
+// new stock save order table
+const StockSaveOrderSchemaSql = require("../models/stockTrading/StockSaveOrder");
+trading_management_db.run(StockSaveOrderSchemaSql), (err) => {
+  if (err) {
+    console.log(err.message);
+  }
+  console.log('Stock save order table created (if it did not already exist).');
+};
+
+// new stock copy trading table
+const StockCopyTradingSchemaSql = require("../models/stockTrading/StockCopyTrading");
+trading_management_db.run(StockCopyTradingSchemaSql), (err) => {
+  if (err) {
+    console.log(err.message);
+  }
+  console.log('Stock copy trading table created (if it did not already exist).');
+};
+
+
 // new option contract table
 const OptionContractSchemaSql = require("../models/OptionContract");
 trading_management_db.run(OptionContractSchemaSql), (err) => {
@@ -77,7 +96,10 @@ trading_management_db.run(TradeHistorySchemaSql), (err) => {
 // database object
 const agentDB = require("./agent.db.js");
 const accountDB = require("./account.db.js");
+
 const stockDB = require("./stockTrading/stock.db.js");  
+const stockSaveOrderDB = require("./stockTrading/stockSaveOrder.db.js")
+const stockCopyTradingDB = require("./stockTrading/stockCopyTrading.db.js")
 
 const optionContractDB = require("./optionContract.db.js");  
 const optionContractSaveOrderDB = require("./optionContractSaveOrder.db.js");       
@@ -89,6 +111,9 @@ const agentDBOperation = new agentDB(trading_management_db);
 const accountDBOperation = new accountDB(trading_management_db);
 
 const stockDBOperation = new stockDB(trading_management_db);
+const stockSaveOrderDBOperation = new stockSaveOrderDB(trading_management_db);
+const stockCopyTradingDBOperation = new stockCopyTradingDB(trading_management_db);
+
 const optionContractDBOperation = new optionContractDB(trading_management_db);
 const optionContractSaveOrderDBOperation = new optionContractSaveOrderDB(trading_management_db);
 const copyTradingAccountDBBOperation = new copyTradingAccountDB(trading_management_db);
@@ -101,6 +126,8 @@ module.exports = {
   agentDBOperation,
   accountDBOperation,
   stockDBOperation,
+  stockSaveOrderDBOperation,
+  stockCopyTradingDBOperation,
   optionContractDBOperation,
   optionContractSaveOrderDBOperation,
   copyTradingAccountDBBOperation,

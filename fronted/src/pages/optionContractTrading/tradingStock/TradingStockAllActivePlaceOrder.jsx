@@ -61,20 +61,20 @@ export default function TradingStockAllActivePlaceOrder({ onClose }) {
         setDisabledButton(false);
     }
 
-    async function saveOrder() {
+    async function handleSaveOrder() {
         setDisabledButton(true);
         try {
             if (!optionChainSymbol || !optionChainDescription || !optionChainInstruction || !optionChainOrderType || !optionChainQuantity || !optionChainPrice) {
                 alert("Please ensure option contract information is completed");
-                return;
-            }
-            const {data} = await axios.post("/option_contract_save_order/add_option_contract_save_order/", { optionChainSymbol, optionChainDescription, optionChainInstruction, optionChainOrderType, optionChainQuantity, optionChainPrice });
-            if (data.success != true) {
-                alert("Save order failed");
             } else {
-                alert("Save order successful");
-                setOptionContractSaveOrderList(data.list)
-                setIsOpenTradingStock(!isOpenTradingStock);
+                const {data} = await axios.post("/option_contract_save_order/add_option_contract_save_order/", { optionChainSymbol, optionChainDescription, optionChainInstruction, optionChainOrderType, optionChainQuantity, optionChainPrice });
+                if (data.success != true) {
+                    alert("Save order failed");
+                } else {
+                    alert("Save order successful");
+                    setOptionContractSaveOrderList(data.list)
+                    setIsOpenTradingStock(!isOpenTradingStock);
+                }
             }
         } catch (error) {
             alert("Save order failed")
@@ -319,7 +319,7 @@ export default function TradingStockAllActivePlaceOrder({ onClose }) {
                             <button
                                 type="button"
                                 className="inline-block rounded bg-teal-300 px-7 pt-3 pb-2.5 text-sm font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-teal-300-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-teal-300-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-teal-300-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
-                                onClick={saveOrder}
+                                onClick={handleSaveOrder}
                                 disabled={disabledButton}>
                                 Save order
                             </button>
