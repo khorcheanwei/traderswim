@@ -9,6 +9,7 @@ const {
 } = require("../../controllers/stockTrading/stockCopyTradingController.js");
 
 const {
+  stock_copy_trading_exit_order,
   stock_copy_trading_replace_order,
   stock_copy_trading_put_replace_order_individual,
   stock_copy_trading_delete_cancel_order_individual,
@@ -61,11 +62,10 @@ stockCopyTradingRouter.post(
   }
 );
 
-/*
 stockCopyTradingRouter.post(
   "/exit_order",
   async (httpRequest, httpResponse) => {
-    const result = await copy_trading_exit_order(httpRequest);
+    const result = await stock_copy_trading_exit_order(httpRequest);
 
     if (result.success == true) {
       httpResponse.status(200).json(result.data);
@@ -74,7 +74,6 @@ stockCopyTradingRouter.post(
     }
   }
 );
-*/
 
 stockCopyTradingRouter.put(
   "/replace_order",
