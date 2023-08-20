@@ -42,7 +42,7 @@ async function updateStockTradeHistory() {
             const currentDate = new Date();
             let stockTrades = result.data;
 
-            // create copyTradingAccount table
+            // create stockCopyTrading table
             await stockCopyTradingDBOperation.deleteAllStockCopyTrading();
 
             for(let index = 0; index < stockTrades.length; index++) {
