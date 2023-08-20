@@ -47,8 +47,8 @@ export function viewAllPositionPanel(row) {
 }
 
 export function ChangePositionPanel(row) {
-  const { isOpenOrderExit, setIsOpenOrderExit } = useContext(CopyTradingPositionContext);
-  const { rowCopyTradingPosition, setRowCopyTradingPosition } = useContext(CopyTradingPositionContext);
+  const { isOpenOrderExit, setIsOpenOrderExit } = useContext(StockCopyTradingPositionContext);
+  const { rowCopyTradingPosition, setRowCopyTradingPosition } = useContext(StockCopyTradingPositionContext);
  
   const orderExitClose = async () => {
     if (isOpenOrderExit == false) {
@@ -72,15 +72,15 @@ export function ChangePositionPanel(row) {
 };
 
 export function SettledQuantityColorChange(row) {
-  let optionChainSettledQuantity = row.cell.row.original.optionChainSettledQuantity;
+  let stockSettledQuantity = row.cell.row.original.stockSettledQuantity;
 
-  const settledQuantityColorChange = (optionChainSettledQuantity) => {
+  const settledQuantityColorChange = (stockSettledQuantity) => {
     let className = ''
-    if (optionChainSettledQuantity > 0) {
+    if (stockSettledQuantity > 0) {
       className = 'text-green-600'
     } 
 
-    if (optionChainSettledQuantity < 0) {
+    if (stockSettledQuantity < 0) {
       className = 'text-red-600'
     } 
 
@@ -88,13 +88,13 @@ export function SettledQuantityColorChange(row) {
   }
   return (
     <div>
-     <span className={settledQuantityColorChange(optionChainSettledQuantity)}>{optionChainSettledQuantity}</span>
+     <span className={settledQuantityColorChange(stockSettledQuantity)}>{stockSettledQuantity}</span>
     </div>
   )
 }
 
 function StockCopyTradingPositionTable({ columns, data }) {
-  let hiddenColumns = ['accountId', 'optionChainSymbol', 'optionChainOrderId', 'agentTradingSessionID'];
+  let hiddenColumns = ['accountId', 'stockSymbol', 'stockOrderId', 'agentTradingSessionID'];
   return CommonTable({ columns, data, GlobalFilter, hiddenColumns })
 }
 

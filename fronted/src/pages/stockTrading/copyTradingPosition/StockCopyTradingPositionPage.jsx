@@ -5,7 +5,7 @@ import { viewAllPositionPanel, ChangePositionPanel, SettledQuantityColorChange }
 import StockCopyTradingAllAccountPositionTable from './StockCopyTradingAllAccountPositionTable'
 
 export default function StockCopyTradingPositionPage() {
-  const {copyTradingPositionMainData, setCopyTradingPositionMainData} = useContext(StockCopyTradingPositionContext);
+  const {stockCopyTradingPositionMainData, setStockCopyTradingPositionMainData} = useContext(StockCopyTradingPositionContext);
 
   const columns = React.useMemo(() => [
     {
@@ -20,20 +20,16 @@ export default function StockCopyTradingPositionPage() {
     },
     {
       Header: 'Symbol',
-      accessor: 'optionChainSymbol',
-    },
-    {
-      Header: 'Symbol description',
-      accessor: 'optionChainDescription',
+      accessor: 'stockSymbol',
     },
     {
       Header: 'Settled Qty',
-      accessor: 'optionChainSettledQuantity',
+      accessor: 'stockSettledQuantity',
       Cell: SettledQuantityColorChange,
     },
     {
       Header: 'Average price',
-      accessor: 'optionChainAveragePrice',
+      accessor: 'stockAveragePrice',
     },
     {
       Header: 'Account Id',
@@ -50,7 +46,7 @@ export default function StockCopyTradingPositionPage() {
   ], [])
 
   
-  var data = React.useMemo(() => copyTradingPositionMainData, [copyTradingPositionMainData])
+  var data = React.useMemo(() => stockCopyTradingPositionMainData, [stockCopyTradingPositionMainData])
 
   return (
     <StockCopyTradingAllAccountPositionTable columns={columns} data={data} />
