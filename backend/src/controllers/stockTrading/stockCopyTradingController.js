@@ -10,7 +10,7 @@ const {
   agentDBOperation,
   accountDBOperation,
   stockCopyTradingDBOperation,
-  tradeHistoryDBOperation,
+  stockTradeHistoryDBOperation,
 } = require("../../data-access/index.js");
 
 const { puppeteer_login_account, get_access_token_from_cache, fetch_trading_account_info_api } = require("./../tradingAccountPuppeteer.js")
@@ -545,10 +545,9 @@ async function stock_copy_trading_database(httpRequest) {
   }
 }
 
-/*
 
 // copy trading history database
-async function copy_trading_history_database(httpRequest) {
+async function stock_copy_trading_history_database(httpRequest) {
   const { token } = httpRequest.cookies;
 
   if (token) {
@@ -559,7 +558,7 @@ async function copy_trading_history_database(httpRequest) {
       try {
         // get CopyTradingAccount based on agentID and agentTradingSessionID
         const result =
-          await tradeHistoryDBOperation.searchTradeHistoryBasedAgentID(
+          await stockTradeHistoryDBOperation.searchStockTradeHistoryBasedAgentID(
             agentID
           );
 
@@ -601,7 +600,7 @@ async function copy_trading_history_database(httpRequest) {
     return { success: true, data: null };
   }
 }
-*/
+
 module.exports = {
     stock_copy_trading_get_stock_quotes,
     get_latest_order_id_all_accounts,
@@ -610,5 +609,6 @@ module.exports = {
     sync_order_and_save_to_stock_copy_trading_database,
     stock_copy_trading_place_order,
     stock_copy_trading_database,
-    stock_copy_trading_database_by_agent
+    stock_copy_trading_database_by_agent,
+    stock_copy_trading_history_database
 };

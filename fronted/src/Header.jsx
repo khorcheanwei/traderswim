@@ -40,6 +40,7 @@ export default function Header() {
                     <Link className={linkClasses('optionCopyTrading')} to={"/trading/optionCopyTrading"}>Option Trading</Link>
                     <Link className={linkClasses('stockCopyTrading')} to={"/trading/stockCopyTrading"}>Stock Trading</Link>
                     <Link className={linkClasses('optionTradeHistory')} to={"/trading/optionTradeHistory"}>Option History</Link>
+                    <Link className={linkClasses('stockTradeHistory')} to={"/trading/stockTradeHistory"}>Stock History</Link>
                 </nav>}
                 <div className="flex items-center gap-3 py-1 px-5">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-10 h-10 mt-2">

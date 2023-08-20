@@ -2,9 +2,6 @@ var cron = require('node-cron');
 
 const { agentDBOperation } = require("./data-access/index.js");
 const { account_database_by_agent } = require('./controllers/tradingAccountController.js');
-const { copy_trading_database_by_agent } = require('./controllers/copyTradingAccountController.js');
-const { copy_trading_position_by_agent } = require('./controllers/copyTradingPositionAccountController.js');
-const { stock_copy_trading_database_by_agent } = require('./controllers/stockTrading/stockCopyTradingController.js')
 
 function waitForResult(func, timeout) {
   return new Promise((resolve, reject) => {

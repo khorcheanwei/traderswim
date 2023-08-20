@@ -18,7 +18,7 @@ import { TradeStockContextProvider } from './optionContractTrading/context/Trade
 import StockTopCopyTradingPage from './stockTrading/copyTrading/StockTopCopyTradingPage';
 import StockCopyTradingPage from './stockTrading/copyTrading/StockCopyTradingPage';
 import StockPlaceOrderPanelAllPage from './stockTrading/copyTrading/StockPlaceOrderPanelAllPage.jsx';
-//import StockTradeHistoryPage from './stockTrading/tradeHistory/StockTradeHistoryPage';
+import StockTradeHistoryPage from './stockTrading/tradeHistory/StockTradeHistoryPage';
 import { StockPlaceOrderPanelContextProvider } from './stockTrading/context/StockPlaceOrderPanelContext';
 import { StockPlaceOrderContextProvider } from './stockTrading/context/StockPlaceOrderContext';
 import { StockCopyTradingOrderContextProvider } from './stockTrading/context/StockCopyTradingOrderContext'
@@ -79,6 +79,11 @@ export default function Trading() {
                 <TradeHistoryContextProvider>
                     <TradeHistoryPage></TradeHistoryPage>
                 </TradeHistoryContextProvider>
+            )}
+            {subpage === 'stockTradeHistory' && (
+                <StockTradeHistoryContextProvider>
+                    <StockTradeHistoryPage></StockTradeHistoryPage>
+                </StockTradeHistoryContextProvider>
             )}
         </div>
     )

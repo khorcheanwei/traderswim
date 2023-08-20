@@ -3,9 +3,9 @@ import axios from 'axios';
 import React from 'react'
 import { useContext, useState, useEffect } from 'react';
 import { TradeHistoryContext } from '../context/TradeHistoryContext';
-import TradingActivityTable from './TradeHistoryTable'
+import TradeHistoryTable from './TradeHistoryTable'
 
-export default function TradeActivityPage() {
+export default function TradeHistoryPage() {
 
   const columns = React.useMemo(() => [
     {
@@ -80,7 +80,7 @@ export default function TradeActivityPage() {
     <div className="min-h-screen bg-gray-100 text-black">
       <main className="mx-auto px-4 sm:px-6 lg:px-8 pt-4">
         <div className="mt-6">
-          <TradingActivityTable columns={columns} data={data} />
+          <TradeHistoryTable columns={columns} data={data} />
         </div>
       </main>
     </div>

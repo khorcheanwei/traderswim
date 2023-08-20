@@ -4,10 +4,10 @@ import { useState} from 'react';
 export const StockTradeHistoryContext = createContext({});
 
 export function StockTradeHistoryContextProvider({children}) {
-    const [tradeHistoryTableData, setTradeHistoryTableData] = useState([]);
+    const [stockTradeHistoryTableData, setStockTradeHistoryTableData] = useState([]);
 
     return (
-        <StockTradeHistoryContext.Provider value={{tradeHistoryTableData, setTradeHistoryTableData}}>
+        <StockTradeHistoryContext.Provider value={{stockTradeHistoryTableData, setStockTradeHistoryTableData}}>
             {children}
         </StockTradeHistoryContext.Provider>
     );
