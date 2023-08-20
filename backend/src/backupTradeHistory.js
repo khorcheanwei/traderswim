@@ -1,6 +1,6 @@
 
 
-const { copyTradingAccountDBBOperation, tradeHistoryDBOperation } = require("./data-access/index.js");
+const { copyTradingAccountDBBOperation, tradeHistoryDBOperation, stockCopyTradingDBOperation, stockTradeHistoryDBOperation } = require("./data-access/index.js");
 
 async function updateTradeHistory() {
     try {
@@ -32,7 +32,39 @@ async function updateTradeHistory() {
     } catch (error) {
         console.log(error);
     }
-    
+}
+
+async function updateStockTradeHistory() {
+    try {
+        const stockDayForBackup = 2;
+        let result = await stockCopyTradingDBOperation.getAllStockCopyTrading();
+        if (result.success == true) {
+            const currentDate = new Date();
+            let stockTrades = result.data;
+
+            // create copyTradingAccount table
+            await stockCopyTradingDBOperation.deleteAllStockCopyTrading();
+
+            for(let index = 0; index < stockTrades.length; index++) {
+                const trade = stockTrades[index];
+                const enteredTime = new Date(trade["stockEnteredTime"]);
+                const timeDifference = currentDate.getTime() - enteredTime.getTime();
+                const daysDifference = timeDifference / (1000 * 3600 * 24);
+              
+                if (daysDifference <= stockDayForBackup) {
+                    await stockCopyTradingDBOperation.createStockCopyTradingItem(trade["agentTradingSessionID"], trade);
+                } else {
+                    await stockTradeHistoryDBOperation.createStockTradeHistoryItem(trade["agentTradingSessionID"], trade);
+                }
+            }
+            console.log('Successful update trade history')
+        } else {
+            console.log(`Update trade history error ${result.error}`)
+        }
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 updateTradeHistory();
+updateStockTradeHistory();

@@ -33,9 +33,9 @@ function GlobalFilter({
   )
 }
 
-function TradingActivityTable({ columns, data }) {
+function StockTradeHistoryTable({ columns, data }) {
   let hiddenColumns = [];
   return CommonTable({ columns, data, GlobalFilter, hiddenColumns })
 }
 
-export default TradingActivityTable;
+export default StockTradeHistoryTable;

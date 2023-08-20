@@ -55,6 +55,14 @@ trading_management_db.run(StockCopyTradingSchemaSql), (err) => {
   console.log('Stock copy trading table created (if it did not already exist).');
 };
 
+// new stock trade history table
+const StockTradeHistorySchemaSql = require("../models/stockTrading/StockTradeHistory");
+trading_management_db.run(StockTradeHistorySchemaSql), (err) => {
+  if (err) {
+    console.log(err.message);
+  }
+  console.log('Stock trade history table created (if it did not already exist).');
+};
 
 // new option contract table
 const OptionContractSchemaSql = require("../models/OptionContract");
@@ -98,8 +106,9 @@ const agentDB = require("./agent.db.js");
 const accountDB = require("./account.db.js");
 
 const stockDB = require("./stockTrading/stock.db.js");  
-const stockSaveOrderDB = require("./stockTrading/stockSaveOrder.db.js")
-const stockCopyTradingDB = require("./stockTrading/stockCopyTrading.db.js")
+const stockSaveOrderDB = require("./stockTrading/stockSaveOrder.db.js");
+const stockCopyTradingDB = require("./stockTrading/stockCopyTrading.db.js");
+const stockTradeHistoryDB = require("./stockTrading/stockTradeHistory.db.js");
 
 const optionContractDB = require("./optionContract.db.js");  
 const optionContractSaveOrderDB = require("./optionContractSaveOrder.db.js");       
@@ -113,6 +122,7 @@ const accountDBOperation = new accountDB(trading_management_db);
 const stockDBOperation = new stockDB(trading_management_db);
 const stockSaveOrderDBOperation = new stockSaveOrderDB(trading_management_db);
 const stockCopyTradingDBOperation = new stockCopyTradingDB(trading_management_db);
+const stockTradeHistoryDBOperation = new stockTradeHistoryDB(trading_management_db);
 
 const optionContractDBOperation = new optionContractDB(trading_management_db);
 const optionContractSaveOrderDBOperation = new optionContractSaveOrderDB(trading_management_db);
@@ -128,6 +138,7 @@ module.exports = {
   stockDBOperation,
   stockSaveOrderDBOperation,
   stockCopyTradingDBOperation,
+  stockTradeHistoryDBOperation,
   optionContractDBOperation,
   optionContractSaveOrderDBOperation,
   copyTradingAccountDBBOperation,

@@ -2,10 +2,10 @@
 import axios from 'axios';
 import React from 'react'
 import { useContext, useState, useEffect } from 'react';
-import { TradeHistoryContext } from '../context/TradeHistoryContext';
-import TradingActivityTable from './StockTradeHistoryTable'
+import { StockTradeHistoryContext } from '../context/StockTradeHistoryContext';
+import StockTradeHistoryTable from './StockTradeHistoryTable'
 
-export default function TradeActivityPage() {
+export default function StockTradeHistoryPage() {
 
   const columns = React.useMemo(() => [
     {
@@ -14,35 +14,35 @@ export default function TradeActivityPage() {
     },
     {
       Header: 'Symbol description',
-      accessor: 'optionChainDescription',
+      accessor: 'stockDescription',
     },
     {
       Header: 'Filled Qty',
-      accessor: 'optionChainFilledQuantity',
+      accessor: 'stockFilledQuantity',
     },
     {
       Header: 'Price',
-      accessor: 'optionChainPrice',
+      accessor: 'stockPrice',
     },
     {
       Header: 'Qty',
-      accessor: 'optionChainQuantity',
+      accessor: 'stockQuantity',
     },
     {
       Header: 'Side Pos Effect',
-      accessor: 'optionChainInstruction',
+      accessor: 'stockInstruction',
     },
     {
       Header: 'Status',
-      accessor: 'optionChainStatus',
+      accessor: 'stockStatus',
     },
     {
       Header: 'Order type',
-      accessor: 'optionChainOrderType',
+      accessor: 'stockOrderType',
     },
     {
       Header: 'Time',
-      accessor: 'optionChainEnteredTime',
+      accessor: 'stockEnteredTime',
     },
     {
       Header: 'Name',
@@ -54,14 +54,14 @@ export default function TradeActivityPage() {
     },
   ], [])
 
-  const { tradeHistoryTableData, setTradeHistoryTableData } = useContext(TradeHistoryContext);
+  const { stockTradeHistoryTableData, setStockTradeHistoryTableData } = useContext(StockTradeHistoryContext);
 
   async function fetchTradeHistoryData() {
     try {
-      const response = await axios.get("/copy_trading_account/trade_history_database")
+      const response = await axios.get("/stock_copy_trading/trade_history_database")
 
       if (response.data != null) {
-        setTradeHistoryTableData(response.data)
+        setStockTradeHistoryTableData(response.data)
       }
 
     } catch (error) {
@@ -73,14 +73,14 @@ export default function TradeActivityPage() {
     fetchTradeHistoryData();
   }, [])
 
-  var data = React.useMemo(() => tradeHistoryTableData, [tradeHistoryTableData])
+  var data = React.useMemo(() => stockTradeHistoryTableData, [stockTradeHistoryTableData])
 
 
   return (
     <div className="min-h-screen bg-gray-100 text-black">
       <main className="mx-auto px-4 sm:px-6 lg:px-8 pt-4">
         <div className="mt-6">
-          <TradingActivityTable columns={columns} data={data} />
+          <StockTradeHistoryTable columns={columns} data={data} />
         </div>
       </main>
     </div>
