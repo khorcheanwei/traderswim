@@ -3,30 +3,29 @@ import { useContext, useState, useEffect } from 'react';
 import { StockCopyTradingPositionContext } from '../context/StockCopyTradingPositionContext';
 
 export default function StockExitOrder({ rowCopyTradingPosition, onClose }) {
-
-    const {isOpenOrderExit, setIsOpenOrderExit, copyTradingPositionDataDict, setCopyTradingPositionDataDict} = useContext(StockCopyTradingPositionContext);
+    const {isOpenOrderExit, setIsOpenOrderExit, stockCopyTradingPositionDataDict, setStockCopyTradingPositionDataDict} = useContext(StockCopyTradingPositionContext);
     
-    var optionChainInstructionList = ["SELL_TO_CLOSE", "BUY_TO_OPEN"];
-    var optionChainOrderTypeList = ["LIMIT", "MARKET", "MARKET_ON_CLOSE", "STOP", "STOP_LIMIT", "TRAILING_STOP"];
+    var stockInstructionList = ["BUY", "SELL"];
+    var stockOrderTypeList = ["MARKET", "LIMIT", "STOP", "STOP_LIMIT", "TRAILING_STOP"];
+    var stockSessionDurationList = ["DAY", "GTC", "EXT", "GTC_EXT"];
 
-    let optionChainDescription = rowCopyTradingPosition.cell.row.original.optionChainDescription;
-    const copyTradingPositionAllAccountData = copyTradingPositionDataDict[optionChainDescription];
+    let rowStockSymbol = rowCopyTradingPosition.cell.row.original.stockSymbol;
+    const copyTradingPositionAllAccountData = stockCopyTradingPositionDataDict[rowStockSymbol];
 
-    let rowOptionChainSymbol = rowCopyTradingPosition.cell.row.original.optionChainSymbol;
-    //let rowOptionChainInstruction =rowCopyTradingPosition.cell.row.original.optionChainInstruction;
-    //let rowOptionChainOrderType = rowCopyTradingPosition.cell.row.original.optionChainOrderType;
-    let rowOptionChainSettledQuantity = rowCopyTradingPosition.cell.row.original.optionChainSettledQuantity;
-    if (rowOptionChainSettledQuantity < 0) {
-        rowOptionChainSettledQuantity = -rowOptionChainSettledQuantity;
+    //let rowStockInstruction =rowCopyTradingPosition.cell.row.original.stockInstruction;
+    //let rowStockOrderType = rowCopyTradingPosition.cell.row.original.stockOrderType;
+    let rowStockSettledQuantity = rowCopyTradingPosition.cell.row.original.stockSettledQuantity;
+    if (rowStockSettledQuantity < 0) {
+        rowStockSettledQuantity = -rowStockSettledQuantity;
     }
     
-    let rowOptionChainAveragePrice = rowCopyTradingPosition.cell.row.original.optionChainAveragePrice;
+    let rowStockAveragePrice = rowCopyTradingPosition.cell.row.original.stockAveragePrice;
 
-    const [optionChainSymbol, setOptionChainSymbol] = useState(rowOptionChainSymbol) 
-    const [optionChainInstruction, setOptionChainInstruction] = useState(optionChainInstructionList[0]);
-    const [optionChainOrderType, setOptionChainOrderType] = useState(optionChainOrderTypeList[0]);
-    const [optionChainQuantity, setOptionChainQuantity] = useState(rowOptionChainSettledQuantity)
-    const [optionChainPrice, setOptionChainPrice] = useState(rowOptionChainAveragePrice)
+    const [stockSymbol, setStockSymbol] = useState(rowStockSymbol) 
+    const [stockInstruction, setStockInstruction] = useState(stockInstructionList[0]);
+    const [stockOrderType, setStockOrderType] = useState("LIMIT");
+    const [stockQuantity, setStockQuantity] = useState(rowStockSettledQuantity)
+    const [stockPrice, setStockPrice] = useState(rowStockAveragePrice)
   
     async function handleExitOrder() {
         try {
@@ -37,7 +36,7 @@ export default function StockExitOrder({ rowCopyTradingPosition, onClose }) {
                 accountUsername: item.accountUsername
               }));
 
-            const { data } = await axios.post("/copy_trading_account/exit_order/", { allTradingAccountsOrderList, optionChainSymbol, optionChainInstruction, optionChainOrderType, optionChainQuantity, optionChainPrice })
+            const { data } = await axios.post("/stock_copy_trading/exit_order/", { allTradingAccountsOrderList, stockSymbol, stockInstruction, stockOrderType, stockQuantity, stockPrice })
 
             if (data != "success") {
                 alert("Exit order failed");
@@ -54,52 +53,42 @@ export default function StockExitOrder({ rowCopyTradingPosition, onClose }) {
     return (
         <div>
             <div className="mb-4">
-                <h1 className="block text-gray-700 text-lm font-bold mb-2">Option Exit Order</h1>
+                <h1 className="block text-gray-700 text-lm font-bold mb-2">Stock Exit Order</h1>
             </div>
             <div>
-                <div className="relative">
-                    <div className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline">
-                       {optionChainDescription}
-                    </div>
-                    <label
-                        className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
-                        htmlFor="small_outlined">
-                        Option Chain Description:
-                    </label>
-                </div>
                 <div className="grid items-end gap-6 mb-6 md:grid-cols-2">
                     <div className="relative">
                         <select
                             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                            value={optionChainInstruction}
-                            onChange={event => setOptionChainInstruction(event.target.value)}>
+                            value={stockInstruction}
+                            onChange={event => setStockInstruction(event.target.value)}>
                             {
-                                optionChainInstructionList.map((option_chain_instruction, index) => (
-                                    <option key={index}>{option_chain_instruction}</option>
+                                stockInstructionList.map((stock_instruction, index) => (
+                                    <option key={index}>{stock_instruction}</option>
                                 ))
                             }
                         </select>
                         <label
                             className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
                             htmlFor="small_outlined">
-                            Option Chain instruction:
+                            Stock instruction:
                         </label>
                     </div>
                     <div className="relative">
                         <select
                             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                            value={optionChainOrderType}
-                            onChange={event => setOptionChainOrderType(event.target.value)}>
+                            value={stockOrderType}
+                            onChange={event => setStockOrderType(event.target.value)}>
                             {
-                                optionChainOrderTypeList.map((option_chain_order_type, index) => (
-                                    <option key={index}>{option_chain_order_type}</option>
+                                stockOrderTypeList.map((stock_order_type, index) => (
+                                    <option key={index}>{stock_order_type}</option>
                                 ))
                             }
                         </select>
                         <label
                             className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
                             htmlFor="small_outlined">
-                            Option Chain order type:
+                            Stock order type:
                         </label>
                     </div>
                 </div>
@@ -108,20 +97,20 @@ export default function StockExitOrder({ rowCopyTradingPosition, onClose }) {
                         <input
                             className="block px-2.5 pb-1.5 pt-3 w-full text-sm text-gray-900 bg-transparent  border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                             type="text"
-                            onChange={event => setOptionChainQuantity(event.target.value)}
-                            value={optionChainQuantity}
+                            onChange={event => setStockQuantity(event.target.value)}
+                            value={stockQuantity}
                             placeholder=" " />
                         <label
                             className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
                             htmlFor="small_outlined">
-                            Option Contract Total:
+                            Stock Total:
                         </label>
                     </div>
                     <div className="relative">
                         <input className="block px-2.5 pb-1.5 pt-3 w-full text-sm text-gray-900 bg-transparent  border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                             type="text"
-                            onChange={event => setOptionChainPrice(event.target.value)}
-                            value={optionChainPrice}
+                            onChange={event => setStockPrice(event.target.value)}
+                            value={stockPrice}
                             placeholder=" " />
                         <label
                             className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"

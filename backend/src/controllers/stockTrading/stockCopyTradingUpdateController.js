@@ -67,7 +67,7 @@ async function post_exit_order_all_accounts(all_trading_accounts_list, payload) 
 }
 
 // Copy trading exit order
-async function copy_trading_exit_order(httpRequest) {
+async function stock_copy_trading_exit_order(httpRequest) {
   let {
     allTradingAccountsOrderList,
     stockSymbol,
@@ -105,21 +105,20 @@ async function copy_trading_exit_order(httpRequest) {
 
       // exit order with all accounts of particular agent
       let payload = {
-        "complexOrderStrategyType": "NONE",
         "orderType": stockOrderType,
-        "session": "NORMAL",
-        "price": stockPrice,
+        "session": "SEAMLESS",
         "duration": "DAY",
         "orderStrategyType": "SINGLE",
+        "price": stockPrice,
         "orderLegCollection": [
-          {
-            "instruction": stockInstruction,
-            "quantity": stockQuantity,
-            "instrument": {
-              "symbol": stockSymbol,
-              "assetType": "EQUITY"
+            {
+                "instruction": stockInstruction,
+                "quantity": stockQuantity,
+                "instrument": {
+                    "symbol": stockSymbol,
+                    "assetType": "EQUITY"
+                }
             }
-          }
         ]
       }
 
@@ -550,7 +549,7 @@ async function stock_copy_trading_cancel_order(httpRequest) {
 }
 
 module.exports = {
-    //copy_trading_exit_order,
+    stock_copy_trading_exit_order,
     stock_copy_trading_replace_order,
     stock_copy_trading_put_replace_order_individual,
     stock_copy_trading_cancel_order,

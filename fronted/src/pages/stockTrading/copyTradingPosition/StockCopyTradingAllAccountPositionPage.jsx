@@ -11,20 +11,16 @@ export default function StockCopyTradingAllAccountPositionPage({ rowCopyTradingP
   const columns = React.useMemo(() => [
     {
       Header: 'Symbol',
-      accessor: 'optionChainSymbol',
-    },
-    {
-      Header: 'Symbol description',
-      accessor: 'optionChainDescription',
+      accessor: 'stockSymbol',
     },
     {
       Header: 'Settled Qty',
-      accessor: 'optionChainSettledQuantity',
+      accessor: 'stockSettledQuantity',
       Cell: SettledQuantityColorChange,
     },
     {
       Header: 'Average price',
-      accessor: 'optionChainAveragePrice',
+      accessor: 'stockAveragePrice',
     },
     {
       Header: 'Account Id',
@@ -40,12 +36,12 @@ export default function StockCopyTradingAllAccountPositionPage({ rowCopyTradingP
     }
   ], [])
 
-  const optionChainDescription = rowCopyTradingPosition.row.original.optionChainDescription;
-  
-  const {copyTradingPositionDataDict, setCopyTradingPositionDataDict} = useContext(StockCopyTradingPositionContext);
-  const copyTradingPositionAllAccountData = copyTradingPositionDataDict[optionChainDescription];
+  const stockSymbol = rowCopyTradingPosition.row.original.stockSymbol;
 
-  var data = React.useMemo(() => copyTradingPositionAllAccountData, [copyTradingPositionAllAccountData])
+  const {stockCopyTradingPositionDataDict, setStockCopyTradingPositionDataDict} = useContext(StockCopyTradingPositionContext);
+  const stockCopyTradingPositionAllAccountData = stockCopyTradingPositionDataDict[stockSymbol];
+
+  var data = React.useMemo(() => stockCopyTradingPositionAllAccountData, [stockCopyTradingPositionAllAccountData])
 
   return (
     <div>
