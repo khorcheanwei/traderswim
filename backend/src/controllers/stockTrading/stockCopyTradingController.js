@@ -292,12 +292,14 @@ async function createStockCopyTradingAccountItem_all_accounts(agentTradingSessio
 // Stock Copy trading place order
 async function stock_copy_trading_place_order(httpRequest) {
   const {
-    allTradingAccountsOrderList,
-    stockSymbol,
-    stockInstruction,
-    stockOrderType,
-    stockQuantity,
-    stockPrice,
+    allTradingAccountsOrderList, 
+    stockSymbol, 
+    stockSession, 
+    stockDuration, 
+    stockInstruction, 
+    stockOrderType, 
+    stockQuantity, 
+    stockPrice
   } = httpRequest.body;
 
   const { token } = httpRequest.cookies;
@@ -331,7 +333,7 @@ async function stock_copy_trading_place_order(httpRequest) {
           let accountName = accountDocument[index].accountName;
           let accountUsername = accountDocument[index].accountUsername;
           let authToken = await get_access_token_from_cache(agentID, accountUsername);
-                                        
+                        
           all_trading_accounts_list.push({ agentID: agentID, accountId: accountId, accountName: accountName, accountUsername: accountUsername, stockOrderId: null, authToken: authToken });
         }
       } else {
@@ -356,8 +358,8 @@ async function stock_copy_trading_place_order(httpRequest) {
       // place order with all accounts of particular agent
       let payload = {
         "orderType": stockOrderType,
-        "session": "SEAMLESS",
-        "duration": "DAY",
+        "session": stockSession,
+        "duration": stockDuration,
         "orderStrategyType": "SINGLE",
         "price": stockPrice,
         "orderLegCollection": [
