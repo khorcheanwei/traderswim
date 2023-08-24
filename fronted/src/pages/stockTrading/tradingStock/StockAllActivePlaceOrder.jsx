@@ -12,7 +12,7 @@ export default function StockAllActivePlaceOrder({ onClose }) {
     var stockOrderTypeList = ["MARKET", "LIMIT", "STOP", "STOP_LIMIT", "TRAILING_STOP"];
     var stockSessionDurationList = ["DAY", "GTC", "EXT", "GTC_EXT"];
 
-    var stopPriceLinkTypeDict = {"$ Dollars":"VALUE", "% Percent" : "PERCENT"}
+    var stopPriceLinkTypeDict = {"$ Dollars": "VALUE", "% Percent": "PERCENT" }
 
     const { isOpenTradingStock, setIsOpenTradingStock } = useContext(StockPlaceOrderContext);
     const { stockSaveOrderList, setStockSaveOrderList } = useContext(StockPlaceOrderPanelContext);
@@ -22,11 +22,11 @@ export default function StockAllActivePlaceOrder({ onClose }) {
     const [stockSessionDuration, setStockSessionDuration] = useState("DAY");
     const [stockOrderType, setStockOrderType] = useState("LIMIT");
     const [stockQuantity, setStockQuantity] = useState(1);
-    const [stockPrice, setStockPrice] = useState(0);
 
-    const [stopActivationPrice, setStopActivationPrice] = useState(0);
-    const [stopPriceLinkType, setStopPriceLinkType] = useState("PERCENT")
-    const [stopPriceOffset, setStopPriceOffset] = useState(0);
+    const [stockPrice, setStockPrice] = useState(0);
+    const [stockStopPrice, setStockStopPrice] = useState(0);
+    const [stockStopPriceLinkTypeSymbol, setStockStopPriceLinkTypeSymbol] = useState("$ Dollars")
+    const [stockStopPriceOffset, setStockStopPriceOffset] = useState(0.1);
 
     const [disabledButton, setDisabledButton] = useState(false)
 
@@ -54,7 +54,9 @@ export default function StockAllActivePlaceOrder({ onClose }) {
         try {
             const allTradingAccountsOrderList = [];
             const {stockSession, stockDuration} = get_duration_and_session(stockSessionDuration)
-            const { data } = await axios.post("/stock_copy_trading/place_order/", { allTradingAccountsOrderList, stockSymbol, stockSession, stockDuration, stockInstruction, stockOrderType, stockQuantity, stockPrice })
+            const stockStopPriceLinkType = stopPriceLinkTypeDict[stockStopPriceLinkTypeSymbol];
+            const { data } = await axios.post("/stock_copy_trading/place_order/", { allTradingAccountsOrderList, stockSymbol, stockSession, stockDuration, 
+                                            stockInstruction, stockOrderType, stockQuantity, stockPrice, stockStopPrice, stockStopPriceLinkType, stockStopPriceOffset })
 
             if (data != "success") {
                 alert("Copy trading failed");
@@ -100,6 +102,7 @@ export default function StockAllActivePlaceOrder({ onClose }) {
                 // set first stock data when user get new stock list
                 const stockBidPrice = data[stockSymbol]["bidPrice"];
                 setStockPrice(stockBidPrice);
+                setStockStopPrice(stockBidPrice);
             } else {
                 alert("Failed to get stock");
             }
@@ -153,19 +156,35 @@ export default function StockAllActivePlaceOrder({ onClose }) {
     }
 
     useEffect( () => {
-        if (stopPriceLinkType == "% Percent") {
-            setStopPriceOffset(1.0)
+        if (stockStopPriceLinkTypeSymbol == "% Percent") {
+            setStockStopPriceOffset(1.0)
         } else {
-            setStopPriceOffset(0.1)
+            setStockStopPriceOffset(0.1)
         }
-    }, [stopPriceLinkType])
-    console.log(stopPriceLinkType)
+    }, [stockStopPriceLinkTypeSymbol])
     
     useEffect( ()=> {
-        if (stockSymbol != "") {
+        if (stockSymbol != "" && stockPrice == 0) {
             getStockList();
         }
-    }, [stockSymbol]);
+
+        if (stockOrderType == "MARKET") {
+            setStockPrice(0);
+            setStockStopPrice(0);
+            setStockStopPriceLinkTypeSymbol("$ Dollars");
+            setStockStopPriceOffset(0);
+        } else if (stockOrderType == "LIMIT" && stockOrderType == "STOP")  {
+            setStockStopPrice(0);
+            setStockStopPriceLinkTypeSymbol("$ Dollars");
+            setStockStopPriceOffset(0);
+        } else if (stockOrderType == "STOP_LIMIT") {
+            setStockStopPriceLinkTypeSymbol("$ Dollars");
+            setStockStopPriceOffset(0);
+        } else {
+            setStockPrice(0);
+            setStockStopPrice(0);
+        }
+    }, [stockSymbol, stockOrderType]);
 
 
     useEffect( () => {
@@ -341,7 +360,7 @@ export default function StockAllActivePlaceOrder({ onClose }) {
                                         Stock Total:
                                     </label>
                                 </div>
-                                { stockOrderType != "MARKET" && 
+                                { stockOrderType != "MARKET" && stockOrderType != "TRAILING_STOP" &&
                                     <div className="relative">
                                         <input className="block px-2.5 pb-1.5 pt-3 w-full text-sm text-gray-900 bg-transparent  border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                                             id="stock_price"
@@ -363,8 +382,8 @@ export default function StockAllActivePlaceOrder({ onClose }) {
                                     <select
                                         id="stock_stopPriceLinkType"
                                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                                        value={stopPriceLinkType}
-                                        onChange={event => setStopPriceLinkType(event.target.value)}>
+                                        value={stockStopPriceLinkTypeSymbol}
+                                        onChange={event => setStockStopPriceLinkTypeSymbol(event.target.value)}>
                                         {
                                             Object.keys(stopPriceLinkTypeDict).map((stopPriceLinkType_key, index) => (
                                                 <option key={index}>{stopPriceLinkType_key}</option>
@@ -383,8 +402,8 @@ export default function StockAllActivePlaceOrder({ onClose }) {
                                         id="stop_activation_price"
                                         className="block px-2.5 pb-1.5 pt-3 w-full text-sm text-gray-900 bg-transparent  border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                                         type="text"
-                                        onChange={event => setStopActivationPrice(event.target.value)}
-                                        value={stopActivationPrice}
+                                        onChange={event => setStockStopPrice(event.target.value)}
+                                        value={stockStopPrice}
                                         placeholder=" " />
                                     <label
                                         className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
@@ -397,8 +416,8 @@ export default function StockAllActivePlaceOrder({ onClose }) {
                                         id="stop_price_offset"
                                         className="block px-2.5 pb-1.5 pt-3 w-full text-sm text-gray-900 bg-transparent  border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                                         type="text"
-                                        onChange={event => setStopPriceOffset(event.target.value)}
-                                        value={stopPriceOffset}
+                                        onChange={event => setStockStopPriceOffset(event.target.value)}
+                                        value={stockStopPriceOffset}
                                         placeholder=" " />
                                     <label
                                         className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"

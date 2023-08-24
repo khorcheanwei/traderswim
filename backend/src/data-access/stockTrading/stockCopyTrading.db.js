@@ -154,18 +154,23 @@ function stockCopyTradingDBOperation(trading_management_db) {
           const accountName = order_information['accountName'];
           const accountUsername = order_information['accountUsername'];
           const stockSymbol = order_information['stockSymbol'];
+          const stockSession = order_information['session'];
+          const stockDuration = order_information['duration'];
           const stockOrderId = order_information['stockOrderId'];
           const stockOrderType = order_information['stockOrderType'];
           const stockInstruction = order_information['stockInstruction'];
           const stockPrice = order_information['stockPrice'];
+          const stockStopPrice = order_information['stockStopPrice'];
+          const stockStopPriceLinkType = order_information['stockStopPriceLinkType'];
+          const stockStopPriceOffset = order_information['stockStopPriceOffset'];
           const stockQuantity = order_information['stockQuantity'];
           const stockFilledQuantity = order_information['stockFilledQuantity'];
           const stockStatus = order_information['stockStatus'];
           const stockEnteredTime = order_information['stockEnteredTime'];
-          const sqlCommand = `INSERT INTO stockCopyTrading (agentID, agentTradingSessionID, accountId, accountName, accountUsername, stockSymbol, stockOrderId, stockOrderType, stockInstruction, stockPrice, stockQuantity, stockFilledQuantity, stockStatus, stockEnteredTime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`
+          const sqlCommand = `INSERT INTO stockCopyTrading (agentID, agentTradingSessionID, accountId, accountName, accountUsername, stockSymbol, stockSession, stockDuration, stockOrderId, stockOrderType, stockInstruction, stockPrice, stockStopPrice, stockStopPriceLinkType, stockStopPriceOffset, stockQuantity, stockFilledQuantity, stockStatus, stockEnteredTime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`
   
           await new Promise((resolve, reject) => {
-            this.trading_management_db.get(sqlCommand, [agentID, agentTradingSessionID, accountId, accountName, accountUsername, stockSymbol, stockOrderId, stockOrderType, stockInstruction, stockPrice, stockQuantity, stockFilledQuantity, stockStatus, stockEnteredTime], (err, row) => {
+            this.trading_management_db.get(sqlCommand, [agentID, agentTradingSessionID, accountId, accountName, accountUsername, stockSymbol, stockSession, stockDuration, stockOrderId, stockOrderType, stockInstruction, stockPrice, stockStopPrice, stockStopPriceLinkType, stockStopPriceOffset, stockQuantity, stockFilledQuantity, stockStatus, stockEnteredTime], (err, row) => {
               if (err) {
                 reject(err);
               } else {

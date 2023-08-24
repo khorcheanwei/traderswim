@@ -196,10 +196,15 @@ async function get_latest_order_information(config, agentID, accountId, accountN
     let current_accountName = accountName;
     let current_accountUsername = accountUsername;
     let current_symbol = current_order["orderLegCollection"][0]["instrument"]["symbol"];
+    let current_session = current_order["session"];
+    let current_duration = current_order["duration"];
     let current_orderId = orderId;
     let current_orderType = current_order["orderType"];
     let current_instruction = current_order["orderLegCollection"][0]["instruction"];
     let current_price = current_order["price"];
+    let current_stockStopPrice = current_order['stopPrice'];
+    let current_stockStopPriceLinkType = current_order['stockStopPriceLinkType'];
+    let current_stockStopPriceOffset = current_order['stockStopPriceOffset'];
     let current_quantity = current_order["quantity"];
     let current_stockFilledQuantity = current_order["filledQuantity"]
     let current_status = current_order["status"];
@@ -210,9 +215,9 @@ async function get_latest_order_information(config, agentID, accountId, accountN
     console.log(`Successful get latest order information - accountUsername: ${accountUsername} with ${JSON.stringify(config)}. Status: ${response.status}`)
 
     return {agentID: current_agentID, accountId: current_accountId, accountName: current_accountName, accountUsername: current_accountUsername,
-      stockSymbol: current_symbol, stockOrderId: current_orderId, stockOrderType: current_orderType, 
-      stockInstruction: current_instruction, stockPrice: current_price, stockQuantity: current_quantity, 
-      stockFilledQuantity: current_stockFilledQuantity, stockStatus: current_status, stockEnteredTime: current_enteredTime}
+      stockSymbol: current_symbol, session: current_session, duration: current_duration, stockOrderId: current_orderId, stockOrderType: current_orderType, 
+      stockInstruction: current_instruction, stockPrice: current_price, stockStopPrice: current_stockStopPrice, stockStopPriceLinkType: current_stockStopPriceLinkType, stockStopPriceOffset:current_stockStopPriceOffset,
+      stockQuantity: current_quantity, stockFilledQuantity: current_stockFilledQuantity, stockStatus: current_status, stockEnteredTime: current_enteredTime}
       
   } catch (error) {
     console.log(`Failed get latest order information - accountUsername: ${accountUsername} with ${JSON.stringify(config)}. Error: ${error.message}`);
@@ -261,7 +266,7 @@ async function get_latest_order_information_all_accounts(all_trading_accounts_li
   }
 }
 
-// Save orders for all trading accounts to copyTradingAccount table
+// Save orders for all trading accounts to stockCopyTradingAccount table
 async function createStockCopyTradingAccountItem_all_accounts(agentTradingSessionID, result_promise_order_information, result_promise_make_order_status) {
   const createCopyTradingAccountItem_requests = result_promise_order_information.map(async (order_information, index) => {
 
@@ -281,13 +286,49 @@ async function createStockCopyTradingAccountItem_all_accounts(agentTradingSessio
 
   try {
     const result_promise = await Promise.all(createCopyTradingAccountItem_requests);
-    console.log('Save orders for all trading accounts to copyTradingAccount table promise requests completed');
+    console.log('Save orders for all trading accounts to stockCopyTradingAccount table promise requests completed');
     return result_promise;
   } catch (error) {
-    console.log(`Error in save orders for all trading accounts to copyTradingAccount table requests completed. Error: ${error.message}`);
+    console.log(`Error in save orders for all trading accounts to stockCopyTradingAccount table requests completed. Error: ${error.message}`);
     return null;
   }
 }
+
+function place_order_config(stockSymbol, stockSession, stockDuration, stockInstruction, stockOrderType, stockQuantity, 
+  stockPrice, stockStopPrice, stockStopPriceLinkType, stockStopPriceOffset) {
+
+  let payload = {
+    "orderType": stockOrderType,
+    "session": stockSession,
+    "duration": stockDuration,
+    "orderStrategyType": "SINGLE",
+    "orderLegCollection": [
+        {
+            "instruction": stockInstruction,
+            "quantity": stockQuantity,
+            "instrument": {
+                "symbol": stockSymbol,
+                "assetType": "EQUITY"
+            }
+        }
+    ]
+  }
+
+  if (stockOrderType == "LIMIT") {
+    payload["price"] = stockPrice;
+  } else if (stockOrderType == "STOP") {
+    payload["stopPrice"] = stockPrice;
+  } else if (stockOrderType == "STOP_LIMIT") {
+    payload["price"] = stockPrice;
+    payload["stopPrice"] = stockStopPrice;
+  } else if (stockOrderType == "TRAILING_STOP") {
+    payload["stopPriceLinkBasis"] = "MARK",
+    payload["stockStopPriceLinkType"] = stockStopPriceLinkType;
+    payload["stockStopPriceOffset"] = stockStopPriceOffset;
+  }
+  return payload;
+}
+
 
 // Stock Copy trading place order
 async function stock_copy_trading_place_order(httpRequest) {
@@ -299,7 +340,10 @@ async function stock_copy_trading_place_order(httpRequest) {
     stockInstruction, 
     stockOrderType, 
     stockQuantity, 
-    stockPrice
+    stockPrice,
+    stockStopPrice, 
+    stockStopPriceLinkType, 
+    stockStopPriceOffset
   } = httpRequest.body;
 
   const { token } = httpRequest.cookies;
@@ -356,23 +400,9 @@ async function stock_copy_trading_place_order(httpRequest) {
       }
 
       // place order with all accounts of particular agent
-      let payload = {
-        "orderType": stockOrderType,
-        "session": stockSession,
-        "duration": stockDuration,
-        "orderStrategyType": "SINGLE",
-        "price": stockPrice,
-        "orderLegCollection": [
-            {
-                "instruction": stockInstruction,
-                "quantity": stockQuantity,
-                "instrument": {
-                    "symbol": stockSymbol,
-                    "assetType": "EQUITY"
-                }
-            }
-        ]
-      }
+      let payload = place_order_config( 
+                      stockSymbol, stockSession, stockDuration, stockInstruction, stockOrderType, 
+                      stockQuantity, stockPrice, stockStopPrice, stockStopPriceLinkType, stockStopPriceOffset);
 
       // Post place order for all trading accounts
       const result_promise_make_order_status = await post_place_order_all_accounts(all_trading_accounts_list, payload);
