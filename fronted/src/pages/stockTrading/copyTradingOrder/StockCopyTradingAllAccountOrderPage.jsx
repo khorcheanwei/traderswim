@@ -54,6 +54,18 @@ export default function StockCopyTradingAllAccountOrderPage({ rowCopyTradingOrde
       Cell: TextStockPriceColorPanel,
     },
     {
+      Header: 'Stop Price',
+      accessor: 'stockStopPrice',
+    },
+    {
+      Header: 'Stop Price Link Type',
+      accessor: 'stockStopPriceLinkType',
+    },
+    {
+      Header: 'Stop Price Offset',
+      accessor: 'stockStopPriceOffset',
+    },
+    {
       Header: 'Qty',
       accessor: 'stockQuantity',
       Cell: TextStockQuantityColorPanel,

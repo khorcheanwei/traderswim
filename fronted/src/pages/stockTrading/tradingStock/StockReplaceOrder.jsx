@@ -1,28 +1,72 @@
 import axios from 'axios';
 import { useContext, useState, useEffect } from 'react';
 import { StockCopyTradingOrderContext } from '../context/StockCopyTradingOrderContext';
+import StockHandleOrder from './StockHandleOrder';
 
 export default function TradingStockReplaceOrder({ rowCopyTradingOrder, onClose, isOpenOrderReplace, setIsOpenOrderReplace }) {
     var stockInstructionList = ["BUY", "SELL"];
     var stockOrderTypeList = ["MARKET", "LIMIT", "STOP", "STOP_LIMIT", "TRAILING_STOP"];
     var stockSessionDurationList = ["DAY", "GTC", "EXT", "GTC_EXT"];
 
-    let agentTradingSessionID = rowCopyTradingOrder.cell.row.original.agentTradingSessionID;
-    let rowStockSymbol = rowCopyTradingOrder.cell.row.original.stockSymbol;
-    let rowStockInstruction = rowCopyTradingOrder.cell.row.original.stockInstruction;
-    let rowStockOrderType = rowCopyTradingOrder.cell.row.original.stockOrderType;
-    let rowStockQuantity = rowCopyTradingOrder.cell.row.original.stockQuantity;
-    let rowStockPrice = rowCopyTradingOrder.cell.row.original.stockPrice;
+    var stockStopPriceLinkTypeDict = {"$ Dollars": "VALUE", "% Percent":"PERCENT"};
+    var stockStopPriceLinkTypeReverseDict = {"VALUE": "$ Dollars", "PERCENT":"% Percent"};
 
-    const [stockSymbol, setStockSymbol] = useState(rowStockSymbol);
+    let agentTradingSessionID = rowCopyTradingOrder.cell.row.original.agentTradingSessionID;
+
+    let rowStockSymbol = rowCopyTradingOrder.cell.row.original.stockSymbol;
+    let rowStockSession = rowCopyTradingOrder.cell.row.original.stockSession;
+    let rowStockDuration = rowCopyTradingOrder.cell.row.original.stockDuration;
+    let rowStockOrderType = rowCopyTradingOrder.cell.row.original.stockOrderType;
+    let rowStockInstruction = rowCopyTradingOrder.cell.row.original.stockInstruction;
+    let rowStockPrice = rowCopyTradingOrder.cell.row.original.stockPrice;
+    let rowStockStopPrice = rowCopyTradingOrder.cell.row.original.stockStopPrice;
+    let rowStockStopPriceLinkType = rowCopyTradingOrder.cell.row.original.stockStopPriceLinkType;
+    let rowStockStopPriceOffset = rowCopyTradingOrder.cell.row.original.stockStopPriceOffset;
+    let rowStockQuantity = rowCopyTradingOrder.cell.row.original.stockQuantity;
+    
+    const [stockSymbol, setStockSymbol]= useState(rowStockSymbol);
     const [stockInstruction, setStockInstruction] = useState(rowStockInstruction);
+    const [stockSessionDuration, setStockSessionDuration] = useState(get_duration_and_session_reverse(rowStockSession, rowStockDuration));
     const [stockOrderType, setStockOrderType] = useState(rowStockOrderType);
     const [stockQuantity, setStockQuantity] = useState(rowStockQuantity);
+
     const [stockPrice, setStockPrice] = useState(rowStockPrice);
+    const [stockStopPrice, setStockStopPrice] = useState(rowStockStopPrice);
+    const [stockStopPriceLinkTypeSymbol, setStockStopPriceLinkTypeSymbol] = useState(stockStopPriceLinkTypeReverseDict[rowStockStopPriceLinkType]);
+    const [stockStopPriceOffset, setStockStopPriceOffset] = useState(rowStockStopPriceOffset);
+
 
     const {stockCopyTradingOrderDataDict, setStockCopyTradingOrderDataDict} = useContext(StockCopyTradingOrderContext);
 
     const copyTradingAllAccountData = stockCopyTradingOrderDataDict[agentTradingSessionID];
+
+    function get_duration_and_session(stockSessionDuration) { 
+        if (stockSessionDuration  == "DAY") {
+            return {stockSession: "NORMAL", stockDuration: "DAY" }
+        } else if(stockSessionDuration == "GTC") {
+            return {stockSession: "NORMAL", stockDuration: "GOOD_TILL_CANCEL" }
+        } else if(stockSessionDuration == "EXT") {
+            return {stockSession: "SEAMLESS", stockDuration: "DAY" }
+        } else if(stockSessionDuration == "GTC_EXT") {
+            return {stockSession: "SEAMLESS", stockDuration: "GOOD_TILL_CANCEL" }
+        } else {
+            return {stockSession: null, stockDuration: null }
+        }        
+    }
+
+    function get_duration_and_session_reverse(session, duration) { 
+        if(session == "NORMAL" && duration == "DAY") {
+            return "DAY";
+        } else if (session == "NORMAL" && duration == "GOOD_TILL_CANCEL") {
+            return "GTC";
+        } else if (session == "SEAMLESS" && duration == "DAY") {
+            return "EXT"
+        } else if (session == "SEAMLESS" && duration == "GOOD_TILL_CANCEL") {
+            return "GTC_EXT"
+        } else {
+            return null;
+        }
+    }
   
     async function handleReplaceOrder() {
         try {
@@ -32,8 +76,11 @@ export default function TradingStockReplaceOrder({ rowCopyTradingOrder, onClose,
                 accountUsername: item.accountUsername,
                 stockOrderId: item.stockOrderId
               }));
-             
-            const { data } = await axios.put("/stock_copy_trading/replace_order/", { agentTradingSessionID, allTradingAccountsOrderList, stockSymbol, stockInstruction, stockOrderType, stockQuantity, stockPrice })
+
+            const {stockSession, stockDuration} = get_duration_and_session(stockSessionDuration);
+            const stockStopPriceLinkType = stockStopPriceLinkTypeDict[stockStopPriceLinkTypeSymbol];
+            const { data } = await axios.put("/stock_copy_trading/replace_order/", { agentTradingSessionID, allTradingAccountsOrderList, stockSymbol, stockSession, stockDuration, 
+                                    stockInstruction, stockOrderType, stockQuantity, stockPrice, stockStopPrice, stockStopPriceLinkType, stockStopPriceOffset })
 
             if (data != "success") {
                 alert("Replace order failed");
@@ -52,72 +99,17 @@ export default function TradingStockReplaceOrder({ rowCopyTradingOrder, onClose,
             <div className="mb-4">
                 <h1 className="block text-gray-700 text-lm font-bold mb-2">Stock Replace Order ( {copyTradingAllAccountData.length} accounts )</h1>
             </div>
-            <div>
-                <div className="grid items-end gap-6 mb-6 md:grid-cols-2">
-                    <div className="relative">
-                        <select
-                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                            value={stockInstruction}
-                            onChange={event => setStockInstruction(event.target.value)}
-                            >
-                            {
-                                stockInstructionList.map((stock_chain_instruction, index) => (
-                                    <option key={index}>{stock_chain_instruction}</option>
-                                ))
-                            }
-                        </select>
-                        <label
-                            className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
-                            htmlFor="small_outlined">
-                            Stock instruction:
-                        </label>
-                    </div>
-                    <div className="relative">
-                        <select
-                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                            value={stockOrderType}
-                            onChange={event => setStockOrderType(event.target.value)}>
-                            {
-                                stockOrderTypeList.map((stock_chain_order_type, index) => (
-                                    <option key={index}>{stock_chain_order_type}</option>
-                                ))
-                            }
-                        </select>
-                        <label
-                            className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
-                            htmlFor="small_outlined">
-                            Stock order type:
-                        </label>
-                    </div>
-                </div>
-                <div className="grid items-end gap-6 mb-6 grid-cols-2">
-                    <div className="relative">
-                        <input
-                            className="block px-2.5 pb-1.5 pt-3 w-full text-sm text-gray-900 bg-transparent  border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                            type="text"
-                            onChange={event => setStockQuantity(event.target.value)}
-                            value={stockQuantity}
-                            placeholder=" " />
-                        <label
-                            className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
-                            htmlFor="small_outlined">
-                            Stock Contract Total:
-                        </label>
-                    </div>
-                    <div className="relative">
-                        <input className="block px-2.5 pb-1.5 pt-3 w-full text-sm text-gray-900 bg-transparent  border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                            type="text"
-                            onChange={event => setStockPrice(event.target.value)}
-                            value={stockPrice}
-                            placeholder=" " />
-                        <label
-                            className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
-                            htmlFor="small_outlined">
-                            Price:
-                        </label>
-                    </div>
-                </div>
-            </div>
+            <StockHandleOrder 
+                onClose={onClose} stockSymbol={stockSymbol}
+                stockInstruction={stockInstruction} setStockInstruction={setStockInstruction}
+                stockSessionDuration={stockSessionDuration} setStockSessionDuration={setStockSessionDuration}
+                stockOrderType={stockOrderType} setStockOrderType={setStockOrderType}
+                stockQuantity={stockQuantity} setStockQuantity={setStockQuantity}
+                stockPrice={stockPrice} setStockPrice={setStockPrice}
+                stockStopPrice={stockStopPrice} setStockStopPrice={setStockStopPrice}
+                stockStopPriceLinkTypeSymbol={stockStopPriceLinkTypeSymbol} setStockStopPriceLinkTypeSymbol={setStockStopPriceLinkTypeSymbol}
+                stockStopPriceOffset={stockStopPriceOffset} setStockStopPriceOffset={setStockStopPriceOffset}>    
+            </StockHandleOrder>
             <div className="flex justify-end gap-5">
                 <button
                     type="button"

@@ -10,6 +10,7 @@ const {
 } = require("../../data-access/index.js");
 
 const {
+    make_order_config,
     get_latest_order_id_all_accounts,
     get_latest_order_information_all_accounts,
     createStockCopyTradingAccountItem_all_accounts,
@@ -307,13 +308,8 @@ async function put_replace_order_all_accounts(all_trading_accounts_list, payload
 // Copy trading replace order
 async function stock_copy_trading_replace_order(httpRequest) {
   let {
-    agentTradingSessionID, 
-    allTradingAccountsOrderList, 
-    stockSymbol, 
-    stockInstruction, 
-    stockOrderType, 
-    stockQuantity, 
-    stockPrice
+    agentTradingSessionID, allTradingAccountsOrderList, stockSymbol, stockSession, stockDuration, 
+    stockInstruction, stockOrderType, stockQuantity, stockPrice, stockStopPrice, stockStopPriceLinkType, stockStopPriceOffset
   } = httpRequest.body;
 
   const { token } = httpRequest.cookies;
@@ -343,23 +339,8 @@ async function stock_copy_trading_replace_order(httpRequest) {
       }
 
       // replace order with all accounts of particular agent
-      let payload = {
-        "orderType": stockOrderType,
-        "session": "SEAMLESS",
-        "duration": "DAY",
-        "orderStrategyType": "SINGLE",
-        "price": stockPrice,
-        "orderLegCollection": [
-            {
-                "instruction": stockInstruction,
-                "quantity": stockQuantity,
-                "instrument": {
-                    "symbol": stockSymbol,
-                    "assetType": "EQUITY"
-                }
-            }
-        ]
-      }
+      let payload = make_order_config(stockSymbol, stockSession, stockDuration, stockInstruction, stockOrderType, stockQuantity, 
+        stockPrice, stockStopPrice, stockStopPriceLinkType, stockStopPriceOffset)
 
       // PUT replace order for all trading accounts
       const result_promise_replace_order = await put_replace_order_all_accounts(all_trading_accounts_list, payload);

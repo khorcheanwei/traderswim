@@ -31,7 +31,15 @@ export default function StockCopyTradingOrderPage() {
       accessor: 'stockSymbol',
     },
     {
-      Header: 'Stock chain order Id',
+      Header: 'Session',
+      accessor: 'stockSession',
+    },
+    {
+      Header: 'Duration',
+      accessor: 'stockDuration',
+    },
+    {
+      Header: 'Stock order Id',
       accessor: 'stockOrderId',
     },
     {
@@ -41,6 +49,18 @@ export default function StockCopyTradingOrderPage() {
     {
       Header: 'Price',
       accessor: 'stockPrice',
+    },
+    {
+      Header: 'Stop Price',
+      accessor: 'stockStopPrice',
+    },
+    {
+      Header: 'Stop Price Link Type',
+      accessor: 'stockStopPriceLinkType',
+    },
+    {
+      Header: 'Stop Price Offset',
+      accessor: 'stockStopPriceOffset',
     },
     {
       Header: 'Qty',
@@ -76,8 +96,8 @@ export default function StockCopyTradingOrderPage() {
       accessor: 'accountUsername',
     },
   ], [])
-  
-  var data = React.useMemo(() => stockCopyTradingOrderMainData, [stockCopyTradingOrderMainData])
+
+  var data = React.useMemo(() => stockCopyTradingOrderMainData, [stockCopyTradingOrderMainData]);
 
   return (
     <StockCopyTradingOrderTable columns={columns} data={data} />

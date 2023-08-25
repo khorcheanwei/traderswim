@@ -1,0 +1,190 @@
+export default function StockHandleOrder({ 
+    onClose, stockSymbol,
+    stockInstruction, setStockInstruction,
+    stockSessionDuration, setStockSessionDuration,
+    stockOrderType, setStockOrderType,
+    stockQuantity, setStockQuantity,
+    stockPrice, setStockPrice,
+    stockStopPrice, setStockStopPrice,
+    stockStopPriceLinkTypeSymbol, setStockStopPriceLinkTypeSymbol,
+    stockStopPriceOffset, setStockStopPriceOffset
+    }) {
+
+    var stockInstructionList = ["BUY", "SELL"];
+    var stockOrderTypeList = ["MARKET", "LIMIT", "STOP", "STOP_LIMIT", "TRAILING_STOP"];
+    var stockSessionDurationList = ["DAY", "GTC", "EXT", "GTC_EXT"];
+
+    var stockStopPriceLinkTypeDict = {"$ Dollars": "VALUE", "% Percent": "PERCENT" }
+
+    return (
+        <div>
+            <div>
+                <div className="relative w-full lg:max-w-sm mb-6">
+                    {/*<select
+                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                        onChange={event => setStockTickerName(event.target.value)}>
+                        {
+                            stockNameList.map((stock_name, index) => (
+                                <FixedSizeList key={index}>{stock_name}</FixedSizeList>
+                            ))
+                        }
+                    </select>*/}
+                    <div className="grid items-end gap-6 mb-6 grid-cols-2">
+                        <div className="relative">
+                            <input
+                                id="stock_pair"
+                                className="block px-2.5 pb-1.5 pt-3 w-full text-sm text-gray-900 bg-transparent border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                type="text"
+                                onChange={event => setStockSymbol(event.target.value)}
+                                value={stockSymbol}
+                                onInput={(event) => event.target.value = (event.target.value).toUpperCase()}
+                                placeholder=" " />
+                            <label
+                                className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
+                                htmlFor="stock_pair">
+                                Stock Pair:
+                            </label>
+                        </div>
+                        <div className="relative">
+                            <select
+                                id="stock_instruction"
+                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                                value={stockInstruction}
+                                onChange={event => setStockInstruction(event.target.value)}>
+                                {
+                                    stockInstructionList.map((stock_instruction, index) => (
+                                        <option key={index}>{stock_instruction}</option>
+                                    ))
+                                }
+                            </select>
+                            <label
+                                className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
+                                htmlFor="stock_instruction">
+                                Stock instruction:
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div className="grid items-end gap-6 mb-6 md:grid-cols-2">
+                    <div className="relative">
+                        <select
+                            id="stock_session_duration"
+                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                            value={stockSessionDuration}
+                            onChange={event => setStockSessionDuration(event.target.value)}>
+                            {
+                                stockSessionDurationList.map((stock_session_duration, index) => (
+                                    <option key={index}>{stock_session_duration}</option>
+                                ))
+                            }
+                        </select>
+                        <label
+                            className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
+                            htmlFor="stock_session_duration">
+                            Stock session duration:
+                        </label>
+                    </div>
+                    <div className="relative">
+                        <select
+                            id="stock_order_type"
+                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                            value={stockOrderType}
+                            onChange={event => setStockOrderType(event.target.value)}>
+                            {
+                                stockOrderTypeList.map((stock_order_type, index) => (
+                                    <option key={index}>{stock_order_type}</option>
+                                ))
+                            }
+                        </select>
+                        <label
+                            className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
+                            htmlFor="stock_order_type">
+                            Stock order type:
+                        </label>
+                    </div>
+                </div>
+                <div className="grid items-end gap-6 mb-6 grid-cols-2">
+                    <div className="relative">
+                        <input
+                            id="stock_total"
+                            className="block px-2.5 pb-1.5 pt-3 w-full text-sm text-gray-900 bg-transparent  border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                            type="text"
+                            onChange={event => setStockQuantity(event.target.value)}
+                            value={stockQuantity}
+                            placeholder=" " />
+                        <label
+                            className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
+                            htmlFor="stock_total">
+                            Stock Total:
+                        </label>
+                    </div>
+                    { stockOrderType != "MARKET" && stockOrderType != "TRAILING_STOP" &&
+                        <div className="relative">
+                            <input className="block px-2.5 pb-1.5 pt-3 w-full text-sm text-gray-900 bg-transparent  border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                id="stock_price"
+                                type="text"
+                                onChange={event => setStockPrice(event.target.value)}
+                                value={stockPrice}
+                                placeholder=" " />
+                            <label
+                                className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
+                                htmlFor="stock_price">
+                                Stock Price:
+                            </label>
+                        </div>
+                    }
+                </div>
+                <div className="grid items-end gap-6 mb-6 grid-cols-2">
+                    <div className="relative">
+                    { stockOrderType == "TRAILING_STOP" && <div className="relative">
+                        <select
+                            id="stock_stopPriceLinkType"
+                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                            value={stockStopPriceLinkTypeSymbol}
+                            onChange={event => setStockStopPriceLinkTypeSymbol(event.target.value)}>
+                            {
+                                Object.keys(stockStopPriceLinkTypeDict).map((stopPriceLinkType_key, index) => (
+                                    <option key={index}>{stopPriceLinkType_key}</option>
+                                ))
+                            }
+                        </select>
+                        <label
+                            className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
+                            htmlFor="stock_stopPriceLinkType">
+                            Stop Price Link Type:
+                        </label>
+                    </div> }
+                    </div>
+                    { stockOrderType == "STOP_LIMIT" && <div className="relative">
+                        <input
+                            id="stop_activation_price"
+                            className="block px-2.5 pb-1.5 pt-3 w-full text-sm text-gray-900 bg-transparent  border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                            type="text"
+                            onChange={event => setStockStopPrice(event.target.value)}
+                            value={stockStopPrice}
+                            placeholder=" " />
+                        <label
+                            className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
+                            htmlFor="stop_activation_price">
+                            Activation Price:
+                        </label>
+                    </div> }
+                    { stockOrderType == "TRAILING_STOP" && <div className="relative">
+                        <input
+                            id="stop_price_offset"
+                            className="block px-2.5 pb-1.5 pt-3 w-full text-sm text-gray-900 bg-transparent  border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                            type="text"
+                            onChange={event => setStockStopPriceOffset(event.target.value)}
+                            value={stockStopPriceOffset}
+                            placeholder=" " />
+                        <label
+                            className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
+                            htmlFor="stop_price_offset">
+                            Stop Price Offset:
+                        </label>
+                    </div> }
+                </div>
+            </div>
+        </div>
+    )
+}
