@@ -154,8 +154,8 @@ function stockCopyTradingDBOperation(trading_management_db) {
           const accountName = order_information['accountName'];
           const accountUsername = order_information['accountUsername'];
           const stockSymbol = order_information['stockSymbol'];
-          const stockSession = order_information['session'];
-          const stockDuration = order_information['duration'];
+          const stockSession = order_information['stockSession'];
+          const stockDuration = order_information['stockDuration'];
           const stockOrderId = order_information['stockOrderId'];
           const stockOrderType = order_information['stockOrderType'];
           const stockInstruction = order_information['stockInstruction'];

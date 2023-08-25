@@ -203,8 +203,8 @@ async function get_latest_order_information(config, agentID, accountId, accountN
     let current_instruction = current_order["orderLegCollection"][0]["instruction"];
     let current_price = current_order["price"];
     let current_stockStopPrice = current_order['stopPrice'];
-    let current_stockStopPriceLinkType = current_order['stockStopPriceLinkType'];
-    let current_stockStopPriceOffset = current_order['stockStopPriceOffset'];
+    let current_stockStopPriceLinkType = current_order['stopPriceLinkType'];
+    let current_stockStopPriceOffset = current_order['stopPriceOffset'];
     let current_quantity = current_order["quantity"];
     let current_stockFilledQuantity = current_order["filledQuantity"]
     let current_status = current_order["status"];
@@ -215,16 +215,16 @@ async function get_latest_order_information(config, agentID, accountId, accountN
     console.log(`Successful get latest order information - accountUsername: ${accountUsername} with ${JSON.stringify(config)}. Status: ${response.status}`)
 
     return {agentID: current_agentID, accountId: current_accountId, accountName: current_accountName, accountUsername: current_accountUsername,
-      stockSymbol: current_symbol, session: current_session, duration: current_duration, stockOrderId: current_orderId, stockOrderType: current_orderType, 
+      stockSymbol: current_symbol, stockSession: current_session, stockDuration: current_duration, stockOrderId: current_orderId, stockOrderType: current_orderType, 
       stockInstruction: current_instruction, stockPrice: current_price, stockStopPrice: current_stockStopPrice, stockStopPriceLinkType: current_stockStopPriceLinkType, stockStopPriceOffset:current_stockStopPriceOffset,
       stockQuantity: current_quantity, stockFilledQuantity: current_stockFilledQuantity, stockStatus: current_status, stockEnteredTime: current_enteredTime}
       
   } catch (error) {
     console.log(`Failed get latest order information - accountUsername: ${accountUsername} with ${JSON.stringify(config)}. Error: ${error.message}`);
     return {agentID: null, accountId: null, accountName: null, accountUsername: null,
-      stockSymbol: null, stockOrderId: null, stockOrderType: null, 
-      stockInstruction: null, stockPrice: null, stockQuantity: null, 
-      stockFilledQuantity: null, stockStatus: null, stockEnteredTime: null};
+      stockSymbol: null, stockSession: null, stockDuration: null, stockOrderId: null, stockOrderType: null, 
+      stockInstruction: null, stockPrice: null, stockStopPrice: null, stockStopPriceLinkType: null, stockStopPriceOffset:null,
+      stockQuantity: null, stockFilledQuantity: null, stockStatus: null, stockEnteredTime: null};
   }
 }
 
@@ -294,7 +294,7 @@ async function createStockCopyTradingAccountItem_all_accounts(agentTradingSessio
   }
 }
 
-function place_order_config(stockSymbol, stockSession, stockDuration, stockInstruction, stockOrderType, stockQuantity, 
+function make_order_config(stockSymbol, stockSession, stockDuration, stockInstruction, stockOrderType, stockQuantity, 
   stockPrice, stockStopPrice, stockStopPriceLinkType, stockStopPriceOffset) {
 
   let payload = {
@@ -323,8 +323,8 @@ function place_order_config(stockSymbol, stockSession, stockDuration, stockInstr
     payload["stopPrice"] = stockStopPrice;
   } else if (stockOrderType == "TRAILING_STOP") {
     payload["stopPriceLinkBasis"] = "MARK",
-    payload["stockStopPriceLinkType"] = stockStopPriceLinkType;
-    payload["stockStopPriceOffset"] = stockStopPriceOffset;
+    payload["stopPriceLinkType"] = stockStopPriceLinkType;
+    payload["stopPriceOffset"] = stockStopPriceOffset;
   }
   return payload;
 }
@@ -400,7 +400,7 @@ async function stock_copy_trading_place_order(httpRequest) {
       }
 
       // place order with all accounts of particular agent
-      let payload = place_order_config( 
+      let payload = make_order_config( 
                       stockSymbol, stockSession, stockDuration, stockInstruction, stockOrderType, 
                       stockQuantity, stockPrice, stockStopPrice, stockStopPriceLinkType, stockStopPriceOffset);
 
@@ -523,8 +523,13 @@ async function stock_copy_trading_database_by_agent(agentID) {
         stockQuantity: currCopyTradingAccount["stockQuantity"],
         stockFilledQuantity: currCopyTradingAccount["stockFilledQuantity"],
         stockSymbol: currCopyTradingAccount["stockSymbol"],
+        stockSession: currCopyTradingAccount["stockSession"],
+        stockDuration: currCopyTradingAccount["stockDuration"],
         stockOrderId: currCopyTradingAccount["stockOrderId"],
         stockPrice: currCopyTradingAccount["stockPrice"],
+        stockStopPrice: currCopyTradingAccount["stockStopPrice"],
+        stockStopPriceLinkType: currCopyTradingAccount["stockStopPriceLinkType"],
+        stockStopPriceOffset: currCopyTradingAccount["stockStopPriceOffset"],
         stockOrderType: currCopyTradingAccount["stockOrderType"],
         stockStatus: currCopyTradingAccount["stockStatus"],
       }
@@ -639,6 +644,7 @@ module.exports = {
     get_latest_order_information_all_accounts,
     createStockCopyTradingAccountItem_all_accounts,
     sync_order_and_save_to_stock_copy_trading_database,
+    make_order_config,
     stock_copy_trading_place_order,
     stock_copy_trading_database,
     stock_copy_trading_database_by_agent,
