@@ -132,7 +132,7 @@ export function StockStatusColorPanel(row) {
 }
 
 function StockCopyTradingOrderTable({ columns, data }) {
-  let hiddenColumns = ['accountId', 'stockOrderId', 'agentTradingSessionID'];
+  let hiddenColumns = ['accountId', 'stockOrderId', 'agentTradingSessionID', 'stockStopPrice', 'stockStopPriceLinkType', 'stockStopPriceOffset'];
   return CommonTable({ columns, data, GlobalFilter, hiddenColumns })
 }
 

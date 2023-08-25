@@ -253,7 +253,7 @@ export function ChangeOrderIndividualPanel(row) {
 };
 
 function StockCopyTradingAllAccountOrderTable({ columns, data }) {
-  let hiddenColumns = ['accountId', 'stockOrderId', 'agentTradingSessionID', 'stockOwnStatusColor'];
+  let hiddenColumns = ['accountId', 'stockOrderId', 'agentTradingSessionID', 'stockOwnStatusColor', 'stockStopPrice', 'stockStopPriceLinkType', 'stockStopPriceOffset'];
   return CommonTable({ columns, data, GlobalFilter, hiddenColumns })
 }
 
