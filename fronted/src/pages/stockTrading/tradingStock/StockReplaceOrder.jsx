@@ -18,11 +18,16 @@ export default function TradingStockReplaceOrder({ rowCopyTradingOrder, onClose,
     let rowStockDuration = rowCopyTradingOrder.cell.row.original.stockDuration;
     let rowStockOrderType = rowCopyTradingOrder.cell.row.original.stockOrderType;
     let rowStockInstruction = rowCopyTradingOrder.cell.row.original.stockInstruction;
-    let rowStockPrice = rowCopyTradingOrder.cell.row.original.stockPrice;
-    let rowStockStopPrice = rowCopyTradingOrder.cell.row.original.stockStopPrice;
-    let rowStockStopPriceLinkType = rowCopyTradingOrder.cell.row.original.stockStopPriceLinkType;
-    let rowStockStopPriceOffset = rowCopyTradingOrder.cell.row.original.stockStopPriceOffset;
+    let rowStockPrice = rowCopyTradingOrder.cell.row.original.stockPrice ?? 0;
+    let rowStockStopPrice = rowCopyTradingOrder.cell.row.original.stockStopPrice ?? 0;
+    let rowStockStopPriceLinkType = rowCopyTradingOrder.cell.row.original.stockStopPriceLinkType ?? "VALUE";
+    let rowStockStopPriceOffset = rowCopyTradingOrder.cell.row.original.stockStopPriceOffset ?? 0.1;
     let rowStockQuantity = rowCopyTradingOrder.cell.row.original.stockQuantity;
+
+    if (rowStockOrderType == "STOP") {
+        rowStockPrice = rowStockStopPrice;
+        rowStockStopPrice = 0;
+    }
     
     const [stockSymbol, setStockSymbol]= useState(rowStockSymbol);
     const [stockInstruction, setStockInstruction] = useState(rowStockInstruction);
@@ -35,9 +40,9 @@ export default function TradingStockReplaceOrder({ rowCopyTradingOrder, onClose,
     const [stockStopPriceLinkTypeSymbol, setStockStopPriceLinkTypeSymbol] = useState(stockStopPriceLinkTypeReverseDict[rowStockStopPriceLinkType]);
     const [stockStopPriceOffset, setStockStopPriceOffset] = useState(rowStockStopPriceOffset);
 
+    const [disabledButton, setDisabledButton] = useState(false)
 
     const {stockCopyTradingOrderDataDict, setStockCopyTradingOrderDataDict} = useContext(StockCopyTradingOrderContext);
-
     const copyTradingAllAccountData = stockCopyTradingOrderDataDict[agentTradingSessionID];
 
     function get_duration_and_session(stockSessionDuration) { 
@@ -69,6 +74,7 @@ export default function TradingStockReplaceOrder({ rowCopyTradingOrder, onClose,
     }
   
     async function handleReplaceOrder() {
+        setDisabledButton(true);
         try {
             const allTradingAccountsOrderList = copyTradingAllAccountData.map(item => ({
                 accountId: item.accountId,
@@ -92,6 +98,7 @@ export default function TradingStockReplaceOrder({ rowCopyTradingOrder, onClose,
             alert("Replace order failed")
             console.log(error.message);
         }
+        setDisabledButton(false);
     }
 
     return (
@@ -120,7 +127,8 @@ export default function TradingStockReplaceOrder({ rowCopyTradingOrder, onClose,
                 <button
                     type="button"
                     className="inline-block rounded bg-teal-300 px-7 pt-3 pb-2.5 text-sm font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-teal-300-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-teal-300-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-teal-300-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
-                    onClick={handleReplaceOrder}>
+                    onClick={handleReplaceOrder}
+                    disabled={disabledButton}>
                     Replace order
                 </button>
             </div>
