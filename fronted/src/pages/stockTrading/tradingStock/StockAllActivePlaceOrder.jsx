@@ -1,10 +1,9 @@
 import axios from 'axios';
 import { useContext, useState, useEffect } from 'react';
-import StockHandleOrder from './StockHandleOrder';
+import StockHandleOrder, {getStockQuotes} from './StockHandleOrder';
 import { StockPlaceOrderContext } from '../context/StockPlaceOrderContext';
 import { StockPlaceOrderPanelContext } from '../context/StockPlaceOrderPanelContext';
 import { ClipLoader } from 'react-spinners';
-
 
 export default function StockAllActivePlaceOrder({ onClose }) {
     const [isLoading, setIsLoading] = useState(false);
@@ -72,28 +71,6 @@ export default function StockAllActivePlaceOrder({ onClose }) {
         setDisabledButton(false);
     }
 
-    async function getStockQuotes() {
-        try {
-            setIsLoading(true);
-            setStockPrice(0);
-            const { data } = await axios.get("/stock_copy_trading/get_stock_quotes/", { params: { stockSymbol }, timeout: 5000})
-            if (data != null) {
-                // set first stock data when user get new stock quotes
-                const stockBidPrice = data[stockSymbol]["bidPrice"];
-                console.log(stockBidPrice)
-                setStockPrice(stockBidPrice);
-                setStockStopPrice(stockBidPrice);
-            } else {
-                alert("Failed to get stock");
-            }
-            setIsLoading(false);
-        } catch (error) {
-            console.log(error.message);
-            alert("Failed to get stock");
-            setIsLoading(false);
-        }
-    }
-
     async function stock_list_fetch() {
         try {
           const {data} = await axios.get("/stock/get_stock_list"); 
@@ -137,7 +114,7 @@ export default function StockAllActivePlaceOrder({ onClose }) {
 
     const handleSetStockName = (currentStockTicker) => {
         if (currentStockTicker == stockSymbol) {
-            getStockQuotes();
+            getStockQuotes(setIsLoading, stockSymbol, setStockPrice, setStockStopPrice);
         } else {
             setStockSymbol(currentStockTicker);
             setStockPrice(0);
@@ -171,126 +148,94 @@ export default function StockAllActivePlaceOrder({ onClose }) {
     }
 
     useEffect( () => {
-        if (stockStopPriceLinkTypeSymbol == "% Percent") {
-            setStockStopPriceOffset(1.0)
-        } else {
-            setStockStopPriceOffset(0.1)
-        }
-    }, [stockStopPriceLinkTypeSymbol])
-    
-    useEffect( ()=> {
-        if (stockSymbol != "" && stockPrice == 0) {
-            getStockQuotes();
-        }
-
-        if (stockOrderType == "MARKET") {
-            setStockPrice(0);
-            setStockStopPrice(0);
-            setStockStopPriceLinkTypeSymbol("$ Dollars");
-            setStockStopPriceOffset(0);
-        } else if (stockOrderType == "LIMIT" && stockOrderType == "STOP")  {
-            setStockStopPrice(0);
-            setStockStopPriceLinkTypeSymbol("$ Dollars");
-            setStockStopPriceOffset(0);
-        } else if (stockOrderType == "STOP_LIMIT") {
-            setStockStopPriceLinkTypeSymbol("$ Dollars");
-            setStockStopPriceOffset(0);
-        } else {
-            setStockPrice(0);
-            setStockStopPrice(0);
-        }
-    }, [stockSymbol, stockOrderType]);
-
-    useEffect( () => {
         stock_list_fetch();
     }, [stockTickerListLength]);
 
     return (
         <div>
-            {isLoading ? (
-                    <ClipLoader loading={true} size={50} />
-                ) : (
-                    <div className="flex gap-10">
-                        <div className="flex flex-col justify-between">
-                            <div>
-                                <div className="mb-4">
-                                    <label className="block text-gray-700 font-bold mb-2" htmlFor="stockTicker">Stock List</label>
-                                    <div className="flex gap-5">
-                                        <input
-                                            type="text"
-                                            id="stockTicker"
-                                            value={stockTicker}
-                                            onInput={(event) => setStockTicker((event.target.value).toUpperCase())}
-                                        />
-                                        <button className="inline-block rounded bg-teal-300 px-2 py-1 text-sm font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-teal-300-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-teal-300-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-teal-300-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]" type="button" onClick={handleStockAdd}>
-                                            <span>Add</span>
-                                        </button>
-                                    </div>
-                                </div>
-                                <div className="overflow-scroll">
-                                    {stockTickerList.map((currentStockTicker, index) => (
-                                        <div key={index}>
-                                            <div className="flex justify-between gap-5">
-                                                <button
-                                                    className="inline-block rounded bg-grey-300 px-2 py-1 text-sm font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-teal-300-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-teal-300-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-teal-300-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
-                                                    onClick={() => handleSetStockName(currentStockTicker)}
-                                                >
-                                                    {currentStockTicker}
-                                                </button>
-                                                <button
-                                                    className="inline-block rounded bg-red-300 px-2 py-1 text-sm font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-teal-300-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-teal-300-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-teal-300-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
-                                                    onClick={() => handleStockRemove(currentStockTicker)} 
-                                                    >
-                                                    Remove
-                                                </button>
-                                            </div>
-                                        </div>
-                                    ))}
+            {isLoading ? 
+                (<ClipLoader loading={true} size={50} />) :  
+                (<div className="flex gap-10">
+                    <div className="flex flex-col justify-between">
+                        <div>
+                            <div className="mb-4">
+                                <label className="block text-gray-700 font-bold mb-2" htmlFor="stockTicker">Stock List</label>
+                                <div className="flex gap-5">
+                                    <input
+                                        type="text"
+                                        id="stockTicker"
+                                        value={stockTicker}
+                                        onInput={(event) => setStockTicker((event.target.value).toUpperCase())}
+                                    />
+                                    <button className="inline-block rounded bg-teal-300 px-2 py-1 text-sm font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-teal-300-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-teal-300-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-teal-300-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]" type="button" onClick={handleStockAdd}>
+                                        <span>Add</span>
+                                    </button>
                                 </div>
                             </div>
-                            <div>
-                                <button
-                                    type="button"
-                                    className="inline-block rounded bg-teal-300 px-7 pt-3 pb-2.5 text-sm font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-teal-300-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-teal-300-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-teal-300-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
-                                    onClick={handleSaveOrder}
-                                    disabled={disabledButton}>
-                                    Save order
-                                </button>
+                            <div className="overflow-scroll">
+                                {stockTickerList.map((currentStockTicker, index) => (
+                                    <div key={index}>
+                                        <div className="flex justify-between gap-5">
+                                            <button
+                                                className="inline-block rounded bg-grey-300 px-2 py-1 text-sm font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-teal-300-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-teal-300-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-teal-300-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
+                                                onClick={() => handleSetStockName(currentStockTicker)}
+                                            >
+                                                {currentStockTicker}
+                                            </button>
+                                            <button
+                                                className="inline-block rounded bg-red-300 px-2 py-1 text-sm font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-teal-300-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-teal-300-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-teal-300-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
+                                                onClick={() => handleStockRemove(currentStockTicker)} 
+                                                >
+                                                Remove
+                                            </button>
+                                        </div>
+                                    </div>
+                                ))}
                             </div>
                         </div>
                         <div>
-                            <div className="mb-4">
-                                <h1 className="block text-gray-700 text-lm font-bold mb-2">Stock Place Order On All Active Accounts</h1>
-                            </div>
-                            <StockHandleOrder 
-                                onClose={onClose} stockSymbol={stockSymbol}
-                                stockInstruction={stockInstruction} setStockInstruction={setStockInstruction}
-                                stockSessionDuration={stockSessionDuration} setStockSessionDuration={setStockSessionDuration}
-                                stockOrderType={stockOrderType} setStockOrderType={setStockOrderType}
-                                stockQuantity={stockQuantity} setStockQuantity={setStockQuantity}
-                                stockPrice={stockPrice} setStockPrice={setStockPrice}
-                                stockStopPrice={stockStopPrice} setStockStopPrice={setStockStopPrice}
-                                stockStopPriceLinkTypeSymbol={stockStopPriceLinkTypeSymbol} setStockStopPriceLinkTypeSymbol={setStockStopPriceLinkTypeSymbol}
-                                stockStopPriceOffset={stockStopPriceOffset} setStockStopPriceOffset={setStockStopPriceOffset}>    
-                            </StockHandleOrder>
-                            <div className="flex justify-end gap-5">
-                                <button
-                                    type="button"
-                                    className="inline-block rounded bg-white px-7 pt-3 pb-2.5 text-sm font-medium uppercase leading-normal text-black shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-teal-300-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-teal-300-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-teal-300-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
-                                    onClick={onClose}>
-                                    CANCEL
-                                </button>
-                                <button
-                                    type="button"
-                                    className="inline-block rounded bg-teal-300 px-7 pt-3 pb-2.5 text-sm font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-teal-300-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-teal-300-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-teal-300-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
-                                    onClick={handlePlaceOrder}
-                                    disabled={disabledButton}>
-                                    Place order
-                                </button>
-                            </div>
+                            <button
+                                type="button"
+                                className="inline-block rounded bg-teal-300 px-7 pt-3 pb-2.5 text-sm font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-teal-300-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-teal-300-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-teal-300-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
+                                onClick={handleSaveOrder}
+                                disabled={disabledButton}>
+                                Save order
+                            </button>
                         </div>
                     </div>
-                )
+                    <div>
+                        <div className="mb-4">
+                            <h1 className="block text-gray-700 text-lm font-bold mb-2">Stock Place Order On All Active Accounts</h1>
+                        </div>
+                        <StockHandleOrder 
+                            setIsLoading={setIsLoading} 
+                            stockSymbol={stockSymbol}
+                            stockInstruction={stockInstruction} setStockInstruction={setStockInstruction}
+                            stockSessionDuration={stockSessionDuration} setStockSessionDuration={setStockSessionDuration}
+                            stockOrderType={stockOrderType} setStockOrderType={setStockOrderType}
+                            stockQuantity={stockQuantity} setStockQuantity={setStockQuantity}
+                            stockPrice={stockPrice} setStockPrice={setStockPrice}
+                            stockStopPrice={stockStopPrice} setStockStopPrice={setStockStopPrice}
+                            stockStopPriceLinkTypeSymbol={stockStopPriceLinkTypeSymbol} setStockStopPriceLinkTypeSymbol={setStockStopPriceLinkTypeSymbol}
+                            stockStopPriceOffset={stockStopPriceOffset} setStockStopPriceOffset={setStockStopPriceOffset}>    
+                        </StockHandleOrder>
+                        <div className="flex justify-end gap-5">
+                            <button
+                                type="button"
+                                className="inline-block rounded bg-white px-7 pt-3 pb-2.5 text-sm font-medium uppercase leading-normal text-black shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-teal-300-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-teal-300-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-teal-300-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
+                                onClick={onClose}>
+                                CANCEL
+                            </button>
+                            <button
+                                type="button"
+                                className="inline-block rounded bg-teal-300 px-7 pt-3 pb-2.5 text-sm font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-teal-300-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-teal-300-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-teal-300-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
+                                onClick={handlePlaceOrder}
+                                disabled={disabledButton}>
+                                Place order
+                            </button>
+                        </div>
+                    </div>
+                </div> )
             }
         </div>
     )

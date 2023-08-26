@@ -317,7 +317,7 @@ function make_order_config(stockSymbol, stockSession, stockDuration, stockInstru
   if (stockOrderType == "LIMIT") {
     payload["price"] = stockPrice;
   } else if (stockOrderType == "STOP") {
-    payload["stopPrice"] = stockPrice;
+    payload["stopPrice"] = stockStopPrice;
   } else if (stockOrderType == "STOP_LIMIT") {
     payload["price"] = stockPrice;
     payload["stopPrice"] = stockStopPrice;

@@ -2,8 +2,11 @@ import axios from 'axios';
 import { useContext, useState, useEffect } from 'react';
 import { StockCopyTradingOrderContext } from '../context/StockCopyTradingOrderContext';
 import StockHandleOrder from './StockHandleOrder';
+import { ClipLoader } from 'react-spinners';
 
 export default function TradingStockReplaceOrder({ rowCopyTradingOrder, onClose, isOpenOrderReplace, setIsOpenOrderReplace }) {
+    const [isLoading, setIsLoading] = useState(false);
+
     var stockInstructionList = ["BUY", "SELL"];
     var stockOrderTypeList = ["MARKET", "LIMIT", "STOP", "STOP_LIMIT", "TRAILING_STOP"];
     var stockSessionDurationList = ["DAY", "GTC", "EXT", "GTC_EXT"];
@@ -23,11 +26,6 @@ export default function TradingStockReplaceOrder({ rowCopyTradingOrder, onClose,
     let rowStockStopPriceLinkType = rowCopyTradingOrder.cell.row.original.stockStopPriceLinkType ?? "VALUE";
     let rowStockStopPriceOffset = rowCopyTradingOrder.cell.row.original.stockStopPriceOffset ?? 0.1;
     let rowStockQuantity = rowCopyTradingOrder.cell.row.original.stockQuantity;
-
-    if (rowStockOrderType == "STOP") {
-        rowStockPrice = rowStockStopPrice;
-        rowStockStopPrice = 0;
-    }
     
     const [stockSymbol, setStockSymbol]= useState(rowStockSymbol);
     const [stockInstruction, setStockInstruction] = useState(rowStockInstruction);
@@ -103,35 +101,41 @@ export default function TradingStockReplaceOrder({ rowCopyTradingOrder, onClose,
 
     return (
         <div>
-            <div className="mb-4">
-                <h1 className="block text-gray-700 text-lm font-bold mb-2">Stock Replace Order ( {copyTradingAllAccountData.length} accounts )</h1>
-            </div>
-            <StockHandleOrder 
-                onClose={onClose} stockSymbol={stockSymbol}
-                stockInstruction={stockInstruction} setStockInstruction={setStockInstruction}
-                stockSessionDuration={stockSessionDuration} setStockSessionDuration={setStockSessionDuration}
-                stockOrderType={stockOrderType} setStockOrderType={setStockOrderType}
-                stockQuantity={stockQuantity} setStockQuantity={setStockQuantity}
-                stockPrice={stockPrice} setStockPrice={setStockPrice}
-                stockStopPrice={stockStopPrice} setStockStopPrice={setStockStopPrice}
-                stockStopPriceLinkTypeSymbol={stockStopPriceLinkTypeSymbol} setStockStopPriceLinkTypeSymbol={setStockStopPriceLinkTypeSymbol}
-                stockStopPriceOffset={stockStopPriceOffset} setStockStopPriceOffset={setStockStopPriceOffset}>    
-            </StockHandleOrder>
-            <div className="flex justify-end gap-5">
-                <button
-                    type="button"
-                    className="inline-block rounded bg-white px-7 pt-3 pb-2.5 text-sm font-medium uppercase leading-normal text-black shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-teal-300-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-teal-300-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-teal-300-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
-                    onClick={onClose}>
-                    CANCEL
-                </button>
-                <button
-                    type="button"
-                    className="inline-block rounded bg-teal-300 px-7 pt-3 pb-2.5 text-sm font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-teal-300-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-teal-300-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-teal-300-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
-                    onClick={handleReplaceOrder}
-                    disabled={disabledButton}>
-                    Replace order
-                </button>
-            </div>
+            {isLoading ? 
+                (<ClipLoader loading={true} size={50} />) :  
+                (<div>
+                    <div className="mb-4">
+                        <h1 className="block text-gray-700 text-lm font-bold mb-2">Stock Replace Order ( {copyTradingAllAccountData.length} accounts )</h1>
+                    </div>
+                    <StockHandleOrder 
+                        setIsLoading={setIsLoading} stockSymbol={stockSymbol}
+                        stockInstruction={stockInstruction} setStockInstruction={setStockInstruction}
+                        stockSessionDuration={stockSessionDuration} setStockSessionDuration={setStockSessionDuration}
+                        stockOrderType={stockOrderType} setStockOrderType={setStockOrderType}
+                        stockQuantity={stockQuantity} setStockQuantity={setStockQuantity}
+                        stockPrice={stockPrice} setStockPrice={setStockPrice}
+                        stockStopPrice={stockStopPrice} setStockStopPrice={setStockStopPrice}
+                        stockStopPriceLinkTypeSymbol={stockStopPriceLinkTypeSymbol} setStockStopPriceLinkTypeSymbol={setStockStopPriceLinkTypeSymbol}
+                        stockStopPriceOffset={stockStopPriceOffset} setStockStopPriceOffset={setStockStopPriceOffset}>    
+                    </StockHandleOrder>
+                    <div className="flex justify-end gap-5">
+                        <button
+                            type="button"
+                            className="inline-block rounded bg-white px-7 pt-3 pb-2.5 text-sm font-medium uppercase leading-normal text-black shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-teal-300-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-teal-300-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-teal-300-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
+                            onClick={onClose}>
+                            CANCEL
+                        </button>
+                        <button
+                            type="button"
+                            className="inline-block rounded bg-teal-300 px-7 pt-3 pb-2.5 text-sm font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-teal-300-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-teal-300-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-teal-300-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
+                            onClick={handleReplaceOrder}
+                            disabled={disabledButton}>
+                            Replace order
+                        </button>
+                    </div>
+                </div>
+                )
+            }
         </div>
     )
 }
