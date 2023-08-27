@@ -105,23 +105,9 @@ async function stock_copy_trading_exit_order(httpRequest) {
       }
 
       // exit order with all accounts of particular agent
-      let payload = {
-        "orderType": stockOrderType,
-        "session": "SEAMLESS",
-        "duration": "DAY",
-        "orderStrategyType": "SINGLE",
-        "price": stockPrice,
-        "orderLegCollection": [
-            {
-                "instruction": stockInstruction,
-                "quantity": stockQuantity,
-                "instrument": {
-                    "symbol": stockSymbol,
-                    "assetType": "EQUITY"
-                }
-            }
-        ]
-      }
+      let payload = make_order_config( 
+        stockSymbol, stockSession, stockDuration, stockInstruction, stockOrderType, 
+        stockQuantity, stockPrice, stockStopPrice, stockStopPriceLinkType, stockStopPriceOffset)
 
       // POST exit order for all trading accounts
       const result_promise_make_order_status = await post_exit_order_all_accounts(all_trading_accounts_list, payload);
@@ -177,7 +163,9 @@ async function replace_order(config, accountUsername) {
 // Put replace order for individual trading account
 async function stock_copy_trading_put_replace_order_individual(httpRequest) {
 
-  let { agentTradingSessionID, accountId, accountName, accountUsername, stockOrderId, stockSymbol, stockInstruction, stockOrderType, stockQuantity, stockPrice } = httpRequest.body;
+  let { agentTradingSessionID, accountId, accountName, accountUsername, stockOrderId, 
+    stockSymbol, stockSession, stockDuration,  stockInstruction, stockOrderType,
+    stockQuantity, stockPrice, stockStopPrice, stockStopPriceLinkType, stockStopPriceOffset } = httpRequest.body;
 
   try {
     const { token } = httpRequest.cookies;
@@ -188,23 +176,8 @@ async function stock_copy_trading_put_replace_order_individual(httpRequest) {
         let authToken = await get_access_token_from_cache(agentID, accountUsername);
 
         // replace order with all accounts of particular agent
-        let payload = {
-          "orderType": stockOrderType,
-          "session": "SEAMLESS",
-          "duration": "DAY",
-          "orderStrategyType": "SINGLE",
-          "price": stockPrice,
-          "orderLegCollection": [
-              {
-                  "instruction": stockInstruction,
-                  "quantity": stockQuantity,
-                  "instrument": {
-                      "symbol": stockSymbol,
-                      "assetType": "EQUITY"
-                  }
-              }
-          ]
-        }
+        let payload = make_order_config(stockSymbol, stockSession, stockDuration, stockInstruction, stockOrderType, stockQuantity, 
+          stockPrice, stockStopPrice, stockStopPriceLinkType, stockStopPriceOffset)
 
         const config = {
           method: 'put',

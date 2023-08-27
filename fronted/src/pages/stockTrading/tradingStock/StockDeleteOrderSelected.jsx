@@ -1,11 +1,9 @@
 import axios from "axios";
-import {useContext } from 'react';
-import { StockCopyTradingOrderContext } from '../context/StockCopyTradingOrderContext';
+import { useState } from 'react';
 
 export default function StockDeleteOrderSelected({rowCopyTradingOrderSelected, selectedOrderDict, onClose}) {
     
-  
-    const { isOpenOrderDeleteSelected, setIsOpenOrderDeleteSelected} = useContext(StockCopyTradingOrderContext);
+    const [isOpenOrderDeleteSelected, setIsOpenOrderDeleteSelected] = useState(false); 
     
     //let stockDescription = rowCopyTradingOrderSelected.cell.row.original.account;
     let accountId = rowCopyTradingOrderSelected.cell.row.original.accountId;
