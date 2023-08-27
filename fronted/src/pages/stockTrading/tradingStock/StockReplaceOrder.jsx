@@ -108,7 +108,8 @@ export default function TradingStockReplaceOrder({ rowCopyTradingOrder, onClose,
                         <h1 className="block text-gray-700 text-lm font-bold mb-2">Stock Replace Order ( {copyTradingAllAccountData.length} accounts )</h1>
                     </div>
                     <StockHandleOrder 
-                        setIsLoading={setIsLoading} stockSymbol={stockSymbol}
+                        isLoading={isLoading} setIsLoading={setIsLoading} 
+                        stockSymbol={stockSymbol} setStockSymbol={setStockSymbol}
                         stockInstruction={stockInstruction} setStockInstruction={setStockInstruction}
                         stockSessionDuration={stockSessionDuration} setStockSessionDuration={setStockSessionDuration}
                         stockOrderType={stockOrderType} setStockOrderType={setStockOrderType}

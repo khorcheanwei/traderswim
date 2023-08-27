@@ -1,11 +1,9 @@
 import React from 'react'
 import { useAsyncDebounce } from 'react-table'
-import { useContext  } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 
 import StockDeleteOrderIndividual from './../tradingStock/StockDeleteOrderIndividual';
 import StockReplaceOrderIndividual from './../tradingStock/StockReplaceOrderIndividual';
-
-import { StockCopyTradingOrderContext } from '../context/StockCopyTradingOrderContext';
 
 import CommonTable from './../../shared/Table';
 import Overlay from "./../../Overlay";
@@ -214,23 +212,18 @@ export function MakeSelectedOrderPanel({row, setSelectedOrderDict}) {
 }
 
 export function ChangeOrderIndividualPanel(row) {
-  const { isOpenOrderReplaceIndividual, setIsOpenOrderReplaceIndividual, isOpenOrderDeleteIndividual, setIsOpenOrderDeleteIndividual } = useContext(StockCopyTradingOrderContext);
-  
-  const { rowCopyTradingOrderIndividual, setRowCopyTradingOrderIndividual } = useContext(StockCopyTradingOrderContext);
+  const [isOpenOrderReplaceIndividual, setIsOpenOrderReplaceIndividual] = useState(false);
+  const [isOpenOrderDeleteIndividual, setIsOpenOrderDeleteIndividual] = useState(false); 
 
-  const orderReplaceCloseIndividual = async () => {
-    if (isOpenOrderReplaceIndividual == false) {
-      setRowCopyTradingOrderIndividual(row)
-    }
-    setIsOpenOrderReplaceIndividual(!isOpenOrderReplaceIndividual)
-  }
+  const orderReplaceCloseIndividual = useCallback(() => {
+    setIsOpenOrderReplaceIndividual(prevState => !prevState);
+  }, []);
 
-  const orderDeleteCloseIndividual = async () => {
-    if (isOpenOrderDeleteIndividual == false) {
-      setRowCopyTradingOrderIndividual(row)
-    }
-    setIsOpenOrderDeleteIndividual(!isOpenOrderDeleteIndividual)
-  }
+  const orderDeleteCloseIndividual = useCallback(() => {
+    setIsOpenOrderDeleteIndividual(prevState => !prevState);
+  }, []);
+
+  const memoizedRow = useMemo(() => row, []);
 
   return (
     <div className="flex">
@@ -243,10 +236,10 @@ export function ChangeOrderIndividualPanel(row) {
         </div>
       </div>
       <Overlay isOpen={isOpenOrderReplaceIndividual} >
-        <StockReplaceOrderIndividual rowCopyTradingOrderIndividual={rowCopyTradingOrderIndividual} onClose={orderReplaceCloseIndividual}></StockReplaceOrderIndividual>
+        <StockReplaceOrderIndividual rowCopyTradingOrderIndividual={memoizedRow} onClose={orderReplaceCloseIndividual}></StockReplaceOrderIndividual>
       </Overlay>
       <Overlay isOpen={isOpenOrderDeleteIndividual} >
-        <StockDeleteOrderIndividual rowCopyTradingOrderIndividual={rowCopyTradingOrderIndividual} onClose={orderDeleteCloseIndividual}></StockDeleteOrderIndividual>
+        <StockDeleteOrderIndividual rowCopyTradingOrderIndividual={memoizedRow} onClose={orderDeleteCloseIndividual}></StockDeleteOrderIndividual>
       </Overlay>
     </div>
   );

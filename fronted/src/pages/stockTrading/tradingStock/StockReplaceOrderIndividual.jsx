@@ -1,133 +1,140 @@
 import axios from 'axios';
-import { useContext, useState, useEffect } from 'react';
-import { StockCopyTradingOrderContext } from '../context/StockCopyTradingOrderContext';
+import { useContext, useState, memo } from 'react';
+import StockHandleOrder from './StockHandleOrder';
+import { ClipLoader } from 'react-spinners';
 
-export default function StockReplaceOrderIndividual({ rowCopyTradingOrderIndividual, onClose }) {
+const StockReplaceOrderIndividual = memo(({ rowCopyTradingOrderIndividual, onClose }) => {
 
-    const {isOpenOrderReplaceIndividual, setIsOpenOrderReplaceIndividual} = useContext(StockCopyTradingOrderContext);
+    const [isLoading, setIsLoading] = useState(false);
 
     var stockInstructionList = ["BUY", "SELL"];
     var stockOrderTypeList = ["MARKET", "LIMIT", "STOP", "STOP_LIMIT", "TRAILING_STOP"];
     var stockSessionDurationList = ["DAY", "GTC", "EXT", "GTC_EXT"];
 
+    var stockStopPriceLinkTypeDict = {"$ Dollars": "VALUE", "% Percent":"PERCENT"};
+    var stockStopPriceLinkTypeReverseDict = {"VALUE": "$ Dollars", "PERCENT":"% Percent"};
+
+    let agentTradingSessionID = rowCopyTradingOrderIndividual.cell.row.original.agentTradingSessionID;
+
     let accountId = rowCopyTradingOrderIndividual.cell.row.original.accountId;
     let accountName = rowCopyTradingOrderIndividual.cell.row.original.accountName;
     let accountUsername = rowCopyTradingOrderIndividual.cell.row.original.accountUsername;
-    let agentTradingSessionID = rowCopyTradingOrderIndividual.cell.row.original.agentTradingSessionID;
+
     let stockOrderId = rowCopyTradingOrderIndividual.cell.row.original.stockOrderId;
     let rowStockSymbol = rowCopyTradingOrderIndividual.cell.row.original.stockSymbol;
-    let rowStockInstruction = rowCopyTradingOrderIndividual.cell.row.original.stockInstruction;
+    let rowStockSession = rowCopyTradingOrderIndividual.cell.row.original.stockSession;
+    let rowStockDuration = rowCopyTradingOrderIndividual.cell.row.original.stockDuration;
     let rowStockOrderType = rowCopyTradingOrderIndividual.cell.row.original.stockOrderType;
+    let rowStockInstruction = rowCopyTradingOrderIndividual.cell.row.original.stockInstruction;
+    let rowStockPrice = rowCopyTradingOrderIndividual.cell.row.original.stockPrice ?? 0;
+    let rowStockStopPrice = rowCopyTradingOrderIndividual.cell.row.original.stockStopPrice ?? 0;
+    let rowStockStopPriceLinkType = rowCopyTradingOrderIndividual.cell.row.original.stockStopPriceLinkType ?? "VALUE";
+    let rowStockStopPriceOffset = rowCopyTradingOrderIndividual.cell.row.original.stockStopPriceOffset ?? 0.1;
     let rowStockQuantity = rowCopyTradingOrderIndividual.cell.row.original.stockQuantity;
-    let rowStockPrice = rowCopyTradingOrderIndividual.cell.row.original.stockPrice;
 
-    const [stockSymbol, setStockSymbol] = useState(rowStockSymbol);
+    const [stockSymbol, setStockSymbol]= useState(rowStockSymbol);
     const [stockInstruction, setStockInstruction] = useState(rowStockInstruction);
+    const [stockSessionDuration, setStockSessionDuration] = useState(get_duration_and_session_reverse(rowStockSession, rowStockDuration));
     const [stockOrderType, setStockOrderType] = useState(rowStockOrderType);
-    const [stockQuantity, setStockQuantity] = useState(rowStockQuantity)
-    const [stockPrice, setStockPrice] = useState(rowStockPrice)
-  
-    async function handleReplaceOrderIndividual() {
-        try {
-            const { data } = await axios.put("/stock_copy_trading/replace_order_individual/", { agentTradingSessionID, accountId, accountName, accountUsername, stockOrderId, stockSymbol, stockInstruction, stockOrderType, stockQuantity, stockPrice })
+    const [stockQuantity, setStockQuantity] = useState(rowStockQuantity);
 
+    const [stockPrice, setStockPrice] = useState(rowStockPrice);
+    const [stockStopPrice, setStockStopPrice] = useState(rowStockStopPrice);
+    const [stockStopPriceLinkTypeSymbol, setStockStopPriceLinkTypeSymbol] = useState(stockStopPriceLinkTypeReverseDict[rowStockStopPriceLinkType]);
+    const [stockStopPriceOffset, setStockStopPriceOffset] = useState(rowStockStopPriceOffset);
+
+    const [disabledButton, setDisabledButton] = useState(false);
+
+    function get_duration_and_session(stockSessionDuration) { 
+        if (stockSessionDuration  == "DAY") {
+            return {stockSession: "NORMAL", stockDuration: "DAY" }
+        } else if(stockSessionDuration == "GTC") {
+            return {stockSession: "NORMAL", stockDuration: "GOOD_TILL_CANCEL" }
+        } else if(stockSessionDuration == "EXT") {
+            return {stockSession: "SEAMLESS", stockDuration: "DAY" }
+        } else if(stockSessionDuration == "GTC_EXT") {
+            return {stockSession: "SEAMLESS", stockDuration: "GOOD_TILL_CANCEL" }
+        } else {
+            return {stockSession: null, stockDuration: null }
+        }        
+    }
+
+    function get_duration_and_session_reverse(session, duration) { 
+        if(session == "NORMAL" && duration == "DAY") {
+            return "DAY";
+        } else if (session == "NORMAL" && duration == "GOOD_TILL_CANCEL") {
+            return "GTC";
+        } else if (session == "SEAMLESS" && duration == "DAY") {
+            return "EXT"
+        } else if (session == "SEAMLESS" && duration == "GOOD_TILL_CANCEL") {
+            return "GTC_EXT"
+        } else {
+            return null;
+        }
+    }
+
+    async function handleReplaceOrderIndividual() {
+        // replace order
+        setDisabledButton(true);
+        try {
+
+            const { stockSession, stockDuration } = get_duration_and_session(stockSessionDuration);
+            const stockStopPriceLinkType = stockStopPriceLinkTypeDict[stockStopPriceLinkTypeSymbol]; 
+            const { data } = await axios.put("/stock_copy_trading/replace_order_individual/", { agentTradingSessionID, accountId, accountName, accountUsername, stockOrderId, 
+                                                                                                stockSymbol, stockSession, stockDuration,  stockInstruction, stockOrderType,
+                                                                                                stockQuantity, stockPrice, stockStopPrice, stockStopPriceLinkType, stockStopPriceOffset  })
             if (data != "success") {
                 alert("Replace order failed");
             } else {
                 alert("Replace order successful");
             }
-            setIsOpenOrderReplaceIndividual(!isOpenOrderReplaceIndividual); 
         } catch (error) {
-            alert("Replace order failed")
+            alert("Replace order failed");
             console.log(error.message);
         }
+        onClose();
+        setDisabledButton(false);
     }
 
     return (
         <div>
-            <div className="mb-4">
-                <h1 className="block text-gray-700 text-lm font-bold mb-2">Stock Replace Order (Individual) - <b>{accountUsername}</b></h1>
-            </div>
-            <div>
-                <div className="grid items-end gap-6 mb-6 md:grid-cols-2">
-                    <div className="relative">
-                        <select
-                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                            value={stockInstruction}
-                            onChange={event => setStockInstruction(event.target.value)}
-                            >
-                            {
-                                stockInstructionList.map((stock_instruction, index) => (
-                                    <option key={index}>{stock_instruction}</option>
-                                ))
-                            }
-                        </select>
-                        <label
-                            className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
-                            htmlFor="small_outlined">
-                            Stock instruction:
-                        </label>
+            {isLoading ? 
+                (<ClipLoader loading={true} size={50} />) :  
+                (<div>
+                    <div className="mb-4">
+                        <h1 className="block text-gray-700 text-lm font-bold mb-2">Stock Replace Order (Individual) - <b>{accountUsername}</b></h1>
                     </div>
-                    <div className="relative">
-                        <select
-                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                            value={stockOrderType}
-                            onChange={event => setStockOrderType(event.target.value)}>
-                            {
-                                stockOrderTypeList.map((stock_order_type, index) => (
-                                    <option key={index}>{stock_order_type}</option>
-                                ))
-                            }
-                        </select>
-                        <label
-                            className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
-                            htmlFor="small_outlined">
-                            Stock order type:
-                        </label>
+                    <StockHandleOrder 
+                        isLoading={isLoading} setIsLoading={setIsLoading} 
+                        stockSymbol={stockSymbol} setStockSymbol={setStockSymbol}
+                        stockInstruction={stockInstruction} setStockInstruction={setStockInstruction}
+                        stockSessionDuration={stockSessionDuration} setStockSessionDuration={setStockSessionDuration}
+                        stockOrderType={stockOrderType} setStockOrderType={setStockOrderType}
+                        stockQuantity={stockQuantity} setStockQuantity={setStockQuantity}
+                        stockPrice={stockPrice} setStockPrice={setStockPrice}
+                        stockStopPrice={stockStopPrice} setStockStopPrice={setStockStopPrice}
+                        stockStopPriceLinkTypeSymbol={stockStopPriceLinkTypeSymbol} setStockStopPriceLinkTypeSymbol={setStockStopPriceLinkTypeSymbol}
+                        stockStopPriceOffset={stockStopPriceOffset} setStockStopPriceOffset={setStockStopPriceOffset}>    
+                    </StockHandleOrder>
+                    <div className="flex justify-end gap-5">
+                        <button
+                            type="button"
+                            className="inline-block rounded bg-white px-7 pt-3 pb-2.5 text-sm font-medium uppercase leading-normal text-black shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-teal-300-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-teal-300-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-teal-300-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
+                            onClick={onClose}>
+                            CANCEL
+                        </button>
+                        <button
+                            type="button"
+                            className="inline-block rounded bg-teal-300 px-7 pt-3 pb-2.5 text-sm font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-teal-300-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-teal-300-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-teal-300-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
+                            onClick={handleReplaceOrderIndividual}
+                            disabled={disabledButton}>
+                            Replace order
+                        </button>
                     </div>
-                </div>
-                <div className="grid items-end gap-6 mb-6 grid-cols-2">
-                    <div className="relative">
-                        <input
-                            className="block px-2.5 pb-1.5 pt-3 w-full text-sm text-gray-900 bg-transparent  border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                            type="text"
-                            onChange={event => setStockQuantity(event.target.value)}
-                            value={stockQuantity}
-                            placeholder=" " />
-                        <label
-                            className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
-                            htmlFor="small_outlined">
-                            Stock Total:
-                        </label>
-                    </div>
-                    <div className="relative">
-                        <input className="block px-2.5 pb-1.5 pt-3 w-full text-sm text-gray-900 bg-transparent  border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                            type="text"
-                            onChange={event => setStockPrice(event.target.value)}
-                            value={stockPrice}
-                            placeholder=" " />
-                        <label
-                            className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
-                            htmlFor="small_outlined">
-                            Price:
-                        </label>
-                    </div>
-                </div>
-            </div>
-            <div className="flex justify-end gap-5">
-                <button
-                    type="button"
-                    className="inline-block rounded bg-white px-7 pt-3 pb-2.5 text-sm font-medium uppercase leading-normal text-black shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-teal-300-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-teal-300-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-teal-300-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
-                    onClick={onClose}>
-                    CANCEL
-                </button>
-                <button
-                    type="button"
-                    className="inline-block rounded bg-teal-300 px-7 pt-3 pb-2.5 text-sm font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-teal-300-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-teal-300-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-teal-300-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
-                    onClick={handleReplaceOrderIndividual}>
-                    Replace order
-                </button>
-            </div>
+                </div>)
+            }
         </div>
     )
-}
+});
+
+export default StockReplaceOrderIndividual;

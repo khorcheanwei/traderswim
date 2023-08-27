@@ -1,6 +1,6 @@
 import Overlay from "../../Overlay";
 import React from 'react'
-import { useContext, useState, useEffect, useRef  } from 'react';
+import { useContext, useState, useCallback } from 'react';
 
 import { StockCopyTradingOrderContext } from '../context/StockCopyTradingOrderContext';
 import StockCopyTradingAllAccountOrderTable from './StockCopyTradingAllAccountOrderTable'
@@ -17,7 +17,6 @@ import { TextStockSymbolColorPanel, TextStockFilledQuantityColorPanel, TextStock
 
 
 export default function StockCopyTradingAllAccountOrderPage({ rowCopyTradingOrder, onClose }) {
-
   const [selectedOrderDict, setSelectedOrderDict] = useState({});
 
   const columns = React.useMemo(() => [
@@ -114,27 +113,29 @@ export default function StockCopyTradingAllAccountOrderPage({ rowCopyTradingOrde
   var data = React.useMemo(() => copyTradingAllAccountData, [copyTradingAllAccountData]);
 
   // replace and cancel selected orders
-  const { isOpenOrderReplaceSelected, setIsOpenOrderReplaceSelected, isOpenOrderDeleteSelected, setIsOpenOrderDeleteSelected, isOpenWarningMessageOrderSelected, setIsOpenWarningMessageOrderSelected } = useContext(StockCopyTradingOrderContext);
-  
+  const [isOpenOrderReplaceSelected, setIsOpenOrderReplaceSelected] = useState(false);
+  const [isOpenOrderDeleteSelected, setIsOpenOrderDeleteSelected] = useState(false); 
+  const [isOpenWarningMessageOrderSelected, setIsOpenWarningMessageOrderSelected] = useState(false); 
+
   const warningMessageOrderSelectedClose = async () => {
     setIsOpenWarningMessageOrderSelected(!isOpenWarningMessageOrderSelected);
   }
 
-  const orderReplaceSelectedClose = async () => {
+  const orderReplaceSelectedClose = useCallback(() => {
     if (Object.keys(selectedOrderDict).length == 0) {
       warningMessageOrderSelectedClose();
     } else {
       setIsOpenOrderReplaceSelected(!isOpenOrderReplaceSelected);
     }
-  }
+  }, [selectedOrderDict, isOpenOrderReplaceSelected]);
 
-  const orderDeleteSelectedClose = async () => {
+  const orderDeleteSelectedClose = useCallback(() => {
     if (Object.keys(selectedOrderDict).length == 0) {
       warningMessageOrderSelectedClose();
     } else {
       setIsOpenOrderDeleteSelected(!isOpenOrderDeleteSelected);
     }
-  }
+  }, [selectedOrderDict, isOpenOrderDeleteSelected]); 
 
   return (
     <div>
