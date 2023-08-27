@@ -104,6 +104,10 @@ async function stock_copy_trading_exit_order(httpRequest) {
         });
       }
 
+      ({ stockSymbol, stockSession, stockDuration, stockInstruction, stockOrderType, stockQuantity, stockPrice, stockStopPrice, stockStopPriceLinkType, 
+        stockStopPriceOffset} = prepare_make_order(stockSymbol, stockSession, stockDuration, stockInstruction, stockOrderType, stockQuantity, 
+          stockPrice, stockStopPrice, stockStopPriceLinkType, stockStopPriceOffset));
+
       // exit order with all accounts of particular agent
       let payload = make_order_config( 
         stockSymbol, stockSession, stockDuration, stockInstruction, stockOrderType, 
@@ -174,6 +178,10 @@ async function stock_copy_trading_put_replace_order_individual(httpRequest) {
         const agentID = agentDocument.id;
         
         let authToken = await get_access_token_from_cache(agentID, accountUsername);
+
+        ({ stockSymbol, stockSession, stockDuration, stockInstruction, stockOrderType, stockQuantity, stockPrice, stockStopPrice, stockStopPriceLinkType, 
+          stockStopPriceOffset} = prepare_make_order(stockSymbol, stockSession, stockDuration, stockInstruction, stockOrderType, stockQuantity, 
+            stockPrice, stockStopPrice, stockStopPriceLinkType, stockStopPriceOffset));
 
         // replace order with all accounts of particular agent
         let payload = make_order_config(stockSymbol, stockSession, stockDuration, stockInstruction, stockOrderType, stockQuantity, 
@@ -310,6 +318,10 @@ async function stock_copy_trading_replace_order(httpRequest) {
           authToken: authToken 
         });
       }
+
+      ({ stockSymbol, stockSession, stockDuration, stockInstruction, stockOrderType, stockQuantity, stockPrice, stockStopPrice, stockStopPriceLinkType, 
+        stockStopPriceOffset} = prepare_make_order(stockSymbol, stockSession, stockDuration, stockInstruction, stockOrderType, stockQuantity, 
+          stockPrice, stockStopPrice, stockStopPriceLinkType, stockStopPriceOffset));
 
       // replace order with all accounts of particular agent
       let payload = make_order_config(stockSymbol, stockSession, stockDuration, stockInstruction, stockOrderType, stockQuantity, 

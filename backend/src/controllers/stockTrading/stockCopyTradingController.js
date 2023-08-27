@@ -294,6 +294,33 @@ async function createStockCopyTradingAccountItem_all_accounts(agentTradingSessio
   }
 }
 
+function prepare_make_order(stockSymbol, stockSession, stockDuration, stockInstruction, stockOrderType, stockQuantity, 
+  stockPrice, stockStopPrice, stockStopPriceLinkType, stockStopPriceOffset) {
+    if (stockOrderType == "MARKET") {
+      stockPrice = null
+      stockStopPrice = null 
+      stockStopPriceLinkType = null
+      stockStopPriceOffset = null
+    } else if (stockOrderType == "LIMIT") {
+      stockStopPrice = null 
+      stockStopPriceLinkType = null
+      stockStopPriceOffset = null
+    } else if (stockOrderType == "STOP") {
+      stockPrice = null
+      stockStopPriceLinkType = null
+      stockStopPriceOffset = null
+    } else if (stockOrderType == "STOP_LIMIT") {
+      stockStopPriceLinkType = null
+      stockStopPriceOffset = null
+    } else if (stockOrderType == "TRAILING_STOP") {
+      stockPrice = null
+      stockStopPrice = null 
+    }
+
+    return {stockSymbol, stockSession, stockDuration, stockInstruction, stockOrderType, stockQuantity, 
+      stockPrice, stockStopPrice, stockStopPriceLinkType, stockStopPriceOffset}
+}
+
 function make_order_config(stockSymbol, stockSession, stockDuration, stockInstruction, stockOrderType, stockQuantity, 
   stockPrice, stockStopPrice, stockStopPriceLinkType, stockStopPriceOffset) {
 
@@ -332,7 +359,7 @@ function make_order_config(stockSymbol, stockSession, stockDuration, stockInstru
 
 // Stock Copy trading place order
 async function stock_copy_trading_place_order(httpRequest) {
-  const {
+  let {
     allTradingAccountsOrderList, 
     stockSymbol, 
     stockSession, 
@@ -398,6 +425,10 @@ async function stock_copy_trading_place_order(httpRequest) {
           });
         }
       }
+
+      ({ stockSymbol, stockSession, stockDuration, stockInstruction, stockOrderType, stockQuantity, stockPrice, stockStopPrice, stockStopPriceLinkType, 
+        stockStopPriceOffset} = prepare_make_order(stockSymbol, stockSession, stockDuration, stockInstruction, stockOrderType, stockQuantity, 
+          stockPrice, stockStopPrice, stockStopPriceLinkType, stockStopPriceOffset));
 
       // place order with all accounts of particular agent
       let payload = make_order_config( 
@@ -644,6 +675,7 @@ module.exports = {
     get_latest_order_information_all_accounts,
     createStockCopyTradingAccountItem_all_accounts,
     sync_order_and_save_to_stock_copy_trading_database,
+    prepare_make_order,
     make_order_config,
     stock_copy_trading_place_order,
     stock_copy_trading_database,

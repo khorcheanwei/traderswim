@@ -28,17 +28,23 @@ function stockSaveOrderDBOperation(trading_management_db) {
     // add stock save order
     this.addStockSaveOrder = async function (
       agentID, 
-      stockSymbol,
-      stockInstruction, 
+      stockSymbol, 
+      stockSession, 
+      stockDuration, 
       stockOrderType, 
-      stockQuantity, 
-      stockPrice
+      stockInstruction, 
+      stockPrice, 
+      stockStopPrice, 
+      stockStopPriceLinkType, 
+      stockStopPriceOffset, 
+      stockQuantity
+
     ) {
         try {
-          const sqlCommand = `INSERT OR REPLACE INTO stockSaveOrder (agentID, stockSymbol, stockInstruction, stockOrderType, stockQuantity, stockPrice) VALUES (?, ?, ?, ?, ?, ?)`;
+          const sqlCommand = `INSERT OR REPLACE INTO stockSaveOrder (agentID, stockSymbol, stockSession, stockDuration, stockOrderType, stockInstruction, stockPrice, stockStopPrice, stockStopPriceLinkType, stockStopPriceOffset, stockQuantity) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
           await new Promise((resolve, reject) => {
-            this.trading_management_db.get(sqlCommand, [agentID, stockSymbol, stockInstruction, stockOrderType, stockQuantity, stockPrice], (err, row) => {
+            this.trading_management_db.get(sqlCommand, [agentID, stockSymbol, stockSession, stockDuration, stockOrderType, stockInstruction, stockPrice, stockStopPrice, stockStopPriceLinkType, stockStopPriceOffset, stockQuantity], (err, row) => {
               if (err) {
                 reject(err);
               } else {

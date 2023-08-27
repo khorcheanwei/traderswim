@@ -1,4 +1,5 @@
 const { stockSaveOrderDBOperation } = require("../../../data-access/index.js");
+const { prepare_make_order } = require("./../stockCopyTradingController");
 
 const jwt = require("jsonwebtoken");
 const jwtSecret = "traderswim";
@@ -44,15 +45,19 @@ async function get_stock_save_order_list(httpRequest) {
 // To add stock save order
 async function add_stock_save_order(httpRequest) {
   const { token } = httpRequest.cookies;
-  const { stockSymbol, stockInstruction, stockOrderType, stockQuantity, stockPrice } = httpRequest.body;
+  let { stockSymbol, stockSession, stockDuration, stockOrderType, stockInstruction, stockPrice, stockStopPrice, stockStopPriceLinkType, stockStopPriceOffset, stockQuantity } = httpRequest.body;
 
   let stock_save_order_list = []
   if (token) {
     try {
       let agentDocument = jwt.verify(token, jwtSecret, {});
       const agentID = agentDocument.id;
+
+      ({ stockSymbol, stockSession, stockDuration, stockInstruction, stockOrderType, stockQuantity, stockPrice, stockStopPrice, stockStopPriceLinkType, 
+      stockStopPriceOffset} = prepare_make_order(stockSymbol, stockSession, stockDuration, stockInstruction, stockOrderType, stockQuantity, 
+        stockPrice, stockStopPrice, stockStopPriceLinkType, stockStopPriceOffset));
       
-      const queryResult = await stockSaveOrderDBOperation.addStockSaveOrder(agentID, stockSymbol, stockInstruction, stockOrderType, stockQuantity, stockPrice);
+      const queryResult = await stockSaveOrderDBOperation.addStockSaveOrder(agentID, stockSymbol, stockSession, stockDuration, stockOrderType, stockInstruction, stockPrice, stockStopPrice, stockStopPriceLinkType, stockStopPriceOffset, stockQuantity);
       stock_save_order_list = obtain_stock_save_order_list(queryResult);
 
       return { success: true, list: stock_save_order_list };
