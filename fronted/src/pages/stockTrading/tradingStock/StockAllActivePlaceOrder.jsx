@@ -52,10 +52,14 @@ export default function StockAllActivePlaceOrder({ onClose }) {
     async function handleSaveOrder() {
         setDisabledButton(true);
         try {
-            if (!stockSymbol || !stockInstruction || !stockOrderType || !stockQuantity || !stockPrice) {
+            if (!stockSymbol || !stockInstruction || !stockOrderType || !stockQuantity) {
                 alert("Please ensure stock information is completed");
             } else {
-                const {data} = await axios.post("/stock_save_order/add_stock_save_order/", { stockSymbol, stockInstruction, stockOrderType, stockQuantity, stockPrice });
+                const {stockSession, stockDuration} = get_duration_and_session(stockSessionDuration)
+                const stockStopPriceLinkType = stockStopPriceLinkTypeDict[stockStopPriceLinkTypeSymbol];
+                const {data} = await axios.post("/stock_save_order/add_stock_save_order/", { stockSymbol, stockSession, stockDuration, stockOrderType, stockInstruction,
+                                                                                            stockPrice, stockStopPrice, stockStopPriceLinkType, stockStopPriceOffset, stockQuantity});
+      
                 if (data.success != true) {
                     alert("Save order failed");
                 } else {
