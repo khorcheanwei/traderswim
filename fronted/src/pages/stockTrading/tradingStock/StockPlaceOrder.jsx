@@ -41,7 +41,10 @@ export default function StockPlaceOrder({ rowCopyTradingOrder, onClose, isOpenOr
     const [disabledButton, setDisabledButton] = useState(false)
 
     const {stockCopyTradingOrderDataDict, setStockCopyTradingOrderDataDict} = useContext(StockCopyTradingOrderContext);
-    const copyTradingAllAccountData = stockCopyTradingOrderDataDict[agentTradingSessionID];
+    let copyTradingAllAccountData = []
+    if(stockCopyTradingOrderDataDict[agentTradingSessionID]) {
+        copyTradingAllAccountData = stockCopyTradingOrderDataDict[agentTradingSessionID];
+    }
 
     function get_duration_and_session(stockSessionDuration) { 
         if (stockSessionDuration  == "DAY") {
@@ -99,7 +102,9 @@ export default function StockPlaceOrder({ rowCopyTradingOrder, onClose, isOpenOr
                 (<ClipLoader loading={true} size={50} />) :  
                 (<div>
                     <div className="mb-4">
-                        <h1 className="block text-gray-700 text-lm font-bold mb-2">Stock Place Order ( {copyTradingAllAccountData.length} accounts )</h1>
+                        {copyTradingAllAccountData.length == 0 ? 
+                            <h1 className="block text-gray-700 text-lm font-bold mb-2">Stock Place Order all accounts</h1>:
+                            <h1 className="block text-gray-700 text-lm font-bold mb-2">Stock Place Order ( {copyTradingAllAccountData.length} accounts )</h1> }
                     </div>
                     <StockHandleOrder 
                         isLoading={isLoading} setIsLoading={setIsLoading} 
