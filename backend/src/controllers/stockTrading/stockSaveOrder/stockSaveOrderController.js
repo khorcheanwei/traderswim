@@ -9,9 +9,14 @@ function obtain_stock_save_order_list(queryResult) {
   for(let index = 0; index < queryResult.length; index++){
     let stock_save_order = {
       "stockSymbol": queryResult[index]["stockSymbol"],
+      "stockSession": queryResult[index]["stockSession"],
+      "stockDuration": queryResult[index]["stockDuration"],
       "stockOrderType": queryResult[index]["stockOrderType"],
       "stockInstruction": queryResult[index]["stockInstruction"],
       "stockPrice": queryResult[index]["stockPrice"],
+      "stockStopPrice": queryResult[index]["stockStopPrice"],
+      "stockStopPriceLinkType": queryResult[index]["stockStopPriceLinkType"],
+      "stockStopPriceOffset": queryResult[index]["stockStopPriceOffset"],
       "stockQuantity": queryResult[index]["stockQuantity"]
     }
     stock_save_order_list.push(stock_save_order);

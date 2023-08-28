@@ -21,6 +21,7 @@ export function StockPlaceOrderPanel({row}) {
           <div onClick={orderPlaceClose} className="cursor-pointer inline-flex items-center justify-center w-10 h-10 rounded-full bg-purple-600">
           <span className="font-medium text-white dark:text-white">P</span>
         </div>
+        <div></div>
         <Overlay isOpen={isOpenOrderPlace} >
           <StockPlaceOrder 
             rowCopyTradingOrder={rowCopyTradingOrder} 

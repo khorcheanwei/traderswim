@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useEffect } from 'react';
+import { useRef, useEffect } from 'react';
 
 export async function getStockQuotes(setIsLoading, stockSymbol, setStockPrice, setStockStopPrice) {
     try {
@@ -14,35 +14,15 @@ export async function getStockQuotes(setIsLoading, stockSymbol, setStockPrice, s
             setStockStopPrice(stockBidPrice);
         } else {
             setIsLoading(false);
-            //alert("Failed to get stock");
+            alert("Failed to get stock");
         }
         setIsLoading(false);
         
     } catch (error) {
         console.log(error.message);
         setIsLoading(false);
-        //alert("Failed to get stock")
+        alert("Failed to get stock")
     }
-
-    /*
-    try {
-        setIsLoading(true);
-        setStockPrice(0);
-        const { data } = await axios.get("/stock_copy_trading/get_stock_quotes/", { params: { stockSymbol }, timeout: 5000})
-        if (data != null) {
-            // set first stock data when user get new stock quotes
-            const stockBidPrice = data[stockSymbol]["bidPrice"];
-            setStockPrice(stockBidPrice);
-            setStockStopPrice(stockBidPrice);
-        } else {
-            alert("Failed to get stock");
-        }
-        setIsLoading(false);
-    } catch (error) {
-        console.log(error.message);
-        alert("Failed to get stock");
-        setIsLoading(false);
-    } */
 }
 
 export default function StockHandleOrder({ 
@@ -81,18 +61,18 @@ export default function StockHandleOrder({
             setStockPrice(0);
             setStockStopPrice(0);
             setStockStopPriceLinkTypeSymbol("$ Dollars");
-            setStockStopPriceOffset(0);
+            setStockStopPriceOffset(0.1);
         } else if (stockOrderType == "LIMIT")  {
             setStockStopPrice(0);
             setStockStopPriceLinkTypeSymbol("$ Dollars");
-            setStockStopPriceOffset(0);
+            setStockStopPriceOffset(0.1);
         } else if (stockOrderType == "STOP") {
             setStockPrice(0);
             setStockStopPriceLinkTypeSymbol("$ Dollars");
-            setStockStopPriceOffset(0);
+            setStockStopPriceOffset(0.1);
         } else if (stockOrderType == "STOP_LIMIT") {
             setStockStopPriceLinkTypeSymbol("$ Dollars");
-            setStockStopPriceOffset(0);
+            setStockStopPriceOffset(0.1);
         } else {
             setStockPrice(0);
             setStockStopPrice(0);
