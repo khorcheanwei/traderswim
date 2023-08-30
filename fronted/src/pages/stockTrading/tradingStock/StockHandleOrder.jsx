@@ -26,6 +26,7 @@ export async function getStockQuotes(setIsLoading, stockSymbol, setStockPrice, s
 }
 
 export default function StockHandleOrder({ 
+    isGetStockQuotes,
     isLoading, setIsLoading, 
     stockSymbol, setStockSymbol,
     stockInstruction, setStockInstruction,
@@ -54,7 +55,11 @@ export default function StockHandleOrder({
     
     useEffect( ()=> {
         if (stockSymbol != "" && stockPrice == 0) {
-            getStockQuotes(setIsLoading, stockSymbol, setStockPrice, setStockStopPrice);
+
+            console.log(isGetStockQuotes)
+            if (isGetStockQuotes) {
+                getStockQuotes(setIsLoading, stockSymbol, setStockPrice, setStockStopPrice);
+            }    
         }
 
         if (stockOrderType == "MARKET") {

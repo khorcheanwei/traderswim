@@ -1,31 +1,38 @@
 import axios from 'axios';
 import { useContext, useState, useEffect } from 'react';
 import { StockCopyTradingPositionContext } from '../context/StockCopyTradingPositionContext';
+import StockHandleOrder, {getStockQuotes} from './StockHandleOrder';
 
-export default function StockExitOrder({ rowCopyTradingPosition, onClose }) {
-    const {isOpenOrderExit, setIsOpenOrderExit, stockCopyTradingPositionDataDict, setStockCopyTradingPositionDataDict} = useContext(StockCopyTradingPositionContext);
+export default function StockExitOrder({ rowCopyTradingPosition, onClose, isOpenOrderExit, setIsOpenOrderExit }) {
+    const [isLoading, setIsLoading] = useState(false);
+    const {stockCopyTradingPositionDataDict, setStockCopyTradingPositionDataDict} = useContext(StockCopyTradingPositionContext);
     
     var stockInstructionList = ["BUY", "SELL"];
     var stockOrderTypeList = ["MARKET", "LIMIT", "STOP", "STOP_LIMIT", "TRAILING_STOP"];
     var stockSessionDurationList = ["DAY", "GTC", "EXT", "GTC_EXT"];
 
+    var stockStopPriceLinkTypeDict = {"$ Dollars": "VALUE", "% Percent":"PERCENT"};
+    var stockStopPriceLinkTypeReverseDict = {"VALUE": "$ Dollars", "PERCENT":"% Percent"};
+
+    //let agentTradingSessionID = rowCopyTradingPosition.cell.row.original.agentTradingSessionID;
+
     let rowStockSymbol = rowCopyTradingPosition.cell.row.original.stockSymbol;
-    const copyTradingPositionAllAccountData = stockCopyTradingPositionDataDict[rowStockSymbol];
-
-    //let rowStockInstruction =rowCopyTradingPosition.cell.row.original.stockInstruction;
-    //let rowStockOrderType = rowCopyTradingPosition.cell.row.original.stockOrderType;
-    let rowStockSettledQuantity = rowCopyTradingPosition.cell.row.original.stockSettledQuantity;
-    if (rowStockSettledQuantity < 0) {
-        rowStockSettledQuantity = -rowStockSettledQuantity;
-    }
+    let rowStockPrice = rowCopyTradingPosition.cell.row.original.stockAveragePrice;
+    let rowStockQuantity = rowCopyTradingPosition.cell.row.original.stockSettledQuantity;
     
-    let rowStockAveragePrice = rowCopyTradingPosition.cell.row.original.stockAveragePrice;
-
-    const [stockSymbol, setStockSymbol] = useState(rowStockSymbol) 
-    const [stockInstruction, setStockInstruction] = useState(stockInstructionList[0]);
+    const [stockSymbol, setStockSymbol]= useState(rowStockSymbol);
+    const [stockInstruction, setStockInstruction] = useState("BUY");
+    const [stockSessionDuration, setStockSessionDuration] = useState("DAY");
     const [stockOrderType, setStockOrderType] = useState("LIMIT");
-    const [stockQuantity, setStockQuantity] = useState(rowStockSettledQuantity)
-    const [stockPrice, setStockPrice] = useState(rowStockAveragePrice)
+    const [stockQuantity, setStockQuantity] = useState(rowStockQuantity);
+
+    const [stockPrice, setStockPrice] = useState(rowStockPrice);
+    const [stockStopPrice, setStockStopPrice] = useState(0);
+    const [stockStopPriceLinkTypeSymbol, setStockStopPriceLinkTypeSymbol] = useState("$ Dollars");
+    const [stockStopPriceOffset, setStockStopPriceOffset] = useState(0.1);
+
+    const [disabledButton, setDisabledButton] = useState(false)
+
   
     async function handleExitOrder() {
         try {
@@ -55,71 +62,19 @@ export default function StockExitOrder({ rowCopyTradingPosition, onClose }) {
             <div className="mb-4">
                 <h1 className="block text-gray-700 text-lm font-bold mb-2">Stock Exit Order</h1>
             </div>
-            <div>
-                <div className="grid items-end gap-6 mb-6 md:grid-cols-2">
-                    <div className="relative">
-                        <select
-                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                            value={stockInstruction}
-                            onChange={event => setStockInstruction(event.target.value)}>
-                            {
-                                stockInstructionList.map((stock_instruction, index) => (
-                                    <option key={index}>{stock_instruction}</option>
-                                ))
-                            }
-                        </select>
-                        <label
-                            className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
-                            htmlFor="small_outlined">
-                            Stock instruction:
-                        </label>
-                    </div>
-                    <div className="relative">
-                        <select
-                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                            value={stockOrderType}
-                            onChange={event => setStockOrderType(event.target.value)}>
-                            {
-                                stockOrderTypeList.map((stock_order_type, index) => (
-                                    <option key={index}>{stock_order_type}</option>
-                                ))
-                            }
-                        </select>
-                        <label
-                            className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
-                            htmlFor="small_outlined">
-                            Stock order type:
-                        </label>
-                    </div>
-                </div>
-                <div className="grid items-end gap-6 mb-6 grid-cols-2">
-                    <div className="relative">
-                        <input
-                            className="block px-2.5 pb-1.5 pt-3 w-full text-sm text-gray-900 bg-transparent  border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                            type="text"
-                            onChange={event => setStockQuantity(event.target.value)}
-                            value={stockQuantity}
-                            placeholder=" " />
-                        <label
-                            className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
-                            htmlFor="small_outlined">
-                            Stock Total:
-                        </label>
-                    </div>
-                    <div className="relative">
-                        <input className="block px-2.5 pb-1.5 pt-3 w-full text-sm text-gray-900 bg-transparent  border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                            type="text"
-                            onChange={event => setStockPrice(event.target.value)}
-                            value={stockPrice}
-                            placeholder=" " />
-                        <label
-                            className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
-                            htmlFor="small_outlined">
-                            Price:
-                        </label>
-                    </div>
-                </div>
-            </div>
+            <StockHandleOrder 
+                isGetStockQuotes={false}
+                isLoading={isLoading} setIsLoading={setIsLoading} 
+                stockSymbol={stockSymbol} setStockSymbol={setStockSymbol}
+                stockInstruction={stockInstruction} setStockInstruction={setStockInstruction}
+                stockSessionDuration={stockSessionDuration} setStockSessionDuration={setStockSessionDuration}
+                stockOrderType={stockOrderType} setStockOrderType={setStockOrderType}
+                stockQuantity={stockQuantity} setStockQuantity={setStockQuantity}
+                stockPrice={stockPrice} setStockPrice={setStockPrice}
+                stockStopPrice={stockStopPrice} setStockStopPrice={setStockStopPrice}
+                stockStopPriceLinkTypeSymbol={stockStopPriceLinkTypeSymbol} setStockStopPriceLinkTypeSymbol={setStockStopPriceLinkTypeSymbol}
+                stockStopPriceOffset={stockStopPriceOffset} setStockStopPriceOffset={setStockStopPriceOffset}>    
+            </StockHandleOrder>
             <div className="flex justify-end gap-5">
                 <button
                     type="button"

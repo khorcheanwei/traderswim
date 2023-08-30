@@ -10,16 +10,12 @@ export function StockCopyTradingPositionContextProvider({children}) {
     const [rowCopyTradingPosition, setRowCopyTradingPosition] = useState([]);
 
     const [isOpenViewAllPosition, setIsOpenViewAllPosition] = useState(false);
-
-    const [isOpenOrderExit, setIsOpenOrderExit] = useState(false);
-    
     return (
         <StockCopyTradingPositionContext.Provider 
             value={{ stockCopyTradingPositionDataDict, setStockCopyTradingPositionDataDict, 
             stockCopyTradingPositionMainData, setStockCopyTradingPositionMainData, 
             rowCopyTradingPosition, setRowCopyTradingPosition, 
-            isOpenViewAllPosition, setIsOpenViewAllPosition, 
-            isOpenOrderExit, setIsOpenOrderExit}}>
+            isOpenViewAllPosition, setIsOpenViewAllPosition}}>
             {children}
         </StockCopyTradingPositionContext.Provider>
     );

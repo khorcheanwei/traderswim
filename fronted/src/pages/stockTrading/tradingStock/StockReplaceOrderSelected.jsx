@@ -112,6 +112,7 @@ const StockReplaceOrderSelected = memo(({ rowCopyTradingOrderSelected, selectedO
                 <h1 className="block text-gray-700 text-lm font-bold mb-2">Stock Replace Order (Selected)</h1>
             </div>
             <StockHandleOrder 
+                isGetStockQuotes={false}
                 isLoading={isLoading} setIsLoading={setIsLoading} 
                 stockSymbol={stockSymbol} setStockSymbol={setStockSymbol}
                 stockInstruction={stockInstruction} setStockInstruction={setStockInstruction}

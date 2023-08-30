@@ -47,7 +47,7 @@ export function viewAllPositionPanel(row) {
 }
 
 export function ChangePositionPanel(row) {
-  const { isOpenOrderExit, setIsOpenOrderExit } = useContext(StockCopyTradingPositionContext);
+  const [isOpenOrderExit, setIsOpenOrderExit] = useState(false);
   const { rowCopyTradingPosition, setRowCopyTradingPosition } = useContext(StockCopyTradingPositionContext);
  
   const orderExitClose = async () => {
@@ -65,7 +65,10 @@ export function ChangePositionPanel(row) {
         </div>
       </div>
       <Overlay isOpen={isOpenOrderExit} >
-        <StockExitOrder rowCopyTradingPosition={rowCopyTradingPosition} onClose={orderExitClose}></StockExitOrder>
+        <StockExitOrder rowCopyTradingPosition={rowCopyTradingPosition} 
+          onClose={orderExitClose}
+          isOpenOrderExit={isOpenOrderExit} 
+          setIsOpenOrderExit={setIsOpenOrderExit}></StockExitOrder>
       </Overlay>
     </div>
   );
