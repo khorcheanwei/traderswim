@@ -1,7 +1,7 @@
 import axios from 'axios';
-import { useContext, useState, useEffect } from 'react';
+import { useContext, useState } from 'react';
 import { StockCopyTradingOrderContext } from '../context/StockCopyTradingOrderContext';
-import StockHandleOrder, {get_duration_and_session} from './StockHandleOrder';
+import StockHandleOrder, {get_duration_and_session, get_duration_and_session_reverse} from './StockHandleOrder';
 import { ClipLoader } from 'react-spinners';
 
 export default function TradingStockReplaceOrder({ rowCopyTradingOrder, onClose, isOpenOrderReplace, setIsOpenOrderReplace }) {
@@ -43,20 +43,6 @@ export default function TradingStockReplaceOrder({ rowCopyTradingOrder, onClose,
     const {stockCopyTradingOrderDataDict, setStockCopyTradingOrderDataDict} = useContext(StockCopyTradingOrderContext);
     const copyTradingAllAccountData = stockCopyTradingOrderDataDict[agentTradingSessionID];
 
-    function get_duration_and_session_reverse(session, duration) { 
-        if(session == "NORMAL" && duration == "DAY") {
-            return "DAY";
-        } else if (session == "NORMAL" && duration == "GOOD_TILL_CANCEL") {
-            return "GTC";
-        } else if (session == "SEAMLESS" && duration == "DAY") {
-            return "EXT"
-        } else if (session == "SEAMLESS" && duration == "GOOD_TILL_CANCEL") {
-            return "GTC_EXT"
-        } else {
-            return null;
-        }
-    }
-  
     async function handleReplaceOrder() {
         setDisabledButton(true);
         try {

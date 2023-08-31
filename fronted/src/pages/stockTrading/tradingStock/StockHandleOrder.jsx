@@ -15,6 +15,20 @@ export function get_duration_and_session(stockSessionDuration) {
     }        
 }
 
+export function get_duration_and_session_reverse(session, duration) { 
+    if(session == "NORMAL" && duration == "DAY") {
+        return "DAY";
+    } else if (session == "NORMAL" && duration == "GOOD_TILL_CANCEL") {
+        return "GTC";
+    } else if (session == "SEAMLESS" && duration == "DAY") {
+        return "EXT"
+    } else if (session == "SEAMLESS" && duration == "GOOD_TILL_CANCEL") {
+        return "GTC_EXT"
+    } else {
+        return null;
+    }
+}
+
 export async function getStockQuotes(setIsLoading, stockSymbol, setStockPrice, setStockStopPrice) {
     try {
         
