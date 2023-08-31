@@ -19,6 +19,7 @@ const StockDeleteOrderIndividual = memo(({ rowCopyTradingOrderIndividual, onClos
       const response = await axios.delete("/stock_copy_trading/cancel_order_individual/", { data: { agentTradingSessionID, accountId, accountUsername, stockOrderId }});
       if (response.data == "success") {
         alert("Order deleted successful");
+        onClose();
       } else {
         alert("Order deleted failed")
       }
@@ -26,7 +27,6 @@ const StockDeleteOrderIndividual = memo(({ rowCopyTradingOrderIndividual, onClos
         alert("Order deleted failed")
         console.log(error.message);
     }
-    onClose();
     setDisabledButton(false);
   }
       
