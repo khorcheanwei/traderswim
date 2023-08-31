@@ -107,7 +107,9 @@ export default function CopyTradingAllAccountOrderPage({ rowCopyTradingOrder, on
   var data = React.useMemo(() => copyTradingAllAccountData, [copyTradingAllAccountData]);
 
   // replace and cancel selected orders
-  const { isOpenOrderReplaceSelected, setIsOpenOrderReplaceSelected, isOpenOrderDeleteSelected, setIsOpenOrderDeleteSelected, isOpenWarningMessageOrderSelected, setIsOpenWarningMessageOrderSelected } = useContext(CopyTradingOrderContext);
+  const [isOpenOrderDeleteSelected, setIsOpenOrderDeleteSelected] = useState(false); 
+  const [isOpenOrderReplaceSelected, setIsOpenOrderReplaceSelected] = useState(false);
+  const [isOpenWarningMessageOrderSelected, setIsOpenWarningMessageOrderSelected] = useState(false); 
   
   const warningMessageOrderSelectedClose = async () => {
     setIsOpenWarningMessageOrderSelected(!isOpenWarningMessageOrderSelected);

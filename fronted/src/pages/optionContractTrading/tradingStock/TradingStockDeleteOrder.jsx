@@ -2,7 +2,7 @@ import axios from "axios";
 import { useState, useContext } from 'react';
 import { CopyTradingOrderContext } from '../context/CopyTradingOrderContext';
 
-export default function TradingStockDeleteOrder({rowCopyTradingOrder, onClose, isOpenOrderDelete, setIsOpenOrderDelete}) {
+export default function TradingStockDeleteOrder({rowCopyTradingOrder, onClose}) {
     
     let optionChainDescription = rowCopyTradingOrder.cell.row.original.optionChainDescription;
     let agentTradingSessionID = rowCopyTradingOrder.cell.row.original.agentTradingSessionID;

@@ -2,7 +2,7 @@ import axios from 'axios';
 import { useContext, useState } from 'react';
 import { CopyTradingOrderContext } from '../context/CopyTradingOrderContext';
 
-export default function TradingStockReplaceOrder({ rowCopyTradingOrder, onClose, isOpenOrderReplace, setIsOpenOrderReplace }) {
+export default function TradingStockReplaceOrder({ rowCopyTradingOrder, onClose }) {
     var optionChainInstructionList = ["BUY_TO_OPEN", "SELL_TO_CLOSE"];
     var optionChainOrderTypeList = ["LIMIT", "MARKET", "MARKET_ON_CLOSE", "STOP", "STOP_LIMIT", "TRAILING_STOP"];
 

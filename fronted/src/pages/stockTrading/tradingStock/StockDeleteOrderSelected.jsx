@@ -3,7 +3,6 @@ import { useState } from 'react';
 
 export default function StockDeleteOrderSelected({rowCopyTradingOrderSelected, selectedOrderDict, onClose}) {
     
-    const [isOpenOrderDeleteSelected, setIsOpenOrderDeleteSelected] = useState(false); 
     const [disabledButton, setDisabledButton] = useState(false);
     
     //let stockDescription = rowCopyTradingOrderSelected.cell.row.original.account;
