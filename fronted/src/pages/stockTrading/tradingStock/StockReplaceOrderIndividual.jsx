@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { useState, memo } from 'react';
-import StockHandleOrder, {get_duration_and_session} from './StockHandleOrder';
+import StockHandleOrder, {get_duration_and_session, get_duration_and_session_reverse} from './StockHandleOrder';
 import { ClipLoader } from 'react-spinners';
 
 const StockReplaceOrderIndividual = memo(({ rowCopyTradingOrderIndividual, onClose }) => {
@@ -44,20 +44,6 @@ const StockReplaceOrderIndividual = memo(({ rowCopyTradingOrderIndividual, onClo
     const [stockStopPriceOffset, setStockStopPriceOffset] = useState(rowStockStopPriceOffset);
 
     const [disabledButton, setDisabledButton] = useState(false);
-
-    function get_duration_and_session_reverse(session, duration) { 
-        if(session == "NORMAL" && duration == "DAY") {
-            return "DAY";
-        } else if (session == "NORMAL" && duration == "GOOD_TILL_CANCEL") {
-            return "GTC";
-        } else if (session == "SEAMLESS" && duration == "DAY") {
-            return "EXT"
-        } else if (session == "SEAMLESS" && duration == "GOOD_TILL_CANCEL") {
-            return "GTC_EXT"
-        } else {
-            return null;
-        }
-    }
 
     async function handleReplaceOrderIndividual() {
         // replace order
