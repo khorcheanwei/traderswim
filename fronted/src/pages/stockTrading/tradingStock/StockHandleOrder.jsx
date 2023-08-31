@@ -69,8 +69,6 @@ export default function StockHandleOrder({
     
     useEffect( ()=> {
         if (stockSymbol != "" && stockPrice == 0) {
-
-            console.log(isGetStockQuotes)
             if (isGetStockQuotes) {
                 getStockQuotes(setIsLoading, stockSymbol, setStockPrice, setStockStopPrice);
             }    

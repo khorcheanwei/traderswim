@@ -38,7 +38,7 @@ export default function StockPlaceOrder({ rowCopyTradingOrder, onClose, isOpenOr
     const [stockStopPriceLinkTypeSymbol, setStockStopPriceLinkTypeSymbol] = useState(stockStopPriceLinkTypeReverseDict[rowStockStopPriceLinkType]);
     const [stockStopPriceOffset, setStockStopPriceOffset] = useState(rowStockStopPriceOffset);
 
-    const [disabledButton, setDisabledButton] = useState(false)
+    const [disabledButton, setDisabledButton] = useState(false);
 
     const {stockCopyTradingOrderDataDict, setStockCopyTradingOrderDataDict} = useContext(StockCopyTradingOrderContext);
     let copyTradingAllAccountData = []
@@ -73,7 +73,7 @@ export default function StockPlaceOrder({ rowCopyTradingOrder, onClose, isOpenOr
                 alert("Copy trading failed");
             } else {
                 alert("Copy trading successful");
-                setIsOpenOrderPlace(!isOpenOrderPlace);
+                onClose();
             }
         } catch (error) {
             alert("Copy trading failed");

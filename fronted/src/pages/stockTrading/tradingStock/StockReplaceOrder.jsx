@@ -38,7 +38,7 @@ export default function TradingStockReplaceOrder({ rowCopyTradingOrder, onClose,
     const [stockStopPriceLinkTypeSymbol, setStockStopPriceLinkTypeSymbol] = useState(stockStopPriceLinkTypeReverseDict[rowStockStopPriceLinkType]);
     const [stockStopPriceOffset, setStockStopPriceOffset] = useState(rowStockStopPriceOffset);
 
-    const [disabledButton, setDisabledButton] = useState(false)
+    const [disabledButton, setDisabledButton] = useState(false);
 
     const {stockCopyTradingOrderDataDict, setStockCopyTradingOrderDataDict} = useContext(StockCopyTradingOrderContext);
     const copyTradingAllAccountData = stockCopyTradingOrderDataDict[agentTradingSessionID];
@@ -76,8 +76,8 @@ export default function TradingStockReplaceOrder({ rowCopyTradingOrder, onClose,
                 alert("Replace order failed");
             } else {
                 alert("Replace order successful");
+                onClose();
             }
-            setIsOpenOrderReplace(!isOpenOrderReplace); 
         } catch (error) {
             alert("Replace order failed")
             console.log(error.message);

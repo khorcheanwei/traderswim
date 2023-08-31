@@ -50,8 +50,8 @@ export default function StockAllActivePlaceOrder({ onClose }) {
                     alert("Save order failed");
                 } else {
                     alert("Save order successful");
-                    setStockSaveOrderList(data.list)
-                    setIsOpenTradingStock(!isOpenTradingStock);
+                    setStockSaveOrderList(data.list);
+                    onClose();
                 }
             }
         } catch (error) {
@@ -128,7 +128,7 @@ export default function StockAllActivePlaceOrder({ onClose }) {
                 alert("Copy trading failed");
             } else {
                 alert("Copy trading successful");
-                setIsOpenTradingStock(!isOpenTradingStock)
+                onClose();
             }
         } catch (error) {
             alert("Copy trading failed")

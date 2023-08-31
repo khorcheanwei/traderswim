@@ -81,6 +81,7 @@ const StockReplaceOrderSelected = memo(({ rowCopyTradingOrderSelected, selectedO
 
             if (data == "success") {
                 alert("Replace selected order successful");
+                onClose();
             } else {
                 alert("Replace selected order failed");
             }
@@ -88,7 +89,6 @@ const StockReplaceOrderSelected = memo(({ rowCopyTradingOrderSelected, selectedO
             alert("Replace selected order failed")
             console.log(error.message);
         }
-        onClose();
         setDisabledButton(false);
     }
 
