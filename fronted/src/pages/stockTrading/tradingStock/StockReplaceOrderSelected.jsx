@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { useState, memo } from 'react';
-import StockHandleOrder from './StockHandleOrder';
+import StockHandleOrder, {get_duration_and_session} from './StockHandleOrder';
 
 const StockReplaceOrderSelected = memo(({ rowCopyTradingOrderSelected, selectedOrderDict, onClose }) => {
     const [isLoading, setIsLoading] = useState(false);
@@ -42,20 +42,6 @@ const StockReplaceOrderSelected = memo(({ rowCopyTradingOrderSelected, selectedO
     const [stockStopPriceOffset, setStockStopPriceOffset] = useState(rowStockStopPriceOffset);
 
     const [disabledButton, setDisabledButton] = useState(false);
-
-    function get_duration_and_session(stockSessionDuration) { 
-        if (stockSessionDuration  == "DAY") {
-            return {stockSession: "NORMAL", stockDuration: "DAY" }
-        } else if(stockSessionDuration == "GTC") {
-            return {stockSession: "NORMAL", stockDuration: "GOOD_TILL_CANCEL" }
-        } else if(stockSessionDuration == "EXT") {
-            return {stockSession: "SEAMLESS", stockDuration: "DAY" }
-        } else if(stockSessionDuration == "GTC_EXT") {
-            return {stockSession: "SEAMLESS", stockDuration: "GOOD_TILL_CANCEL" }
-        } else {
-            return {stockSession: null, stockDuration: null }
-        }        
-    }
 
     function get_duration_and_session_reverse(session, duration) { 
         if(session == "NORMAL" && duration == "DAY") {
@@ -112,6 +98,7 @@ const StockReplaceOrderSelected = memo(({ rowCopyTradingOrderSelected, selectedO
                 <h1 className="block text-gray-700 text-lm font-bold mb-2">Stock Replace Order (Selected)</h1>
             </div>
             <StockHandleOrder 
+                isGetStockQuotes={false}
                 isLoading={isLoading} setIsLoading={setIsLoading} 
                 stockSymbol={stockSymbol} setStockSymbol={setStockSymbol}
                 stockInstruction={stockInstruction} setStockInstruction={setStockInstruction}

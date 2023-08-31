@@ -10,6 +10,7 @@ const {
 } = require("../../data-access/index.js");
 
 const {
+    prepare_make_order,
     make_order_config,
     get_latest_order_id_all_accounts,
     get_latest_order_information_all_accounts,
@@ -70,12 +71,17 @@ async function post_exit_order_all_accounts(all_trading_accounts_list, payload) 
 // Copy trading exit order
 async function stock_copy_trading_exit_order(httpRequest) {
   let {
-    allTradingAccountsOrderList,
-    stockSymbol,
-    stockInstruction,
-    stockOrderType,
-    stockQuantity,
-    stockPrice,
+    allTradingAccountsOrderList, 
+    stockSymbol, 
+    stockSession, 
+    stockDuration, 
+    stockInstruction, 
+    stockOrderType, 
+    stockQuantity, 
+    stockPrice, 
+    stockStopPrice, 
+    stockStopPriceLinkType, 
+    stockStopPriceOffset
   } = httpRequest.body;
 
   const { token } = httpRequest.cookies;

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { useContext, useState, useEffect } from 'react';
 import { StockCopyTradingOrderContext } from '../context/StockCopyTradingOrderContext';
-import StockHandleOrder from './StockHandleOrder';
+import StockHandleOrder, {get_duration_and_session} from './StockHandleOrder';
 import { ClipLoader } from 'react-spinners';
 
 export default function StockPlaceOrder({ rowCopyTradingOrder, onClose, isOpenOrderPlace, setIsOpenOrderPlace }) {
@@ -44,20 +44,6 @@ export default function StockPlaceOrder({ rowCopyTradingOrder, onClose, isOpenOr
     let copyTradingAllAccountData = []
     if(stockCopyTradingOrderDataDict[agentTradingSessionID]) {
         copyTradingAllAccountData = stockCopyTradingOrderDataDict[agentTradingSessionID];
-    }
-
-    function get_duration_and_session(stockSessionDuration) { 
-        if (stockSessionDuration  == "DAY") {
-            return {stockSession: "NORMAL", stockDuration: "DAY" }
-        } else if(stockSessionDuration == "GTC") {
-            return {stockSession: "NORMAL", stockDuration: "GOOD_TILL_CANCEL" }
-        } else if(stockSessionDuration == "EXT") {
-            return {stockSession: "SEAMLESS", stockDuration: "DAY" }
-        } else if(stockSessionDuration == "GTC_EXT") {
-            return {stockSession: "SEAMLESS", stockDuration: "GOOD_TILL_CANCEL" }
-        } else {
-            return {stockSession: null, stockDuration: null }
-        }        
     }
 
     function get_duration_and_session_reverse(session, duration) { 
@@ -107,6 +93,7 @@ export default function StockPlaceOrder({ rowCopyTradingOrder, onClose, isOpenOr
                             <h1 className="block text-gray-700 text-lm font-bold mb-2">Stock Place Order ( {copyTradingAllAccountData.length} accounts )</h1> }
                     </div>
                     <StockHandleOrder 
+                        isGetStockQuotes={false}
                         isLoading={isLoading} setIsLoading={setIsLoading} 
                         stockSymbol={stockSymbol} setStockSymbol={setStockSymbol}
                         stockInstruction={stockInstruction} setStockInstruction={setStockInstruction}

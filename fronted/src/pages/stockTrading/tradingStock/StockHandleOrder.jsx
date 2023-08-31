@@ -1,6 +1,20 @@
 import axios from 'axios';
 import { useRef, useEffect } from 'react';
 
+export function get_duration_and_session(stockSessionDuration) { 
+    if (stockSessionDuration == "DAY") {
+        return {stockSession: "NORMAL", stockDuration: "DAY" }
+    } else if(stockSessionDuration == "GTC") {
+        return {stockSession: "NORMAL", stockDuration: "GOOD_TILL_CANCEL" }
+    } else if(stockSessionDuration == "EXT") {
+        return {stockSession: "SEAMLESS", stockDuration: "DAY" }
+    } else if(stockSessionDuration == "GTC_EXT") {
+        return {stockSession: "SEAMLESS", stockDuration: "GOOD_TILL_CANCEL" }
+    } else {
+        return {stockSession: null, stockDuration: null }
+    }        
+}
+
 export async function getStockQuotes(setIsLoading, stockSymbol, setStockPrice, setStockStopPrice) {
     try {
         
@@ -26,6 +40,7 @@ export async function getStockQuotes(setIsLoading, stockSymbol, setStockPrice, s
 }
 
 export default function StockHandleOrder({ 
+    isGetStockQuotes,
     isLoading, setIsLoading, 
     stockSymbol, setStockSymbol,
     stockInstruction, setStockInstruction,
@@ -54,7 +69,11 @@ export default function StockHandleOrder({
     
     useEffect( ()=> {
         if (stockSymbol != "" && stockPrice == 0) {
-            getStockQuotes(setIsLoading, stockSymbol, setStockPrice, setStockStopPrice);
+
+            console.log(isGetStockQuotes)
+            if (isGetStockQuotes) {
+                getStockQuotes(setIsLoading, stockSymbol, setStockPrice, setStockStopPrice);
+            }    
         }
 
         if (stockOrderType == "MARKET") {
