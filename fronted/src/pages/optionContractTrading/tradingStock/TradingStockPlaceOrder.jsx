@@ -1,9 +1,11 @@
 import axios from 'axios';
-import { useContext, useState, useEffect } from 'react';
+import { useContext, useState } from 'react';
 import { CopyTradingOrderContext } from '../context/CopyTradingOrderContext';
 
 
 export default function TradingStockPlaceOrder({ rowCopyTradingOrder, onClose, isOpenOrderPlace, setIsOpenOrderPlace }) {
+
+    const [disabledButton, setDisabledButton] = useState(false);
 
     var optionChainInstructionList = ["BUY_TO_OPEN", "SELL_TO_CLOSE"];
     var optionChainOrderTypeList = ["LIMIT", "MARKET", "MARKET_ON_CLOSE", "STOP", "STOP_LIMIT", "TRAILING_STOP"];
@@ -27,6 +29,7 @@ export default function TradingStockPlaceOrder({ rowCopyTradingOrder, onClose, i
     const copyTradingAllAccountData = copyTradingOrderDataDict[agentTradingSessionID];
   
     async function handlePlaceOrder() {
+        setDisabledButton(true);
         try {
             const allTradingAccountsOrderList = [];
              
@@ -35,12 +38,13 @@ export default function TradingStockPlaceOrder({ rowCopyTradingOrder, onClose, i
                 alert("Place order failed");
             } else {
                 alert("Place order successful");
+                onClose();
             }
-            setIsOpenOrderPlace(!isOpenOrderPlace); 
         } catch (error) {
             alert("Place order failed")
             console.log(error.message);
         }
+        setDisabledButton(false);
     }
 
     return (
@@ -128,7 +132,8 @@ export default function TradingStockPlaceOrder({ rowCopyTradingOrder, onClose, i
                 <button
                     type="button"
                     className="inline-block rounded bg-white px-7 pt-3 pb-2.5 text-sm font-medium uppercase leading-normal text-black shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-teal-300-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-teal-300-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-teal-300-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
-                    onClick={onClose}>
+                    onClick={onClose}
+                    disabled={disabledButton}>
                     CANCEL
                 </button>
                 <button

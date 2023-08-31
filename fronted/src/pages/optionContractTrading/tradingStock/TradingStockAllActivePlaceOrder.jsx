@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { useContext, useState, useEffect } from 'react';
-import { OptionContractPlaceOrderContext } from '../context/OptionContractPlaceOrderContext';
 import { OptionPlaceOrderPanelContext } from '../context/OptionPlaceOrderPanelContext';
 import AutocompleteList from './AutocompleteList';
 import { ClipLoader } from 'react-spinners';
@@ -13,7 +12,6 @@ export default function TradingStockAllActivePlaceOrder({ onClose }) {
     //var optionChainCallPutList = ["CALL", "PUT"];
     var optionChainOrderTypeList = ["LIMIT", "MARKET", "MARKET_ON_CLOSE", "STOP", "STOP_LIMIT", "TRAILING_STOP"];
 
-    const { isOpenTradingStock, setIsOpenTradingStock } = useContext(OptionContractPlaceOrderContext);
     const {optionContractSaveOrderList, setOptionContractSaveOrderList } = useContext(OptionPlaceOrderPanelContext);
 
     const [optionContractTickerName, setOptionContractTickerName] = useState("");
@@ -52,7 +50,7 @@ export default function TradingStockAllActivePlaceOrder({ onClose }) {
                 alert("Copy trading failed");
             } else {
                 alert("Copy trading successful");
-                setIsOpenTradingStock(!isOpenTradingStock)
+                onClose();
             }
         } catch (error) {
             alert("Copy trading failed")
@@ -73,7 +71,7 @@ export default function TradingStockAllActivePlaceOrder({ onClose }) {
                 } else {
                     alert("Save order successful");
                     setOptionContractSaveOrderList(data.list)
-                    setIsOpenTradingStock(!isOpenTradingStock);
+                    onClose();
                 }
             }
         } catch (error) {
