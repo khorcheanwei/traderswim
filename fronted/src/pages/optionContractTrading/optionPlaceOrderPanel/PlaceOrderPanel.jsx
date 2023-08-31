@@ -31,8 +31,6 @@ export function PlaceOrderPanel({row, callOption}) {
           <TradingStockPlaceOrder 
             rowCopyTradingOrder={rowCopyTradingOrder} 
             onClose={orderPlaceClose}
-            isOpenOrderPlace={isOpenOrderPlace}
-            setIsOpenOrderPlace={setIsOpenOrderPlace}
             >
           </TradingStockPlaceOrder>
         </Overlay>

@@ -90,20 +90,20 @@ export function ChangeOrderPanel(row) {
       </div>
       <Overlay isOpen={isOpenOrderPlace} >
         <TradingStockPlaceOrder 
-          rowCopyTradingOrder={rowCopyTradingOrder} onClose={orderPlaceClose} 
-          isOpenOrderPlace={isOpenOrderPlace} setIsOpenOrderPlace={setIsOpenOrderPlace}>  
+          rowCopyTradingOrder={rowCopyTradingOrder} 
+          onClose={orderPlaceClose}>  
         </TradingStockPlaceOrder>
       </Overlay>
       <Overlay isOpen={isOpenOrderReplace} >
         <TradingStockReplaceOrder 
-          rowCopyTradingOrder={rowCopyTradingOrder} onClose={orderReplaceClose}
-          isOpenOrderReplace={isOpenOrderReplace} setIsOpenOrderReplace={setIsOpenOrderReplace}>
+          rowCopyTradingOrder={rowCopyTradingOrder} 
+          onClose={orderReplaceClose}>
         </TradingStockReplaceOrder>
       </Overlay>
       <Overlay isOpen={isOpenOrderDelete} >
         <TradingStockDeleteOrder 
-          rowCopyTradingOrder={rowCopyTradingOrder} onClose={orderDeleteClose}
-          isOpenOrderDelete={isOpenOrderDelete} setIsOpenOrderDelete={setIsOpenOrderDelete}>
+          rowCopyTradingOrder={rowCopyTradingOrder} 
+          onClose={orderDeleteClose}>
         </TradingStockDeleteOrder>
       </Overlay>
     </div>

@@ -3,7 +3,7 @@ import { useContext, useState } from 'react';
 import { CopyTradingOrderContext } from '../context/CopyTradingOrderContext';
 
 
-export default function TradingStockPlaceOrder({ rowCopyTradingOrder, onClose, isOpenOrderPlace, setIsOpenOrderPlace }) {
+export default function TradingStockPlaceOrder({ rowCopyTradingOrder, onClose }) {
 
     const [disabledButton, setDisabledButton] = useState(false);
 

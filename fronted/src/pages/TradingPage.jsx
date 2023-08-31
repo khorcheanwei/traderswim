@@ -8,7 +8,6 @@ import CopyTradingPage from './optionContractTrading/copyTrading/CopyTradingPage
 import OptionPlaceOrderPanelAllPage from './optionContractTrading/copyTrading/OptionPlaceOrderPanelAllPage';
 import TradeHistoryPage from './optionContractTrading/tradeHistory/TradeHistoryPage';
 import { OptionPlaceOrderPanelContextProvider } from './optionContractTrading/context/OptionPlaceOrderPanelContext'
-import { OptionContractPlaceOrderContextProvider } from './optionContractTrading/context/OptionContractPlaceOrderContext';
 import { CopyTradingOrderContextProvider } from './optionContractTrading/context/CopyTradingOrderContext';
 import { CopyTradingPositionContextProvider } from './optionContractTrading/context/CopyTradingPositionContext';
 import { TradeHistoryContextProvider } from './optionContractTrading/context/TradeHistoryContext';
@@ -46,9 +45,7 @@ export default function Trading() {
                     <CopyTradingPositionContextProvider>
                             <TradeStockContextProvider>
                                 <OptionPlaceOrderPanelContextProvider>
-                                    <OptionContractPlaceOrderContextProvider>
-                                        <TopCopyTradingPage></TopCopyTradingPage>
-                                    </OptionContractPlaceOrderContextProvider>
+                                    <TopCopyTradingPage></TopCopyTradingPage>
                                     <CopyTradingPage>
                                         <OptionPlaceOrderPanelAllPage></OptionPlaceOrderPanelAllPage>
                                     </CopyTradingPage>
