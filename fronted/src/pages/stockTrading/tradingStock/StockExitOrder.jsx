@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { useContext, useState, useEffect } from 'react';
 import { StockCopyTradingPositionContext } from '../context/StockCopyTradingPositionContext';
-import StockHandleOrder, {getStockQuotes} from './StockHandleOrder';
+import StockHandleOrder, {get_duration_and_session} from './StockHandleOrder';
 
 export default function StockExitOrder({ rowCopyTradingPosition, onClose, isOpenOrderExit, setIsOpenOrderExit }) {
     const [isLoading, setIsLoading] = useState(false);
@@ -19,6 +19,8 @@ export default function StockExitOrder({ rowCopyTradingPosition, onClose, isOpen
     let rowStockSymbol = rowCopyTradingPosition.cell.row.original.stockSymbol;
     let rowStockPrice = rowCopyTradingPosition.cell.row.original.stockAveragePrice;
     let rowStockQuantity = rowCopyTradingPosition.cell.row.original.stockSettledQuantity;
+
+    const stockCopyTradingPositionAllAccountData = stockCopyTradingPositionDataDict[rowStockSymbol];
     
     const [stockSymbol, setStockSymbol]= useState(rowStockSymbol);
     const [stockInstruction, setStockInstruction] = useState("BUY");
@@ -37,13 +39,16 @@ export default function StockExitOrder({ rowCopyTradingPosition, onClose, isOpen
     async function handleExitOrder() {
         try {
 
-            const allTradingAccountsOrderList = copyTradingPositionAllAccountData.map(item => ({
+            const allTradingAccountsOrderList = stockCopyTradingPositionAllAccountData.map(item => ({
                 accountId: item.accountId,
                 accountName: item.accountName,
                 accountUsername: item.accountUsername
               }));
 
-            const { data } = await axios.post("/stock_copy_trading/exit_order/", { allTradingAccountsOrderList, stockSymbol, stockInstruction, stockOrderType, stockQuantity, stockPrice })
+            const {stockSession, stockDuration} = get_duration_and_session(stockSessionDuration);
+            const stockStopPriceLinkType = stockStopPriceLinkTypeDict[stockStopPriceLinkTypeSymbol];
+            const { data } = await axios.post("/stock_copy_trading/exit_order/", { allTradingAccountsOrderList, stockSymbol, stockSession, stockDuration, 
+                stockInstruction, stockOrderType, stockQuantity, stockPrice, stockStopPrice, stockStopPriceLinkType, stockStopPriceOffset })
 
             if (data != "success") {
                 alert("Exit order failed");

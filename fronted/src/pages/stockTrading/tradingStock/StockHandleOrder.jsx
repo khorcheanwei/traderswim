@@ -1,6 +1,20 @@
 import axios from 'axios';
 import { useRef, useEffect } from 'react';
 
+export function get_duration_and_session(stockSessionDuration) { 
+    if (stockSessionDuration == "DAY") {
+        return {stockSession: "NORMAL", stockDuration: "DAY" }
+    } else if(stockSessionDuration == "GTC") {
+        return {stockSession: "NORMAL", stockDuration: "GOOD_TILL_CANCEL" }
+    } else if(stockSessionDuration == "EXT") {
+        return {stockSession: "SEAMLESS", stockDuration: "DAY" }
+    } else if(stockSessionDuration == "GTC_EXT") {
+        return {stockSession: "SEAMLESS", stockDuration: "GOOD_TILL_CANCEL" }
+    } else {
+        return {stockSession: null, stockDuration: null }
+    }        
+}
+
 export async function getStockQuotes(setIsLoading, stockSymbol, setStockPrice, setStockStopPrice) {
     try {
         
