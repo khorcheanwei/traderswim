@@ -4,7 +4,7 @@ import { StockCopyTradingOrderContext } from '../context/StockCopyTradingOrderCo
 import StockHandleOrder, {get_duration_and_session, get_duration_and_session_reverse} from './StockHandleOrder';
 import { ClipLoader } from 'react-spinners';
 
-export default function TradingStockReplaceOrder({ rowCopyTradingOrder, onClose, isOpenOrderReplace, setIsOpenOrderReplace }) {
+export default function StockReplaceOrder({ rowCopyTradingOrder, onClose }) {
     const [isLoading, setIsLoading] = useState(false);
 
     var stockInstructionList = ["BUY", "SELL"];
