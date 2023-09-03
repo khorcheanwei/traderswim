@@ -132,7 +132,7 @@ async function copy_trading_position_by_agent(agentID) {
       }
 
       if (copyTradingPositionDataDict.hasOwnProperty(current_optionChainDescription) == false) {
-        copyTradingPositionDataDict[current_optionChainDescription] = [currCopyTradingPositionAccountData]
+        copyTradingPositionDataDict[current_optionChainDescription] = [currCopyTradingPositionAccountData];
       } else {
         copyTradingPositionDataDict[current_optionChainDescription].push(currCopyTradingPositionAccountData);
       }
