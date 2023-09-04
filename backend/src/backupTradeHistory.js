@@ -107,6 +107,6 @@ async function cleanOptionContractSaveOrderTable() {
 }
 
 
-//updateTradeHistory();
-//updateStockTradeHistory();
+updateTradeHistory();
+updateStockTradeHistory();
 cleanOptionContractSaveOrderTable();
