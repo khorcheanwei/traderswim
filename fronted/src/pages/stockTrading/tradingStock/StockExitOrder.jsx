@@ -23,7 +23,7 @@ export default function StockExitOrder({ rowCopyTradingPosition, onClose, isOpen
     const stockCopyTradingPositionAllAccountData = stockCopyTradingPositionDataDict[rowStockSymbol];
     
     const [stockSymbol, setStockSymbol]= useState(rowStockSymbol);
-    const [stockInstruction, setStockInstruction] = useState("BUY");
+    const [stockInstruction, setStockInstruction] = useState("SELL");
     const [stockSessionDuration, setStockSessionDuration] = useState("DAY");
     const [stockOrderType, setStockOrderType] = useState("LIMIT");
     const [stockQuantity, setStockQuantity] = useState(rowStockQuantity);
