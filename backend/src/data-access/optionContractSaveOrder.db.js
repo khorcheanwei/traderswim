@@ -1,5 +1,29 @@
 function optionContractSaveOrderDBOperation(trading_management_db) {
     this.trading_management_db = trading_management_db;
+
+    // get option contract save order list
+    this.getOptionContractSaveOrder = async function (
+      agentID,
+  ) {
+      try {
+        const sqlCommand = `SELECT * FROM optionContractSaveOrder`;
+
+        const queryResult = await new Promise((resolve, reject) => {
+          this.trading_management_db.all(sqlCommand, [agentID], (err, row) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(row);
+            }
+          });
+        });
+        console.log(`Successful get option contract save order list for agent ID ${agentID}`)
+        return queryResult;
+      } catch (error) {
+        console.log(`Failed get option contract save order list for agent ID ${agentID}`);
+        return [];
+      }
+  }
   
     // get option contract save order list
     this.getOptionContractSaveOrderList = async function (
@@ -82,6 +106,34 @@ function optionContractSaveOrderDBOperation(trading_management_db) {
           return [];
         }
     }
+
+    this.removeOptionContractsByIdList = async function(optionContractSaveOrderDeleteList) {
+      try {
+          // SQL command to delete option contracts by ID list
+          const placeholders = optionContractSaveOrderDeleteList.map(() => '?').join(',');
+          const sqlCommand = `DELETE FROM optionContractSaveOrder WHERE id IN (${placeholders})`;
+  
+          const params = optionContractSaveOrderDeleteList;
+  
+          // Use a Promise to perform the SQL query
+          await new Promise((resolve, reject) => {
+              this.trading_management_db.run(sqlCommand, params, function (err) {
+                  if (err) {
+                      reject(err);
+                  } else {
+                      resolve(this.changes);
+                  }
+              });
+          });
+  
+          console.log(`Successfully removed option contracts based on ${optionContractSaveOrderDeleteList.join(',')}`);
+      } catch (error) {
+          console.log(`Failed to remove option contracts based on ${optionContractSaveOrderDeleteList.join(',')}`);
+      }
+  }
+  
+
+    
 }
     
 module.exports = optionContractSaveOrderDBOperation;

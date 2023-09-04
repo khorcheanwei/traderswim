@@ -1,6 +1,6 @@
 
 
-const { copyTradingAccountDBBOperation, tradeHistoryDBOperation, stockCopyTradingDBOperation, stockTradeHistoryDBOperation } = require("./data-access/index.js");
+const { copyTradingAccountDBBOperation, tradeHistoryDBOperation, stockCopyTradingDBOperation, stockTradeHistoryDBOperation, optionContractSaveOrderDBOperation } = require("./data-access/index.js");
 
 async function updateTradeHistory() {
     try {
@@ -66,5 +66,47 @@ async function updateStockTradeHistory() {
     }
 }
 
+async function cleanOptionContractSaveOrderTable() {
+    try {
+        const stockDayForClean = 2;
+        let result = await optionContractSaveOrderDBOperation.getOptionContractSaveOrder();
+
+        let optionContractSaveOrderDeleteList = [];
+        const currentDate = new Date();
+        for(let index = 0; index < result.length; index++) {
+            const optionContractSaveOrder = result[index];
+            const optionChainSymbol = optionContractSaveOrder["optionChainSymbol"];
+            const optionChainRight = optionChainSymbol.split("_")[1];
+
+            let optionChainSymbolDate;
+            if (optionChainRight.includes("C")) {
+                optionChainSymbolDate = optionChainRight.split("C")[0];
+            } else {
+                optionChainSymbolDate = optionChainRight.split("P")[0];
+            }
+
+            const optionMonth = parseInt(optionChainSymbolDate.substring(0, 2)) - 1;
+            const optionDay = parseInt(optionChainSymbolDate.substring(2, 4)); // Months are zero-based
+            const optionYear = parseInt("20" + optionChainSymbolDate.substring(4));
+
+            // Create a Date object for the option date
+            const optionDate = new Date(optionYear, optionMonth, optionDay);
+
+            const timeDifference = currentDate.getTime() - optionDate.getTime();
+            const daysDifference = timeDifference / (1000 * 3600 * 24);
+
+            if (daysDifference >= stockDayForClean) {
+                optionContractSaveOrderDeleteList.push(optionContractSaveOrder["id"]);
+            }
+        }
+        await optionContractSaveOrderDBOperation.removeOptionContractsByIdList(optionContractSaveOrderDeleteList);
+
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
 updateTradeHistory();
 updateStockTradeHistory();
+cleanOptionContractSaveOrderTable();
