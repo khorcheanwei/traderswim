@@ -225,7 +225,7 @@ async function puppeteer_login_account(agentID, accountUsername, accountPassword
             let sessionStorageData;
 
             while (attempt <= maxRetries && !success) {
-                const browser = await puppeteer.launch({ headless: true });
+                const browser = await puppeteer.launch({ headless: false });
                 try {
                     const page = await browser.newPage();
 
