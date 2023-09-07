@@ -78,8 +78,7 @@ export default function StockPlaceOrder({ rowCopyTradingOrder, onClose }) {
                             <h1 className="block text-gray-700 text-lm font-bold mb-2">Stock Place Order all accounts</h1>:
                             <h1 className="block text-gray-700 text-lm font-bold mb-2">Stock Place Order ( {copyTradingAllAccountData.length} accounts )</h1> }
                     </div>
-                    <StockHandleOrder 
-                        isGetStockQuotes={false}
+                    <StockHandleOrder
                         isLoading={isLoading} setIsLoading={setIsLoading} 
                         stockSymbol={stockSymbol} setStockSymbol={setStockSymbol}
                         stockInstruction={stockInstruction} setStockInstruction={setStockInstruction}
