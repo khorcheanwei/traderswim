@@ -31,7 +31,6 @@ export function get_duration_and_session_reverse(session, duration) {
 
 export async function getStockQuotes(setIsLoading, stockSymbol, setStockPrice, setStockStopPrice) {
     try {
-        //setStockSymbol(stockSymbol);
         setIsLoading(true);
         setStockPrice(0);
         const { data } = await axios.get("/stock_copy_trading/get_stock_quotes/", { params: { stockSymbol }, timeout: 5000});
