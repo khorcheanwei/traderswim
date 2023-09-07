@@ -72,8 +72,7 @@ export default function StockExitOrderSelected({ selectedPositionDict, onClose }
             <div className="mb-4">
                 <h1 className="block text-gray-700 text-lm font-bold mb-2">Stock Exit Order</h1>
             </div>
-            <StockHandleOrder 
-                isGetStockQuotes={false}
+            <StockHandleOrder
                 isLoading={isLoading} setIsLoading={setIsLoading} 
                 stockSymbol={stockSymbol} setStockSymbol={setStockSymbol}
                 stockInstruction={stockInstruction} setStockInstruction={setStockInstruction}

@@ -197,8 +197,7 @@ export default function StockAllActivePlaceOrder({ onClose }) {
                         <div className="mb-4">
                             <h1 className="block text-gray-700 text-lm font-bold mb-2">Stock Place Order On All Active Accounts</h1>
                         </div>
-                        <StockHandleOrder 
-                            isGetStockQuotes={true}
+                        <StockHandleOrder
                             isLoading={isLoading} setIsLoading={setIsLoading} 
                             stockSymbol={stockSymbol} setStockSymbol={setStockSymbol}
                             stockInstruction={stockInstruction} setStockInstruction={setStockInstruction}

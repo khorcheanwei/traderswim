@@ -53,7 +53,6 @@ export async function getStockQuotes(setIsLoading, stockSymbol, setStockPrice, s
 }
 
 export default function StockHandleOrder({ 
-    isGetStockQuotes,
     isLoading, setIsLoading, 
     stockSymbol, setStockSymbol,
     stockInstruction, setStockInstruction,
