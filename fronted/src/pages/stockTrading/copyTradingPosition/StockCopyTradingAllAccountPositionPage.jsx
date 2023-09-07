@@ -1,6 +1,6 @@
 import Overlay from "../../../pages/Overlay"
 import React from 'react'
-import { useContext, useState, useEffect, useRef  } from 'react';
+import { useContext, useState  } from 'react';
 
 import { StockCopyTradingPositionContext } from '../context/StockCopyTradingPositionContext';
 import StockCopyTradingAllAccountPositionTable from './StockCopyTradingAllAccountPositionTable';
@@ -53,7 +53,9 @@ export default function StockCopyTradingAllAccountPositionPage({ rowCopyTradingP
   const [isOpenWarningMessagePositionSelected, setIsOpenWarningMessagePositionSelected] = useState(false); 
 
   const {stockCopyTradingPositionDataDict, setStockCopyTradingPositionDataDict} = useContext(StockCopyTradingPositionContext);
-  const stockCopyTradingPositionAllAccountData = stockCopyTradingPositionDataDict[stockSymbol];
+  let stockCopyTradingPositionAllAccountData = stockCopyTradingPositionDataDict[stockSymbol];
+  stockCopyTradingPositionAllAccountData.sort((a, b) => a["stockSettledQuantity"] - b["stockSettledQuantity"]);
+
 
   var data = React.useMemo(() => stockCopyTradingPositionAllAccountData, [stockCopyTradingPositionAllAccountData])
 

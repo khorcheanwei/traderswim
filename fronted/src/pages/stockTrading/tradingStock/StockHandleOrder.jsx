@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useRef, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 export function get_duration_and_session(stockSessionDuration) { 
     if (stockSessionDuration == "DAY") {
@@ -31,7 +31,7 @@ export function get_duration_and_session_reverse(session, duration) {
 
 export async function getStockQuotes(setIsLoading, stockSymbol, setStockPrice, setStockStopPrice) {
     try {
-        
+        //setStockSymbol(stockSymbol);
         setIsLoading(true);
         setStockPrice(0);
         const { data } = await axios.get("/stock_copy_trading/get_stock_quotes/", { params: { stockSymbol }, timeout: 5000});
@@ -82,12 +82,6 @@ export default function StockHandleOrder({
     }, [stockStopPriceLinkTypeSymbol])
     
     useEffect( ()=> {
-        if (stockSymbol != "" && stockPrice == 0) {
-            if (isGetStockQuotes) {
-                getStockQuotes(setIsLoading, stockSymbol, setStockPrice, setStockStopPrice);
-            }    
-        }
-
         if (stockOrderType == "MARKET") {
             setStockPrice(0);
             setStockStopPrice(0);
@@ -108,7 +102,7 @@ export default function StockHandleOrder({
             setStockPrice(0);
             setStockStopPrice(0);
         }
-    }, [stockSymbol, stockOrderType]);
+    }, [stockOrderType]);
 
     return (
         <div>
@@ -123,20 +117,28 @@ export default function StockHandleOrder({
                     }
                 </select>*/}
                 <div className="grid items-end gap-6 mb-6 grid-cols-2">
-                    <div className="relative">
-                        <input
-                            id="stock_pair"
-                            className="block px-2.5 pb-1.5 pt-3 w-full text-sm text-gray-900 bg-transparent border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                            type="text"
-                            onChange={event => setStockSymbol(event.target.value)}
-                            value={stockSymbol}
-                            onInput={(event) => event.target.value = (event.target.value).toUpperCase()}
-                            placeholder=" " />
-                        <label
-                            className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
-                            htmlFor="stock_pair">
-                            Stock Pair:
-                        </label>
+                    <div className="flex">
+                        <div>
+                            <input
+                                id="stock_pair"
+                                className="block px-2.5 pb-1.5 pt-3 w-full text-sm text-gray-900 bg-transparent border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                type="text"
+                                onChange={event => setStockSymbol(event.target.value)}
+                                value={stockSymbol}
+                                onInput={(event) => event.target.value = (event.target.value).toUpperCase()}
+                                placeholder=" " />
+                            <label
+                                className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
+                                htmlFor="stock_pair">
+                                Stock Pair:
+                            </label>
+                        </div>
+                        <button
+                            type="button"
+                            className="inline-block rounded bg-teal-300  pt-3 pb-2.5 text-sm font-small uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-teal-300-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-teal-300-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-teal-300-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
+                            onClick={() => getStockQuotes(setIsLoading, stockSymbol, setStockPrice, setStockStopPrice)}>
+                            Search
+                        </button>
                     </div>
                     <div className="relative">
                         <select
