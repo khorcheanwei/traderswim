@@ -11,7 +11,7 @@ export default function TradingStockExitOrderSelected({
     CopyTradingPositionContext
   );
 
-  var optionChainInstructionList = ["SELL_TO_CLOSE"];
+  var optionChainInstructionList = ["SELL_TO_CLOSE", "BUY_TO_CLOSE"];
   var optionChainOrderTypeList = [
     "LIMIT",
     "MARKET",
@@ -32,7 +32,7 @@ export default function TradingStockExitOrderSelected({
 
   if (rowOptionChainSettledQuantity < 0) {
     rowOptionChainSettledQuantity = -rowOptionChainSettledQuantity;
-    optionChainInstructionList = ["BUY_TO_CLOSE"];
+    optionChainInstructionList = ["BUY_TO_CLOSE", "SELL_TO_CLOSE"];
   }
   let rowOptionChainAveragePrice =
     firstSelectedPosition.optionChainAveragePrice;

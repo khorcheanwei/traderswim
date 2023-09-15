@@ -13,7 +13,7 @@ export default function TradingStockExitOrder({
   const { copyTradingPositionDataDict, setCopyTradingPositionDataDict } =
     useContext(CopyTradingPositionContext);
 
-  var optionChainInstructionList = ["SELL_TO_CLOSE"];
+  var optionChainInstructionList = ["SELL_TO_CLOSE", "BUY_TO_CLOSE"];
   var optionChainOrderTypeList = [
     "LIMIT",
     "MARKET",
@@ -36,7 +36,7 @@ export default function TradingStockExitOrder({
     rowCopyTradingPosition.cell.row.original.optionChainSettledQuantity;
   if (rowOptionChainSettledQuantity < 0) {
     rowOptionChainSettledQuantity = -rowOptionChainSettledQuantity;
-    optionChainInstructionList = ["BUY_TO_CLOSE"];
+    optionChainInstructionList = ["BUY_TO_CLOSE", "SELL_TO_CLOSE"];
   }
 
   let rowOptionChainAveragePrice =
