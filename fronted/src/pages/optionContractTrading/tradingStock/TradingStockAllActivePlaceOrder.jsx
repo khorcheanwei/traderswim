@@ -7,8 +7,8 @@ import { ClipLoader } from "react-spinners";
 export default function TradingStockAllActivePlaceOrder({ onClose }) {
   const [isLoading, setIsLoading] = useState(false);
 
-  var optionChainInstructionList = ["BUY_TO_OPEN", "SELL_TO_CLOSE"];
-  //var optionChainCallPutList = ["CALL", "PUT"];
+  var optionChainInstructionList = ["BUY_TO_OPEN", "SELL_TO_OPEN"];
+
   var optionChainOrderTypeList = [
     "LIMIT",
     "MARKET",
@@ -37,7 +37,7 @@ export default function TradingStockAllActivePlaceOrder({ onClose }) {
 
   const [optionChainSymbol, setOptionChainSymbol] = useState("");
   const [optionChainInstruction, setOptionChainInstruction] = useState(
-    optionChainInstructionList[0],
+    optionChainInstructionList[0]
   );
   const [optionChainOrderType, setOptionChainOrderType] = useState("LIMIT");
   const [optionChainQuantity, setOptionChainQuantity] = useState(1);
@@ -98,7 +98,7 @@ export default function TradingStockAllActivePlaceOrder({ onClose }) {
             optionChainOrderType,
             optionChainQuantity,
             optionChainPrice,
-          },
+          }
         );
         if (data.success != true) {
           alert("Save order failed");
@@ -180,7 +180,7 @@ export default function TradingStockAllActivePlaceOrder({ onClose }) {
         {
           params: { optionContractTickerName, optionChainCallPut },
           timeout: 5000,
-        },
+        }
       );
       if (data != null) {
         setOptionChainData(data);
@@ -188,7 +188,7 @@ export default function TradingStockAllActivePlaceOrder({ onClose }) {
         // set first option chain data when user get new option chain list
         const firstOptionChainDate = Object.keys(data)[0];
         const firstOptionChainStrikeList = Object.keys(
-          data[firstOptionChainDate],
+          data[firstOptionChainDate]
         );
         const firstOptionChainDescription =
           data[firstOptionChainDate][firstOptionChainStrikeList[0]][0][
@@ -224,7 +224,7 @@ export default function TradingStockAllActivePlaceOrder({ onClose }) {
   async function getOptionChainStrikeList(option_chain_date) {
     try {
       const firstOptionChainStrikeList = Object.keys(
-        optionChainData[option_chain_date],
+        optionChainData[option_chain_date]
       );
       const firstOptionChainDescription =
         optionChainData[option_chain_date][firstOptionChainStrikeList[0]][0][
@@ -254,13 +254,13 @@ export default function TradingStockAllActivePlaceOrder({ onClose }) {
   async function getOptionChainBidPrice(option_chain_strike) {
     try {
       setOptionChainDescription(
-        optionChainData[optionChainDate][option_chain_strike][0]["description"],
+        optionChainData[optionChainDate][option_chain_strike][0]["description"]
       );
       setOptionChainPrice(
-        optionChainData[optionChainDate][option_chain_strike][0]["bid"],
+        optionChainData[optionChainDate][option_chain_strike][0]["bid"]
       );
       setOptionChainSymbol(
-        optionChainData[optionChainDate][option_chain_strike][0]["symbol"],
+        optionChainData[optionChainDate][option_chain_strike][0]["symbol"]
       );
     } catch (error) {
       console.log(error.message);
@@ -270,7 +270,7 @@ export default function TradingStockAllActivePlaceOrder({ onClose }) {
   async function option_contract_list_fetch() {
     try {
       const { data } = await axios.get(
-        "/option_contract/get_option_contract_list",
+        "/option_contract/get_option_contract_list"
       );
       setOptionContractTickerList(data.list);
     } catch (error) {
@@ -285,12 +285,12 @@ export default function TradingStockAllActivePlaceOrder({ onClose }) {
     }
     const isOptionContractExist = optionContractTickerList.some(
       (currentOptionContractTicker) =>
-        currentOptionContractTicker === optionContractTicker,
+        currentOptionContractTicker === optionContractTicker
     );
     if (!isOptionContractExist) {
       const response = await axios.post(
         "/option_contract/add_option_contract/",
-        { optionChainSymbol: optionContractTicker },
+        { optionChainSymbol: optionContractTicker }
       );
       if (response.data.success != true) {
         alert("Add option contract failed");
@@ -301,7 +301,7 @@ export default function TradingStockAllActivePlaceOrder({ onClose }) {
       setOptionContractTickerList(
         isOptionContractExist
           ? optionContractTickerList
-          : [...optionContractTickerList, optionContractTicker],
+          : [...optionContractTickerList, optionContractTicker]
       );
     } else {
       alert("Option contract is already existed");
@@ -310,7 +310,7 @@ export default function TradingStockAllActivePlaceOrder({ onClose }) {
   async function handleOptionContractRemove(currentOptionContractTicker) {
     const response = await axios.delete(
       "/option_contract/remove_option_contract/",
-      { data: { optionChainSymbol: currentOptionContractTicker } },
+      { data: { optionChainSymbol: currentOptionContractTicker } }
     );
 
     if (response.data.success != true) {
@@ -416,7 +416,7 @@ export default function TradingStockAllActivePlaceOrder({ onClose }) {
                           className="inline-block rounded bg-red-300 px-2 py-1 text-sm font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-teal-300-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-teal-300-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-teal-300-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
                           onClick={() =>
                             handleOptionContractRemove(
-                              currentOptionContractTicker,
+                              currentOptionContractTicker
                             )
                           }
                         >
@@ -424,7 +424,7 @@ export default function TradingStockAllActivePlaceOrder({ onClose }) {
                         </button>
                       </div>
                     </div>
-                  ),
+                  )
                 )}
               </div>
             </div>
@@ -533,7 +533,7 @@ export default function TradingStockAllActivePlaceOrder({ onClose }) {
                   value={getOptionChainRealDate(optionChainDate)}
                   onChange={(event) => {
                     getOptionChainStrikeList(
-                      getRevertOptionChainRealDate(event.target.value),
+                      getRevertOptionChainRealDate(event.target.value)
                     );
                   }}
                 >
@@ -584,7 +584,7 @@ export default function TradingStockAllActivePlaceOrder({ onClose }) {
                     {optionChainInstructionList.map(
                       (option_chain_instruction, index) => (
                         <option key={index}>{option_chain_instruction}</option>
-                      ),
+                      )
                     )}
                   </select>
                   <label
@@ -606,7 +606,7 @@ export default function TradingStockAllActivePlaceOrder({ onClose }) {
                     {optionChainOrderTypeList.map(
                       (option_chain_order_type, index) => (
                         <option key={index}>{option_chain_order_type}</option>
-                      ),
+                      )
                     )}
                   </select>
                   <label

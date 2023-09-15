@@ -6,7 +6,7 @@ export default function TradingStockReplaceOrder({
   rowCopyTradingOrder,
   onClose,
 }) {
-  var optionChainInstructionList = ["BUY_TO_OPEN", "SELL_TO_CLOSE"];
+  var optionChainInstructionList = ["BUY_TO_OPEN", "SELL_TO_OPEN"];
   var optionChainOrderTypeList = [
     "LIMIT",
     "MARKET",
@@ -36,18 +36,18 @@ export default function TradingStockReplaceOrder({
   const [optionChainSymbol, setOptionChainSymbol] =
     useState(rowOptionChainSymbol);
   const [optionChainInstruction, setOptionChainInstruction] = useState(
-    rowOptionChainInstruction,
+    rowOptionChainInstruction
   );
   const [optionChainOrderType, setOptionChainOrderType] = useState(
-    rowOptionChainOrderType,
+    rowOptionChainOrderType
   );
   const [optionChainQuantity, setOptionChainQuantity] = useState(
-    rowOptionChainQuantity,
+    rowOptionChainQuantity
   );
   const [optionChainPrice, setOptionChainPrice] = useState(rowOptionChainPrice);
 
   const { copyTradingOrderDataDict, setCopyTradingOrderDataDict } = useContext(
-    CopyTradingOrderContext,
+    CopyTradingOrderContext
   );
 
   const copyTradingAllAccountData =
@@ -62,7 +62,7 @@ export default function TradingStockReplaceOrder({
           accountName: item.accountName,
           accountUsername: item.accountUsername,
           optionChainOrderId: item.optionChainOrderId,
-        }),
+        })
       );
 
       const { data } = await axios.put("/copy_trading_account/replace_order/", {
@@ -119,7 +119,7 @@ export default function TradingStockReplaceOrder({
               {optionChainInstructionList.map(
                 (option_chain_instruction, index) => (
                   <option key={index}>{option_chain_instruction}</option>
-                ),
+                )
               )}
             </select>
             <label
@@ -138,7 +138,7 @@ export default function TradingStockReplaceOrder({
               {optionChainOrderTypeList.map(
                 (option_chain_order_type, index) => (
                   <option key={index}>{option_chain_order_type}</option>
-                ),
+                )
               )}
             </select>
             <label

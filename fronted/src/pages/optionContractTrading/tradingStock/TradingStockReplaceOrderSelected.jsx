@@ -8,7 +8,7 @@ export default function TradingStockReplaceOrderSelected({
 }) {
   const [disabledButton, setDisabledButton] = useState(false);
 
-  var optionChainInstructionList = ["BUY_TO_OPEN", "SELL_TO_CLOSE"];
+  var optionChainInstructionList = ["BUY_TO_OPEN", "SELL_TO_OPEN"];
   var optionChainOrderTypeList = [
     "LIMIT",
     "MARKET",
@@ -41,13 +41,13 @@ export default function TradingStockReplaceOrderSelected({
   const [optionChainSymbol, setOptionChainSymbol] =
     useState(rowOptionChainSymbol);
   const [optionChainInstruction, setOptionChainInstruction] = useState(
-    rowOptionChainInstruction,
+    rowOptionChainInstruction
   );
   const [optionChainOrderType, setOptionChainOrderType] = useState(
-    rowOptionChainOrderType,
+    rowOptionChainOrderType
   );
   const [optionChainQuantity, setOptionChainQuantity] = useState(
-    rowOptionChainQuantity,
+    rowOptionChainQuantity
   );
   const [optionChainPrice, setOptionChainPrice] = useState(rowOptionChainPrice);
 
@@ -120,7 +120,7 @@ export default function TradingStockReplaceOrderSelected({
               {optionChainInstructionList.map(
                 (option_chain_instruction, index) => (
                   <option key={index}>{option_chain_instruction}</option>
-                ),
+                )
               )}
             </select>
             <label
@@ -139,7 +139,7 @@ export default function TradingStockReplaceOrderSelected({
               {optionChainOrderTypeList.map(
                 (option_chain_order_type, index) => (
                   <option key={index}>{option_chain_order_type}</option>
-                ),
+                )
               )}
             </select>
             <label

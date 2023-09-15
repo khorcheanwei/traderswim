@@ -8,12 +8,12 @@ export default function TradingStockExitOrder({
 }) {
   const [disabledButton, setDisabledButton] = useState(false);
   const { isOpenOrderExit, setIsOpenOrderExit } = useContext(
-    CopyTradingPositionContext,
+    CopyTradingPositionContext
   );
   const { copyTradingPositionDataDict, setCopyTradingPositionDataDict } =
     useContext(CopyTradingPositionContext);
 
-  var optionChainInstructionList = ["SELL_TO_CLOSE", "BUY_TO_OPEN"];
+  var optionChainInstructionList = ["SELL_TO_CLOSE", "BUY_TO_CLOSE"];
   var optionChainOrderTypeList = [
     "LIMIT",
     "MARKET",
@@ -36,6 +36,7 @@ export default function TradingStockExitOrder({
     rowCopyTradingPosition.cell.row.original.optionChainSettledQuantity;
   if (rowOptionChainSettledQuantity < 0) {
     rowOptionChainSettledQuantity = -rowOptionChainSettledQuantity;
+    optionChainInstructionList = ["BUY_TO_CLOSE", "SELL_TO_CLOSE"];
   }
 
   let rowOptionChainAveragePrice =
@@ -44,16 +45,16 @@ export default function TradingStockExitOrder({
   const [optionChainSymbol, setOptionChainSymbol] =
     useState(rowOptionChainSymbol);
   const [optionChainInstruction, setOptionChainInstruction] = useState(
-    optionChainInstructionList[0],
+    optionChainInstructionList[0]
   );
   const [optionChainOrderType, setOptionChainOrderType] = useState(
-    optionChainOrderTypeList[0],
+    optionChainOrderTypeList[0]
   );
   const [optionChainQuantity, setOptionChainQuantity] = useState(
-    rowOptionChainSettledQuantity,
+    rowOptionChainSettledQuantity
   );
   const [optionChainPrice, setOptionChainPrice] = useState(
-    rowOptionChainAveragePrice,
+    rowOptionChainAveragePrice
   );
 
   async function handleExitOrder() {
@@ -64,7 +65,7 @@ export default function TradingStockExitOrder({
           accountId: item.accountId,
           accountName: item.accountName,
           accountUsername: item.accountUsername,
-        }),
+        })
       );
 
       const { data } = await axios.post("/copy_trading_account/exit_order/", {
@@ -120,7 +121,7 @@ export default function TradingStockExitOrder({
               {optionChainInstructionList.map(
                 (option_chain_instruction, index) => (
                   <option key={index}>{option_chain_instruction}</option>
-                ),
+                )
               )}
             </select>
             <label
@@ -139,7 +140,7 @@ export default function TradingStockExitOrder({
               {optionChainOrderTypeList.map(
                 (option_chain_order_type, index) => (
                   <option key={index}>{option_chain_order_type}</option>
-                ),
+                )
               )}
             </select>
             <label
