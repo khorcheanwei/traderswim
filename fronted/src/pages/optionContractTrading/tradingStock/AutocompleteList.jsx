@@ -1,7 +1,7 @@
-import React, { useState, useRef  } from 'react';
+import React, { useState, useRef } from "react";
 
-const AutocompleteList = ({list, onData}) => {
-  const [searchTerm, setSearchTerm] = useState('');
+const AutocompleteList = ({ list, onData }) => {
+  const [searchTerm, setSearchTerm] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [isListVisible, setListVisible] = useState(false);
   const listContainerRef = useRef(null);
@@ -12,7 +12,7 @@ const AutocompleteList = ({list, onData}) => {
 
     // Filter the list based on the search term
     const filteredList = list.filter((item) =>
-      item.toLowerCase().startsWith(value.toLowerCase())
+      item.toLowerCase().startsWith(value.toLowerCase()),
     );
 
     // Update the suggestions with a maximum of 5 items from the filtered list
@@ -42,7 +42,10 @@ const AutocompleteList = ({list, onData}) => {
       />
 
       {isListVisible && suggestions.length > 0 && (
-        <div ref={listContainerRef} className="absolute w-full z-50 max-h-40 overflow-y-auto">
+        <div
+          ref={listContainerRef}
+          className="absolute w-full z-50 max-h-40 overflow-y-auto"
+        >
           <ul className="bg-white border border-gray-300 rounded-md divide-y divide-gray-300">
             {suggestions.map((suggestion, index) => (
               <li

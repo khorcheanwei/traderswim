@@ -1,6 +1,13 @@
-import React from 'react'
-import { useTable, useFilters, useGlobalFilter, useAsyncDebounce, useSortBy, usePagination } from 'react-table'
-import CommonTable from '../../shared/Table';
+import React from "react";
+import {
+  useTable,
+  useFilters,
+  useGlobalFilter,
+  useAsyncDebounce,
+  useSortBy,
+  usePagination,
+} from "react-table";
+import CommonTable from "../../shared/Table";
 
 // Define a default UI for filtering
 function GlobalFilter({
@@ -8,11 +15,11 @@ function GlobalFilter({
   globalFilter,
   setGlobalFilter,
 }) {
-  const count = preGlobalFilteredRows.length
-  const [value, setValue] = React.useState(globalFilter)
-  const onChange = useAsyncDebounce(value => {
-    setGlobalFilter(value || undefined)
-  }, 200)
+  const count = preGlobalFilteredRows.length;
+  const [value, setValue] = React.useState(globalFilter);
+  const onChange = useAsyncDebounce((value) => {
+    setGlobalFilter(value || undefined);
+  }, 200);
 
   return (
     <div className="flex">
@@ -22,7 +29,7 @@ function GlobalFilter({
           type="text"
           className="rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
           value={value || ""}
-          onChange={e => {
+          onChange={(e) => {
             setValue(e.target.value);
             onChange(e.target.value);
           }}
@@ -30,12 +37,12 @@ function GlobalFilter({
         />
       </label>
     </div>
-  )
+  );
 }
 
 function StockTradeHistoryTable({ columns, data }) {
   let hiddenColumns = [];
-  return CommonTable({ columns, data, GlobalFilter, hiddenColumns })
+  return CommonTable({ columns, data, GlobalFilter, hiddenColumns });
 }
 
 export default StockTradeHistoryTable;
