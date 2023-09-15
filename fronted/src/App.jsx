@@ -1,18 +1,17 @@
-import axios from 'axios';
-import { Route, Routes } from 'react-router';
-import './App.css';
-import Layout from './Layout';
-import AgentLoginPage from './pages/agent/AgentLoginPage';
-import AgentRegisterPage from './pages/agent/AgentRegisterPage';
-import TradingPage from './pages/TradingPage';
-import { UserContextProvider } from './pages/context/UserContext';
-import { AccountContextProvider } from './pages/context/AccountContext';
+import axios from "axios";
+import { Route, Routes } from "react-router";
+import "./App.css";
+import Layout from "./Layout";
+import AgentLoginPage from "./pages/agent/AgentLoginPage";
+import AgentRegisterPage from "./pages/agent/AgentRegisterPage";
+import TradingPage from "./pages/TradingPage";
+import { UserContextProvider } from "./pages/context/UserContext";
+import { AccountContextProvider } from "./pages/context/AccountContext";
 
 axios.defaults.baseURL = "http://localhost:4000";
 axios.defaults.withCredentials = true;
 
 function App() {
-
   return (
     <UserContextProvider>
       <AccountContextProvider>
@@ -25,7 +24,7 @@ function App() {
         </Routes>
       </AccountContextProvider>
     </UserContextProvider>
-  )
+  );
 }
 
-export default App
+export default App;

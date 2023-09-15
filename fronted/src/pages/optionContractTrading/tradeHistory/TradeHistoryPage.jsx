@@ -1,69 +1,72 @@
-
-import axios from 'axios';
-import React from 'react'
-import { useContext, useState, useEffect } from 'react';
-import { TradeHistoryContext } from '../context/TradeHistoryContext';
-import TradeHistoryTable from './TradeHistoryTable'
+import axios from "axios";
+import React from "react";
+import { useContext, useState, useEffect } from "react";
+import { TradeHistoryContext } from "../context/TradeHistoryContext";
+import TradeHistoryTable from "./TradeHistoryTable";
 
 export default function TradeHistoryPage() {
+  const columns = React.useMemo(
+    () => [
+      {
+        Header: "ID",
+        accessor: "agentTradingSessionID",
+      },
+      {
+        Header: "Symbol description",
+        accessor: "optionChainDescription",
+      },
+      {
+        Header: "Filled Qty",
+        accessor: "optionChainFilledQuantity",
+      },
+      {
+        Header: "Price",
+        accessor: "optionChainPrice",
+      },
+      {
+        Header: "Qty",
+        accessor: "optionChainQuantity",
+      },
+      {
+        Header: "Side Pos Effect",
+        accessor: "optionChainInstruction",
+      },
+      {
+        Header: "Status",
+        accessor: "optionChainStatus",
+      },
+      {
+        Header: "Order type",
+        accessor: "optionChainOrderType",
+      },
+      {
+        Header: "Time",
+        accessor: "optionChainEnteredTime",
+      },
+      {
+        Header: "Name",
+        accessor: "accountName",
+      },
+      {
+        Header: "Account Username",
+        accessor: "accountUsername",
+      },
+    ],
+    [],
+  );
 
-  const columns = React.useMemo(() => [
-    {
-      Header: "ID",
-      accessor: "agentTradingSessionID",
-    },
-    {
-      Header: 'Symbol description',
-      accessor: 'optionChainDescription',
-    },
-    {
-      Header: 'Filled Qty',
-      accessor: 'optionChainFilledQuantity',
-    },
-    {
-      Header: 'Price',
-      accessor: 'optionChainPrice',
-    },
-    {
-      Header: 'Qty',
-      accessor: 'optionChainQuantity',
-    },
-    {
-      Header: 'Side Pos Effect',
-      accessor: 'optionChainInstruction',
-    },
-    {
-      Header: 'Status',
-      accessor: 'optionChainStatus',
-    },
-    {
-      Header: 'Order type',
-      accessor: 'optionChainOrderType',
-    },
-    {
-      Header: 'Time',
-      accessor: 'optionChainEnteredTime',
-    },
-    {
-      Header: 'Name',
-      accessor: 'accountName',
-    },
-    {
-      Header: 'Account Username',
-      accessor: 'accountUsername',
-    },
-  ], [])
-
-  const { tradeHistoryTableData, setTradeHistoryTableData } = useContext(TradeHistoryContext);
+  const { tradeHistoryTableData, setTradeHistoryTableData } =
+    useContext(TradeHistoryContext);
 
   async function fetchTradeHistoryData() {
     try {
-      const response = await axios.get("/copy_trading_account/trade_history_database")
+      const response = await axios.get(
+        "/copy_trading_account/trade_history_database",
+      );
 
       if (response.data != null) {
-        setTradeHistoryTableData(response.data)
+        setTradeHistoryTableData(response.data);
       }
-
     } catch (error) {
       console.log(error.message);
     }
@@ -71,10 +74,12 @@ export default function TradeHistoryPage() {
 
   useEffect(() => {
     fetchTradeHistoryData();
-  }, [])
+  }, []);
 
-  var data = React.useMemo(() => tradeHistoryTableData, [tradeHistoryTableData])
-
+  var data = React.useMemo(
+    () => tradeHistoryTableData,
+    [tradeHistoryTableData],
+  );
 
   return (
     <div className="min-h-screen bg-gray-100 text-black">
@@ -86,4 +91,3 @@ export default function TradeHistoryPage() {
     </div>
   );
 }
-

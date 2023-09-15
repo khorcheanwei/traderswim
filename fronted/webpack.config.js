@@ -2,38 +2,38 @@ const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
-    entry: "./src/main.jsx",
-    output: {
-        filename: "main.js",
-        path: path.resolve(__dirname, "build"),
+  entry: "./src/main.jsx",
+  output: {
+    filename: "main.js",
+    path: path.resolve(__dirname, "build"),
+  },
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: path.join(__dirname, "public", "index.html"),
+    }),
+  ],
+  devServer: {
+    static: {
+      directory: path.join(__dirname, "build"),
     },
-    plugins: [
-        new HtmlWebpackPlugin({
-            template: path.join(__dirname, "public", "index.html"),
-        }),
+    port: 3000,
+  },
+  module: {
+    // exclude node_modules
+    rules: [
+      {
+        test: /\.(js|jsx)$/, // <-- added `|jsx` here
+        exclude: /node_modules/,
+        use: ["babel-loader"],
+      },
+      {
+        test: /\.css$/i,
+        use: ["style-loader", "css-loader", "postcss-loader"],
+      },
     ],
-    devServer: {
-        static: {
-            directory: path.join(__dirname, "build"),
-        },
-        port: 3000,
-    },
-    module: {
-        // exclude node_modules
-        rules: [
-            {
-                test: /\.(js|jsx)$/,         // <-- added `|jsx` here
-                exclude: /node_modules/,
-                use: ["babel-loader"],
-            },
-            {
-                test: /\.css$/i,
-                use: ['style-loader', 'css-loader', 'postcss-loader'],
-            },
-        ],
-    },
-    // pass all js files through Babel
-    resolve: {
-        extensions: ["*", ".js", ".jsx"],    // <-- added `.jsx` here
-    },
+  },
+  // pass all js files through Babel
+  resolve: {
+    extensions: ["*", ".js", ".jsx"], // <-- added `.jsx` here
+  },
 };
