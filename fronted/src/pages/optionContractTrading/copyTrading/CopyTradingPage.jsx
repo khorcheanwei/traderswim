@@ -34,7 +34,7 @@ export default function CopyTradingPage({ children }) {
       ) {
         let copyTradingMainAccountDataList = [];
         for (const [key, value] of Object.entries(
-          copyTradingAccountDataDictResponse,
+          copyTradingAccountDataDictResponse
         ).reverse()) {
           let optionChainStatusSet = new Set();
           let optionChainFilledQuantitySet = new Set();
@@ -91,7 +91,7 @@ export default function CopyTradingPage({ children }) {
       ) {
         let copyTradingMainPositionAccountDataList = [];
         for (const [key, value] of Object.entries(
-          copyTradingPositionDataDictResponse,
+          copyTradingPositionDataDictResponse
         )) {
           copyTradingMainPositionAccountDataList.push(value[0]);
         }
