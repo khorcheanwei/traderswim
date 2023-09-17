@@ -34,9 +34,11 @@ export default function TradingStockExitOrder({
   //let rowOptionChainOrderType = rowCopyTradingPosition.cell.row.original.optionChainOrderType;
   let rowOptionChainSettledQuantity =
     rowCopyTradingPosition.cell.row.original.optionChainSettledQuantity;
+
+  let currentOptionChainInstruction = "SELL_TO_CLOSE";
   if (rowOptionChainSettledQuantity < 0) {
     rowOptionChainSettledQuantity = -rowOptionChainSettledQuantity;
-    optionChainInstructionList = ["BUY_TO_CLOSE", "SELL_TO_CLOSE"];
+    currentOptionChainInstruction = "BUY_TO_CLOSE";
   }
 
   let rowOptionChainAveragePrice =
@@ -45,7 +47,7 @@ export default function TradingStockExitOrder({
   const [optionChainSymbol, setOptionChainSymbol] =
     useState(rowOptionChainSymbol);
   const [optionChainInstruction, setOptionChainInstruction] = useState(
-    optionChainInstructionList[0]
+    currentOptionChainInstruction
   );
   const [optionChainOrderType, setOptionChainOrderType] = useState(
     optionChainOrderTypeList[0]
