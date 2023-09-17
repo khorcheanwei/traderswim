@@ -97,8 +97,6 @@ export default function StockCopyTradingPage({ children }) {
         )) {
           stockCopyTradingMainPositionAccountDataList.push(value[0]);
         }
-        stockCopyTradingMainPositionAccountDataList[0]["stockSettledQuantity"] =
-          -330;
         setStockCopyTradingPositionMainData(
           stockCopyTradingMainPositionAccountDataList
         );
