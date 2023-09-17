@@ -34,7 +34,7 @@ export default function StockCopyTradingPage({ children }) {
       ) {
         let stockCopyTradingMainAccountDataList = [];
         for (const [key, value] of Object.entries(
-          stockCopyTradingDataDictResponse,
+          stockCopyTradingDataDictResponse
         ).reverse()) {
           let stockStatusSet = new Set();
           let stockFilledQuantitySet = new Set();
@@ -73,7 +73,7 @@ export default function StockCopyTradingPage({ children }) {
             }
           }
           stockCopyTradingMainAccountDataList.push(
-            stockCopyTradingMainAccountDataRow,
+            stockCopyTradingMainAccountDataRow
           );
         }
         setStockCopyTradingOrderMainData(stockCopyTradingMainAccountDataList);
@@ -84,7 +84,7 @@ export default function StockCopyTradingPage({ children }) {
 
       const stockCopyTradingPositionDataDictResponse = response.data;
       setStockCopyTradingPositionDataDict(
-        stockCopyTradingPositionDataDictResponse,
+        stockCopyTradingPositionDataDictResponse
       );
 
       if (
@@ -93,12 +93,14 @@ export default function StockCopyTradingPage({ children }) {
       ) {
         let stockCopyTradingMainPositionAccountDataList = [];
         for (const [key, value] of Object.entries(
-          stockCopyTradingPositionDataDictResponse,
+          stockCopyTradingPositionDataDictResponse
         )) {
           stockCopyTradingMainPositionAccountDataList.push(value[0]);
         }
+        stockCopyTradingMainPositionAccountDataList[0]["stockSettledQuantity"] =
+          -330;
         setStockCopyTradingPositionMainData(
-          stockCopyTradingMainPositionAccountDataList,
+          stockCopyTradingMainPositionAccountDataList
         );
       }
     } catch (error) {

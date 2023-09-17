@@ -67,7 +67,7 @@ const StockReplaceOrderIndividual = memo(
     const [stockInstruction, setStockInstruction] =
       useState(rowStockInstruction);
     const [stockSessionDuration, setStockSessionDuration] = useState(
-      get_duration_and_session_reverse(rowStockSession, rowStockDuration),
+      get_duration_and_session_reverse(rowStockSession, rowStockDuration)
     );
     const [stockOrderType, setStockOrderType] = useState(rowStockOrderType);
     const [stockQuantity, setStockQuantity] = useState(rowStockQuantity);
@@ -77,7 +77,7 @@ const StockReplaceOrderIndividual = memo(
     const [stockStopPriceLinkTypeSymbol, setStockStopPriceLinkTypeSymbol] =
       useState(stockStopPriceLinkTypeReverseDict[rowStockStopPriceLinkType]);
     const [stockStopPriceOffset, setStockStopPriceOffset] = useState(
-      rowStockStopPriceOffset,
+      rowStockStopPriceOffset
     );
 
     const [disabledButton, setDisabledButton] = useState(false);
@@ -108,7 +108,7 @@ const StockReplaceOrderIndividual = memo(
             stockStopPrice,
             stockStopPriceLinkType,
             stockStopPriceOffset,
-          },
+          }
         );
         if (data != "success") {
           alert("Replace order failed");
@@ -135,8 +135,8 @@ const StockReplaceOrderIndividual = memo(
               </h1>
             </div>
             <StockHandleOrder
-              isLoading={isLoading}
               setIsLoading={setIsLoading}
+              isExitStock={false}
               stockSymbol={stockSymbol}
               setStockSymbol={setStockSymbol}
               stockInstruction={stockInstruction}
@@ -177,7 +177,7 @@ const StockReplaceOrderIndividual = memo(
         )}
       </div>
     );
-  },
+  }
 );
 
 export default StockReplaceOrderIndividual;

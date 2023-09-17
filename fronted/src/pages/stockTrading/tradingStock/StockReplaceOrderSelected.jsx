@@ -64,7 +64,7 @@ const StockReplaceOrderSelected = memo(
     const [stockInstruction, setStockInstruction] =
       useState(rowStockInstruction);
     const [stockSessionDuration, setStockSessionDuration] = useState(
-      get_duration_and_session_reverse(rowStockSession, rowStockDuration),
+      get_duration_and_session_reverse(rowStockSession, rowStockDuration)
     );
     const [stockOrderType, setStockOrderType] = useState(rowStockOrderType);
     const [stockQuantity, setStockQuantity] = useState(rowStockQuantity);
@@ -74,7 +74,7 @@ const StockReplaceOrderSelected = memo(
     const [stockStopPriceLinkTypeSymbol, setStockStopPriceLinkTypeSymbol] =
       useState(stockStopPriceLinkTypeReverseDict[rowStockStopPriceLinkType]);
     const [stockStopPriceOffset, setStockStopPriceOffset] = useState(
-      rowStockStopPriceOffset,
+      rowStockStopPriceOffset
     );
 
     const [disabledButton, setDisabledButton] = useState(false);
@@ -135,8 +135,8 @@ const StockReplaceOrderSelected = memo(
           </h1>
         </div>
         <StockHandleOrder
-          isLoading={isLoading}
           setIsLoading={setIsLoading}
+          isExitStock={false}
           stockSymbol={stockSymbol}
           setStockSymbol={setStockSymbol}
           stockInstruction={stockInstruction}
@@ -175,7 +175,7 @@ const StockReplaceOrderSelected = memo(
         </div>
       </div>
     );
-  },
+  }
 );
 
 export default StockReplaceOrderSelected;
