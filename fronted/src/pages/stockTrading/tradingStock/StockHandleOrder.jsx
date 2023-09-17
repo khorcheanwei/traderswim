@@ -33,7 +33,7 @@ export async function getStockQuotes(
   setIsLoading,
   stockSymbol,
   setStockPrice,
-  setStockStopPrice,
+  setStockStopPrice
 ) {
   try {
     setIsLoading(true);
@@ -60,8 +60,8 @@ export async function getStockQuotes(
 }
 
 export default function StockHandleOrder({
-  isLoading,
   setIsLoading,
+  isExitStock,
   stockSymbol,
   setStockSymbol,
   stockInstruction,
@@ -81,7 +81,12 @@ export default function StockHandleOrder({
   stockStopPriceOffset,
   setStockStopPriceOffset,
 }) {
-  var stockInstructionList = ["BUY", "SELL"];
+  var stockInstructionList = ["BUY", "SELL_SHORT"];
+
+  if (isExitStock) {
+    stockInstructionList = ["SELL", "BUY_TO_COVER"];
+  }
+
   var stockOrderTypeList = [
     "MARKET",
     "LIMIT",
@@ -168,7 +173,7 @@ export default function StockHandleOrder({
                   setIsLoading,
                   stockSymbol,
                   setStockPrice,
-                  setStockStopPrice,
+                  setStockStopPrice
                 )
               }
             >
@@ -304,7 +309,7 @@ export default function StockHandleOrder({
                 {Object.keys(stockStopPriceLinkTypeDict).map(
                   (stopPriceLinkType_key, index) => (
                     <option key={index}>{stopPriceLinkType_key}</option>
-                  ),
+                  )
                 )}
               </select>
               <label

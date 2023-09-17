@@ -42,11 +42,19 @@ export default function StockExitOrder({
   let rowStockQuantity =
     rowCopyTradingPosition.cell.row.original.stockSettledQuantity;
 
+  let currentStockInstruction = "SELL";
+  if (rowStockQuantity < 0) {
+    rowStockQuantity = -rowStockQuantity;
+    currentStockInstruction = "BUY_TO_COVER";
+  }
+
   const stockCopyTradingPositionAllAccountData =
     stockCopyTradingPositionDataDict[rowStockSymbol];
 
   const [stockSymbol, setStockSymbol] = useState(rowStockSymbol);
-  const [stockInstruction, setStockInstruction] = useState("SELL");
+  const [stockInstruction, setStockInstruction] = useState(
+    currentStockInstruction
+  );
   const [stockSessionDuration, setStockSessionDuration] = useState("DAY");
   const [stockOrderType, setStockOrderType] = useState("LIMIT");
   const [stockQuantity, setStockQuantity] = useState(rowStockQuantity);
@@ -108,8 +116,8 @@ export default function StockExitOrder({
         </h1>
       </div>
       <StockHandleOrder
-        isLoading={isLoading}
         setIsLoading={setIsLoading}
+        isExitStock={true}
         stockSymbol={stockSymbol}
         setStockSymbol={setStockSymbol}
         stockInstruction={stockInstruction}

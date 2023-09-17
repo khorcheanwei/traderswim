@@ -27,15 +27,15 @@ export default function StockAllActivePlaceOrder({ onClose }) {
   };
 
   const { isOpenTradingStock, setIsOpenTradingStock } = useContext(
-    StockPlaceOrderContext,
+    StockPlaceOrderContext
   );
   const { stockSaveOrderList, setStockSaveOrderList } = useContext(
-    StockPlaceOrderPanelContext,
+    StockPlaceOrderPanelContext
   );
 
   const [stockSymbol, setStockSymbol] = useState("");
   const [stockInstruction, setStockInstruction] = useState(
-    stockInstructionList[0],
+    stockInstructionList[0]
   );
   const [stockSessionDuration, setStockSessionDuration] = useState("DAY");
   const [stockOrderType, setStockOrderType] = useState("LIMIT");
@@ -82,7 +82,7 @@ export default function StockAllActivePlaceOrder({ onClose }) {
             stockStopPriceLinkType,
             stockStopPriceOffset,
             stockQuantity,
-          },
+          }
         );
 
         if (data.success != true) {
@@ -115,7 +115,7 @@ export default function StockAllActivePlaceOrder({ onClose }) {
       return;
     }
     const isStockExist = stockTickerList.some(
-      (currentStockTicker) => currentStockTicker === stockTicker,
+      (currentStockTicker) => currentStockTicker === stockTicker
     );
     if (!isStockExist) {
       const response = await axios.post("/stock/add_stock/", {
@@ -128,7 +128,7 @@ export default function StockAllActivePlaceOrder({ onClose }) {
       }
 
       setStockTickerList(
-        isStockExist ? stockTickerList : [...stockTickerList, stockTicker],
+        isStockExist ? stockTickerList : [...stockTickerList, stockTicker]
       );
     } else {
       alert("Stock is already existed");
@@ -154,7 +154,7 @@ export default function StockAllActivePlaceOrder({ onClose }) {
         setIsLoading,
         stockSymbol,
         setStockPrice,
-        setStockStopPrice,
+        setStockStopPrice
       );
     } else {
       setStockSymbol(currentStockTicker);
@@ -276,8 +276,8 @@ export default function StockAllActivePlaceOrder({ onClose }) {
               </h1>
             </div>
             <StockHandleOrder
-              isLoading={isLoading}
               setIsLoading={setIsLoading}
+              isExitStock={false}
               stockSymbol={stockSymbol}
               setStockSymbol={setStockSymbol}
               stockInstruction={stockInstruction}

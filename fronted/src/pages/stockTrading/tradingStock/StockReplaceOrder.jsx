@@ -50,7 +50,7 @@ export default function StockReplaceOrder({ rowCopyTradingOrder, onClose }) {
   const [stockSymbol, setStockSymbol] = useState(rowStockSymbol);
   const [stockInstruction, setStockInstruction] = useState(rowStockInstruction);
   const [stockSessionDuration, setStockSessionDuration] = useState(
-    get_duration_and_session_reverse(rowStockSession, rowStockDuration),
+    get_duration_and_session_reverse(rowStockSession, rowStockDuration)
   );
   const [stockOrderType, setStockOrderType] = useState(rowStockOrderType);
   const [stockQuantity, setStockQuantity] = useState(rowStockQuantity);
@@ -60,7 +60,7 @@ export default function StockReplaceOrder({ rowCopyTradingOrder, onClose }) {
   const [stockStopPriceLinkTypeSymbol, setStockStopPriceLinkTypeSymbol] =
     useState(stockStopPriceLinkTypeReverseDict[rowStockStopPriceLinkType]);
   const [stockStopPriceOffset, setStockStopPriceOffset] = useState(
-    rowStockStopPriceOffset,
+    rowStockStopPriceOffset
   );
 
   const [disabledButton, setDisabledButton] = useState(false);
@@ -79,7 +79,7 @@ export default function StockReplaceOrder({ rowCopyTradingOrder, onClose }) {
           accountName: item.accountName,
           accountUsername: item.accountUsername,
           stockOrderId: item.stockOrderId,
-        }),
+        })
       );
 
       const { stockSession, stockDuration } =
@@ -127,8 +127,8 @@ export default function StockReplaceOrder({ rowCopyTradingOrder, onClose }) {
             </h1>
           </div>
           <StockHandleOrder
-            isLoading={isLoading}
             setIsLoading={setIsLoading}
+            isExitStock={false}
             stockSymbol={stockSymbol}
             setStockSymbol={setStockSymbol}
             stockInstruction={stockInstruction}

@@ -34,8 +34,16 @@ export default function StockExitOrderSelected({
   let rowStockPrice = firstSelectedPosition.stockAveragePrice;
   let rowStockQuantity = firstSelectedPosition.stockSettledQuantity;
 
+  let currentStockInstruction = "SELL";
+  if (rowStockQuantity < 0) {
+    rowStockQuantity = -rowStockQuantity;
+    currentStockInstruction = "BUY_TO_COVER";
+  }
+
   const [stockSymbol, setStockSymbol] = useState(rowStockSymbol);
-  const [stockInstruction, setStockInstruction] = useState("SELL");
+  const [stockInstruction, setStockInstruction] = useState(
+    currentStockInstruction
+  );
   const [stockSessionDuration, setStockSessionDuration] = useState("DAY");
   const [stockOrderType, setStockOrderType] = useState("LIMIT");
   const [stockQuantity, setStockQuantity] = useState(rowStockQuantity);
@@ -103,8 +111,8 @@ export default function StockExitOrderSelected({
         </h1>
       </div>
       <StockHandleOrder
-        isLoading={isLoading}
         setIsLoading={setIsLoading}
+        isExitStock={true}
         stockSymbol={stockSymbol}
         setStockSymbol={setStockSymbol}
         stockInstruction={stockInstruction}
