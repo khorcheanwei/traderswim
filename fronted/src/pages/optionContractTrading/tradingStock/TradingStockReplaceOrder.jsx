@@ -6,7 +6,12 @@ export default function TradingStockReplaceOrder({
   rowCopyTradingOrder,
   onClose,
 }) {
-  var optionChainInstructionList = ["BUY_TO_OPEN", "SELL_TO_OPEN"];
+  var optionChainInstructionList = [
+    "BUY_TO_OPEN",
+    "SELL_TO_OPEN",
+    "SELL_TO_CLOSE",
+    "BUY_TO_CLOSE",
+  ];
   var optionChainOrderTypeList = [
     "LIMIT",
     "MARKET",

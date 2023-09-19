@@ -136,6 +136,7 @@ const StockReplaceOrderIndividual = memo(
             </div>
             <StockHandleOrder
               setIsLoading={setIsLoading}
+              isOpenStock={false}
               isExitStock={false}
               stockSymbol={stockSymbol}
               setStockSymbol={setStockSymbol}

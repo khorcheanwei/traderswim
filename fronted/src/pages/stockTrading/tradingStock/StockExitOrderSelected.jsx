@@ -112,6 +112,7 @@ export default function StockExitOrderSelected({
       </div>
       <StockHandleOrder
         setIsLoading={setIsLoading}
+        isOpenStock={false}
         isExitStock={true}
         stockSymbol={stockSymbol}
         setStockSymbol={setStockSymbol}

@@ -61,6 +61,7 @@ export async function getStockQuotes(
 
 export default function StockHandleOrder({
   setIsLoading,
+  isOpenStock,
   isExitStock,
   stockSymbol,
   setStockSymbol,
@@ -81,7 +82,11 @@ export default function StockHandleOrder({
   stockStopPriceOffset,
   setStockStopPriceOffset,
 }) {
-  var stockInstructionList = ["BUY", "SELL_SHORT"];
+  var stockInstructionList = ["BUY", "SELL_SHORT", "SELL", "BUY_TO_COVER"];
+
+  if (isOpenStock) {
+    stockInstructionList = ["BUY", "SELL_SHORT"];
+  }
 
   if (isExitStock) {
     stockInstructionList = ["SELL", "BUY_TO_COVER"];
