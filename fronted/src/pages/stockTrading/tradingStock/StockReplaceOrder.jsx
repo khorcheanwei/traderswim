@@ -128,6 +128,7 @@ export default function StockReplaceOrder({ rowCopyTradingOrder, onClose }) {
           </div>
           <StockHandleOrder
             setIsLoading={setIsLoading}
+            isOpenStock={false}
             isExitStock={false}
             stockSymbol={stockSymbol}
             setStockSymbol={setStockSymbol}

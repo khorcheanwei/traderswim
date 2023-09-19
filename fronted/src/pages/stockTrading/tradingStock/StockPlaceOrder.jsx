@@ -115,19 +115,20 @@ export default function StockPlaceOrder({ rowCopyTradingOrder, onClose }) {
       ) : (
         <div>
           <div className="mb-4">
-            {copyTradingAllAccountData.length == 0 ? (
-              <h1 className="block text-gray-700 text-lm font-bold mb-2">
-                Stock Place Order all accounts
-              </h1>
-            ) : (
-              <h1 className="block text-gray-700 text-lm font-bold mb-2">
-                Stock Place Order ( {copyTradingAllAccountData.length} accounts
-                )
-              </h1>
-            )}
+            <h1 className="block text-gray-700 text-lm font-bold mb-2">
+              {agentTradingSessionID === undefined ? (
+                <div>Stock Place Order all accounts</div>
+              ) : (
+                <div>
+                  Stock Place Order ( {copyTradingAllAccountData.length}{" "}
+                  accounts )
+                </div>
+              )}
+            </h1>
           </div>
           <StockHandleOrder
             setIsLoading={setIsLoading}
+            isOpenStock={agentTradingSessionID === undefined ? true : false}
             isExitStock={false}
             stockSymbol={stockSymbol}
             setStockSymbol={setStockSymbol}

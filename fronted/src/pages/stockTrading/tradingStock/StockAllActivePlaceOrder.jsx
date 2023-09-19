@@ -277,6 +277,7 @@ export default function StockAllActivePlaceOrder({ onClose }) {
             </div>
             <StockHandleOrder
               setIsLoading={setIsLoading}
+              isOpenStock={true}
               isExitStock={false}
               stockSymbol={stockSymbol}
               setStockSymbol={setStockSymbol}

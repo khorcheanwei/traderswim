@@ -8,7 +8,13 @@ export default function TradingStockPlaceOrder({
 }) {
   const [disabledButton, setDisabledButton] = useState(false);
 
-  var optionChainInstructionList = ["BUY_TO_OPEN", "SELL_TO_OPEN"];
+  var optionChainInstructionList = [
+    "BUY_TO_OPEN",
+    "SELL_TO_OPEN",
+    "SELL_TO_CLOSE",
+    "BUY_TO_CLOSE",
+  ];
+
   var optionChainOrderTypeList = [
     "LIMIT",
     "MARKET",
@@ -53,6 +59,10 @@ export default function TradingStockPlaceOrder({
   const copyTradingAllAccountData =
     copyTradingOrderDataDict[agentTradingSessionID];
 
+  if (agentTradingSessionID === undefined) {
+    optionChainInstructionList = ["BUY_TO_OPEN", "SELL_TO_OPEN"];
+  }
+
   async function handlePlaceOrder() {
     setDisabledButton(true);
     try {
@@ -83,7 +93,13 @@ export default function TradingStockPlaceOrder({
     <div>
       <div className="mb-4">
         <h1 className="block text-gray-700 text-lm font-bold mb-2">
-          Option Place Order On All Active Accounts
+          {agentTradingSessionID !== undefined ? (
+            <div>
+              Option Place Order ( {copyTradingAllAccountData.length} accounts )
+            </div>
+          ) : (
+            <div>Option Place Order all accounts</div>
+          )}
         </h1>
       </div>
       <div>
