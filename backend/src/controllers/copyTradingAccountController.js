@@ -652,6 +652,7 @@ module.exports = {
   copy_trading_stock_pair_list,
   copy_trading_get_option_chain_list,
   get_latest_order_id_all_accounts,
+  make_order_config,
   get_latest_order_information_all_accounts,
   createCopyTradingAccountItem_all_accounts,
   copy_trading_place_order,
