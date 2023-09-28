@@ -11,7 +11,7 @@ const TradeHistorySchemaSql = `
     optionChainOrderId INTEGER NOT NULL,
     optionChainOrderType TEXT NOT NULL,
     optionChainInstruction TEXT NOT NULL,
-    optionChainPrice REAL NOT NULL,
+    optionChainPrice REAL NULL,
     optionChainQuantity INTEGER NOT NULL,
     optionChainFilledQuantity INTEGER NOT NULL,
     optionChainStatus TEXT NOT NULL,
