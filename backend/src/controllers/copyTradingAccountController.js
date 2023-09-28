@@ -2,7 +2,7 @@ const axios = require('axios');
 const jwt = require("jsonwebtoken");
 
 var Memcached = require('memcached-promise');
-var copy_trading_account_cache = new Memcached('127.0.0.1:11211', {maxExpiration: 2592000});
+var copy_trading_account_cache = new Memcached('127.0.0.1:11211', { maxExpiration: 2592000 });
 
 const jwtSecret = "traderswim";
 
@@ -61,7 +61,7 @@ async function copy_trading_get_option_chain_list(httpRequest) {
       const result = await accountDBOperation.searchAccountByAgentID(agentID);
       const accountDocument = result.data;
       if (accountDocument.length == 0) {
-        return { success: false, data: `No account registered for this agent ID ${agentID}` }; 
+        return { success: false, data: `No account registered for this agent ID ${agentID}` };
       }
 
       const accountUsername = accountDocument[0]["accountUsername"];
@@ -108,7 +108,7 @@ async function place_order(config, accountUsername) {
     } else {
       return false;
     }
-    
+
   } catch (error) {
     console.log(`Failed place order - accountUsername: ${accountUsername} with ${JSON.stringify(config)}. Error: ${error.message}`);
     return false;
@@ -119,7 +119,7 @@ async function place_order(config, accountUsername) {
 async function post_place_order_all_accounts(all_trading_accounts_list, payload) {
   const post_place_order_api_requests = all_trading_accounts_list.map(async (api_data) => {
     const { agentID, accountId, accountName, accountUsername, optionChainOrderId, authToken } = api_data;
-        
+
     const config = {
       method: 'post',
       maxBodyLength: Infinity,
@@ -146,7 +146,7 @@ async function post_place_order_all_accounts(all_trading_accounts_list, payload)
 
 // Get latest orderID 
 async function get_latest_order_id(config, accountUsername) {
-  
+
   let latest_order_id = null;
   try {
     const response = await axios.request(config)
@@ -240,17 +240,21 @@ async function get_latest_order_information(config, agentID, accountId, accountN
     }
     console.log(`Successful get latest order information - accountUsername: ${accountUsername} with ${JSON.stringify(config)}. Status: ${response.status}`)
 
-    return {agentID: current_agentID, accountId: current_accountId, accountName: current_accountName, accountUsername: current_accountUsername,
-      optionChainSymbol: current_symbol, optionChainDescription: current_description, optionChainOrderId: current_orderId, optionChainOrderType: current_orderType, 
-      optionChainInstruction: current_instruction, optionChainPrice: current_price, optionChainQuantity: current_quantity, 
-      optionChainFilledQuantity: current_optionChainFilledQuantity, optionChainStatus: current_status, optionChainEnteredTime: current_enteredTime}
-      
+    return {
+      agentID: current_agentID, accountId: current_accountId, accountName: current_accountName, accountUsername: current_accountUsername,
+      optionChainSymbol: current_symbol, optionChainDescription: current_description, optionChainOrderId: current_orderId, optionChainOrderType: current_orderType,
+      optionChainInstruction: current_instruction, optionChainPrice: current_price, optionChainQuantity: current_quantity,
+      optionChainFilledQuantity: current_optionChainFilledQuantity, optionChainStatus: current_status, optionChainEnteredTime: current_enteredTime
+    }
+
   } catch (error) {
     console.log(`Failed get latest order information - accountUsername: ${accountUsername} with ${JSON.stringify(config)}. Error: ${error.message}`);
-    return {agentID: null, accountId: null, accountName: null, accountUsername: null,
-      optionChainSymbol: null, optionChainDescription: null, optionChainOrderId: null, optionChainOrderType: null, 
-      optionChainInstruction: null, optionChainPrice: null, optionChainQuantity: null, 
-      optionChainFilledQuantity: null, optionChainStatus: null, optionChainEnteredTime: null};
+    return {
+      agentID: null, accountId: null, accountName: null, accountUsername: null,
+      optionChainSymbol: null, optionChainDescription: null, optionChainOrderId: null, optionChainOrderType: null,
+      optionChainInstruction: null, optionChainPrice: null, optionChainQuantity: null,
+      optionChainFilledQuantity: null, optionChainStatus: null, optionChainEnteredTime: null
+    };
   }
 }
 
@@ -276,7 +280,7 @@ async function get_latest_order_information_all_accounts(all_trading_accounts_li
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${authToken}`
       },
-      data : data
+      data: data
     }
     const result = await get_latest_order_information(config, agentID, accountId, accountName, accountUsername, orderId);
     return result;
@@ -303,8 +307,8 @@ async function createCopyTradingAccountItem_all_accounts(agentTradingSessionID, 
     }
 
     result = await copyTradingAccountDBBOperation.createCopyTradingAccountItem(
-          agentTradingSessionID,
-          order_information,
+      agentTradingSessionID,
+      order_information,
     );
 
     return result;
@@ -319,6 +323,33 @@ async function createCopyTradingAccountItem_all_accounts(agentTradingSessionID, 
     return null;
   }
 }
+
+function make_order_config(optionChainSymbol, optionChainInstruction, optionChainOrderType, optionChainQuantity, optionChainPrice) {
+
+  let payload = {
+    "complexOrderStrategyType": "NONE",
+    "orderType": optionChainOrderType,
+    "session": "NORMAL",
+    "duration": "DAY",
+    "orderStrategyType": "SINGLE",
+    "orderLegCollection": [
+      {
+        "instruction": optionChainInstruction,
+        "quantity": optionChainQuantity,
+        "instrument": {
+          "symbol": optionChainSymbol,
+          "assetType": "OPTION"
+        }
+      }
+    ]
+  }
+
+  if (optionChainOrderType == "LIMIT") {
+    payload["price"] = optionChainPrice;
+  }
+  return payload;
+}
+
 
 // Copy trading place order
 async function copy_trading_place_order(httpRequest) {
@@ -362,7 +393,7 @@ async function copy_trading_place_order(httpRequest) {
           let accountName = accountDocument[index].accountName;
           let accountUsername = accountDocument[index].accountUsername;
           let authToken = await get_access_token_from_cache(agentID, accountUsername);
-                                        
+
           all_trading_accounts_list.push({ agentID: agentID, accountId: accountId, accountName: accountName, accountUsername: accountUsername, optionChainOrderId: null, authToken: authToken });
         }
       } else {
@@ -372,37 +403,20 @@ async function copy_trading_place_order(httpRequest) {
           let accountUsername = allTradingAccountsOrderList[index]["accountUsername"];
           let optionChainOrderId = allTradingAccountsOrderList[index]["optionChainOrderId"];
           let authToken = await get_access_token_from_cache(agentID, accountUsername);
-  
-          all_trading_accounts_list.push({ 
+
+          all_trading_accounts_list.push({
             agentID: agentID,
-            accountId: accountId, 
+            accountId: accountId,
             accountName: accountName,
-            accountUsername: accountUsername, 
-            optionChainOrderId: optionChainOrderId, 
-            authToken: authToken 
+            accountUsername: accountUsername,
+            optionChainOrderId: optionChainOrderId,
+            authToken: authToken
           });
         }
       }
 
       // place order with all accounts of particular agent
-      let payload = {
-        "complexOrderStrategyType": "NONE",
-        "orderType": optionChainOrderType,
-        "session": "NORMAL",
-        "price": optionChainPrice,
-        "duration": "DAY",
-        "orderStrategyType": "SINGLE",
-        "orderLegCollection": [
-          {
-            "instruction": optionChainInstruction,
-            "quantity": optionChainQuantity,
-            "instrument": {
-              "symbol": optionChainSymbol,
-              "assetType": "OPTION"
-            }
-          }
-        ]
-      }
+      let payload = make_order_config(optionChainSymbol, optionChainInstruction, optionChainOrderType, optionChainQuantity, optionChainPrice);
 
       // Post place order for all trading accounts
       const result_promise_make_order_status = await post_place_order_all_accounts(all_trading_accounts_list, payload);
@@ -415,7 +429,7 @@ async function copy_trading_place_order(httpRequest) {
 
       // save orders for all trading accounts to copyTradingAccount table
       await createCopyTradingAccountItem_all_accounts(agentTradingSessionID, result_promise_order_information, result_promise_make_order_status)
-     
+
       result = await agentDBOperation.updateAgentTradingSessionID(
         agentID,
         agentTradingSessionID
@@ -456,8 +470,8 @@ async function sync_order_and_save_to_copy_trading_database(agentID, agentTradin
       let accountUsername = all_trading_accounts_order_list[index]["accountUsername"];
       let optionChainOrderId = all_trading_accounts_order_list[index]["optionChainOrderId"];
       let authToken = await get_access_token_from_cache(agentID, accountUsername);
-                                    
-      all_trading_accounts_list.push({ agentID: agentID,  accountId: accountId, accountName: accountName, accountUsername: accountUsername, optionChainOrderId: optionChainOrderId, authToken: authToken });
+
+      all_trading_accounts_list.push({ agentID: agentID, accountId: accountId, accountName: accountName, accountUsername: accountUsername, optionChainOrderId: optionChainOrderId, authToken: authToken });
 
       // it can be confusing with this term `result_promise_make_order_status` in sync_order_and_save_to_copy_trading_database function
       result_promise_make_order_status.push(true);
@@ -487,14 +501,14 @@ async function copy_trading_database_by_agent(agentID) {
       return { success: false, data: result.error };
     }
     agentDocument = result.data;
-    let agentTradingSessionIDList =  await copyTradingAccountDBBOperation.getAllAgentTradingSessionIDBasedOptionChainStatus(agentID)
+    let agentTradingSessionIDList = await copyTradingAccountDBBOperation.getAllAgentTradingSessionIDBasedOptionChainStatus(agentID)
 
     for (let index = 0; index < agentTradingSessionIDList.data.length; index++) {
       let currAgentTradingSessionID = agentTradingSessionIDList.data[index]["agentTradingSessionID"];
       // sync order and save to copy trading table for all trading accounts
       await sync_order_and_save_to_copy_trading_database(agentID, currAgentTradingSessionID);
     }
-    
+
     // get CopyTradingAccount based on agentID and agentTradingSessionID
     result =
       await copyTradingAccountDBBOperation.searchCopyTradingAccountBasedAgentID(
@@ -561,11 +575,11 @@ async function copy_trading_database(httpRequest) {
       // get copyTradingOrderDataDict from cache
       let copyTradingOrderDataDict_key = agentID + "." + "copyTradingOrderDataDict";
       let copyTradingOrderDataDict = await copy_trading_account_cache.get(copyTradingOrderDataDict_key);
-  
-      if(copyTradingOrderDataDict != undefined) {
+
+      if (copyTradingOrderDataDict != undefined) {
         return { success: true, data: copyTradingOrderDataDict };
-      }     
-       
+      }
+
       copyTradingOrderDataDict = await copy_trading_database_by_agent(agentID);
 
       //await new Promise(resolve => setTimeout(resolve, 500)); 

@@ -12,14 +12,7 @@ export default function TradingStockReplaceOrder({
     "SELL_TO_CLOSE",
     "BUY_TO_CLOSE",
   ];
-  var optionChainOrderTypeList = [
-    "LIMIT",
-    "MARKET",
-    "MARKET_ON_CLOSE",
-    "STOP",
-    "STOP_LIMIT",
-    "TRAILING_STOP",
-  ];
+  var optionChainOrderTypeList = ["LIMIT", "MARKET"];
 
   let agentTradingSessionID =
     rowCopyTradingOrder.cell.row.original.agentTradingSessionID;
@@ -170,21 +163,23 @@ export default function TradingStockReplaceOrder({
               Option Contract Total:
             </label>
           </div>
-          <div className="relative">
-            <input
-              className="block px-2.5 pb-1.5 pt-3 w-full text-sm text-gray-900 bg-transparent  border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-              type="text"
-              onChange={(event) => setOptionChainPrice(event.target.value)}
-              value={optionChainPrice}
-              placeholder=" "
-            />
-            <label
-              className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
-              htmlFor="small_outlined"
-            >
-              Price:
-            </label>
-          </div>
+          {optionChainOrderType == "LIMIT" && (
+            <div className="relative">
+              <input
+                className="block px-2.5 pb-1.5 pt-3 w-full text-sm text-gray-900 bg-transparent  border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                type="text"
+                onChange={(event) => setOptionChainPrice(event.target.value)}
+                value={optionChainPrice}
+                placeholder=" "
+              />
+              <label
+                className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-3 scale-75 top-1 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-1 peer-focus:scale-75 peer-focus:-translate-y-3 left-1"
+                htmlFor="small_outlined"
+              >
+                Price:
+              </label>
+            </div>
+          )}
         </div>
       </div>
       <div className="flex justify-end gap-5">
